@@ -1,0 +1,223 @@
+<!-- =========================== ENQUETE CONTAINER -->
+
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load tags %}
+
+{% block head %}
+
+	<!-- ================== DEPRECATED THINGS -->
+	<!-- scriptaculous, for smooth scrolling -->
+	<!-- <script type="text/javascript" src="{{ MEDIA_URL }}/js/prototype.js"></script>-->
+	<!-- <script type="text/javascript" src="{{ MEDIA_URL }}/js/scriptaculous/scriptaculous.js"></script>-->
+	 
+	<!-- Google Web Font -->
+	<!--<link href='http://fonts.googleapis.com/css?family=Patrick+Hand' rel='stylesheet' type='text/css'>-->
+	
+	<!-- for django-tables2 -->
+	<!--<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/paleblue/css/screen.css" />-->
+	
+	<!-- ================== USED EVERYWHERE -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-1.6.2.min.js"></script>
+	
+	<!-- scrollTo jquery plugin, for smooth scrolling -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery.scrollTo.js"></script>
+	
+	<!-- all script function, todo: split in different files -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/utilScripts.js"></script>
+	
+	<!-- all enquete css for the moment -->
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/css/e.css"/>
+
+	{% block enqueteheadmore %}
+	{% endblock %}
+
+{% endblock %}
+
+
+{% block headenquetetitle %}
+	<!-- general enquete header: title, meta... -->
+	<div class="title_enquete">
+		<h1 id="topanchor">{{enquete.name}}</h1>
+		<div class="meta_enquete">
+			{% if perms.reanalyseapp.can_make %}
+				author: {{enquete|enqueteAuthor}}
+				 | uploaded: {{enquete.date}}
+				 | status: {{enquete.get_status_display}}
+					{% if enquete.status != '0' %}
+					({{enquete.statuscomplete}}%)
+					{% endif %}
+			{% else %}
+				{{enquete|enqueteAuthor}}
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block launchviz %}
+	oui oui oui
+{% endblock %}
+
+
+
+{% block leftmenu %}
+
+	{% comment %}Translators: Study left menu{% endcomment %}
+	
+	<!-- ======================================================= -->
+	<div id="leftmenucontent">
+	
+		<div class="leftmenublock">
+			<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">< {% trans 'Back to the studies list' %}</a>
+		</div>
+		
+		<!-- ============================ BROWSE -->
+		<div class="leftmenublock">
+<a href="{% url reanalyse.reanalyseapp.views.eShow enquete.id %}">
+<div class="allPage {% if pageid == 'overview' %}currentPage{% endif %}">{% trans 'Overview' %}</div></a>
+
+{% if perms.reanalyseapp.can_browse %}
+<a href="{% url reanalyse.reanalyseapp.views.eseShow enquete.id %}">
+<div class="allPage {% if pageid == 'ese' %}currentPage{% endif %}">{% trans 'Research on the Research' %}</div></a>
+{% else %}
+<div class="allPage pageDisabled">{% trans 'Research on the Research' %}</div>
+{% endif %}
+
+{% if perms.reanalyseapp.can_explore %}
+<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete.texte_set.count}})</div></a>
+<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete.speaker_set.count}})</div></a>
+<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %}
+	{% if perms.reanalyseapp.can_make %}
+		({{enquete.visualization_set.count}})
+	{% else %}
+		({{enquete|visualizationPublicCount}})
+	{% endif %}
+</div></a>
+<a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}"><div class="allPage {% if pageid == 'search' %}currentPage{% endif %}"><span class="imSearch"></span> {% trans 'Search' %}</div></a>		
+
+{% else %}
+<div class="allPage pageDisabled">{% trans 'Documents' %} ({{enquete.texte_set.count}})</div>
+<div class="allPage pageDisabled">{% trans 'Speakers' %} ({{enquete.speaker_set.count}})</div>
+<div class="allPage pageDisabled">{% trans 'Visualizations' %} ({{enquete|visualizationPublicCount}})</div>
+<div class="allPage pageDisabled">{% trans 'Search' %}</div>
+{% endif %}
+
+{% if not perms.reanalyseapp.can_explore %}
+
+	</br>
+	{% comment %}Translators: Left menu link to register page{% endcomment %}
+	{% trans 'To consult the entire study, please consult the page' %}
+	<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&e={{enquete.id}}">access</a>
+
+{% endif %}		
+
+		</div>
+		
+		<!-- ============================ IF NEEDED, BEFORE -->
+		{% block enqueteleftmenubefore %}
+		{% endblock %}
+		
+		
+		{% comment %}
+		<!-- ============================ STATISTICS -->
+		<div class="leftmenublock">
+			<h1><a href="#" onclick='$("#leftmenu_stats").toggle("fast");return false;'>All Statistics</a></h1>
+			<div id="leftmenu_stats" style="display:none;">
+				<!-- Texts -->
+				<a rel="generaltooltip" title="{% for d in enquete.texte_set.all %}<a href='{% url reanalyse.reanalyseapp.views.edShow enquete.id d.id %}'>{{d.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
+				<b>{{enquete.texte_set.count}}</b> Texts</br>
+				<!-- Speakers -->
+				<a rel="generaltooltip" title="{% for p in enquete.speaker_set.all %}<a href='{% url reanalyse.reanalyseapp.views.esShow enquete.id p.id %}'>{{p.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
+				<b>{{enquete.speaker_set.count}}</b> Speakers</br>
+				
+
+
+				<!-- CodeTypes -->
+				<a rel="generaltooltip" title="{% for c in enquete.codetype_set.all %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>	
+				<b>{{enquete.codetype_set.count}}</b> Categories</br>
+				<!-- Codes -->
+				<a rel="generaltooltip" title="{% for c in enquete.code_set.all %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>		
+				<b>{{enquete.code_set.count}}</b> Codes</br>
+				<!-- Words -->
+				<b>{{enquete.intervention_set.count}}</b> Interventions</br>
+				<b>{{enquete.wordentity_set.count}}</b> Words</br>
+				<b>{{enquete.word_set.count}}</b> Word-Occurrences
+
+				
+			</div>
+		</div>
+		<!-- ============================ STATISTICS LOCAL-->
+		{% if texte %}
+			<div class="leftmenublock">
+				<h1>Local Statistics</h1>
+				<!-- Texts -->
+				<a rel="generaltooltip" title="{% for d in stats.textes %}<a href='{% url reanalyse.reanalyseapp.views.edShow enquete.id d.id %}'>{{d.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
+				<b>{{stats.textes.count}}</b> Texts</br>
+				<!-- Speakers -->
+				<a rel="generaltooltip" title="{% for p in stats.speakers %}<a href='{% url reanalyse.reanalyseapp.views.esShow enquete.id p.id %}'>{{p.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
+				<b>{{stats.speakers.count}}</b> Speakers</br>
+				
+
+				<!-- CodeTypes -->
+				<!--<a rel="generaltooltip" title="{% for c in enquete.codetype_set.all %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}}</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>	
+				<b>{{stats.codetype_set.count}}</b> Categories</br>-->
+				<!-- Codes -->
+				<a rel="generaltooltip" title="{% for c in stats.codes %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}} ({{c.codetype.name}})</a>, {% endfor %}">
+				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>		
+				<b>{{stats.codes.count}}</b> Codes</br>
+				<!-- Words -->
+				<b>{{stats.interventions}}</b> Interventions</br>
+				<b>{{stats.wordentities}}</b> WordEntities</br>
+				<b>{{stats.words}}</b> Words
+				
+			</div>
+		{% endif %}
+		{% endcomment %}
+		
+		
+		<!-- ============================ MORE -->
+		{% block enqueteleftmenumore %}
+		{% endblock %}
+		
+		<!-- ============================ MORE, BUT SCROLL TO FIXED -->
+		<div id="leftMenuScrollToFixed">
+			{% block enqueteleftmenumorescroll %}
+			{% endblock %}
+		</div>
+		
+	</div>
+	<!-- ======================================================= -->
+{% endblock %}
+
+
+
+{% block bottom %}
+	<!-- scroll to fixed for leftmenu -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-scrolltofixed-min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+			// scroll to fixed
+			$('#leftMenuScrollToFixed').scrollToFixed();
+				
+			initGeneralTooltips();
+		});
+	</script>
+	{% block enquetebottommore %}
+	{% endblock %}
+
+{% endblock %}
+
+
+

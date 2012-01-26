@@ -1,0 +1,79 @@
+/////////////////////////////////////////////////////////////////////////////
+ArrayList mydocs;
+int selectedN=0;
+/////////////////////////////////////////////////////////////////////////////
+void setup() {
+  size(600,50);
+  frameRate(20);
+  
+  //colorMode(RGB,255,255,255,100);
+  
+  smooth();
+  mydocs = new ArrayList();
+  
+  int[] vals={18,34,200,45,64,124};
+  String[] names={'18','34','20','45','64','124'};
+  addDocuments(vals,names);
+}
+/////////////////////////////////////////////////////////////////////////////
+void draw() {
+  background(200,150,150);
+  
+  //for(int d=0;d<mydocs.size();d++) mydocs.detect();
+  updateSelection();
+  
+  rectMode(CENTER);
+  
+  for(int d=0;d<mydocs.size();d++) {
+	float w=width/mydocs.size();
+	//console.log("taille:"+w);
+	float x1=d*w;
+	h=mydocs.get(d).n;
+	
+	noStroke();
+	fill(100);
+	if(selectedN==d) {
+		fill(180,250,250);
+		rectMode(CORNER);
+		rect(x1,0,w,height);
+		fill(100,200,200);
+	}
+	rectMode(CENTER);
+	rect(x1+w/2,height,w,h);
+  }
+}
+/////////////////////////////////////////////////////////////////////////////
+void addDocuments( int[] ids, String[] names, int[] values ) {
+	for(int k=0;k<values.length();k++)	{
+		EDocument newDoc = new EDocument(ids[k],names[k],values[k]);
+		mydocs.add(newDoc);
+	}
+}
+/////////////////////////////////////////////////////////////////////////////
+class EDocument {
+	int n,id;
+	String name;
+	EDocument(int id,String name,int n) {
+		this.id=id;
+		this.name=name;
+		this.n=n;
+		console.log("Processing Object created :"+name);
+	}
+	void detect() {
+		//nothing...
+	}
+}
+EDocument getSelected() {
+	return mydocs.get(selectedN);
+}
+////////////////////////////////////////////////////////////////////////////
+void updateSelection() {
+	selectedN = int((mouseX/width)*mydocs.size());
+}
+void mouseClicked () {
+	console.log("Document "+selectedN+" "+getSelected().name+" was clicked");
+}
+////////////////////////////////////////////////////////////////////////////
+
+
+

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block bodyid %}
+<body id="e">
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block leftmenu %}
+{% endblock %}
+
+
+
+{% block content %}
+
+<h1>You searched for : {{query_string}}</h1>
+<ul>
+	{% for r in results %}
+		<li>{{r.name}}</li>	
+	{% endfor %}
+</ul>
+
+
+{% comment %}
+<!-- deprecated: text extracts
+<table>
+	{% for r in results %}
+		<tr>
+			<td>{{r.name}}</td>
+			
+			<td style="text-align:right;">{{r.before}}</td>
+			<td style="text-align:center;padding:1px;"> {% autoescape off %} {{r.excerpt}} {% endautoescape %}</td>
+			<td style="text-align:left;">{{r.after}}</td>
+			
+			
+		</tr>
+	{% endfor %}
+</table>
+-->
+<!-- deprecated: whole content was too much!!
+<ul>
+	{% for r in results.0 %}
+		<li class="searchResultDiv">
+			<h1>{{r.name}}</h1>
+			{% autoescape off %}
+			</br>{{r.content}}
+			{% endautoescape %}
+		</li>
+	{% endfor %}
+</ul>
+-->
+{% endcomment %}
+
+{% endblock %}
+
+
+
+
+
+{% block bottom %}
+{% endblock %}

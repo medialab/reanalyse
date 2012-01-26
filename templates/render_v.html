@@ -1,0 +1,402 @@
+<!-- ================================================================================ -->
+<!-- This is the code appearing in each visualization box, depending on the type -->
+
+{% if v.viztype == 'Graph_SpeakersSpeakers' or v.viztype == 'Graph_SpeakersWords' or v.viztype == 'Graph_SpeakersAttributes' %}
+	download link : <a href="{% url reanalyse.reanalyseapp.views.downloadGraph v.id %}">{{v.name}}.gexf</a><br/>
+	
+	<!-- ======================================== Seadragon -->
+	<!--<div id="theViz_{{nk}}" style="width:670px;height:400px;"></div>-->
+	
+	<!-- ======================================== SIGMA -->
+	<!--<div id="parsingResult"><b>Please wait until your network is parsed...</b></div>-->
+	
+	<!-- EXPERIMENTAL : sigma flash to visualize graphs
+	{% if v.public %}
+	<div id="SiGMa-container" style="height:400px;width:670px;">
+	<object id="SiGMa-client_{{nk}}" style="width:670px;height:400px;border:1px #866 solid;">
+		<param name="movie" value="{{ MEDIA_URL }}/sigma/sigma.swf?configPath={{ MEDIA_URL }}/sigma/sigma_default_config.json"/>
+		<param name="allowScriptAccess" value="always"/>
+		<embed src="{{ MEDIA_URL }}/sigma/sigma.swf?configPath={{ MEDIA_URL }}/sigma/sigma_default_config.json" allowScriptAccess="always">
+		</embed>
+	</object>
+	</div>
+	{% endif %}
+	-->
+	
+{% else %}
+	<div id="theViz_{{nk}}" style="width:100%;"></div>
+{% endif %}
+
+<!-- ================================================================================ -->
+<script type="text/javascript">	
+		
+{% if v.viztype == 'Graph_SpeakersSpeakers' or v.viztype == 'Graph_SpeakersWords' or v.viztype == 'Graph_SpeakersAttributes' %}
+		var sigma_{{nk}};
+		function feedSiGMa(){
+			if(!sigma_{{nk}}){ return;}
+			sigma_{{nk}}.resetGraphPosition();
+			sigma_{{nk}}.killForceAtlas();
+			sigma_{{nk}}.deleteGraph();
+			sigma_{{nk}}.updateGraph("{% url reanalyse.reanalyseapp.views.serveGraph v.id %}");
+			sigma_{{nk}}.initForceAtlas();
+		};
+		function initviz_{{nk}}() {
+			////////////////////////////////////////////////////////////////////////////// IMAGE DISPLAY using seadragon
+			// NB: workaround ! "img/" path hard-changed in js source !!
+			//viewer = new Seadragon.Viewer("theViz_{{nk}}");
+			//viewer.openDzi("{{ MEDIA_URL }}dzi/{{v.name}}/dzc_output.xml");
+			////////////////////////////////////////////////////////////////////////////// SIGMA
+			//console.log("Reloading graph...");
+			{% if v.public %}
+			// uncomment to try sigma...
+			//sigma_{{nk}} = window["SiGMa-client_{{nk}}"];
+			{% endif %}
+		};
+{% else %}
+	
+		function initviz_{{nk}}() {
+			$.ajax({
+				url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id v.id %}",
+				success: function(data){
+					//console.log("data received for viz:{{nk}}");
+					$("#theViz_{{nk}}").html("");	
+					buildD3_{{v.viztype}}(data,"theViz_{{nk}}");
+				},
+			});
+		};
+		
+{% endif %}
+	
+
+		
+		// ============================= LOAD
+		$(document).ready(function() {
+			initviz_{{nk}}();
+		});
+		
+		// ============================= RELOAD on button click
+		$("#butReload_{{nk}}").click( function(event) {
+			initviz_{{nk}}();
+			return false;
+		});
+		
+</script>
+<!-- ================================================================================ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	{% comment %}
+	<!-- =================================== TAGCLOUD DEPRECATED JAVASCRIPT WAY -->
+	
+	<!--
+	<script type="text/javascript">
+
+		var jsBuildListTagCloud = function(data) {
+			//console.log("dataMin:"+data.min);
+			//console.log("dataMax:"+data.max);
+			
+			$("#tagCloud_{{nk}}").children().remove();
+			$("<ul>").attr("id", "tagList_{{nk}}").attr("class", "tagList").appendTo("#tagCloud_{{nk}}");
+			
+			//create tags
+			var minCount=data.min;
+			var rangeCount=data.max-minCount;
+			var minEm=0.9;
+			var rangeEm=1.1;
+			$.each(data.words, function(i, val) {
+				var freq = minEm + (val.count - minCount)*rangeEm/rangeCount;
+				
+				//create item
+				var li = $("<li>").addClass("tagList");
+				$("<span>").addClass("tagCloudCount").text(val.tip).appendTo(li);
+				$("<a>").text(val.word).attr({rel:"tooltip",title:val.tip, href:"#", onclick:"return false;"}).css("fontSize",  freq + "em").appendTo(li);
+				
+				//add to list
+				li.appendTo("#tagList_{{nk}}");
+			});
+			
+			if(data.words.length==0) {
+				var li = $("<li>");
+				$("<a>").text("No words for that configuration").appendTo(li);
+				li.appendTo("#tagList_{{nk}}");
+			}
+		};
+		
+		var jsBuildBubbleTagCloud = function(data) {
+			//console.log("dataMin:"+data.min);
+			//console.log("dataMax:"+data.max);
+			
+			$("#tagCloud_{{nk}}").children().remove();
+			$("<ul>").attr("id", "tagList_{{nk}}").attr("class", "tagList").appendTo("#tagCloud_{{nk}}");
+			
+			//create tags
+			var minCount=data.min;
+			var rangeCount=data.max-minCount;
+			var minEm=0.9;
+			var rangeEm=1.1;
+			$.each(data.words, function(i, val) {
+				//create item
+				var li = $("<li>").addClass("tagList");
+				$("<a>").text(val.word).attr({rel:"tooltip",title:val.tip, href:"#", onclick:"return false;"}).appendTo(li);
+				
+				//li.children().css("fontSize", (val.freq / 10 < 1) ? val.freq / 10 + 1 + "em": (val.freq / 10 > 2) ? "2em" : val.freq / 10 + "em");
+				//scale tag size in [0.5,2]
+				var freq = minEm + (val.count - minCount)*rangeEm/rangeCount;
+				//console.log(freq);
+				li.css("fontSize",  freq + "em");
+				//li.children().css("background-color",  val.color);
+				//add to list
+				li.appendTo("#tagList_{{nk}}");
+			});
+			
+			if(data.words.length==0) {
+				var li = $("<li>");
+				$("<a>").text("No words for that configuration").appendTo(li);
+				li.appendTo("#tagList_{{nk}}");
+			}
+		};
+		
+		$.get(
+			"{% url reanalyse.reanalyseapp.views.evGetJson enquete.id visualization.id %}", jsBuildListTagCloud
+		);
+	</script>
+	-->
+	{% endcomment %}
+	
+
+<!-- ================================================================================ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}
+
+
+<!-- ================================================================================ -->
+<!-- =========================== TABLE WITH TFIDF WORDS - saved here, but to rebuild -->
+<h1>Speaker Tfidf Words</h1>
+<table class="paleblue">
+	<thead>
+		<td>Min Tfidf</td>
+		<td>Word</td>
+		<td>Max Tfidf</td>
+		<td>Word</td>
+	</thead>
+	{% for k,l in stats.words %}
+	<tr class="{% cycle 'odd' 'even' %}">
+		<td>{{k.tfidf}}</td>
+		<td><a href="{% url reanalyse.reanalyseapp.views.ewShow speaker.enquete.id k.id %}">{{k.word}}</a></td>
+		<td>{{l.tfidf}}</td>
+		<td><a href="{% url reanalyse.reanalyseapp.views.ewShow speaker.enquete.id l.id %}">{{l.word}}</a></td>
+	</tr>
+	{% endfor %}
+</table>
+<!-- ================================================================================ -->
+<!-- =========================== TABLE WITH attributes - fetched from already-made dict -->
+{% for l in speakeratt %}
+<table class="paleblue">
+	<tr class="odd">
+	{% for a in l.type %}
+		<td>
+		{{ a }}
+		</td>
+	{% endfor %}
+	</tr>
+	<tr class="even">
+	{% for b in l.value %}
+		<td>
+		{{ b.name }}{% if b.description %} <a rel="tooltip" title="{{ b.description }}"><img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>{% endif %}
+		</td>
+	{% endfor %}
+	</tr>
+</table>
+</br>
+{% endfor %}
+<!-- ================================================================================ -->
+
+
+
+
+
+
+
+<!-- ================================================================================ -->
+{% if visualization.viztype == 'tagclouddeprecated' %}
+	<!-- =========================== TAG CLOUD -->
+	<div class="collapsableoptions">
+		<a href="#" onclick='$("#tagCloudBox").toggle("fast"); return false;'>Toggle show TagCloud</a>
+		<div id="tagCloudBox" style="display:none;">
+			<div id="tagCloudForm">
+			<form id="theForm" name="tagcloudinput" action="" method="get">
+				<!--<input type="checkbox" name="speakers" value="sp" /> ColorBySpeakers<br/>-->
+				<input type="radio" name="how" value="freq" checked/> How:byFreq
+				<input type="radio" name="how" value="tfidf" /> How:byTFIDF
+				<!-- WHERE = IN WHICH Text -->
+				Where: <select name="where_text_id">
+					<option value="all">-- All Texts</option>
+					{% for t in texte.enquete.texte_set.all %}
+						{% if t.doctype == "TEI" %}
+							<option value="{{t.id}}" {% if texte == t %}selected{% endif %}>{{t.name}}</option>
+						{% endif %}
+					{% endfor %}
+				</select>
+				<!-- WHO = IN WHICH Speaker -->
+				Who: <select name="who_speaker_id">
+					<option value="all" selected>-- All Speakers</option>
+					{% for s in texte.speaker_set.all %}
+						<option value="{{s.id}}">{{s.name}}</option>
+					{% endfor %}
+				</select>
+				HowMany: <input type="text" name="count" size="7" value="50"/>
+				<input type="button" onclick="sendData();" value="Submit">
+				<script type="text/javascript">
+					function sendData() {
+						$.get(
+							"{% url reanalyse.reanalyseapp.views.makeTagCloud enquete.id %}",
+							$("#theForm").serialize(),
+							function(data) {
+								initTagCloudsDeprecated(data);
+							}	
+						);
+					}
+				</script>
+			</form>
+			</div>
+			<div id="tagCloud"></div>
+		</div>
+	</div>
+{% endif %}
+<!-- ================================================================================ -->
+
+
+
+
+
+<!-- ================================================================================ STREAMED TIMELINE (using streamgraph) DEPRECATED-->
+{% if visualization.viztype == 'StreamedTimeline' %}
+	<script type="text/javascript">
+		var myStreamGraph = null;
+		var jsondata = null;
+	</script>
+	
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/streamgraph/streamgraph.css"/>
+	<script src="{{ MEDIA_URL }}/streamgraph/streamgraph.js" type="text/javascript" charset="utf-8"></script>
+	<script src="{{ MEDIA_URL }}/streamgraph/fire.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_ParaverbalTimeline.js"></script>
+	<div id="theViz_{{nk}}"></div>
+	<script type="text/javascript">
+		var jsonUrl = "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id visualization.id %}";
+		$.ajax({
+			url: jsonUrl,
+			success: function(data){
+				// data is the json stored by the viz
+				//buildD3_ParaverbalTimeline(data,"theViz_{{nk}}");
+				{% autoescape off%}
+					jsondata = data;
+				{% endautoescape %}
+				console.log('JSONRECEIVED. NOW LOADING GRAPH'+jsondata["title"]);
+				myStreamGraph.loadJSONGraph(jsondata, false);
+			},
+		});
+	</script>
+		
+	<div id="streamgraph_container" class="hidden_start">
+		<div id="streamgraph_controls">
+		<form name="controls">						
+			<div class="control_element">
+				<label>
+					<p>Line Smoothing:</p>
+					<p><input type="range" id="r_linesmooth" min="0" max="1" value="0.35" step="0.05"></p>
+				</label>
+			</div>
+		
+			<div class="control_element">
+				<p><label><input type="radio" name="c_baseline" value="straight"> Stacked Graph</label></p>
+				<p><label><input type="radio" name="c_baseline" value="middle"> Middle Baseline</label></p>
+				<p><label><input type="radio" name="c_baseline" value="wiggle" checked="checked"> Wiggled Reducing BL</label></p>
+				<p><label><input type="radio" name="c_baseline" value="weighted"> Weighted Wiggle (broken)</label></p>
+			</div>
+		
+			<div class="control_element">
+				<p><label><input type="radio" name="c_order" value="none"> Layers Unordered</label></p>
+				<p><label><input type="radio" name="c_order" value="outsideup"> Stack Up Onset</label></p>
+				<p><label><input type="radio" name="c_order" value="outsidedown"> Stack Down Onset</label></p>
+				<p><label><input type="radio" name="c_order" value="outsidesum" checked="checked"> Balanced Onset</label></p>
+			</div>
+		
+			<div class="control_element">
+				<p><label><input type="radio" name="c_colormode" value="hue" checked="checked"> One Hue</label></p>
+				<p><label><input type="radio" name="c_colormode" value="bonus"> One Hue Bonus</label></p>
+				<p><label><input type="radio" name="c_colormode" value="random"> Candy Man</label></p>
+				<p><label><input type="radio" name="c_colormode" value="nice"> Picture Color Picker</label></p>
+			</div>
+			
+			<div class="control_element">
+				<div id="col_hue">
+					<label>
+						<p>Color Hue:</p>
+						<p><input type="range" id="r_hue" min="0" max="360" value="75" step="1"></p>
+					</label>
+				</div>
+				<div id="col_hue_bonus" style="display:none">
+					<label>
+						<p>Color Hue Bonus Feature:</p>
+						<p><input type="range" id="r_bhue" min="0" max="360" value="75" step="1"></p>
+					</label>
+				</div>
+				<div id="col_candy" style="display:none">
+					<label>
+						<p>Candyman Craziness:</p>
+						<p><input type="range" id="r_candy" in="0" max="1" value="0" step="0.01"></p>
+					</label>
+				</div>
+			</div>
+		</form>
+		</div>		
+		</br>
+		<div style="display:inline-block;">
+			<figure>
+				<canvas id="streamgraph" width="600px" height="300px">Your browser does not support the canvas element.</canvas>	
+				<!--<canvas id="streamgraph" width="auto" height="370">Your browser does not support the canvas element.</canvas>-->
+				<figcaption id="streamgraph_caption">This is a wonderful Streamgraph.</figcaption>
+			</figure>	
+		</div>
+
+	
+{% endif %}
+
+{% endcomment %}
+	

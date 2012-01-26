@@ -1,0 +1,124 @@
+/* ========= FOR INTERVIEW TEXTS ========= */
+.xmlAll{
+    font-family: georgia;
+    font-size:12px;
+    background-color:#FFFFFF ;
+}
+.xmlAll h1 {
+	font-size:16px;
+	//color:red;
+}
+.xmlAll h3 {
+	font-size:1.5em;
+	background-color:#FFCC99 ;
+	padding: 0.3em;
+}
+/* ========= HEADERS ========= */
+.xmlDescription {
+	padding-left:20px;
+}
+/* ========= BLOCKS ========= */
+.xmlHeaderBox {
+    border: 1px dotted gray;
+    //margin-left: 1em;
+    padding: 0.5em;
+    margin:0.5em;
+	background-color:#FFCC99;
+}
+.xmlExtDocumentsBox {
+	border: 1px dotted gray;
+	padding: 0.5em;
+    margin:0.5em;
+	background-color:#FFFFCC;
+}
+.xmlVariablesBox {
+	border: 1px dotted gray;	
+	padding: 0.5em;
+    margin:0.5em;
+	background-color:#E0E0E0 ;
+}
+/* ========= TEXTS ========= */
+.xmlTextsBox , .xmlTextBoxLeft , .xmlTextBoxRight {
+	border: 1px dotted gray;	
+	padding: 0.2em;
+    margin:0.5em;
+	background-color:#FFFFCC ;
+	
+	display:block;
+}
+.xmlTextBoxLeft {
+	//float:left;
+	width:40%;
+	//height:600px;
+}
+
+.xmlTextBoxRight {
+	//float:right;
+	//width:40%;
+	height:600px;
+}
+.xmlColumns td {
+	width:40%;
+}
+/* ========= PHASES ========= */
+.xmlPhase {
+	padding: 0.5em;
+    margin:0.5em;
+	background-color:#FFFFFF ;
+}
+.xmlPhase_before {
+	font-style:strong;
+	font-size:1.1em;
+}
+/* ========= FOR INTERVIEW TEXTS ========= */
+.xmlText_Who {
+	/* before any intervention question or answer */
+	color:#909090;
+	font-style:italic;
+	font-style:bold;
+	padding-right:30px;
+	display: inline;
+}
+.xmlText_Content {
+	padding-right:30px;
+	display: inline;
+	//font-size:10px;
+}
+.xmlText_Inaudible {
+	color:#336633;
+	font-style:italic;
+	//text-decoration:underline;
+}
+.xmlText_Strong {
+	color:#660000;
+	font-style:bold;
+	text-decoration:underline;
+}
+.xmlText_Hesitation {
+	color:#009999;
+	font-style:italic;
+}
+.xmlText_Silence {
+	color:#909090;
+	font-style:italic;
+	font-style:bold;
+}
+.xmlText_Silence:before {
+	content:' -...-';
+}
+.xmlText_Interrompt {
+	color:#0099CC;
+	font-style:italic;
+}
+.xmlText_Comment {
+	color:#707070 ;
+	font-style:italic;
+	font-style:bold;
+}
+.xmlText_Comment:before {
+	content:'[';
+}
+.xmlText_Comment:after {
+	content:']';
+}
+/* ============================ */

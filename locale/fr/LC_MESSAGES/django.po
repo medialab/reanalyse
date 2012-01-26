@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-01 18:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#. Translators: Main page
+#: templates/base.html:46
+msgid "ADMIN - You can consult, upload, make viz and phonecalls to god"
+msgstr "ADMIN - Vous pouvez tout faire, c'est super"
+
+#: templates/base.html:49
+#, fuzzy
+msgid "EXPLORE - You can explore whole study sites"
+msgstr "EXPLORE - Vous pouvez consulter l'intégralité des enquêtes, mais pas faire de viz"
+
+#: templates/base.html:52
+msgid "BROWSE - You can browse studies descriptions and studies on studies"
+msgstr "BROWSE - Vous pouvez consulter les enquêtes sur enquêtes"
+
+#: templates/base.html:54
+msgid "PUBLIC - You can browse the studies list"
+msgstr "PUBLIC - Vous pouvez consulter la liste des enquêtes"
+
+#: templates/base.html:57
+msgid "access"
+msgstr "accès"
+
+#: templates/base.html:62
+msgid "you are connected as"
+msgstr "vous êtes connecté(e) en tant que "
+
+#: templates/base.html:77
+msgid "A Project from"
+msgstr "Un projet"
+
+#. Translators: Main menu choices
+#: templates/base.html:87
+msgid "Project"
+msgstr "Projet"
+
+#: templates/base.html:89
+msgid "Methodology"
+msgstr "Méthode"
+
+#: templates/base.html:91
+msgid "Access"
+msgstr "Accès"
+
+#: templates/base.html:93
+msgid "The Studies"
+msgstr "Les Enquêtes"
+
+#: templates/base.html:96
+msgid "Upload"
+msgstr "Upload"
+
+#: templates/e_base.html:69
+msgid "Back to the studies list"
+msgstr "Retour à la liste des enquêtes"
+
+#: templates/e_base.html:75
+msgid "Overview"
+msgstr ""
+
+#: templates/e_base.html:79 templates/e_base.html.py:81
+msgid "Research on the Research"
+msgstr ""
+
+#. Translators: Studies list
+#: templates/e_base.html:85 templates/e_base.html.py:91
+#: templates/e_browse.html:48
+msgid "Documents"
+msgstr "Documents"
+
+#: templates/e_base.html:86 templates/e_base.html.py:92
+#: templates/e_browse.html:49
+msgid "Speakers"
+msgstr "Intervenants"
+
+#: templates/e_base.html:87 templates/e_base.html.py:93
+#: templates/e_browse.html:50
+msgid "Visualizations"
+msgstr "Visualizations"
+
+#: templates/e_base.html:88 templates/e_base.html.py:94
+msgid "Search"
+msgstr "Recherche"
+
+#. Translators: Left menu link to register page
+#: templates/e_base.html:101
+msgid "To consult the entire study, please consult the page"
+msgstr ""
+
+#: templates/e_browse.html:21
+msgid "Back home"
+msgstr "Retour à l'accueil"
+
+#. Translators: ESE final report download
+#: templates/e_eseShow.html:89
+msgid "The final report can be downloaded"
+msgstr ""
+
+#. Translators: Documents browse when null
+#: templates/ed_browse.html:94
+msgid "There is no linked documents for in study"
+msgstr ""
+
+#. Translators: Speakers browse when null
+#: templates/es_browse.html:128
+msgid "There is no linked speakers in this study"
+msgstr ""
+
+#. Translators: Visualization browse when null
+#: templates/ev_browse.html:36
+msgid "There isn\\'t any Visualisation in this study"
+msgstr ""
+
+#. Translators: Login page
+#: templates/home.html:56
+msgid "If you already have an account, please login"
+msgstr ""
+
+#: templates/home.html:57
+msgid "If you don't, please consult the page"
+msgstr ""
+
+#: templates/home.html:66
+msgid "login"
+msgstr ""

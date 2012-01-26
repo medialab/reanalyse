@@ -1,0 +1,327 @@
+{% load tags %}
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////// CONTENT = SEARCH RESULTS -->
+
+<!-- //////////////////////////////////////// GENERAL -->
+
+<h1><span class="searchedQuery">{{query}}</span> returned {{page.paginator.count}} results</h1>
+
+
+				{% comment %}
+					{% for queri,count in youcould.items %}
+						<div class="result_suggestion"><em>"{{queri}}"</em> gives <b>{{count}}</b> results</div>
+					{% endfor %}
+						<div class="result_suggestion">Suggestion: {{suggestion}}</div>
+				{% endcomment %}
+					
+				{% comment %}
+				<!-- //////////////////////////////////////// collapsable D3 GRAPH with Textes/Speakers -->
+				<div class="collapsableoptions">
+					<a href="#" onclick='if(!$("#d3stats").html()) buildD3GraphFromData(theData);$("#d3graphcontainer").toggle("fast"); return false;'>Toggle show d3 graph</a>
+					<div id="d3graphcontainer" style="display:none;">
+						<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_searchresults.js"></script>
+						<div id="d3stats"></div>
+						<script type="text/javascript">
+							var theData = []
+							// Textes
+							theData[0]=[{% for t in d3data.textes %}"{{t.name}}",{% endfor %}];
+							// Speakers
+							theData[1]=[{% for s in d3data.speakers %}"{{s.name}}",{% endfor %}];
+							// Links
+							theData[2]=[{% for s in d3data.links %}[{{s.0}},{{s.1}}],{% endfor %}];
+						</script>
+					</div>
+				</div>
+				<!-- //////////////////////////////////////// collapsable TFIDF SHARED WORDS with jquery DataTables -->
+				<div class="collapsableoptions">
+					<a href="#" onclick='$("#wordsTfidfTableContainer").toggle("fast"); return false;'>Toggle show shared words tfidf</a>
+					<div id="wordsTfidfTableContainer" style="display:none;">
+						<table class="display" id="wordsTfidfTable">
+							<thead>
+								<tr>
+									<th>Solr Word</th>
+									{% for sname in tfidf.values.0.keys %}
+										<th>TF</th>
+										<th>DF</th>
+										<th>{{sname}} TFIDF</th>
+									{% endfor %}
+								</tr>
+							</thead>
+							<tbody>
+							{% for w,dict in tfidf.items %}
+								<tr>
+									<td><b>{{w}}</b></td> 
+									{% for s,vals in dict.items %}
+										<td>{{vals.tf}}</td> 
+										<td>{{vals.df}}</td> 
+										<td>{{vals.tfidf|floatformat:3}}</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- ////////////////////////////////// -->
+				{% endcomment %}
+
+
+
+
+
+{% if query %}
+		<!-- //////////////////////////////////////////////////// PAGINATION -->
+		<div id="search_pagination_top" class="search_pagination">
+			{% if page.has_previous %}
+			<a href="#" onclick='launchSearch("page={{ page.previous_page_number }}");return false;'>&laquo; Previous</a> |
+			{% endif %}
+			<!-- /////////////////////// LOOP IN AVAILABLE PAGES -->
+			{% for kp in page.paginator.page_range %}
+				{% if kp != page.number %}
+					<a href="#" onclick='launchSearch("page={{ kp }}");return false;'> {{kp}} </a>
+				{% else %}
+					<b>  {{kp}}  </b>
+				{% endif %}
+			{% endfor %}
+			<!-- /////////////////////// -->
+			{% if page.has_next %}
+			| <a href="#" onclick='launchSearch("page={{ page.next_page_number }}");return false;'>Next &raquo;</a>
+			{% endif %}
+		</div>
+	<!-- //////////////////////////////////////////////////// -->
+	<ol id="searchResultList">
+		<!-- /////////////////// SORTING by... -->
+		<li>
+			<div class="searchResult">
+				<div class="res_left">
+					<a href="#" onclick='launchSearch("sortb=speaker");return false;'>sort by Speaker</a>
+				</div>
+				<div class="res_middle" style="text-align:center">
+					<a href="#" onclick='launchSearch();return false;'>sort by Relevance score</a>
+				</div>
+				<div class="res_right">
+					<a href="#" onclick='launchSearch("sortb=texte");return false;'>sort by Texte</a>
+				</div>
+			</div>
+		</li>
+	{% for r in page.object_list %}
+		<li>
+			<div class="searchResult_relevance">
+				<div class="searchResult_relevance" style=" background:#CC9933; width:{% widthratio r.score 1 70 %}px;"></div>
+				<span style="margin:4px;">{{r.score|floatformat}}</span>
+			</div>
+			<div class="searchResult">
+				<!-- ////////////////////////////////////////////////////////// SPEAKER -->
+				<a class="res_left_link" href="{% url reanalyseapp.views.esShow enquete.id r.object.speaker.id %}">
+					<div class="res_left speaker_{{r.object.speaker.id}}">
+						{{ r.object.speaker.name }}
+					</div>
+				</a>
+				<!-- ////////////////////////////////////////////////////////// TEXT EXTRACT -->
+<a class="res_middle_link" href="" onclick='toggleSentenceExtract("{% url reanalyse.reanalyseapp.views.dGetHtmlAround enquete.id r.object.id %}","sentence_{{r.object.id}}","{{query}}");return false;'> 
+					<div class="res_middle" id="sentence_{{r.object.id}}">
+						<div class="res_excerpt_txt" style="display:block;">
+							{% comment %}
+							<!-- ALL CONTENT: {{r.object.content|truncatewords:100}}-->
+							<!-- USING HAYSTACK TEMPLATE TAG: {% highlight r.object.content with query html_tag "div" css_class "result_highlighted" %} -->
+							{% endcomment %}
+							<!--{{r.object.content}}
+							</br></br>-->
+							{% autoescape off %}
+							{{ r.highlighted.text.0|replaceEmByClassedDiv }}
+							{% endautoescape %}
+						</div>
+						<div class="res_excerpt_html" style="display:none;"></div>
+					</div>
+				</a>
+				<!-- ////////////////////////////////////////////////////////// TEXT -->
+				<a class="res_right_link" href="{% url reanalyseapp.views.edShow enquete.id r.object.texte.id %}?around={{r.object.i}}">
+					<div class="res_right">
+						go to {{ r.object.texte.name }}
+					</div>
+				</a>
+				<!--
+				n: {{forloop.counter}}</br>
+				MODEL: {{r.model_name}}</br>
+				SCORE: {{r.score}}</br>
+				NAME: {{r.object.name}}</br>
+				TYPE: {{r.object.code.name}}</br>
+				DESCRIPTION: {{ r.object.description }}</br>
+				int from SPEAKER: </br>
+				int from TEXTE: {{ r.object.texte.name }}</br>
+				-->
+			</div>
+		</li>
+	<!-- //////////////////////////////////////////////////// -->
+	{% empty %}
+		<p>No results found.</p>
+	{% endfor %}
+	</ol>
+	<div id="search_pagination_bottom" class="search_pagination">
+	<!-- //////////////////////////////////////////////////// -->
+	
+	
+{% else %}
+	Please search for something, like "graph"
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////// LEFTMENU = FACETS -->
+<div id="divFacets" style="display:none;">
+</div>
+
+		
+		<!-- 
+		
+			{{ f }}				...is calculated in view using facets
+			# 0.number of interventions for the query 'q'
+			# 1.total number of interventions 
+			# 2.name
+			# 3.is currently selected ?
+		
+		 -->
+		<!-- FACET RELEVANCY DISPLAYED AS a thin colored div -->
+		<!--
+		<div class="facetRelevance" style="background:lightgray; width:{% widthratio f.1 handfacets.maxT 150 %}px;">
+			<div class="facetRelevance" style="background:#CC9933; width:{% widthratio f.0 handfacets.maxT 150 %}px;"></div>
+		</div>
+		-->
+	{% comment %}
+		<!-- style="border-left:2px solid {% if f.0 == 0 %}lightgray{% else %}#CC9933{% endif %};" -->
+		
+				
+		<!-- /////////////////////////////////// -->
+		</br>Filter by Texte:
+		<ul class="facetList" id="facetText">
+			{% for f in handfacets.textes %}
+				<li>
+				<span class="{% if f.0 == 0 %}facetNbZero{% else %}facetNb{% endif %}">({{f.0}}/{{f.1}})</span>
+				<a {% if f.3 %}class='facetSelected'{% endif %} id="texte_{{ f.2.id }}" href="#" onclick='clickOnFacet("texte","{{ f.2.id }}"); return false;'>
+				{{ f.2.name }}
+				</a></li>
+			{% endfor %}
+		</ul>
+		<!-- /////////////////////////////////// -->
+		</br>Filter by Speaker:
+		<ul class="facetList" id="facetSpeaker">
+			{% for f in handfacets.speakers %}
+				<li>
+				<span class="{% if f.0 == 0 %}facetNbZero{% else %}facetNb{% endif %}">({{f.0}}/{{f.1}})</span>
+				<a {% if f.3 %}class='facetSelected'{% endif %} id="speaker_{{ f.2.id }}" href="#" onclick='clickOnFacet("speaker","{{ f.2.id }}"); return false;'>
+				{{ f.2.name }}
+				</a></li>
+			{% endfor %}
+		</ul>
+		<!-- /////////////////////////////////// -->
+	{% endcomment %}
+	
+	
+					
+	{% comment %}
+	<!-- /////////////////////// DEPRECATED, not using haystack facets anymore !
+	</br>Filter by Texte: 
+	{% if facets.fields.texte %}
+	<ul class="facetList" id="facetText">
+		{% for t in facets.fields.texte %}
+			<li>({{ t.1 }}) <a id="facetT_{{forloop.counter0}}" href="#" onclick='clickOnFacet("texte","{{ t.0|urlencode }}","facetT_{{forloop.counter0}}"); return false;'>{{ t.0 }}</a></li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	</br>Filter by Participant: 
+	{% if facets.fields.speaker %}
+	<ul class="facetList" id="facetSpeaker">
+		{% for t in facets.fields.speaker %}
+			<li>({{ t.1 }}) <a id="facetS_{{forloop.counter0}}" href="#" onclick='clickOnFacet("speaker","{{ t.0|urlencode }}","facetS_{{forloop.counter0}}"); return false;'>{{ t.0 }}</a></li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	-->
+	{% endcomment %}
+	
+
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////// CONTENTTOP = Related Viz -->
+<div id="divRelatedViz" style="display:none;">
+	<!-- =================================== FIXED TO SCROLL RELATED VIZ -->
+	<div id="contentScrollToFixed">
+		<div id="relatedViz">
+			<div id="relatedVizContainer" style="display:none;">
+				{% for v in visualizations %}
+					<div class="vizContainer" id="vizContainer_{{forloop.counter}}" style="display:none;">
+						<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_{{v.viztype}}.js"></script>
+						{% include "render_v.html" with enquete=enquete v=v nk=forloop.counter %}
+					</div>
+				{% endfor %}
+			</div>
+			<div id="relatedVizToggle" {%if visualizations|length%}onclick='$("#relatedVizContainer").toggle("fast");return false;'{%endif%}>
+				- {{visualizations|length}} related viz - 
+				{% for v in visualizations %}
+	<a href="#" onclick='$("#relatedVizContainer").toggle(true,"fast");$(".vizContainer").toggle(false);$("#vizContainer_{{forloop.counter}}").toggle(true);event.stopPropagation();return false;'>({{v.id}}) {{v.viztype}}</a>
+					{% if not forloop.last %} | {% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<!-- =================================== -->
+</div>
+
+
+
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////// SCRIPT -->
+<script type="text/javascript">
+$(document).ready(function() {	
+	//////////////////////// put content in the right place
+	$('#ajaxContentTopRelatedViz').html( $('#divRelatedViz').html() );
+	$('#divRelatedViz').html(" ");
+	
+	$('#search_pagination_bottom').html( $('#search_pagination_top').html() );
+	
+	//////////////////////// put facets in the right place
+	//$('#ajaxLeftFacets').html( $('#divFacets').html() );
+	//$('#divFacets').html(" ");
+	$.ajax({
+		url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
+		success: function(data){
+			//console.log("data received for viz:{{nk}}");
+			$("#theViz_over").html("");
+			var param = { 'mode':'weight','stats':{ {%for k,v in overviewStats.items%}'{{k}}':{{v}},{%endfor%} } };
+			buildD3_Overview(data,"theViz_over",param);
+		},
+	});
+	
+	
+	//////////////////////// Init words tfidf datatable
+/*
+	var tfTable = $('#wordsTfidfTable').dataTable({
+		//"bFilter": true,
+		"sScrollY": "270px",
+		"sScrollX": "700px",
+		//"sScrollXInner": "700px",
+		"bScrollCollapse": true,
+		"bPaginate": false,
+		"aaSorting": [[ 0, "desc" ]],
+	});
+*/
+
+		
+	});
+</script>
+
+
+

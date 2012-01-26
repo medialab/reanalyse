@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<tei>
+	<text>
+	<front>
+		<div type="titre">
+			<p>Titre du Dialogue</p>
+		</div>
+	</front>
+	<body>
+	
+	<!-- <w> can be used to describe events ? -->
+	
+	<sp>
+		<speaker>Mary</speaker>
+		<p>
+			Bonjour, je suis <w type="8">tousse</w> Marie. et toi ? tu...
+		</p>
+		<p>
+			Enfin, je mangerai bien une Moustre.
+		</p>
+	</sp>
+	<sp>
+		<speaker>John</speaker>
+		<p>
+			Moi c'est John. Je <w type="7">porte claque</w> vais bien !
+		</p>
+	</sp>
+	
+	</body>
+	</text>
+</tei>

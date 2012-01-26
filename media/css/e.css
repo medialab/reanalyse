@@ -1,0 +1,1365 @@
+/* =================================================================================== HOME / INTRO CONTENT (NORMALISATION) */
+/* lists */
+.content_norm ul, .content_norm ol {
+	margin-left:30px;
+}
+.content_norm li {
+	list-style-type:decimal;
+	margin:5px;
+}
+/* misc */
+.content_norm table {
+	background:white;
+	margin:10px;
+	border-left:#4C509B solid 3px;
+}
+.content_norm h2 {
+	/* h2 is managed by .introhtml */
+}
+.content_norm h3 {
+	font-size:1.4em;
+	margin:30px 0 10px 0;
+	border-bottom:1px lightgray solid;
+}
+.content_norm h4 {
+	font-size:1.2em;
+	margin:25px 0 5px 0;
+	border-bottom:1px lightgray solid;
+}
+.content_norm td {
+	padding:4px;
+	border:1px lightgray solid;
+}
+.content_norm tr:first-child {
+	background:#E0E4FC;
+}
+.content_norm td:first-child {
+	background:#E0E4FC;
+}
+/* for table cells describing original study.. */
+.content_norm .content_norm_orig {
+	background:#E6E6E6;
+	font-size:0.8em;
+}
+/* for table rows description.. */
+.content_norm_expl td {
+	background:#E6E6E6;
+	font-size:0.8em;
+}
+/* for table rows ese.. */
+.content_norm_ese td {
+	background:#E6E6E6;
+	opacity:0.6;
+}
+
+.content_norm_ext {
+	color:red;
+}
+.content_norm_file {
+	color:#4C509B;
+	font-weight:bold;
+	font-size:0.9em;
+	/*font-stretch: extra-condensed;*/
+}
+/* for verbatim extracts */
+.content_norm_verb {
+	margin:15px;
+	margin-bottom:5px;
+	padding:10px;
+	background:#E0E4FC;
+	border:lightgray dashed 1px;
+	border-left:#4C509B solid 3px;
+}
+.content_norm_vleg {
+	margin-left:30px;
+	margin-bottom:25px;
+	color:#B1B1B1;
+	font-style:italic;
+}
+/* Following for styling examples of syntax */
+
+.content_norm_verbspk { /*speakers names*/
+	color:gray;
+}
+.content_norm_verbm { /*paraverbal*/
+	color:red;
+}
+.content_norm_verbmc { /*comments*/
+	color:#A3A131;
+}
+.content_norm_verbmcon { /*time superposition*/
+	color:green;
+}
+/* =================================================================================== HOME / INTRO bullets */
+.content_listbullet {
+	margin-left:20px;
+	list-style-type:none;
+}
+.content_listbullet li {
+	background-image: url('../images/text_bullet.png');
+	background-repeat: no-repeat;
+	background-position: 0 0.4em;
+	padding-left: 20px;
+}
+/*
+.introHtml ul {
+	list-style-type:none;
+	margin-left:20px;
+}
+.introHtml ol {
+	list-style-type:decimal;
+	margin-left:30px;
+}
+.introHtml ol li {
+	padding:5px;
+}
+*/
+/* =================================================================================== HOME / INTRO TEXTS */
+.introDiv {
+	margin-right:10%;
+}
+.inputButt {
+	margin-top:5px;
+	margin-left:5px;
+}
+.introHtml h1, .introDiv h1 {
+	margin-top:10px;
+	margin-bottom:7px;
+	font-size: 1.9em;
+	padding-top:10px;
+	padding-bottom:5px;
+	border-bottom:1px solid lightgray;
+}
+.introHtml h2, .introDiv h2 {
+	margin-top:10px;
+	margin-bottom:7px;
+	font-size: 1.3em;
+	padding-top:10px;
+	padding-bottom:5px;
+	border-bottom:1px solid lightgray;
+}
+.introHtml p {
+	margin-bottom:10px;
+	text-align:justify;
+	text-indent:30px;
+}
+
+
+/* =================================================================================== GENERAL ALWAYS */
+
+/* Icons !! */
+.imDocument { background-image: url("../silkicons/page_copy.png"); display:inline-block; width:16px; height:16px; }
+.imSpeaker { background-image: url("../silkicons/user_red.png"); display:inline-block; width:16px; height:16px; }
+.imVisualisation { background-image: url("../silkicons/rainbow.png"); display:inline-block; width:16px; height:16px; }
+.imSearch { background-image: url("../silkicons/zoom.png"); display:inline-block; width:16px; height:16px; }
+
+.imTei { background-image: url("../silkicons/comment.png"); display:inline-block; width:16px; height:16px; }
+
+.imSpkInvestigator { background-image: url("../silkicons/user_edit.png"); display:inline-block; width:16px; height:16px; }
+.imSpkSpeaker { background-image: url("../silkicons/user_comment.png"); display:inline-block; width:16px; height:16px; }
+.imSpkProtagonist { background-image: url("../silkicons/user_gray.png"); display:inline-block; width:16px; height:16px; }
+
+
+/* Useful */
+hr {
+	border:1px solid lightgray;
+	margin-top:7px;
+	margin-bottom:7px;
+}
+
+/* fullscreen toggle on top */
+#fullscreenContainer:hover {
+	background:#B5B5B5;
+}
+#fullscreenContainer {
+	position:absolute;
+	background:#F2F1ED;
+	height:15px;
+	/* with text
+	width:90px;
+	left:-106px;*/
+	width:18px;
+	left:-34px;
+	padding:8px;
+}
+/* Login header */
+#loginContainer {
+	background:#707070;
+	color: lightgray;
+	height:15px;
+	padding:8px;
+}
+#loginContainer a {
+	color:lightgray;
+	text-decoration:underline;
+}
+#loginLanguage {
+	float:left;
+	margin-right:10px;
+}
+#loginLanguage select,
+#loginLanguage input {
+	font-size:0.8em;
+}
+#loginLanguage option {
+	font-size:1.2em;
+}
+#loginStatus {
+	float:left;
+	color:white;
+}
+#loginIn {
+	float:right;
+	text-align:right;
+	color:white;
+}
+#loginUsername {
+	font-style:italic;
+}
+#id_username, #id_password {
+	width:80px;
+}
+/* =================================================================================== LOGIN / REGISTER */
+/* Login table */
+.loginFormTable {
+	background:white;
+	border:1px lightgray solid;
+	margin:5px;
+}
+.loginFormTable td,th {
+	padding:10px;
+	border:1px lightgray solid;
+}
+
+/* Overview of different registration status */
+.statutTable {
+	margin:10px;
+}
+.statutTable td, .statutTable th {
+	padding:5px;
+	padding-right:25px;
+	border:1px #909090 solid;
+}
+.statutTable thead {
+	background:lightgray;
+	font-weight:bold;
+}
+.statutTableYes {
+	background:#CDFFC7;
+}
+.statutTableNo {
+	background:#FFD1D1;
+}
+
+/* Overview of different registration status */
+.registerFormTable {
+	background:white;
+	border:1px lightgray solid;
+	margin:5px;
+}
+.registerFormTable td,th {
+	padding:10px;
+	border:1px lightgray solid;
+}
+.errorlist {
+	color:red;
+	list-style-type:none;
+}
+
+/* =================================================================================== ENQUETE LIST */
+/* ============================================ */
+ul#eList {
+	list-style-type:none;
+}
+#eBrowseNewEnquete {
+	border:1px dotted lightgray;
+	background:white;
+	margin:3px;
+	padding:10px;
+	width:600px;
+}
+.eBrowseEnquete {
+	margin:3px;
+	margin-bottom:17px;
+	padding:10px;
+	border:1px solid lightgray;
+	border-top:10px solid lightgray;
+	background:white;
+	width:600px;
+}
+.eBrowseEnquete:hover {
+	background:#F2E6CE;
+	cursor:pointer;
+}
+.eBrowseEnquete h1 {
+	font-size:1.6em;
+	margin-top:0px;
+}
+.eBrowseEnqueteStatus {
+	float:right;
+	color:gray;
+	margin-left:4px;
+}
+.eBrowseEnqueteDescription {
+	margin-left:20px;
+	/*margin-right:20px;*/
+	color:gray;
+}
+.eBrowseEnqueteMetaAuthor {
+	color:#585858;
+	font-weight:bold;
+}
+.eBrowseEnqueteMetaContainer{
+	height:10px;
+}
+.eBrowseEnqueteMeta, .eBrowseEnqueteContentStats {
+	font-size:0.9em;
+	color:gray;
+}
+.eBrowseEnqueteMeta {
+	float:left;
+}
+.eBrowseEnqueteContentStats {
+	float:right;
+}
+
+
+/* =================================================================================== GENERAL ALWAYS PRESENT IN ENQUETE */
+/* ============================================ */
+.enqueteMetaShowTableContainer {
+	background:white;
+	padding:5px;
+}
+div#enqueteMetaShow {
+	/*margin-left:15px;*/
+}
+.enqueteMetaShowTableToggle {
+	/*margin-left:10px;*/
+}
+.enqueteMetaShowTable {
+	width:100%;
+	padding:20px;
+	/*margin-top:10px;
+	margin-bottom:5px;*/
+}
+.enqueteMetaShowTable td {
+	padding:3px;
+	padding-right:15px;
+	padding-left:10px;
+}
+.enqueteMetaShowTable tr.odd{
+	background:#F0F0F0;
+}
+.enqueteMetaShowTable tr.even {
+	background:white;
+}
+.enqueteMetaShowTableKey {
+	font-style:italic;
+	width:120px;
+	/*border-right:1px gray solid;*/
+}
+
+/* Enquete title and meta on the top */
+div.title_enquete {
+	padding:5px;
+	margin-left:10px;
+}
+div.title_enquete h1 {
+	font-family: "CA BND Web Bold",Arial,sans;
+	font-size: 2.2em;
+	margin-top:13px;
+	margin-bottom:0px;
+}
+div.meta_enquete {
+
+}
+
+/* Links in the menu */
+div.allPage {
+	height:19px;
+	padding:5 3 3 7;
+	border-left:3px solid transparent;
+	color:#606060;
+}
+div.allPage a {
+	color:#606060;
+}
+div.allPage:hover {
+	border-left:3px solid darkgray;
+}
+div.pageDisabled {
+	padding:5 3 3 7;
+	color:lightgray;
+	border-left:3px solid transparent;
+}
+div.currentPage {
+	background:lightgray;
+	border-left:3px solid #606060;
+}
+
+/* ============================================ */
+/* Tooltips */
+#theGeneralToolTip {
+    position:absolute;
+    z-index:999999;
+    width:auto;
+}
+#theGeneralToolTip .tipBody {
+	text-align: left;
+    background-color:#383838;
+    padding:5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+	border:lightgray solid 1px;
+	text-decoration: none;
+	color:white;
+}
+#theGeneralToolTip a {
+	color:white;
+}
+/* =================================================================================== RELATED VIZ */
+#relatedViz {
+	/*width:100%;*/
+	background-color:#FFFFCC;
+	padding:3px;
+	text-align:center;
+	border-bottom: 1px solid lightgray;
+}
+#relatedVizToggle {
+	padding:4px;
+}
+#relatedVizToggle:hover {
+	background-color:#FFCC99;
+}
+#relatedVizContainer {
+	background:white;
+	height:250px;
+	overflow-y:auto;
+}
+#relatedVizContainer ul {
+	list-style-type:none;
+}
+#relatedVizContainer li {
+	margin-top:2px;
+}
+
+/* =================================================================================== DOCUMENT / SPEAKER BROWSE */
+/* Little FRISE in Tables */
+.vizinvolved {
+	color:black;
+	margin:1px;
+	display:inline-block;
+	padding:1px;
+	background:lightgray;
+	/*background:url('../images/viz_involved.png') no-repeat;*/
+	font-size:7px;	
+}
+.vizinvolved:hover {
+	cursor:pointer;
+	opacity:0.5;	
+}
+.content_littlefrise {
+	/* also set to 80 in d3 builder (d3_TexteContentLittleFrise.js) */
+	width:80px;
+	/*height:100%;*/
+	/*background:lightgray;*/
+	padding:2px 4px;
+}
+
+/* =================================================================================== DOCUMENT / SPEAKER BROWSE & SELECTION */
+/* table for selection doc/spk and viz launch */
+.bottomTable {
+	margin-top:10px;
+	display: inline-block;
+	background: white;
+	border: 1px lightgray solid;
+	padding:10px;
+	width:100%;
+}
+.bottomTable th {
+	font-size: 20px;
+	font-weight:bold;
+	border:none;
+}
+.bottomTable td {
+	margin:15px;
+	padding:7px;
+	width:50%;
+}
+.bottomTable td a {
+	color:gray;
+}
+.bottomTable td a:hover {
+	text-decoration:underline;
+}
+/* this is the action buttons list*/
+.bottomTable ul {
+	list-style-type:none;
+	margin-left:20px;
+}
+.selectedList {
+	margin-top:10px;
+}
+.littleForm {
+	display: inline-block;
+	margin-left:5px;
+}
+.littleInputBox {
+	display: inline-block;
+    font-size: 9px;
+    height: 8px;
+    width: 30px;
+    margin-right:5px;
+}
+.goCreateVizForm {
+	color:blue;
+}
+
+/* =================================================================================== CSV BROWSE */
+/* table */
+#csvTable tr.show.even{
+	background:#FFFF99;
+}
+#csvTable tr.show.odd {
+	background:#FFFFCC;
+}
+
+
+/* =================================================================================== DOCUMENT BROWSE */
+/* Table */
+#docTable a {
+	color:#F40C42;
+}
+#docTable a:hover {
+	text-decoration: underline;
+}
+
+/* Colors for rows based on doctype TEI,PDF,CSV */
+/*
+tr.odd.doctype_TEI td {
+	background-color:#F8F8F8;
+}
+tr.even.doctype_TEI td {
+	background-color: #F0F0F0;
+}
+*/
+
+/* =================================================================================== SPEAKER BROWSE */
+
+
+.littleFrise {
+	height:12px;
+	background:#909090;
+}
+/* ============================================ */
+/* Table */
+#speakerTable a, .DTFC_ScrollWrapper a {
+	color:#F40C42;
+}
+#speakerTable a:hover, .DTFC_ScrollWrapper a:hover {
+	text-decoration: underline;
+}
+
+/* FixedLeftColumn */
+.DTFC_LeftWrapper {
+	border:1px gray solid;
+}
+
+/* colorPicker */
+/*
+.colorPicker {
+	width: 20px;
+	height: 20px;
+	background: url(../colorpicker/images/select2.png);
+}
+*/
+
+/* DEPRECATED : Selection Tooltips in table header */
+/*
+#theSelTooltip a  {
+	text-decoration: none;
+	color:gray;
+	font-size: 9px;
+	font-weight: none;
+}
+#theSelTooltip a:hover {
+	text-decoration: underline;
+}
+#theSelTooltip {
+    position:absolute;
+    z-index:999999;
+    width:auto;
+}
+#theSelTooltip .tipBody {
+	text-align: left;
+    background-color:white;
+    padding:5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+	border:lightgray solid 1px;
+	text-decoration: none;
+	color:#606060;
+}
+*/
+
+/* Selection table on the bottom */
+.speakerSelectionLeftHeader {
+	height:40px;
+	width:100%;
+}
+.speakerSelectionLeftCenter {
+	height:100px;
+	width:100%;
+	margin-top:3px;
+	margin-bottom:3px;
+}
+.speakerSelectionLeftBottom {
+	height:10px;
+	width:100%;
+}
+.speakerSelectionLeftParts {
+	width:170px;
+	display:inline-block;
+}
+.inTableListContainer {
+	height:100px;
+	width:170px;
+	display:inline-block;
+	overflow-y:scroll;
+}
+#speakerSelectedList {
+
+}
+#speakerSetsList {
+
+}
+.speakerSetSelected {
+	background:#BADCDD;
+}
+#nospeaker, #nospeakerset {
+	font-style:italic;
+	color:#B8B8B8;
+}
+/* ============================================ */
+/* SpeakerTable Scroll */
+.scroll-bar-wrap {
+	clear: left;
+	padding: 0 4px 0 2px;
+	margin: 0 -1px -1px -1px;
+	margin-left:100px;
+	margin-bottom:4px;
+	width:500px;
+}
+.scroll-bar-wrap .ui-slider {
+	background: none;
+	border:0;
+	height: 0.9em;
+	margin: 0 auto;
+}
+.scroll-bar-wrap .ui-handle-helper-parent { position: relative; width: 100%; height: 100%; margin: 0 auto; }
+.scroll-bar-wrap .ui-slider-handle { top:.2em; height: 1.5em; }
+.scroll-bar-wrap .ui-slider-handle .ui-icon { margin: -8px auto 0; position: relative; top: 50%; }
+/* ============================================ */
+/* Browse Speakers */
+.speaker_table {
+	width:670px;
+	height: 650px;
+	overflow:auto;
+}
+/* ============ */
+/* SpeakerTable */
+.seven {
+	background:#FFFFFF;
+}
+.sodd{
+	background:#EDF3FE;
+}
+.sTable {
+	float:left;
+	width:700px;
+	font-size:8px;
+}
+/* ============ */
+.sTableHeaders {
+	float:left;
+	width:700px;
+	border:1px solid gray;
+	margin-bottom:7px;
+}
+.sTableLeftHeader, .sTableCenterHeader, .sTableRightHeader {
+	background:#CCCCFF;
+	float:left;
+}
+.sTableLeftHeader, .sTableLeftContent {
+	width:120px;
+}
+.sTableCenterHeader, .sTableCenterContent {
+	width:470px;
+	overflow-y:auto;
+	overflow-x:hidden;
+	margin-left:5px;
+	margin-right:5px;
+	/*-moz-box-shadow: inset -5px -5px 5px 5px gray;
+	-webkit-box-shadow: inset -5px -5px 5px 5px gray;
+	box-shadow: inset -5px -5px 5px 5px gray;*/
+}
+.sTableCenterScrollHeader {
+	display:inline-block;
+	width:2000px; /* ------------------------------- */
+}
+.sTableRightHeader, .sTableRightContent {
+	width:80px;
+}
+/* ============ */
+.sTableContent {
+	float:left;
+	width:700px;
+	height:300px;
+	border:1px solid gray;
+	background:#EDF3FE;
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+.sTableLeftContent, .sTableCenterContent {
+	float:left;
+}
+#sContentWidthDiv {
+
+}
+.sTableCenterScrollContent {
+	display:inline-block;
+	width:2000px; /* ------------------------------- */
+}
+.sTableRightContent {
+	display:inline-block;
+}
+/* ============ */
+.sTableColumn {
+	display:inline-block;
+	border-left:1px #DDDDDD solid;
+	width:55px;
+	text-align: center;
+}
+.sTableCell {
+	float:left;
+	border-bottom:1px #DDDDDD solid;
+	width:55px;
+	padding:3px;
+	height:30px;
+	overflow:hidden;
+}
+.spColor, .spColor .sTableCell { width:15px; }
+.spName, .spName .sTableCell { width:95px; font-size:10px; font-weight:bold; }
+
+.sTableHeaders .sTableCell {
+	background:#FCFCFC;
+	font-size:10px;
+	height:40px;
+}
+.sTableCenterHeader .sTableCell {
+	background:#F0F0F0;
+}
+
+
+
+
+
+
+
+
+/* =================================================================================== SEARCH */
+/* ============================================ */
+/* Search Results D3 Graph Textes/Speakers */
+.svgLinkTextSpeaker {
+    fill: none;
+    stroke: gray;
+    stroke-width: 1.5px;
+    opacity:0.5;
+}
+/* ============================================ */
+/* Search Results D3 Graph Textes/Speakers */
+#wordsTfidfTable tr {
+	border-bottom: 1px solid lightgray;
+}
+
+/* ============================================ */
+/* search facets */
+/*#facetText #facetSpeaker*/
+.facetList a {
+	color:#808080;
+}
+.facetList a:hover {
+	color:#F40C42;
+	text-decoration: none;
+}
+.facetList .facetSelected {
+	color:black;
+	/*font-weight: bold;*/
+}
+.facetNb, .facetNbZero {
+	font-size: 9px;
+}
+.facetNb {
+	color:red;
+}
+.facetRelevance {
+	height:2px;
+	width:100%;
+	margin-top: 5px;
+}
+/* ============================================ */
+/* Search Fields */
+
+#id_inTextes, #id_inSpeakers {
+	width:100%;
+	font-size: 10px;
+}
+#id_q {
+	width:110px;
+	font-size: 10px;
+}
+#id_searchsubmit {
+	float:right;
+}
+
+/* ============================================ */
+/* Search Results */
+.searchedQuery {
+	background:#FFFF99;
+	color:#808080;
+	padding: 0 4px 0 4px;
+}
+ol#searchResultList {
+	/*list-style-type:decimal;*/
+	list-style-type:none;
+	margin-bottom:10px;
+}
+.searchResult_relevance {
+	height:3px;
+	width:100%;
+	background:lightgray;
+	font-size: 7px;
+	margin-top: 5px;
+}
+.searchResult {
+	background-color:white;
+	/*
+	border:1px dotted lightgray;
+	margin:0 5px 5px 5px;
+	*/
+	padding:10px;
+	overflow:hidden;
+}
+#instantresultscount {
+	color:gray;
+	font-size: 9px;
+}
+/*
+.searchResultHighlight {
+	background-color:yellow;
+	padding-left:3px;
+	padding-right:3px;
+}
+.searchResultHighlight_excerpt {
+	background-color:yellow;
+	padding-left:3px;
+	padding-right:3px;
+}
+*/
+.result_highlighted {
+	display:inline-block;
+	background:#FFFF99;
+	padding: 0 2px 0 2px;
+}
+
+.search_pagination {
+	text-align:center;
+	margin-bottom:10px;
+}
+/* ============= LEFT */
+.res_left {
+	text-align:center; 
+	vertical-align: middle;
+	float:left;
+	width:90px;
+	padding:2px;
+	border-right: 1px lightgray solid;
+}
+/* ============= MIDDLE */
+.res_middle {
+	float:left;
+	width:480px;
+	padding-left:7px;
+	padding-right:7px;
+}
+.res_middle:hover {
+	background:#F0F0F0;
+}
+a.res_middle_link {
+	text-decoration: none;
+	color:#606060;
+}
+/* ============= RIGHT */
+.res_right {
+	text-align:center; 
+	vertical-align: middle;
+	float:right;
+	width:110px;
+	padding:2px;
+	border-left: 1px lightgray solid;
+}
+.res_right:hover {
+	background:#E0E0E0;
+}
+
+
+/* ============================================ */
+/* Options Boxes */
+.collapsableoptions {
+	margin-bottom:10px;
+}
+
+
+
+
+
+
+
+
+/* =================================================================================== VISUALIZATIONS */
+.vizdiv {
+	text-align:left;
+	font-size:10px;
+}
+
+/* ============================================ */
+/* GENERAL LIST OF VIZUS */
+.vizAll {
+	/*width:100%;*/
+}
+.vizList {
+	list-style-type:none;
+}
+/* left border color based on type */
+.viztype_Cloud_SolrSpeakerTagCloud { 	border-left:5px solid #66CCCC;border-bottom:2px solid #66CCCC; }
+.viztype_TexteStreamTimeline { 			border-left:5px solid #FFCC99;border-bottom:2px solid #FFCC99; }
+.viztype_Attributes { 					border-left:5px solid #3399CC;border-bottom:2px solid #3399CC; }
+
+.viztype_Graph_SpeakersAttributes { 	border-left:5px solid #B0B0B0;border-bottom:2px solid #B0B0B0; }
+.viztype_Graph_SpeakersSpeakers { 		border-left:5px solid #B0B0B0;border-bottom:2px solid #B0B0B0; }
+.viztype_Graph_SpeakersWords { 			border-left:5px solid #B0B0B0;border-bottom:2px solid #B0B0B0; }
+
+ul.vizGlobalActions {
+	list-style-type:none;
+}
+vizGlobalActions li {
+	color
+	padding-right:10px;
+}
+.vizOne {
+	/*clear:left;*/
+	background-color:white;
+	border-right: lightgray solid 1px;
+	border-top: lightgray solid 1px;
+	width:100%;
+	margin-bottom:5px;
+}
+.vizTop {
+	background:#D8D8D8;
+	height:5px;
+}
+.vizTop:hover {
+	background:#C0C0C0;
+}
+.vizHeader {
+	background:#E8E8E8;
+	height:40px;
+	padding:7px;
+}
+.vizHeader:hover {
+	background:#D8D8D8;
+}
+.vizContainer, .descrContainer {
+	padding:7px;
+	border-top:1px solid lightgray;
+}
+.vizOne h1 {
+	margin:1px;
+	font-size: 1em;
+	font-weight: none;
+	margin-bottom:5px;
+}
+.vizOne .vizInvolve {
+	float:right;
+	text-align:right;
+	/*color:blue;*/
+}
+.vizActions {
+	opacity:0.5;
+	width:500px; /* to avoid relatedDocSpk table overlay ! */
+}
+.vizInvolveTable td {
+	color:gray;
+	padding:2px;
+	padding-left:5px;
+	padding-right:5px;
+	/*border:1px solid lightgray;*/
+}
+
+.vizLoadingSpinner {display:inline-block; background: url("../fileuploader/loading.gif"); width:15px; height:15px; vertical-align:text-bottom;}
+
+.vizStatusPublic, .vizStatusPrivate {
+	padding-left:3px;
+	padding-right:3px;
+}
+.vizStatusPublic {
+	color:green;
+	background:#99FF99;
+}
+.vizStatusPrivate {
+	color:red;
+	background:#FFCCCC;
+}
+
+/* ============================================ */
+/* TAG CLOUDS */
+
+#tagCloudBox {
+	margin:0 auto;
+	padding:3px;
+	margin-top:10px;
+	border: lightgray solid 1px;
+}
+#tagCloudForm {
+	padding:5px;
+	background: white;
+	font-size: 10px;
+}
+#tagCloudForm select {
+	font-size: 10px;
+	width:90px;
+}
+
+/* BUBBLE WAY */
+
+/*
+.tagCloud {
+	text-align:center;
+	vertical-align:center;
+	padding:5px;
+	background: white;
+}
+.tagList {
+	margin:0;
+	padding:0;
+}
+*/
+
+.tagCloudList li {
+	list-style-type:none;
+	display:inline-block;
+	/*margin:0 5px;*/
+	/*height:30px;*/
+}
+.tagCloudList li a {
+	text-decoration:none;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	/*background: lightgray;*/
+	/*border:1px solid lightgray;*/
+	padding:2px;
+	margin:2px;
+	cursor:pointer;
+}
+.tagCloudList li a:hover {
+	text-decoration:none;
+	background: #E8E8E8 ;
+	/*border:1px solid gray;*/
+}
+
+
+
+/* SIMPLE LIST */
+/*
+.tagCloud {
+	padding:5px;
+	background: white;
+}
+.tagList {
+	margin:0;
+	padding:0;
+}
+.tagList li {
+	list-style-type:none;
+}
+.tagList li a {
+	text-decoration:none;
+	color:black;
+}
+.tagList li a:hover {
+	text-decoration:none;
+	background: #E8E8E8 ;
+}
+.tagCloudCount {
+	margin-right:10px;
+}
+*/
+
+/* ============================================ */
+/* D3 GRAPH */
+
+#d3graphcontainer {
+	background-color:white;
+	padding:5px;
+	margin-top:10px;
+	border: lightgray solid 1px;
+}
+/* D3 Interface Styles */
+ul.d3buttons {
+	text-align: center;
+	margin-top:10px;
+	/*width:300px;*/
+} 
+.d3buttons li {
+	display:inline;
+	margin:10px;
+	padding:5px;
+	color:white;
+}
+.d3buttonOn {
+	background:gray;
+}
+.d3buttonOff {
+	background:lightgray;
+}
+.d3buttonOn:hover, .d3buttonOff:hover {
+	cursor:pointer;
+	color:red;
+}
+/* D3 Objects Styles */
+
+.wordhidden {
+	/*visibility:hidden;*/
+	fill:#B0B0B0;
+}
+.wordshowed {
+	/*visibility:visible;*/
+	fill:black;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* =================================================================================== DOCUMENT / TEXT / VERBATIM DISPLAY */
+#loadingFetchingText {
+	text-align:center;
+}
+
+/* ============================================ */
+/* words display filters (white/black lists) */
+#verb_controls textarea#verb_inputfilt_w {
+	background:white;
+	font-size: 0.8em;
+}
+#verb_controls textarea#verb_inputfilt_lem {
+	background:#EFE9BD;
+	font-size: 0.8em;
+}
+
+/* ============================================ */
+/* show/hide speaker parts with checkboxes */
+
+.spkcheckboxes a {
+	/*color:#606060;*/
+}
+ul.spkcheckboxes {
+	list-style-type:none;
+}
+.spkcheckboxes li {
+	padding:2px;
+	margin:2px;
+	font-size:10px;
+}
+
+/* ========================== styles for text content (verbatims) */
+.teiSliderLabel {
+	margin-bottom:10px;
+}
+#teiIntervalText {
+	display:inline-block;
+}
+.text_part table{
+	border-left:2px solid #FF6633 ;
+	border-right:2px solid #FF6633 ;
+}
+
+.text_verbatim {
+	background:white;
+	padding:10px;
+	/*font-family: 'Patrick Hand', cursive;*/
+	/*line-height: 20px;*/
+	font-size: 11px;
+	position:relative;
+}
+
+div.text_part {
+	margin:5px 0px 5px 97px;
+	position:relative;
+}
+.text_part table {
+	width:100%;
+}
+.text_part th {
+	margin:0px;
+	padding:0px;
+}
+div.text_speaker {
+	/*
+	border:1px dotted gray;
+	margin:4px;
+	padding:5px;
+	background-color:lightgray;
+	*/
+	text-align: justify;
+	padding:7px;
+}
+div.text_speaker_name {
+	left:-97px;
+	width:90px;
+	text-align:right;
+	position:absolute;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color:gray;
+	/*font-weight: bold;*/
+}
+span.text_speaker_namecount {
+	color:lightgray;
+}
+/* verbatim Text styles */
+.text_ref {
+	/*display:inline;*/
+}
+.text_p {
+	margin-top:4px;
+	margin-bottom:4px;
+}
+
+/* ========================== ALL IMAGES */
+.text_anyparvb {
+	text-align:left;
+	display: inline-block;
+	width:23px;
+	background: left;
+	cursor: pointer;
+}
+.text_anyparvb:hover {
+	/*opacity:0.7;*/
+}
+/* ========================== IN MARGIN */
+.text_comment,
+.text_break,
+.text_time {
+	position:absolute;
+	text-decoration: none;
+	width:20px;
+}
+.text_comment,
+.text_break { left:-115px; }
+.text_time { right:-23px; }
+
+
+
+/* ========================== TEXT STYLING */
+.text_sic,
+.text_uncertain,
+.text_strong,
+.text_anonym {
+	width:auto;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background:lightgray;
+	/*text-decoration:underline;*/
+	/*border: 1px solid lightgray;*/
+	padding-left:3px;
+	padding-right:3px;	
+}
+a.text_sic,
+a.text_uncertain,
+a.text_anonym {
+	color:gray;
+}
+/*
+.text_sic { 		background:#CCCCFF; }
+.text_uncertain { 	background:#FFFF66; }
+.text_strong { 		background:red; }
+.text_anonym { 		background:#CCFFCC; }
+*/
+
+/* ========================== IMAGES */
+.text_incident {		background:url('../images/text_incident.png') no-repeat; }
+
+/* TRANSCRIPTION */
+.text_comment {			background:url('../images/text_comment.png') no-repeat; }
+.text_question {		background:url('../images/text_question.png') no-repeat; }
+.text_inaudible {		background:url('../images/text_inaudible.png') no-repeat; }
+.text_break {			background:url('../images/text_break.png') no-repeat; }
+.text_time {			background:url('../images/text_time.png') no-repeat; }
+
+/* VERBATIM */
+.text_laugh {			background:url('../images/text_laugh.png') no-repeat; }
+.text_interruption {	background:url('../images/text_interruption.png') no-repeat; }
+.text_hesitation {		background:url('../images/text_hesitation.png') no-repeat; }
+.text_silence {			background:url('../images/text_silence.png') no-repeat; }
+.text_directed {		background:url('../images/text_directed.png') no-repeat; }
+.text_body {			background:url('../images/text_body.png') no-repeat; }
+
+
+/*
+div.text_silence:before {
+	content:"•";
+}
+div.text_silence:after {
+	content:"&nbsp;";
+}*/
+/*
+.text_incident:before {
+	content:"[";
+}
+.text_incident:after {
+	content:"]";
+}
+*/
+
+/* ============================================ */
+/* Text Tooltip */
+
+.theTextTooltip a, a:hover  {
+	text-decoration: none;
+}
+#theTextTooltip {
+    position:absolute;
+    z-index:9999;
+    width:auto;
+}
+#theTextTooltip .tipBody {
+	text-align: left;
+    background-color:white;
+    padding:5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+	border:lightgray solid 1px;
+	text-decoration: none;
+	color:#606060;
+}
+/* IE hack removed..., see later */
+/* ============================================ */
+

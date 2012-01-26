@@ -1,0 +1,91 @@
+/////////////////////////////////////////////////////////////////////////////
+ArrayList theWords;
+int selectedN=0;
+float ymax=1;
+float ymin=0;
+float xstep=1;
+float ystep=1;
+float margin=30;
+/////////////////////////////////////////////////////////////////////////////
+void setup() {
+  size(600,450);
+  frameRate(1);
+  //colorMode(RGB,255,255,255,100);
+  
+  smooth();
+  theWords = new ArrayList();
+}
+/////////////////////////////////////////////////////////////////////////////
+void draw() {
+  background(220);
+  
+  //for(int d=0;d<mydocs.size();d++) mydocs.detect();
+  //updateSelection();
+  
+  //rectMode(CENTER);
+
+  for(int k=0;k<theWords.size();k++) {
+  	EWord d=(EWord)theWords.get(k);
+  	float x=margin/2 + (width-margin)*d.ndoc/(float)xstep;
+  	float y=margin/2 + (ymax-d.tfidf)*(height-margin)/(float)(ymax-ymin);
+	noStroke();
+	fill(200,20,20);
+	if(d.isSelected) ellipse(x,y,5,5);
+	//console.log("PJS Drawing :"+str(x)+":"+str(y));
+	drawText(x,y,d.name);
+  }
+}
+/////////////////////////////////////////////////////////////////////////////
+void initVals(float min,float max,float stepx, float stepy) {
+	ymin=min;
+	ymax=max;
+	xstep=stepx;
+	ystep=stepy;
+	//console.log("PJS Init :"+str(ymin)+":"+str(ymax)+":"+str(xstep)+":"+str(ystep));
+}
+/////////////////////////////////////////////////////////////////////////////
+void addWord( float nDoc,float tfidf,String name ) {
+	EWord newWord = new EWord(nDoc,tfidf,name);
+	theWords.add(newWord);
+	return newWord;
+}
+/////////////////////////////////////////////////////////////////////////////
+class EWord {
+	float ndoc,tfidf;
+	String name;
+	Boolean isSelected=False;
+	EWord(float ndoc,float tfidf,String name) {
+		this.ndoc=ndoc;
+		this.tfidf=tfidf;
+		this.name=name;
+		//console.log("PJS Word created :"+name);
+	}
+}
+EWord getSelected() {
+	//return mydocs.get(selectedN);
+}
+////////////////////////////////////////////////////////////////////////////
+void updateSelection() {
+	//selectedN = int((mouseX/width)*mydocs.size());
+}
+////////////////////////////////////////////////////////////////////////////
+var canvas = document.getElementById('tfidfPjsCanvas');
+if (!canvas.getContext) console.log("Canvas Not Context Error");
+var ctx = canvas.getContext('2d');
+// this adds the text functions to the ctx
+CanvasTextFunctions.enable(ctx);
+	
+function drawText(x,y,thetext) {
+  //ctx.clearRect(0,0,canvas.width,canvas.height);
+  //ctx.fillStyle = "rgba(200,200,255,0.66)";
+  //ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  var font = "sans";
+  var fontsize = 8;
+  //var y = ctx.fontAscent(font,fontsize);
+  ctx.strokeStyle = "rgba(0,0,0,0.75)";
+  ctx.drawTextCenter( font, fontsize, x, y,thetext);
+ };
+
+
+////////////////////////////////////////////////////////////////////////////

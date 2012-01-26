@@ -1,0 +1,291 @@
+{% extends "e_base.html" %}
+
+{% load tags %}
+
+{% block bodyid %}
+<body id="e">
+{% endblock %}
+
+{% block enqueteheadmore %}
+	
+	<!-- datatables jquery plugin -->
+	<!--
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/datatables/css/demo_table.css" />
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>-->
+	
+	
+	<!-- =============================== FOR VIZ -->
+	<!-- d3.js -->
+	<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
+	<!-- jquery ui for slider -->
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/jqueryui/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	
+	
+	<!-- =============================== CSS FOR SPEAKERS COLORS -->
+	<style type="text/css">
+	{% for k,v in colors.items %} .speaker_{{k}} {background-color:{{v}};}
+	{% endfor %}
+	</style>
+	<!-- ======================================================= -->
+	
+{% endblock %}
+
+
+{% block enqueteleftmenubefore %}
+{% endblock %}
+
+{% block enqueteleftmenumorescroll %}
+	<!-- ================================================== SEARCH FORM -->
+	<div class="leftmenublock">
+		<h1>Search</h1>
+		<div id="instantresultscount"></div>
+		<form id="searchForm">
+			{{ form.non_field_errors }}
+			
+			<div class="fieldWrapper">
+				{{ form.q.errors }}
+				{{ form.q }}
+				<input id="id_searchsubmit" type="image" name="_search" value="Search" src="{{ MEDIA_URL }}/images/button_search.png"/>
+				(OR,AND,-a,"a b"=a_b)
+			</div>
+
+			<!-- ADVANCED OPTIONS -->
+			<a href="#" onclick='$("#toggle_appear").toggle("fast"); return false;'>advanced options</a>
+			<div id="toggle_appear" style="display:none;">
+				
+				<!-- ///////////////////////// OPTIONS -->
+				{{ form.rawQuery.errors }}
+				{{ form.rawQuery }}Raw Query</br>
+				(a?b,a*,a^4 b,a~0.7,"a b"~10)</br>
+				{{ form.autocomplete }}AutocompleteC</br>
+				{{ form.autocompletew }}AutocompleteW</br>
+				
+				<!-- ///////////////////////// NEW FACETS, by hand -->
+				<a href="#" onclick='resetFacetsAndResearch(); return false;'>> reset facets</a>
+				
+		<br/>Note:
+		<br/>+ please make sure <a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> is on and already has an index (made of all Interventions)
+		<br/>+ stopwords return all the index (not displaying correctly?)
+				<!-- initially, facets are just the list of Texts/Speakers -->
+				<!-- built by the view and available ein the context as "handfacets.textes & handfacets.speakers" -->
+				<!-- when searching, order and counts are updated (from search_results.html template), using javascript -->
+			</div>
+		</form>
+	</div>
+	
+	<!-- ================================================== FACETS OVERVIEW VIZ -->
+	<div class="leftmenublock">
+		<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Overview Facets</h1>
+		<div id="vizOverViewContainer" style="display:none;">
+			<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>
+			<div id="theViz_over" style="width:100%;"></div>
+		</div>
+	</div>		
+	
+	
+	
+				{% comment %}
+				<!-- ... FACETS ... (loaded in search_results.html) -->
+				<!-- <div id="ajaxLeftFacets"></div>	-->
+				
+				<!--
+				<div class="fieldWrapper">
+					{{ form.inTextes.errors }}
+					<label for="id_inTextes">Dans les textes:</label>
+					{{ form.inTextes }}
+				</div>
+				<div class="fieldWrapper">
+					{{ form.inSpeakers.errors }}
+					<label for="id_inSpeakers">Participants:</label>
+					{{ form.inSpeakers }}
+				</div>
+				-->
+				{% endcomment %}
+	
+	<!-- ///////////////////////// OLD FACETS (USING HAYSTACK FACETS) -->
+	{% comment %}
+	<!--
+	<div class="leftmenublock">
+		<a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?q={{query|urlencode}}">reset facets</a>
+		</br>Filter by Texte: 
+		{% if facets.fields.texte %}
+		<ul class="facetList" id="facetText">
+			{% for t in facets.fields.texte %}
+				<li>({{ t.1 }}) <a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?q={{query|urlencode}}&amp;selected_facets=texte_exact:{{ t.0|urlencode }}">{{ t.0 }}</a></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		</br>Filter by Participant: 
+		{% if facets.fields.speaker %}
+		<ul class="facetList" id="facetSpeaker">
+			{% for t in facets.fields.speaker %}
+				<li>({{ t.1 }}) <a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?q={{query|urlencode}}&amp;selected_facets=speaker_exact:{{ t.0|urlencode }}">{{ t.0 }}</a></li>
+				WASBEFORE: <a href="{{ request.get_full_path }}&amp;selected_facets=speaker_exact:{{ t.0|urlencode }}">{{ t.0 }}</a>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	-->
+	{% endcomment %}
+	
+	
+	
+{% endblock %}
+
+
+
+{% block contenttop %}
+	<div id="ajaxContentTopRelatedViz"></div>
+{% endblock %}
+
+
+
+{% block content %}
+		
+	<div id="ajaxContentSearchResults">Please search for something</div>
+	
+{% endblock %}
+
+
+{% block enquetebottommore %}
+<!-- ======================================================= -->
+<script type="text/javascript">
+	var facetArray=Array();
+	facetArray['texte']=Array();
+	facetArray['speaker']=Array();
+	//////////////////////////////////////////////////////////
+	function resetFacetsAndResearch() {
+		facetArray['texte']=Array();
+		facetArray['speaker']=Array();
+		$('.facetSelected').each( function(index) {
+			$(this).removeClass('facetSelected');
+		});
+		if ($('#id_q').val() != "") {
+			launchSearch();
+		}
+		else {
+			console.log("Search aborted (nothing was typed)");
+		}
+	};
+	//////////////////////////////////////////////////////////	
+	function clickOnFacet(facetType,facetId) {
+		console.log("Facet clicked:"+facetType+"_"+facetId);
+		var theFacet=$('#'+facetType+"_"+facetId);
+		// change look of selected
+		if ( theFacet.hasClass('facetSelected') ) {
+			theFacet.removeClass('facetSelected');
+			var idx = facetArray[facetType].indexOf(facetId);
+			if(idx!=-1) facetArray[facetType].splice(idx, 1);
+			console.log(facetArray);
+		} else {
+			facetArray[facetType].push(facetId);
+			theFacet.addClass("facetSelected");
+		}
+	};
+	////////////////////////////////////////////////////////// LAUNCH SEARCH FUNCTION
+	function launchSearch(extraParam) {
+		var form = $("#searchForm");
+		//console.log("Search launched");
+		$('#ajaxContentSearchResults').html('<span class="vizLoadingSpinner"></span> Loading results ... &nbsp;')
+		// GET parameters from the form, and from facets
+		var paramlist = form.serialize();
+		//////// DEPRECATED old school way, using facets from haystack (pb is you cannot do "OR facets" !) 
+/*
+		for(var u=0;u<facetArray['texte'].length;u++) {
+			paramlist += "&selected_facets=texte_exact:"+facetArray['texte'][u];
+		}
+		for(var u=0;u<facetArray['speaker'].length;u++) {
+			paramlist += "&selected_facets=speaker_exact:"+facetArray['speaker'][u];
+		}
+*/
+		//////// NEW way, by hand, parsing list of facets in the view
+		if(facetArray['texte'].length>0)
+			paramlist += "&inTextes="+facetArray['texte'].toString();
+		if(facetArray['speaker'].length>0)
+			paramlist += "&inSpeakers="+facetArray['speaker'].toString();
+		// unsaved extra params (sort, paginate, ...)
+		if(extraParam) paramlist += "&"+extraParam ;
+		console.log("Search launched with params: "+paramlist);
+		
+		$.scrollTo($("#ajaxContentSearchResults"),500,{offset:-10});
+		
+		$.ajax({
+			type: "GET",
+			url: '{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?'+paramlist ,
+			cache: false,
+			success: function processAnswer(html) {
+				//console.log('Search results received!');
+				$('#ajaxContentSearchResults').html(html);
+			}
+		});
+		$("#id_searchsubmit").attr('disabled', false);
+/*
+		$('#ajaxSearchResults').load(
+			'{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}',
+			form.serializeArray(),
+			function processResults(res) {
+				$('#ajaxSearchResults').html(res);
+			}
+		);
+	*/		
+	};
+	////////////////////////////////////////////////////////// LAUNCH SEARCH CLICK HANDLER
+	$(document).ready(function() {
+		var form = $("#searchForm");
+		form.submit(function(e) {
+			if ($('#id_q').val()=="") {
+				console.log("Search aborted (nothing was typed)");
+				return false;
+			}
+			else {
+				$("#id_searchsubmit").attr('disabled', true)
+				launchSearch();
+				e.preventDefault(); 
+			}		
+/*
+			$("#ajaxwrapper").load(
+				form.attr('action') + ' #ajaxwrapper', form.serializeArray(),
+				function(responseText, responseStatus) {
+					jQuery("#sendbutton").attr('disabled', false)
+				}
+			);
+*/
+		});
+		
+		// click handler for search button action
+		//$('#id_searchsubmit').attr("disabled","disabled");
+/*
+		$('#id_searchsubmit').click(function() {
+			console.log("SearchButton clicked!");
+			//q = $('#q').val();
+			var values = $('#searchForm').serialize();
+			xx=values;
+			
+		});
+*/
+		
+		// click handler for facets (filtering by speaker/text)
+		$('#facetList a').click( function() {
+			console.log("clicked on:"+$(this).html());
+			if ( $(this).hasClass('row_selected') ) {
+				$(this).removeClass('row_selected');
+				$('#speakerSelectionDiv').html(fnGetSelectedNames(sTable));
+			}
+			else {
+				$(this).addClass('row_selected');
+				$('#speakerSelectionDiv').html(fnGetSelectedNames(sTable));	
+			}
+		} );
+		
+	});
+</script>
+<!-- ======================================================= -->
+{% endblock %}
+

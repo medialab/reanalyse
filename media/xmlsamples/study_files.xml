@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<folder>study/
+	<file>study_ddi.xml</file>
+	<folder>_ese/
+	</folder>
+	<folder>_meta/
+		<file>for_study.csv</file>
+		<file>for_documents.csv</file>
+		<file>for_speakers.csv</file>
+		<file>for_codes.csv</file>
+	</folder>
+	<folder>_verbatim/
+		<file>entretien_27.txt</file>
+	</folder>
+	<folder>_data/
+		<file>types_ideologiques.csv</file>
+		<file>entretien_27_tei.xml</file>
+		<file>guide_entretien.pdf</file>
+		<file>rapport.pdf</file>
+	</folder>
+	<folder>_source/
+		<file>Tableau4 types.xls</file>
+		<file>guide d'entretiens.docx</file>
+		<file>entr n°27 reludéfinitif.rtf</file>
+		<file>Rapport d'enquête.doc</file>
+	</folder>
+</folder>

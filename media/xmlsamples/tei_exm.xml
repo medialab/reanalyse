@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tei xmlns="http://www.tei-c.org/ns/1.0" xmlns:tesla="http://www.exmaralda.org" xmlns:tei="http://www.tei-c.org/ns/1.0">
+	<teiHeader>
+	</teiHeader>
+	<text>
+		<body>
+		<div>
+			<u who="s002">
+				<anchor synch="#T0" />
+				<seg function="utterance" type="exclamative">
+					<w>Et</w>
+					<w>alors</w>
+					<incident>
+						<desc>comment:porte claque</desc>
+					</incident>
+					<w>voila</w>
+				</seg>
+				<seg function="utterance" type="not_classified">
+					<w>j'ai</w>
+					<w>faim</w>
+				</seg>
+				<anchor synch="#T1" />
+			</u>
+		</div>
+		<div>
+			<u who="s003">
+				<anchor synch="#T1" />
+				<seg function="utterance" type="not_classified">
+					<w>je</w>
+					<w>dis</w>
+					<w>oui</w>
+				</seg>
+				<anchor synch="#T2" />
+			</u>
+		</div>
+	</body>
+   </text>
+</tei>

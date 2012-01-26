@@ -1,0 +1,83 @@
+<!-- =========================== OVERVIEW PAGE -->
+
+
+{% extends "e_base.html" %}
+
+{% load tags %}
+{% load ssi from future %}
+
+
+{% block enqueteheadmore %}
+{% endblock %}
+
+
+{% block enqueteleftmenumore %}
+{% endblock %}
+
+
+{% block content %}
+<div class="introDiv">
+	
+	<!-- ============================================================================= -->
+	<!--<div>- here a viz showing all documents, sortable by date, type, ...</div>-->
+	
+	<!-- ============================================================================= -->
+	<div class="enqueteMetaShowTableContainer">
+		<!--<a class="enqueteMetaShowTableToggle" href="#" onclick='$("#enqueteMetaShow").toggle("fast"); return false;'>afficher/masquer le détail</a>-->
+		<div id="enqueteMetaShow" style="display:visible;">
+			<table class="enqueteMetaShowTable">
+			{% for v in metashort %}
+			<tr class="{% cycle 'odd' 'even' %}">
+				<td class="enqueteMetaShowTableKey">{{v.0}}</td>
+				<td>{{v.1}}</td>
+			</tr>
+			{% endfor %}
+			</table>
+		</div>
+	</div>
+	<!-- ============================================================================= -->
+	<div class="introHtml">
+		<h1>Collection</h1>
+			{% for v in metalong %}
+				<h2>{{v.0}}</h2>
+				<p>{{v.1}}</p>		
+			{% endfor%}
+	<!-- ============================================================================= -->		
+		<h1>Description</h1>
+		<!-- already html styled ! -->
+		{% autoescape off %}{{description}}{% endautoescape %}
+	<!-- ============================================================================= -->
+		<hr/>
+		<h1>Publications</h1>
+			<ul>
+			{% for r in publications %}
+				<li>{{r}}</li>
+				<hr>
+			{% endfor %}
+			</ul>
+	<!-- ============================================================================= -->
+	</div>
+		
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block enquetebottommore %}
+
+<!-- ======================================================= -->
+<script type="text/javascript">
+	$(document).ready(function() {
+
+	});
+</script>
+<!-- ======================================================= -->
+
+{% endblock %}
+

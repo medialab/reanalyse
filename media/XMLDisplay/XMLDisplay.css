@@ -1,0 +1,36 @@
+@charset "utf-8";
+/* CSS Document */
+.Utility {
+	color: black;
+}	
+.NodeName {
+	font-weight:bold;
+	color: gray;	
+}
+.AttributeName 
+{
+	font-weight:bold;
+	color: black;
+}
+.AttributeValue
+{
+	color:#404172;
+}
+.NodeValue
+{
+	color: black;
+}
+.Element {
+	border-left-color:lightgray;
+	border-left-width:thin;
+	border-left-style:solid;
+	padding-top:0px;
+	margin-top:10px;
+}
+.Clickable {	
+	font-weight:900;
+	font-size:large;
+	color: #800080;	
+	cursor:pointer;
+	vertical-align:middle;
+}

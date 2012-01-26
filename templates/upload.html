@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/utilScripts.js"></script>
+
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/css/e.css"/>
+	
+{% endblock %}
+
+{% block leftmenu %}
+{% endblock %}
+
+{% block content %}
+<! ================================================= -->
+	<div id="eBrowseNewEnquete">
+		<div id="file-uploader">
+		<noscript>
+			<p>Please enable JavaScript to use file uploader.</p>
+			<!-- or put a simple form for upload here -->
+		</noscript>
+		</div>
+		You can choose to upload:
+		<ul style='margin:5px 0 0 20px;'>
+		<li>all the files in the same time, with the mandatory ddi.xml file</li>
+		<li>a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
+		</ul>
+	</div>
+<! ================================================= -->
+
+<!--
+	<form id="addEnqueteForm" enctype="multipart/form-data" method="post" action="{% url reanalyse.reanalyseapp.views.eAddAjax %}">
+		{% comment %}{% csrf_token %}{% endcomment %}
+		<input type="file" name="thefiles" id="fs" multiple="">
+		<input type="submit" name="_upload" value="Upload/Load" />
+	</form>
+-->
+<! ================================================= -->
+
+
+{% endblock %}
+
+
+
+{% block bottom %}
+<script src="{{ MEDIA_URL }}/fileuploader/fileuploader.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{{ MEDIA_URL }}/fileuploader/fileuploader.css"/>
+
+<script type="text/javascript">
+	///////////////////////////////////////////////////////////////////////////////////
+	function createUploader(){            
+        var uploader = new qq.FileUploader({
+            element: $('#file-uploader')[0],
+            action: "{% url reanalyse.reanalyseapp.views.eAddAjax %}",
+            debug: true,
+            multiple: true,
+			params: {
+				'csrf_token': '{{ csrf_token }}',
+				'csrf_name': 'csrfmiddlewaretoken',
+				'csrf_xname': 'X-CSRFToken',
+				'foldname': '{{foldname}}',
+			},
+			onSubmit: function(id, fileName){
+				// when clicked
+			},
+			onComplete: function( id, fileName, responseJSON ) {
+				// on each file complete
+			},
+			onAllComplete: function( uploads ) {
+				$("#uploadActions").show();
+				// buttons are already made in template in "fileuploader/fileuploader.js"
+				$("#buttCancel").click( function(event) {
+					// create Enquete from uploaded files					
+					doGetAtUrl("{% url reanalyse.reanalyseapp.views.eReset %}?foldname={{foldname}}");
+					$("#uploadActions").remove();
+					createUploader();
+					//event.stopPropagation();
+					//event.preventDefault();
+					return false;
+				});
+				$("#buttOk").click( function(event) {
+					// create Enquete from uploaded files					
+					doGetAtUrl("{% url reanalyse.reanalyseapp.views.eParse %}?foldname={{foldname}}");
+					//event.stopPropagation();
+					//event.preventDefault();
+					//window.location.href="{% url reanalyse.reanalyseapp.views.eBrowse %}";
+					//window.location.reload();
+					$("#eBrowseNewEnquete").html("Enquete was added. Go look at it");
+					return false;
+					
+				});
+			}
+        });           
+    }
+	///////////////////////////////////////////////////////////////////////////////////
+	$(function () {
+		createUploader(); 
+  	});
+  
+
+
+
+</script>
+
+{% endblock %}

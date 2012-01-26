@@ -1,0 +1,133 @@
+{% extends "e_base.html" %}
+
+{% load i18n %}
+{% load ssi from future %}
+
+{% block enqueteheadmore %}
+
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/css/ese.css"/>
+	
+	<script src="{{ MEDIA_URL }}/jplayer/js/jquery.jplayer.min.js"></script>
+	<script src="{{ MEDIA_URL }}/jplayer/js/customPlayer.js"></script>
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/jplayer/css/jplayer.blue.monday.css"/>
+	
+	<script src="{{ MEDIA_URL }}/verticaltabs/js/verticaltabs.js"></script>
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/verticaltabs/css/verticaltabs.css"/>
+
+	
+	<script type="text/javascript"> 
+	$(document).ready(function(){
+	// 		$( "#accordion" ).accordion({fillSpace: true});
+		$("#mesTabs").verticaltabs({speed: 500,slideShow: false,activeIndex: 0});
+		});
+	</script> 
+
+{% endblock %}
+
+
+
+{% block content %}
+	<div class="verticalslider" id="mesTabs">
+		<ul class="verticalslider_tabs">
+		{% for chapter in chapters %}
+			<li><a href="#">{{ chapter.name }}</a></li>
+		{% endfor %}
+		</ul>
+		
+		<ul class="verticalslider_contents">
+		{% for chapter in chapters %}
+			<li>
+			{% if chapter.summary %}
+			<div class="chapter-summary">{% ssi chapter.summary %}</div>
+			{% endif %}
+			
+			<div class="jplayerzone">		
+			<div id="jquery_jplayer_{{forloop.counter}}" class="jp-jplayer"></div>
+	
+				<div class="jp-audio">
+					<div class="jp-type-playlist">
+						<div id="jp_interface_{{forloop.counter}}" class="jp-interface">
+							<ul class="jp-controls">
+								<li><a href="#" class="jp-play" tabindex="1">play</a></li>
+								<li><a href="#" class="jp-pause" tabindex="1">pause</a></li>
+								<li><a href="#" class="jp-stop" tabindex="1">stop</a></li>
+								<li><a href="#" class="jp-mute" tabindex="1">mute</a></li>
+								<li><a href="#" class="jp-unmute" tabindex="1">unmute</a></li>
+								<li><a href="#" class="jp-previous" tabindex="1">previous</a></li>
+								<li><a href="#" class="jp-next" tabindex="1">next</a></li>
+							</ul>
+							<div class="jp-progress">
+								<div class="jp-seek-bar">
+									<div class="jp-play-bar"></div>
+								</div>
+							</div>
+							<div class="jp-volume-bar">
+								<div class="jp-volume-bar-value"></div>
+							</div>
+							<div class="jp-current-time"></div>
+							<div class="jp-duration"></div>
+						</div>
+						<div id="jp_playlist_{{forloop.counter}}" class="jp-playlist">
+							<ul>
+								
+								<li></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>	
+						<!-- The method Playlist.displayPlaylist() uses this unordered list -->
+						<!-- JPAUDIO -->
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	
+	<div style="margin-top:240px;">
+	<hr>
+	{% comment %}Translators: ESE final report download{% endcomment %}
+	{% trans 'The final report can be downloaded' %}: <a href="{% url reanalyse.reanalyseapp.views.getfile enquete.id %}">{{enquete.name}}</a>
+	<hr>
+	</div>
+	
+{% endblock %}
+
+
+
+{% block bottom %}
+<script type="text/javascript">
+
+	$(document).ready(function(){
+	{% for chapter in chapters %}
+		var audioPlaylist_{{forloop.counter}} = new Playlist("{{forloop.counter}}", [
+			
+			{% for subchapter in chapter.esesubchapter_set.all %}
+			{
+			name:"{{subchapter.name|escapejs}}",
+			mp3:"{% url reanalyse.reanalyseapp.views.stream ese.name_id subchapter.mp3 %}",
+			ogg:"{% url reanalyse.reanalyseapp.views.stream ese.name_id subchapter.ogg %}"
+			}
+			{% if not forloop.last %},{% endif %}
+			{% endfor %}
+
+		], {
+			ready: function() {
+				audioPlaylist_{{forloop.counter}}.displayPlaylist();
+				audioPlaylist_{{forloop.counter}}.playlistInit(false); // Parameter is a boolean for autoplay.
+			},
+			ended: function() {
+				audioPlaylist_{{forloop.counter}}.playlistNext();
+			},
+			play: function() {
+				$(this).jPlayer("pauseOthers");
+			},
+			swfPath: "{{ MEDIA_URL }}/jplayer/js",
+			supplied: "mp3",
+			solution:"flash, html"
+		});
+	{% endfor %}		
+	});
+	
+</script>
+{% endblock %}
+

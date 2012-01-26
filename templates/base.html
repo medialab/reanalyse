@@ -1,0 +1,181 @@
+<!-- for Internationalization -->
+{% load i18n %}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>BEQuali</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/grid960/reset.css" />
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/grid960/960.css" />
+	
+	<link href="{{ MEDIA_URL }}/css/default.css" rel="stylesheet" type="text/css" />
+	
+{% block head %}
+
+{% endblock %}
+
+</head>
+
+<body>
+<!-- =========================== HEADER -->
+<div class="container_16">
+	<div class="grid_16">
+		<div id="fullscreenContainer">
+			<!-- Button : Fullscreen Mode -->
+			<a href="" id="but_fullscreenmode" title="toggle fullscreen mode" onclick="toggleFullScreenMode();return false;">
+				<img src="{{ MEDIA_URL }}/images/toggle_fullscreen_on.png" alt="description"/>
+			</a>
+			<!-- Button : Normal Mode -->
+			<a href="" id="but_normalmode" style="display:none;" title="toggle fullscreen mode" onclick="toggleFullScreenMode();return false;">
+				<img src="{{ MEDIA_URL }}/images/toggle_fullscreen_off.png" alt="description"/>
+			</a>
+		</div>
+		<div id="loginContainer">
+			<div id="loginLanguage">
+				{% get_language_info for LANGUAGE_CODE as lang %}
+				<form action="/reanalyse/i18n/setlang/" method="post">
+					{% csrf_token %}
+					<input name="next" type="hidden" value="{{ request.build_absolute_uri }}" />
+					<select name="language">
+						{% get_language_info_list for LANGUAGES as languages %}
+						{% for language in languages %}
+						<option {% if lang.code == language.code %}selected="selected"{% endif %} value="{{ language.code }}">
+						{{ language.name_local }} ({{ language.code }})
+						</option>
+						{% endfor %}
+					</select>
+					<input type="submit" value="Go" />
+				</form>
+			</div>
+			<div id="loginStatus">
+				{% if perms.reanalyseapp.can_make %}
+					{% comment %}Translators: Main page{% endcomment %}
+					{% trans 'ADMIN - You can consult, upload, make viz and phonecalls to god' %}
+				{% else %}
+				{% if perms.reanalyseapp.can_explore %}
+					{% trans 'EXPLORE - You can explore whole study sites' %}
+				{% else %}
+				{% if perms.reanalyseapp.can_browse %}
+					{% trans 'BROWSE - You can browse studies descriptions and studies on studies' %}
+				{% else %}
+					{% trans 'PUBLIC - You can browse the studies list' %}
+				{% endif %}{% endif %}{% endif %}.
+				{% if not perms.reanalyseapp.can_browse %}
+				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register">{% trans 'access' %}</a>
+				{% endif %}
+			</div>
+			<div id="loginIn">
+				{% if user.is_authenticated %}
+					{% trans 'you are connected as' %} <span id="loginUsername">{{ user.username }}</span>
+					(<a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>)
+					{% if perms.reanalyseapp.can_make %}
+						(<a href="/reanalyse/admin">admin</a>)
+					{% endif %}
+				{% else %}
+					<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login">login</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div id="header">
+		<div class="grid_5">
+			<div id="logo">
+				<h1><a href="{% url reanalyse.reanalyseapp.views.home %}">BEQuali</a></h1>
+				<h2>{% trans 'A Project from' %} <a href="http://cdsp.sciences-po.fr/">CDSP</a> / <a href="http://medialab.sciences-po.fr/">médialab</a> / <a href="http://www.sciences-po.fr/">Sciences-Po</a></a></h2>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div id="menu" class="grid_16">
+		<div class="prefix_5">
+			<ul>
+				<li id="{%if bodyid == 'project'%}menuCurrent{%endif%}">
+				{% comment %}Translators: Main menu choices{% endcomment %}
+				<a href="{% url reanalyse.reanalyseapp.views.home %}">{% trans 'Project' %}</a></li>
+				<li id="{%if bodyid == 'method'%}menuCurrent{%endif%}">
+				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=method">{% trans 'Methodology' %}</a></li>
+				<li id="{%if bodyid == 'access'%}menuCurrent{%endif%}">
+				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access">{% trans 'Access' %}</a></li>
+				<li id="{%if bodyid == 'e'%}menuCurrent{%endif%}">
+				<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>
+				{% if perms.reanalyseapp.can_make %}
+				<li id="{%if bodyid == 'upload'%}menuCurrent{%endif%}">
+				<a href="{% url reanalyse.reanalyseapp.views.eUpload %}">{% trans 'Upload' %}</a></li>
+				{% endif %}
+
+			</ul>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div id="menuband" class="grid_16">
+		<div class="prefix_3">
+			{% block headenquetetitle %}
+			{% endblock %}
+		</div>
+	</div>
+	<div class="clear"></div>
+	<!-- =========================== WRAPPER -->
+
+	<div id="wrapper">
+		<div class="grid_3" id="leftmenucontainer">
+			<div id="leftmenu">
+				{% block leftmenu %}
+			    {% endblock %}
+		    </div>
+		</div>
+		<div class="grid_13" id="contentcontainer">
+			<div id="contenttop">
+				{% block contenttop %}
+			    {% endblock %}
+		    </div>
+			<div id="content">
+				{% block content %}
+			    {% endblock %}
+		    </div>
+		</div>
+	</div>
+
+
+	<div class="clear"></div>
+	
+	{% comment %}
+	<!-- <div style="text-align:right;padding:10px;"><a href="javascript:history.back()">< Retour</a></div> -->
+	<!-- BEFORE
+	<div id="wrapper" class="grid_16">
+		<div class="grid_3">
+			<div id="leftmenu">
+				
+				{% block leftmenu %}
+			    {% endblock %}
+		    </div>
+		</div>
+		<div class="grid_13">
+			{% block submenu %}
+			{% endblock %}
+			<div id="content">
+			    {% block content %}
+			    {% endblock %}
+		    </div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	-->
+	{% endcomment %}
+	<!-- =========================== FOOTER -->
+	<div id="footer">
+		<p id="legal">This is a copyright</p>
+		<p id="links"><a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
+	</div>
+	<!-- end div#footer -->
+</div>
+</body>
+</html>
+
+{% block bottom %}
+
+{% endblock %}
+
+

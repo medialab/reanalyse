@@ -1,0 +1,20 @@
+{
+	"parameters": {
+		"minDisplayThickness": 0.9,
+		"maxDisplayThickness": 1.2,
+		"minDisplaySize": 3.1,
+		"maxDisplaySize": 5.2,
+		"nodesColor": "0xaa9999",
+		"edgesColor": "0x886666",
+		"labelsColor": "0x444444",
+		"fontName": "Arial",
+		"displayEdges":true,
+		"displayNodes":true,
+		"displayLabels":false
+	},
+	"callbacks": {
+		"onReady": "feedSiGMa",
+		"onClickNodes": "onClickNodes",
+		"onOverNodes": "onOverNodes"
+	}
+}
