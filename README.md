@@ -17,4 +17,4 @@ privateconfig.py
 /solrdataindex/
 /upload/
 
-![Alt text](http://jiminy.medialab.sciences-po.fr/anta_dev/images/anta-02.png "the path of anta")
+![Alt text](http://jiminy.medialab.sciences-po.fr/reanalyse/media/images/content_overview.png "overview")
