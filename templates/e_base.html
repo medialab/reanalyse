@@ -114,7 +114,22 @@
 
 {% endif %}		
 
-		</div>
+	</div>
+	
+	
+<!-- ============================ SOLR INDEX ADMIN -->	
+{% if perms.reanalyseapp.can_make %}
+<div class="leftmenublock">
+	<ul>
+		<li><a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr admin</a></li>
+		<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a></li>
+		<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}">update_index</a></li>
+		<li><a href="{% url reanalyse.reanalyseapp.views.resetAllTfidf enquete.id %}">reset all tfidf</a></li>
+	</ul>
+</div>
+{% endif %}
+
+		
 		
 		<!-- ============================ IF NEEDED, BEFORE -->
 		{% block enqueteleftmenubefore %}

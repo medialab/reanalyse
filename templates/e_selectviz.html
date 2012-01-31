@@ -85,9 +85,9 @@ total: <span id="speakerSelectedCountDiv">0</span> speakers
 		</select>
 	<!-- ========================== -->
 </li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{});return false;'>Graph Speakers-Speakers</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{});return false;'>Graph Speakers-Words</a></li>
-<li id="Cloud_SolrSpeakerTagCloud"><a href='' id="goCreateTagCloud">Tag Cloud</a></li>
+<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{});return false;'>Graph Speakers-Speakers (solr similarity)</a></li>
+<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{});return false;'>Graph Speakers-Words (django ngrams)</a></li>
+<li id="Cloud_SolrSpeakerTagCloud"><a href='' id="goCreateTagCloud">Tag Cloud (ngrams from solr)</a></li>
 <li><a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"textes":selectedTexteIds});return false;'>TexteStreamTimeline (for each text)</a></li>
 <li><a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds});return false;'>Attributes</a></li>
 <li><a href="" onclick='createVisualization({{enquete.id}},"Overview",{});return false;'>Overview</a></li>

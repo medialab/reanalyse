@@ -54,6 +54,8 @@ urlpatterns = patterns('reanalyse',
 	
 	(r'^e/(?P<eid>\d+)/makealltfidf$', 'reanalyseapp.views.resetAllTfidf'),		# TFIDF ngrams
 
+	(r'^e/solrclear$', 'reanalyseapp.views.eSolrIndexClear'),	# clear whole solr index
+	(r'^e/solrupdate$', 'reanalyseapp.views.eSolrIndexUpdate'),	# update whole solr index
 	
 	(r'^e/export$', 'reanalyseapp.views.exportEnquetes'),
 	(r'^e/delete$', 'reanalyseapp.views.deleteEnquetes'),
@@ -82,6 +84,10 @@ urlpatterns = patterns('reanalyse',
 	(r'^e/(?P<eid>\d+)/ss/delete$', 'reanalyseapp.views.deleteSpeakerSets'),				# DELETE 	SpeakerSets
 	(r'^e/(?P<eid>\d+)/setcolor$', 'reanalyseapp.views.setColor'),							# set speaker(s) color
 	(r'^e/(?P<eid>\d+)/resetcolor$', 'reanalyseapp.views.resetColors'),						# set all random colors
+	
+	
+	(r'^e/(?P<eid>\d+)/s/(?P<sid>\d+)/ngrams$', 'reanalyseapp.views.esGetSolrTermVector'),	# useful just to fetch solr ngrams for that speaker
+	
 	
 	##### 5.Visualizations
 	(r'^e/(?P<eid>\d+)/json/d/(?P<tid>\d+)/$', 'reanalyseapp.views.getLittleFriseJson'),	# little frise texte/speaker content d3 display

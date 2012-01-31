@@ -767,8 +767,9 @@ def getSolrSimilarArray(speaker,maxcount):
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
 def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
-	# USING PYSOLR or PYTHONSOLR : same syntax 
-	p = {'fq':'django_ct:(reanalyseapp.speaker)','qt':'tvrh','fl':'text','tv.fl':field,'tv.all':'true'}
+	# USING PYSOLR or PYTHONSOLR : same syntax
+	# http://jiminy-dev.medialab.sciences-po.fr:8983/solr/select?q=speakerid:36&fq=django_ct:(reanalyseapp.speaker)&qt=tvrh&fl=text&tv.fl=ngrams&tv.all=true
+	p = {'fq':'django_ct:(reanalyseapp.speaker)','qt':'tvrh','fl':'text','tv.fl':field,'tv.all':'true','wt':'json'}
 	
 	q=None
 	for s in speakers:
@@ -783,7 +784,14 @@ def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
 
 	# !!!!! r.result['termVector'] only available in pythonsolr
 	# looking at: https://bitbucket.org/cogtree/python-solr/src/dc20a25f7ca9/pythonsolr/pysolr.py
-	tv = r.result['termVectors'][1]
+	
+	# decoding results
+	tv = r.result['termVectors'][0]
+	if tv=='warnings':
+		tv = r.result['termVectors'][3]
+	else:
+		tv = r.result['termVectors'][1]
+		
 	tv = list2dict(tv)
 	
 	# "parse" results manually
@@ -873,26 +881,27 @@ def visMakeTagCloudFromTermVectors(e,param):
 
 	wordsArr=[]
   	
-  	############################################# for MULTIPLE speakers, we query solr again (like the old way)
-  	if len(speakers)>1:
-  		d = getSolrTermVectorsDict(speakers,'ngrams',howmany)
-  		for w in d.keys():
-  			dic = {'word':w,'count':d[w]['tfidf']}
-  			dic.update(d[w])
-  			wordsArr.append(dic)
-  		wordsArr = sorted(wordsArr, key=lambda k: -k['count'])
-  		wordsArr = wordsArr[:howmany]
-  	############################################# NEW WAY: look at stored model (works only for only ONE speaker)
-	else:
-		s=speakers[0]
-		if howmany==0:
-			thengs = s.ngramspeaker_set.order_by("-tfidf")
-		else:
-			thengs = s.ngramspeaker_set.order_by("-tfidf")[:howmany]
-			
-		for ngs in thengs:
-	  		ng = ngs.ngram
-	  		spkArray=[]
+  	############################################# SOLR QUERY !
+  	#if len(speakers)>1:
+	d = getSolrTermVectorsDict(speakers,'ngrams',howmany)
+	for w in d.keys():
+		dic = {'word':w,'count':d[w]['tfidf']}
+		dic.update(d[w])
+		wordsArr.append(dic)
+	wordsArr = sorted(wordsArr, key=lambda k: -k['count'])
+	wordsArr = wordsArr[:howmany]
+	
+  	############################################# Old (NEW) WAY: look at stored model (works only for only ONE speaker)
+# 	else:
+# 		s=speakers[0]
+# 		if howmany==0:
+# 			thengs = s.ngramspeaker_set.order_by("-tfidf")
+# 		else:
+# 			thengs = s.ngramspeaker_set.order_by("-tfidf")[:howmany]
+# 			
+# 		for ngs in thengs:
+# 	  		ng = ngs.ngram
+# 	  		spkArray=[]
 	  		
 	  	##################################################### deprecated ? FETCH SIMILAR SPEAKERS
 	#		similSpeakersArray = getSolrSimilarArray(s,similcount) # return sorted array of [score,sId,sName]
@@ -912,7 +921,8 @@ def visMakeTagCloudFromTermVectors(e,param):
 	#   				donothing=1
 	#   				#spkArray.append({'id':0,'tfidf':0,'tf':0,'tn':0})
 	  			
-	  		wordsArr.append({'word':ng.content,'speakers':spkArray,'count':ngs.tfidf,'tfidf':ngs.tfidf,'df':ng.df,'dn':ng.ngramspeaker_set.count(),'tf':ngs.tf,'tn':ngs.tn})
+	  			
+# 	  		wordsArr.append({'word':ng.content,'speakers':spkArray,'count':ngs.tfidf,'tfidf':ngs.tfidf,'df':ng.df,'dn':ng.ngramspeaker_set.count(),'tf':ngs.tf,'tn':ngs.tn})
   		#############################################
   	
   	res={}

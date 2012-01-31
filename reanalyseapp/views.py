@@ -59,7 +59,7 @@ from haystack.forms import *
 from haystack.query import *
 
 # to update_index SOLR from view
-from haystack.management.commands import update_index
+from haystack.management.commands import update_index, clear_index
 
 # Pagination for edShow
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -485,8 +485,7 @@ def resetAllTfidf(request,eid):
 	logging.info("now updating tfidf")
 	makeAllTfidf(Enquete.objects.get(id=eid))
 	logging.info("tfidf sucessfully updated")
-	json = simplejson.dumps({},indent=4,ensure_ascii=False)
-	return HttpResponse(json, mimetype="application/json")
+	return HttpResponse("tfidf updated", mimetype="application/json")
 ################################################################################
 def eReset(request):
 	d={}
@@ -731,7 +730,7 @@ def esBrowse(request,eid):
 	
 	############################### COLUMNS
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'},{'label':'nGram '+str(Ngram.objects.count())}]
+		colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'},{'label':'django_ngrams '+str(Ngram.objects.count())}]
 	else:
 		colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'}]
 		
@@ -761,11 +760,15 @@ def esBrowse(request,eid):
 			'<span class="imSpk'+s.get_ddi_type_display()+'"></span>'
 
 		vizStr = getStrFromVizList(getRelatedViz(speakers=[s]))
-		ngramCountStr = s.ngramspeaker_set.count()
-			
+		
+		
+		ngramcount = str(s.ngramspeaker_set.count())
+		ngramjsonlink = ' <a href="'+ reverse(esGetSolrTermVector,args=[eid,s.id]) +'">json ngrams</a>'
+		ngramsStr = ngramcount + ngramjsonlink
+		
 		########################## VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
-			vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr,ngramCountStr]
+			vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr,ngramsStr]
 		else:
 			vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr]
 				
@@ -1823,7 +1826,30 @@ def getLittleFriseJson(request,eid,tid):
 
 
 
+# SOLR INDEX
+###########################################################################
+def eSolrIndexClear(request):
+	arg = {'interactive':False,'verbosity':0}
+	clear_index.Command().handle(**arg)
+	return HttpResponse('solr index cleared', mimetype="application/json")
+###########################################################################
+def eSolrIndexUpdate(request):
+	update_index.Command().handle(verbosity=0)
+	return HttpResponse('solr index updated', mimetype="application/json")
+###########################################################################
 
+
+
+
+
+# USEFUL
+###########################################################################
+def esGetSolrTermVector(request,eid,sid):
+	speaker = Speaker.objects.get(id=sid)
+	res = getSolrTermVectorsDict([speaker],'ngrams',0)
+	json = simplejson.dumps(res,indent=4,ensure_ascii=False)
+	return HttpResponse(json, mimetype="application/json")
+###########################################################################
 
 
 
