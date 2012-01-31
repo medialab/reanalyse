@@ -622,8 +622,10 @@ def edBrowse(request,eid):
 		#refreshStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkStyle+'");return false;\'>stylize</a>&nbsp;'
 		#if t.doctype=='TEI' or t.doctype=='CTX':
 		#	dataStr += parseStr
+		if request.user.has_perm('reanalyseapp.can_make') and t.doctype=='TEI':
+			dataStr += parseStr
 		if len(t.contenttxt)>0 and request.user.has_perm('reanalyseapp.can_make'):
-			dataStr = vStyle +'parsed' + endStyle
+			dataStr += vStyle +'parsed' + endStyle
 		
 		if t.filesize==0:
 			sizeStr = '< 1Ko'
