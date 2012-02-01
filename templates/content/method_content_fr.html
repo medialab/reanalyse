@@ -273,28 +273,123 @@ NB: Page en cours de rédaction !
 <h1>Visualisations</h1>
 <div class="content_norm">
 	<div>
-	Lorsque l'intégralité de l'enquête est chargée, il est possible de créer des visualisations.<br/>
-	Pour créer une visualisation il faut choisir un jeu de document(s) ou de speaker(s).<br/>
-	Le choix de celles-ci dépend du type de l'enquête et des documents disponibles
+	Voici la liste des différentes visualisations disponibles dans un site-enquête.<br/>
+	Chacune d'entre elles correspond à un angle d'exploration différent.<br/>
 	<table class="content_norm_ex">
-		<tr><td>label</td><td>type</td><td>utilise</td><td>description</td></tr>
-		<tr><td>Cloud_SolrSpeakerTagCloud</td><td>Nuage de mots</td><td>speaker(s)</td>
-			<td class="content_norm_orig">ngrams classés par tfidf</td></tr>
-		<tr><td>Graph_SpeakersSpeakers</td><td>Graphe .gexf</td><td>speaker(s)</td>
-			<td class="content_norm_orig">liens entre speakers. les liens représentent la valeur de similarité calculée par lucene/solr à partir de chacun des verbatims</td></tr>
-		<tr><td>Graph_SpeakersWords</td><td>Graphe .gexf</td><td>1+ speaker(s)</td><td class="content_norm_orig">speakers et ngrams. les liens reflètent les valeurs de tfidf pour chaque ngram partagé</td></tr>
-		<tr><td>Graph_SpeakersAttributes</td><td>Graphe .gexf</td><td>1+ speaker(s)</td>
-			<td class="content_norm_orig">speakers et attributs partagés</td></tr>
-		<tr><td>TexteStreamTimeline</td><td>Timeline</td><td>1 documents</td>
-			<td class="content_norm_orig">évolution de la dynamique d'entretien (tours de parole et codes)</td></tr>
-		<tr><td>Attributes</td><td></td><td>1+ speaker(s)</td>
-			<td class="content_norm_orig">affichage des attributs des speakers sous forme de barchart</td></tr>
+		<tr><td>nom</td><td>source</td><td>description</td><td>example</td></tr>
+		<tr>
+			<!--<td>edBrowse</td>-->
+			<td><a href="#viz_example_dbrowse">Liste des documents</a></td>
+			<td class="content_norm_orig">tous les documents d'une enquête</td>
+			<td>affichage des attributs des speakers sous forme de barchart</td>
+			<td><a href="#viz_example_dbrowse"><img src="/reanalyse/media/images/viz_example_dbrowse.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>esBrowse</td>-->
+			<td><a href="#viz_example_sbrowse">Liste des intervenants</a></td>
+			<td class="content_norm_orig">tous les intervenants d'une enquête</td>
+			<td>affichage des attributs des speakers sous forme de barchart</td>
+			<td><a href="#viz_example_sbrowse"><img src="/reanalyse/media/images/viz_example_sbrowse.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>edShow</td>-->
+			<td><a href="#viz_example_dshow">Exploration d'un entretien</a></td>
+			<td class="content_norm_orig">un entretien</td>
+			<td>Cette page permet d'explorer un entretien</td>
+			<td><a href="#viz_example_dshow"><img src="/reanalyse/media/images/viz_example_dshow.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>TexteStreamTimeline</td>-->
+			<td><a href="#viz_example_timeline">Dynamique d'entretien</a></td>
+			<td class="content_norm_orig">un entretien</td>
+			<td>évolution de la dynamique d'entretien (tours de parole et codes)</td>
+			<td><a href="#viz_example_timeline"><img src="/reanalyse/media/images/viz_example_timeline.png" width="160px"></a></td>
+			</tr>	
+		<tr>
+			<!--<td>Cloud_SolrSpeakerTagCloud</td>-->
+			<td><a href="#viz_example_tagcloud">Nuage de mots</a></td>
+			<td class="content_norm_orig">un ou plusieurs intervenants</td>
+			<td>ngrams classés par tfidf</td>
+			<td><a href="#viz_example_tagcloud"><img src="/reanalyse/media/images/viz_example_tagcloud.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>Attributes</td>-->
+			<td><a href="#viz_example_attributes">Attributs sociographiques</a></td>
+			<td class="content_norm_orig">un ensemble d'intervenants</td>
+			<td>affichage des attributs des speakers sous forme de barchart</td>
+			<td><a href="#viz_example_attributes"><img src="/reanalyse/media/images/viz_example_attributes.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>Graph_SpeakersAttributes</td>-->
+			<td><a href="#viz_example_graph_spkatt">Graphe Intervenants-Attributs</a></td>
+			<td class="content_norm_orig">un ensemble d'intervenants, et un jeu d'attributs sociographiques</td>
+			<td>speakers et attributs partagés</td>
+			<td><a href="#viz_example_graph_spkatt"><img src="/reanalyse/media/images/viz_example_graph_spkatt.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>Graph_SpeakersWords</td>-->
+			<td><a href="#viz_example_graph_spkngr">Graphe Intervenants-Ngrams</a></td>
+			<td class="content_norm_orig">un ensemble d'intervenants</td>
+			<td>speakers et ngrams. les liens reflètent les valeurs de tfidf pour chaque ngram partagé</td>
+			<td><a href="#viz_example_graph_spkngr"><img src="/reanalyse/media/images/viz_example_graph_spkngr.png" width="160px"></a></td>
+			</tr>
+		<tr>
+			<!--<td>Graph_SpeakersSpeakers</td>-->
+			<td><a href="#viz_example_graph_spkspk">Graphe des Intervenants</a></td>
+			<td class="content_norm_orig">un ensemble d'intervenants</td>
+			<td>liens entre speakers. les liens représentent la valeur de similarité calculée par lucene/solr à partir de chacun des verbatims</td>
+			<td><a href="#viz_example_graph_spkspk"><img src="/reanalyse/media/images/viz_example_graph_spkspk.png" width="160px"></a></td>
+			</tr>
 	</table>
 	</div>
-</div>
 
-<div id="viz_examples">
-<!-- see home.html template to see how viz examples are displayed... -->
+<ol>
+<li><a name="viz_example_dbrowse"><h2>Liste des documents</h2></a>
+<img src="/reanalyse/media/images/viz_example_dbrowse.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_sbrowse"><h2>Liste des intervenants</h2></a>
+<img src="/reanalyse/media/images/viz_example_sbrowse.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_dshow"><h2>Exploration d'un entretien</h2></a>
+<img src="/reanalyse/media/images/viz_example_dshow.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_timeline"><h2>Dynamique d'entretien</h2></a>
+<img src="/reanalyse/media/images/viz_example_timeline.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_tagcloud"><h2>Nuage de mots</h2></a>
+<img src="/reanalyse/media/images/viz_example_tagcloud.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_attributes"><h2>Attributs sociographiques</h2></a>
+<img src="/reanalyse/media/images/viz_example_attributes.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_graph_spkatt"><h2>Graphe Intervenants-Attributs</h2></a>
+<img src="/reanalyse/media/images/viz_example_graph_spkatt.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_graph_spkngr"><h2>Graphe Intervenants-Ngrams</h2></a>
+<img src="/reanalyse/media/images/viz_example_graph_spkngr.png" width="100%">
+
+</li>
+
+<li><a name="viz_example_graph_spkspk"><h2>Graphe des Intervenants</h2></a>
+<img src="/reanalyse/media/images/viz_example_graph_spkspk.png" width="100%">
+
+</li>
+
+</ol>
 </div>
 
 

@@ -62,6 +62,7 @@
 		     		<tokenizer class="solr.WhitespaceTokenizerFactory" />
 		     		<filter class="solr.LowerCaseFilterFactory"/>
 					<filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="4" outputUnigrams="false" tokenSeparator=" "/>
+					<filter class="solr.PatternReplaceFilterFactory" pattern=".*[\.?!,;:].*" replacement="%" />
 <!--
 				<tokenizer class="solr.StandardTokenizerFactory"/>
 		    	<tokenizer class="solr.WhitespaceTokenizerFactory" />
@@ -80,6 +81,7 @@
 		            <tokenizer class="solr.WhitespaceTokenizerFactory" />
 		            <filter class="solr.LowerCaseFilterFactory"/>
 		            <filter class="solr.ShingleFilterFactory" minShingleSize="2" maxShingleSize="4" outputUnigrams="false" tokenSeparator=" "/>
+		            <filter class="solr.PatternReplaceFilterFactory" pattern=".*[\.?!,;:].*" replacement="%" />
 		      </analyzer>
 		    </fieldType>
 		    

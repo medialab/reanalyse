@@ -107,7 +107,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 				for t in textes:
 					spks = t.speaker_set.all()
 					newVizu = makeVisualizationObject(e,typ,descr)
-					d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks,'similcount':2})
+					d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
 					for spk in spks:
 						newVizu.speakers.add(spk)
 					newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
@@ -118,7 +118,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 			newVizu = makeVisualizationObject(e,typ,descr)
 			#d = visMakeSolrTagCloud(e,{'count':MaxWords,'who':speakerIds,'what':'content_c_auto'})
 			#d = visMakeSolrTagCloud(e,{'count':MaxWords,'who':speakerIds,'what':'text'})
-			d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':speakers,'similcount':2})
+			d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':speakers})
 			for s in speakers:
 				newVizu.speakers.add(s)
 			newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
@@ -819,8 +819,9 @@ def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
 		# then keep words wanted
 		out={}
 		for w,d in alldic.items():
+			keepw = len(w)>2
 			###### RULE 1 : dont keep words which appear only 1 time for that speaker and never else (df=tf=1)
-			keepw = d['df']+d['tf']!=2
+			keepw = keepw and d['df']+d['tf']!=2
 			###### RULE 2 : dont keep words included in other-longer-word (if same df/tf)
 			keepw = keepw and not True in [(w in otherw and w!=otherw and d['df']==alldic[otherw]['df'] and d['tf']==alldic[otherw]['tf']) for otherw in alldic.keys()]
 			
