@@ -1,4 +1,15 @@
-/* =================================================================================== HOME / INTRO CONTENT (NORMALISATION) */
+/* =================================================================================== PROJET/METHODE HTML CONTENT (tutorial & explications !) */
+
+/* for table cells describing original study.. */
+.content_norm {
+	font-size:1em;
+	line-height:1.3em;
+}
+.content_norm .content_norm_orig {
+	background:#E6E6E6;
+	font-size:0.8em;
+}
+
 /* lists */
 .content_norm ul, .content_norm ol {
 	margin-left:30px;
@@ -7,6 +18,7 @@
 	list-style-type:decimal;
 	margin:5px;
 }
+
 /* misc */
 .content_norm table {
 	background:white;
@@ -30,17 +42,16 @@
 	padding:4px;
 	border:1px lightgray solid;
 }
+.content_norm img {
+	margin-bottom: 10px;
+}
 .content_norm tr:first-child {
 	background:#E0E4FC;
 }
 .content_norm td:first-child {
 	background:#E0E4FC;
 }
-/* for table cells describing original study.. */
-.content_norm .content_norm_orig {
-	background:#E6E6E6;
-	font-size:0.8em;
-}
+
 /* for table rows description.. */
 .content_norm_expl td {
 	background:#E6E6E6;
@@ -90,6 +101,8 @@
 .content_norm_verbmcon { /*time superposition*/
 	color:green;
 }
+
+
 /* =================================================================================== HOME / INTRO bullets */
 .content_listbullet {
 	margin-left:20px;
@@ -101,19 +114,7 @@
 	background-position: 0 0.4em;
 	padding-left: 20px;
 }
-/*
-.introHtml ul {
-	list-style-type:none;
-	margin-left:20px;
-}
-.introHtml ol {
-	list-style-type:decimal;
-	margin-left:30px;
-}
-.introHtml ol li {
-	padding:5px;
-}
-*/
+
 /* =================================================================================== HOME / INTRO TEXTS */
 .introDiv {
 	margin-right:10%;

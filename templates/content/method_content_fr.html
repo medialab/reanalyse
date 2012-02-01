@@ -4,7 +4,7 @@
 <h1>Sites Enquête</h1>
 <h1>Normalisation</h1>
 <!-- =========================================================================== -->
-NB: Page en cours de rédaction !
+NB: Page en cours de rédaction...
 
 <!-- todo: That part is quite big, maybe put it somewhere else -->
 
@@ -128,7 +128,7 @@ NB: Page en cours de rédaction !
 	</li>
 		
 	<li><h4>Table des codages <span class="content_norm_file">meta_codes.csv</span></h4>
-		Décrit les codes utilisés dans les verbatims.
+		Décrit les <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> utilisés dans les verbatims.
 		<table class="content_norm_ex">
 			<tr><td>*id</td><td>*label</td><td>*type</td><td>hiat</td><td>transcriber</td><td>description</td><td>syntaxe originelle</td><td>info conversion</td></tr>
 			<!--<tr><td>c234</td><td>east_europe</td><td>caqdas</td><td>((theme:east_europe))</td><td>{}</td><td>CAQDAS coded parts</td></tr>-->
@@ -153,30 +153,7 @@ NB: Page en cours de rédaction !
 
 	
 <li><h3>Normalisation des verbatims</h3>
-<ol>
-	<li>
-		<h4>Remarque sur la précision du codage</h4>
-		La précision du codage doit être ajustée selon l'usage souhaité lors de l'exploration de l'enquête.
-		<div class="content_norm_verb">
-		<div><span class="content_norm_verbspk">s003:</span> à Paris, je lui ai dit: "ne fais pas ça"</div>
-		<div><span class="content_norm_verbspk">s002:</span> certes .. mais seulement à Londres</div>
-		</div>
-		<div class="content_norm_vleg">
-			- noms des intervenants
-		</div>
-		<div class="content_norm_verb">
-		<div><span class="content_norm_verbspk">s003:</span> à Paris, je lui ai dit: "ne fais pas ça"</div>
-		<div><span class="content_norm_verbspk">s002:</span> certes .. mais seulement à Londres</div>
-		</div>
-		<div class="content_norm_vleg">
-			- question posée<br/>
-			- noms des intervenants<br/>
-			- citations<br/>
-			- entitées nommées (lieux, personnes)<br/>
-			- paraverbal (...)
-		</div>		
-	</li>
-	
+<ol>	
 	<li>
 		<h4>Normalisation de la syntaxe <span class="content_norm_file">entr n°27 reludéfinitif.rtf</span> > <span class="content_norm_file">entretien_27.txt</span></h4>
 		Une fois déterminé le niveau de précision voulu (et décrit dans le fichier <span class="content_norm_file">meta_codes.csv</span>), il s'agit de traduire (souvent manuellement) la syntaxe utilisée par le chercheur en une syntaxe normalisée HIAT/Transcriber.<br/>
@@ -270,75 +247,86 @@ NB: Page en cours de rédaction !
 
 
 <!-- =========================================================================== -->
-<h1>Visualisations</h1>
+<h1>Exploration</h1>
+NB: Page en cours de rédaction...
+<br/>
 <div class="content_norm">
 	<div>
 	Voici la liste des différentes visualisations disponibles dans un site-enquête.<br/>
 	Chacune d'entre elles correspond à un angle d'exploration différent.<br/>
 	<table class="content_norm_ex">
-		<tr><td>nom</td><td>source</td><td>description</td><td>example</td></tr>
+		<tr><td>nom</td><td>jeu de données</td><td>description</td><td>exemple</td><td>interaction</td></tr>
 		<tr>
 			<!--<td>edBrowse</td>-->
 			<td><a href="#viz_example_dbrowse">Liste des documents</a></td>
 			<td class="content_norm_orig">tous les documents d'une enquête</td>
-			<td>affichage des attributs des speakers sous forme de barchart</td>
+			<td>tableau permettant d'accéder à tous les documents référencés dans une enquête: entretiens, documents préparatoires ou d'analyse, images, etc...</td>
 			<td><a href="#viz_example_dbrowse"><img src="/reanalyse/media/images/viz_example_dbrowse.png" width="160px"></a></td>
+			<td class="content_norm_orig">filtrage par mot clef, tri par colonnes</td>
 			</tr>
 		<tr>
 			<!--<td>esBrowse</td>-->
 			<td><a href="#viz_example_sbrowse">Liste des intervenants</a></td>
 			<td class="content_norm_orig">tous les intervenants d'une enquête</td>
-			<td>affichage des attributs des speakers sous forme de barchart</td>
+			<td>tableau référençant l'intégralité des intervenants d'une enquête, ainsi que leurs propriétés sociographiques</td>
 			<td><a href="#viz_example_sbrowse"><img src="/reanalyse/media/images/viz_example_sbrowse.png" width="160px"></a></td>
+			<td class="content_norm_orig">filtrage par mot clef, tri par colonnes</td>
 			</tr>
 		<tr>
 			<!--<td>edShow</td>-->
 			<td><a href="#viz_example_dshow">Exploration d'un entretien</a></td>
 			<td class="content_norm_orig">un entretien</td>
-			<td>Cette page permet d'explorer un entretien</td>
+			<td>affichage de la transcription d'un verbatim. lorsque le document a été enrichi, certains <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> (silences, évènements, notes, commentaires,...) sont affichés sous forme d'icônes</td>
 			<td><a href="#viz_example_dshow"><img src="/reanalyse/media/images/viz_example_dshow.png" width="160px"></a></td>
+			<td class="content_norm_orig">affichage ou masquage d'un intervenant, ou d'un <a href="/reanalyse/?p=method&q=5#gloss_code">code</a> particulier</td>
 			</tr>
 		<tr>
 			<!--<td>TexteStreamTimeline</td>-->
 			<td><a href="#viz_example_timeline">Dynamique d'entretien</a></td>
 			<td class="content_norm_orig">un entretien</td>
-			<td>évolution de la dynamique d'entretien (tours de parole et codes)</td>
+			<td>graphique présentant l'évolution de la dynamique d'un entretien (<a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> et tours de parole)</td>
 			<td><a href="#viz_example_timeline"><img src="/reanalyse/media/images/viz_example_timeline.png" width="160px"></a></td>
+			<td class="content_norm_orig">modification de la précision, retour possible au texte source</td>
 			</tr>	
 		<tr>
 			<!--<td>Cloud_SolrSpeakerTagCloud</td>-->
 			<td><a href="#viz_example_tagcloud">Nuage de mots</a></td>
 			<td class="content_norm_orig">un ou plusieurs intervenants</td>
-			<td>ngrams classés par tfidf</td>
+			<td>nuage de mots reflétant les <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> à plus fort <a href="/reanalyse/?p=method&q=5#gloss_tfidf">tfidf</a> utilisés par le ou les intervenants</td>
 			<td><a href="#viz_example_tagcloud"><img src="/reanalyse/media/images/viz_example_tagcloud.png" width="160px"></a></td>
+			<td class="content_norm_orig">tri alphabétique, par fréquence ou par tfidf</td>
 			</tr>
 		<tr>
 			<!--<td>Attributes</td>-->
 			<td><a href="#viz_example_attributes">Attributs sociographiques</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants</td>
-			<td>affichage des attributs des speakers sous forme de barchart</td>
+			<td>affichage des attributs sociographiques des intervenants sous forme d'histogramme</td>
 			<td><a href="#viz_example_attributes"><img src="/reanalyse/media/images/viz_example_attributes.png" width="160px"></a></td>
+			<td class="content_norm_orig">affichage dynamique des attributs par survol de la souris</td>
 			</tr>
 		<tr>
 			<!--<td>Graph_SpeakersAttributes</td>-->
 			<td><a href="#viz_example_graph_spkatt">Graphe Intervenants-Attributs</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants, et un jeu d'attributs sociographiques</td>
-			<td>speakers et attributs partagés</td>
+			<td><a href="/reanalyse/?p=method&q=5#gloss_graph">graphe</a> des intervenants et de leurs attributs sociographiques partagés</td>
 			<td><a href="#viz_example_graph_spkatt"><img src="/reanalyse/media/images/viz_example_graph_spkatt.png" width="160px"></a></td>
+			<td class="content_norm_orig">exploration avec le logiciel <a href="http://www.gephi.org">Gephi</a></td>
 			</tr>
 		<tr>
 			<!--<td>Graph_SpeakersWords</td>-->
 			<td><a href="#viz_example_graph_spkngr">Graphe Intervenants-Ngrams</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants</td>
-			<td>speakers et ngrams. les liens reflètent les valeurs de tfidf pour chaque ngram partagé</td>
+			<td><a href="/reanalyse/?p=method&q=5#gloss_graph">graphe</a> des intervenants et des <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> qu'il partagent. le poids des liens est proportionnel aux valeurs de <a href="/reanalyse/?p=method&q=5#gloss_tfidf">tfidf</a> pour chaque ngram</td>
 			<td><a href="#viz_example_graph_spkngr"><img src="/reanalyse/media/images/viz_example_graph_spkngr.png" width="160px"></a></td>
+			<td class="content_norm_orig">exploration avec le logiciel <a href="http://www.gephi.org">Gephi</a></td>
 			</tr>
 		<tr>
 			<!--<td>Graph_SpeakersSpeakers</td>-->
 			<td><a href="#viz_example_graph_spkspk">Graphe des Intervenants</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants</td>
-			<td>liens entre speakers. les liens représentent la valeur de similarité calculée par lucene/solr à partir de chacun des verbatims</td>
+			<td><a href="/reanalyse/?p=method&q=5#gloss_graph">graphe</a> des liens entre intervenants. le poids des liens correspond à un indice de similarité comparant la distance entre les différents verbatims. la proximité dans l'espace est donc directement reliée au nombre de mots utilisés en commum</td>
 			<td><a href="#viz_example_graph_spkspk"><img src="/reanalyse/media/images/viz_example_graph_spkspk.png" width="160px"></a></td>
+			<td class="content_norm_orig">exploration avec le logiciel <a href="http://www.gephi.org">Gephi</a></td>
 			</tr>
 	</table>
 	</div>
@@ -346,53 +334,174 @@ NB: Page en cours de rédaction !
 <ol>
 <li><a name="viz_example_dbrowse"><h2>Liste des documents</h2></a>
 <img src="/reanalyse/media/images/viz_example_dbrowse.png" width="100%">
-
+<br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque document (par ex. <a href="#viz_example_timeline">dynamique d'entretien</a>)
 </li>
 
 <li><a name="viz_example_sbrowse"><h2>Liste des intervenants</h2></a>
 <img src="/reanalyse/media/images/viz_example_sbrowse.png" width="100%">
-
+<br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque intervenant (par ex. <a href="#viz_example_tagcloud">nuage de mots</a> utilisés)
 </li>
 
 <li><a name="viz_example_dshow"><h2>Exploration d'un entretien</h2></a>
 <img src="/reanalyse/media/images/viz_example_dshow.png" width="100%">
-
+<br/>Les blocs en couleur font état des tours de parole.
+<br/>Si le texte est enrichi, les <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> sont représentés par des icônes avec infobulles lors du passage de la souris.
 </li>
 
 <li><a name="viz_example_timeline"><h2>Dynamique d'entretien</h2></a>
 <img src="/reanalyse/media/images/viz_example_timeline.png" width="100%">
-
+<br/>Cette visualisation permet d'explorer l'évolution d'un entretien de son début à sa fin.
+<br/>L'axe horizontal du graphe correspond à l'avancement dans la transcription (nombre de phrases, ou - s'il a été renseigné - le minutage exact).
+<br/>La moitié supérieure fait état de la fréquence des <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> au cours du temps.
+<br/>La partie inférieure décrit le nombre de phrases pour chacun des intervenants (enquêteur inclus), c'est-à-dire les quantités relatives de prise de parole.
+<br/>Le curseur "set precision" permet de modifier la fenêtre d'intégration pour le décompte des phrases:
+<br/>- une valeur faible permet d'observer précisement les passages de parole
+<br/>- une valeur élevée permet de lisser les passages de parole, voire d'obtenir une moyenne sur toute la transcription
 </li>
 
 <li><a name="viz_example_tagcloud"><h2>Nuage de mots</h2></a>
 <img src="/reanalyse/media/images/viz_example_tagcloud.png" width="100%">
-
+<br/>Ce nuage de mots présente les <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> de plus grand <a href="/reanalyse/?p=method&q=5#gloss_tfidf">tfidf</a> pour un ensemble donné d'intervenants.
 </li>
 
 <li><a name="viz_example_attributes"><h2>Attributs sociographiques</h2></a>
 <img src="/reanalyse/media/images/viz_example_attributes.png" width="100%">
-
+<br/>Histogramme interactif présentant sous formes de jauges la répartition des attributs sociographiques d'un jeu donné d'intervenants.
+<br/>Chacune des colonnes correspond à un type d'attribut (sexe,âge,profession,...)
+<br/>Les stratifications verticales montrent l'éventail des valeurs pour chacun des types d'attribut.
+<br/>Dans cet exemple, tous les intervenants sont de Type Idéologique "droite rigoriste"
+<br/>Jacob (qui est selectionné) à un Niveau d'Étude "secondaire", comme environ 50% du panel observé
+<br/>Il est également possible de selectionner une valeur d'attribut, afin d'observer la répartition des autres attributs:
+<br/>- quelle est la répartition des âges des personnes de la région parisienne ?
+<br/>- quelle est la réponse présidentielle des hommes ?
+<br/>- etc...
 </li>
 
 <li><a name="viz_example_graph_spkatt"><h2>Graphe Intervenants-Attributs</h2></a>
 <img src="/reanalyse/media/images/viz_example_graph_spkatt.png" width="100%">
-
+<br/><a href="/reanalyse/?p=method&q=5#gloss_graph">Graphe</a> bipartite, reliant les intervenants à leurs attributs.
+<br/>Dans cet exemple (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>), les couleurs distinguent les différents types d'attributs.
 </li>
 
 <li><a name="viz_example_graph_spkngr"><h2>Graphe Intervenants-Ngrams</h2></a>
 <img src="/reanalyse/media/images/viz_example_graph_spkngr.png" width="100%">
-
+<br/><a href="/reanalyse/?p=method&q=5#gloss_graph">Graphe</a> bipartite des intervenants et des ngrams qu'il partagent
+<br/>Dans cet exemple (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>), les points rouges représentent les <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> partagés. Leur valeurs ainsi que les liens ont ici été masqués pour faciliter la lecture.
 </li>
 
 <li><a name="viz_example_graph_spkspk"><h2>Graphe des Intervenants</h2></a>
 <img src="/reanalyse/media/images/viz_example_graph_spkspk.png" width="100%">
-
+<br/><a href="/reanalyse/?p=method&q=5#gloss_graph">Graphe</a> monopartite (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>) reliant les intervenants entre eux.
+<br/>Ce graphe permet d'évaluer les positions relatives des intervenants (i.e. le vocabulaire partagé) par rapport aux différentes valeurs d'un type d'attributs.
+<br/>Exemple avec les "Types Idéologiques": rouge="divers", bleu="droite libérale", vert="gauche", etc...
 </li>
 
 </ol>
 </div>
 
 
-
+<!-- =========================================================================== -->
+<h1>Glossaire</h1>
+NB: Page en cours de rédaction...
+<div class="content_norm">
+<ul>
+	<!-- ================================ -->
+	<li><a name="gloss_code"><h2>Code</h2></a>
+		Les codes permettent d'enrichir un texte avec des informations de différents types:
+		<p>
+		<ul>
+			<li><b>structuration</b>: tours de parole, temps, paragraphes, sections, ...</li>
+			<li><b>paraverbal</b>: silences, bruits divers, regards, gestuelle, ...</li>
+			<li><b>liées à la transcription d'un verbatim</b>: prononciation, inaudibles, ...</li>
+			<li><b>grammatical et syntaxique</b>: part-of-speech (Nom,Verbe,Pronom,...), lemmes (mangeais,mangeant,ai mangé -> manger)</li>
+			<li><b>annotations de recherche</b>: notes, commentaires, thèmes, ...</li>
+			<li><b>sémantique</b>: ontologies et thésaurus (gars,mec,type = personne)</li>
+		</ul>
+		</p>
+		La précision du codage conditionne celle de l'exploration et de la recherche.</br>
+		Un texte enrichi de codes est généralement décrit au format XML:
+		<div class="content_norm_verb">
+		<div><span class="content_norm_verbm">< spk="John" ></span></span> j'ai mangé à Paris, et lui ai dit: "ne fais pas ça" <span class="content_norm_verbm">< /spk ></span></div>
+		<div><span class="content_norm_verbm">< spk="Mary" ></span> certes mais seulement à Londres <span class="content_norm_verbm">< /spk ></span></div>
+		</div>
+		<div class="content_norm_vleg">
+			exemple de texte brut dont seuls les tours de paroles sont codés (en rouge)
+		</div>
+		<div class="content_norm_verb">
+		<div>
+		<span class="content_norm_verbm">< c="PRO_PERS je" ></span>j'<span class="content_norm_verbm">< /c ></span>
+		<span class="content_norm_verbm">< c="VERB_PAST manger" ></span>ai mangé<span class="content_norm_verbm">< /c ></span> à 
+		<span class="content_norm_verbmcon">< c="city" ></span>Paris<span class="content_norm_verbmcon">< /c ></span>
+		</div>
+		<div><span class="content_norm_verbmc">< c="rires" /></span>
+		</div>
+		<div>
+		 certes <span class="content_norm_verbmc">< c="silence court" /></span> mais seulement à 
+		<span class="content_norm_verbmcon">< c="city" ></span>Londres<span class="content_norm_verbmcon">< /c ></span></div>
+		</div>
+		<div class="content_norm_vleg">
+			exemple avec part-of-speech et lemmes (rouge), paraverbal (jaune) et sémantique (vert)
+		</div>	
+	</li>
+	<!-- ================================ -->
+	<li><a name="gloss_ngram"><h2>Indexation et Ngrams</h2></a>
+		L'indexation des textes permet la recherche dans le corps des verbatims.
+		<div class="content_norm_verb">
+			<div>
+			<span class="content_norm_verbspk">John:</span>
+			Je pense que le travail acharné permet des miracles, mais je crois que les fonctionnaires sont sous-payés.
+			Je pense cela depuis très longtemps.
+			</div>
+			<div>
+			<span class="content_norm_verbspk">Mary:</span>
+			Moi je pense que le travail est horrible et les fonctionnaires horribles aussi.
+			</div>
+		</div>
+		L'indexation permet d'extraire - pour chacun des intervenants - les ngrams, c'est-à-dire tous les groupes de mots de longueur n:
+		<ul>
+			<li><b>1-grams</b>: je, pense, que, le, travail,...</li>
+			<li><b>2-grams</b>: je pense, pense que, que le, le travail,...</li>
+			<li><b>3-grams</b>: je pense que, pense que le, que le travail, le travail acharné,...</li>
+			<li>etc...</li>
+		</ul>
+		Le nombre total de ngrams est évidemment astronomique (même pour n<7), il faut donc pouvoir les filtrer selon leur pertinence.
+		<br/>
+		<br/>Une première mesure de sélection peut se baser - pour des textes enrichis - sur les codes de part-of-speech
+		<br/>Pour exemple, ici, en ne gardant que les groupe nominaux ou les parties sujet-verbe-complément:
+		<br/>- ngrams à rejeter: je pense que le, acharné permet des, sous sous-payés,...
+		<br/>- ngrams pertinents: je pense que, le travail acharné, les fonctionnaires sont sous-payés,...
+		<br/>
+		<br/>Une autre mesure de sélection peut utiliser les valeurs de tf-idf de chacun de ces ngrams.
+		
+	</li>
+	<!-- ================================ -->
+	<li><a name="gloss_tfidf"><h2>term-frequency / document-frequency / tf-idf d'un ngram</h2></a>
+	<ul>
+		<li>term-frequency <b>tf</b>: c'est la fréquence d'occurrence d'un ngram dans un texte</li>
+		<li>document-frequency <b>df</b>: c'est la fréquence d'occurrence d'un ngram dans tous les texte d'une enquête</li>
+		<li>la <b>tfidf</b> = <b>tf</b> * log (1/ <b>df</b>): mesure la spécificité d'un ngram par rapport à l'ensemble des verbatims d'une enquête</li>
+		<br/>Pour exemple avec le texte précédent, par ordre de tfidf décroissant:
+		<ul>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</ul>
+	</li>
+	<!-- ================================ -->
+	<li><a name="gloss_graph"><h2>Graphes</h2></a>
+		Un graphe est constitué de noeuds et de liens. Dans les graphes qui nous intéressent, les noeuds représentent des intervenants, mais ils peuvent également correspondre à des ngrams ou des attributs partagés (si le graphe a plusieurs types de noeuds, il est dit "bipartite").
+		<br/>Pour explorer un fichier de graphe .gexf, il faut l'ouvrir avec le logiciel <a href="http://www.gephi.org">Gephi</a>.
+		<br/>Il est ainsi possible de:
+		<ul>
+			<li><b>spatialiser le graphe</b>: les noeuds se répartissent dans l'espace selon les liens qui les relient (et éventuellement leur poids). Des noeuds qui ont de nombreux liens communs se retrouveront proches l'un de l'autre.
+			</li>
+			<li><b>associer des tailles ou des couleurs aux noeuds</b>, selon des attributs (dans le cas présent, selon le sexe, la profession,...) ou des propriétés intrinsèques à la topologie du graphe (nombre de liens entrants ou sortant,...)</li>
+		</ul>
+	</li>
+</ul>
+</div>
 
 
