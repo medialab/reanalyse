@@ -34,7 +34,6 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 HAYSTACK_SOLR_TIMEOUT = 60 * 5
 
-
 ADMINS = (
      ('pierre', 'your_email@example.com'),
 )
@@ -192,7 +191,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
-# Needed by django-tables2 :
+# Needed by django-tables2
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",

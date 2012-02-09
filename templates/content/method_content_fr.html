@@ -118,13 +118,20 @@ NB: Page en cours de rédaction...
 	<li><h4>Tables des intervenants <span class="content_norm_file">meta_speakers.csv</span></h4>
 		Contient les métadonnées relatives aux personnes impliquées dans l'enquête.
 		<table class="content_norm_ex">
-			<tr><td>*id</td><td>*name</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>_location</td><td>_profession</td><td>groupe</td></tr>
+			<tr><td>*id</td><td>*pseudo</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>_location</td><td>_profession</td><td>groupe</td></tr>
 			<tr class="content_norm_expl"><td>note</td><td></td><td></td><td></td><td></td><td>_age par tranches</td><td></td><td></td><td>catégorisation déductive en 3 groupes. voir groupes.csv</td></tr>
 			<tr><td>s001</td><td>Etienne</td><td>investigator</td><td>chercheur</td><td></td><td></td><td></td><td></td><td></td></tr>
 			<tr><td>s002</td><td>Marc</td><td>speaker</td><td></td><td>18</td><td>15-19</td><td>Paris, France</td><td>student</td><td>Gauche</td></tr>
 			<tr><td>s003</td><td>Julie</td><td>speaker</td><td></td><td>22</td><td>20-24</td><td>Lyon, France</td><td>teacher</td><td>Divers</td></tr>
 			<tr><td>s004</td><td>NC</td><td>protagonist</td><td>mère de Julie</td><td>46</td><td>45-49</td><td>Lyon, France</td><td></td><td></td></tr>
 		</table>
+		Colonnes nécéssaires:
+		<ul>
+		<li>*id</li>
+		<li>*type (seuls les 'speaker' sont affichés dans le site enquête)</li>
+		<li>*pseudo (deviendra le 'Nom')</li>
+		</ul>
+		Pour toutes les autres colonnes: si le nom commence par _, elles seront masqués dans le site enquête
 	</li>
 		
 	<li><h4>Table des codages <span class="content_norm_file">meta_codes.csv</span></h4>

@@ -73,11 +73,16 @@ a:hover {
 
 /* ============================================ GENERAL TOP MENU */
 #menuband {
-	height:75px;
+	height:30px;
 	background-color:darkgray;
 	z-index:-10;
 	border-bottom:1px solid #585858;
 }
+#menuband.bodyid_e {
+	/*bodyid allows to customize css depending on view (normal=small,enquete=big)*/
+	height:75px;
+}
+
 #menu {
 	height:7px;
 }
@@ -94,10 +99,11 @@ a:hover {
 	letter-spacing: 1px;
 	text-decoration: none;
 	/*font-family: Tahoma, Geneva, sans-serif;*/
-	font-family: "CA BND Web Bold",Arial,sans;
+	font-family:"CA BND Web Bold",Arial,sans;
+	/*font-family: Lucida Grande,Arial,sans; */
 	/*text-transform:uppercase;*/
 	/*text-shadow:1px 1px white;*/
-	font-size: 1.1em;
+	font-size: 1.3em;
 	/*font-weight: strong;*/
 	color: #383B3F;
 	background-color:#E8E8E8;

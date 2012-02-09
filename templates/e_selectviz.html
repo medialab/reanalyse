@@ -74,7 +74,7 @@ total: <span id="speakerSelectedCountDiv">0</span> speakers
 	<ul>
 	
 <li>
-	<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{});return false;'>Graph Speakers-Attributes</a>
+	<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds});return false;'>Graph Speakers-Attributes</a>
 	<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
 		<select id="attSelectDropDownList" multiple="multiple">
 		{% for c in attributeTypes %}
@@ -85,13 +85,13 @@ total: <span id="speakerSelectedCountDiv">0</span> speakers
 		</select>
 	<!-- ========================== -->
 </li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{});return false;'>Graph Speakers-Speakers (solr similarity)</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{});return false;'>Graph Speakers-Words (django ngrams)</a></li>
+<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Speakers (solr similarity)</a></li>
+<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Words (django ngrams)</a></li>
 <li id="Cloud_SolrSpeakerTagCloud"><a href='' id="goCreateTagCloud">Tag Cloud (ngrams from solr)</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"textes":selectedTexteIds});return false;'>TexteStreamTimeline (for each text)</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds});return false;'>Attributes</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Overview",{});return false;'>Overview</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"StudyOverview",{});return false;'>Study Overview</a></li>
+<li><a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>TexteStreamTimeline (for each text)</a></li>
+<li><a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a></li>
+<!--<li><a href="" onclick='createVisualization({{enquete.id}},"Overview",{});return false;'>Overview</a></li>-->
+<!--<li><a href="" onclick='createVisualization({{enquete.id}},"StudyOverview",{});return false;'>Study Overview</a></li>-->
 <!--<li><a href="" onclick='createVisualization({{enquete.id}},"SpeakersByText");return false;'>(all) Speakers/Texts</a></li>-->
 <!--<li><a href="" onclick='createVisualization({{enquete.id}},"WordsBySpeaker");return false;'>(t) Words/Speaker</a></li>-->
 <!--<li><a href="" onclick='createVisualization({{enquete.id}},"Cloud_TeiSpeakerTagCloud");return false;'>(s) from TEI</a></li>-->

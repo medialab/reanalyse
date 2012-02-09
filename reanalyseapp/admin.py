@@ -20,12 +20,12 @@ class CommonMedia:
 		'all': (settings.MEDIA_URL+'/css/admin.css',),
 	}
 #############################################################
-class SiteContentAdmin(admin.ModelAdmin):
-	fieldsets = [
-		(None,			 { 'fields': ('name','description','contenthtml')}),
-		#('Description', {'fields': [], 'classes': ['collapse']}),
-	]
-	Media = CommonMedia
+# class SiteContentAdmin(admin.ModelAdmin):
+# 	fieldsets = [
+# 		(None,			 { 'fields': ('name','description','contenthtml')}),
+# 		#('Description', {'fields': [], 'classes': ['collapse']}),
+# 	]
+# 	Media = CommonMedia
 #############################################################
 
 
@@ -47,7 +47,8 @@ class TexteAdmin(admin.ModelAdmin):
 
 
 #############################################################
-admin.site.register(SiteContent, SiteContentAdmin)
+
+#admin.site.register(SiteContent, SiteContentAdmin) # tryout to edit html contents using admin
 admin.site.register(EnqueteSurEnquete)
 admin.site.register(Enquete)
 admin.site.register(Texte,TexteAdmin)

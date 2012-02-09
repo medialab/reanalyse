@@ -1,5 +1,24 @@
 {% load tags %}
 
+	<!-- 
+		Page is an array of timeparts
+		each timepart is an array of already styled sentences 
+		so we just have to loop
+		
+		EXAMPLE :
+			
+						timepart				[s is html styled sentence made when parsing]
+	
+				
+		onlyone				0		div			s s s				
+				
+		concourrant			1		tablerow	s s s s
+									tablerow	s s
+									
+		inmargin			2		div			s
+		
+	-->
+
 {% for onlymargin,timepart in timeparts %}
 		
 		{% if timepart|length == 1 %}		<!-- ########### if only one speaker -->

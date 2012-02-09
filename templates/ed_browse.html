@@ -64,9 +64,7 @@
 	<thead>
 		<tr>
 			{% for c in tTable.columns %}
-			<th>
-				{{c}}
-			</th>
+			<th>{{c}}</th>
 			{% endfor%}
 		</tr>
 	</thead>
@@ -89,6 +87,15 @@
 		</tr>
 		{% endfor%}
 	</tbody>
+<!--
+	<tfoot>
+		<tr>
+			{% for c in tTable.columns %}
+			<th>{{c}}</th>
+			{% endfor%}
+		</tr>
+	</tfoot>
+-->
 </table>
 <!-- ==================================================================== SELECTION -->
 {% if perms.reanalyseapp.can_make %}
@@ -232,10 +239,10 @@
 		//////////////////////////////////////////////////////////////////////
 		// Init documents datatable
 		dTable = $('#docTable').dataTable( {
-			//"bFilter": true,
+			"bFilter": true,
 			//"bSort": false,
-			//"sScrollY": "400px", // rather take max width
-			"sScrollX": "700px",
+			"sScrollY": "400px", // rather take max width
+			"sScrollX": "100%",
  			"sScrollXInner": "850px",
 			"bScrollCollapse": true,
 			"bPaginate": false,
@@ -251,6 +258,26 @@
 				},	
 			}
 		);
+		
+		// todo: we could also try filtering for each column
+		// you would have to import a patched version of the datatableplugin
+		// example: ../datatables/js/jquery.dataTables.columnFilter_patched.js">
+		// .. and play with header, adding <tr id="headrfilter"> ..etc..
+/*
+		dTable.columnFilter({
+			sFilterRow : 	".dataTables_scrollHead #headrfilter",
+			sFilterHead :	"#headrvalues",
+
+			aoColumns: 	[ 	{ type: "select", values: [ 'Gecko', 'Trident', 'KHTML', 'Misc', 'Presto', 'Webkit', 'Tasman']  },
+					     	{ type: "text" },
+					     	null,
+					     	{ type: "number" },
+	             			{ type: "select" }
+						]
+		});
+*/
+
+
 		
 		// todo: understand why "sScrollX" is not taken into account !
 		// we have to set it manually !

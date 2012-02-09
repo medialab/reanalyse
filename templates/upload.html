@@ -4,7 +4,6 @@
 
 	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-1.6.2.min.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}/js/utilScripts.js"></script>
-
 	<link rel="stylesheet" href="{{ MEDIA_URL }}/css/e.css"/>
 	
 {% endblock %}
@@ -21,10 +20,16 @@
 			<!-- or put a simple form for upload here -->
 		</noscript>
 		</div>
-		You can choose to upload:
+		You can choose to either upload:
 		<ul style='margin:5px 0 0 20px;'>
-		<li>all the files in the same time, with the mandatory ddi.xml file</li>
-		<li>a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
+			<li>all the files in the same time, with the mandatory ddi.xml file</li>
+			<li>a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
+		</ul>
+		<br/>
+		NB
+		<ul style='margin:5px 0 0 20px;'>
+			<li>make sure <a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> in online if you need documents to be indexed</li>
+			<li>for verbatims, only XML is supported (TXM made from Transcriber file, or TEI made from Exmaralda > TEI Drop)</li>
 		</ul>
 	</div>
 <! ================================================= -->
@@ -37,16 +42,11 @@
 	</form>
 -->
 <! ================================================= -->
-
-
 {% endblock %}
-
-
 
 {% block bottom %}
 <script src="{{ MEDIA_URL }}/fileuploader/fileuploader.js" type="text/javascript"></script>
 <link rel="stylesheet" href="{{ MEDIA_URL }}/fileuploader/fileuploader.css"/>
-
 <script type="text/javascript">
 	///////////////////////////////////////////////////////////////////////////////////
 	function createUploader(){            
@@ -97,10 +97,7 @@
 	$(function () {
 		createUploader(); 
   	});
-  
-
-
-
+ 
 </script>
 
 {% endblock %}

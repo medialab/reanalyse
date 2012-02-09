@@ -41,10 +41,13 @@ def makeVisualizationObject(e,typ,descr):
 ###########################################################################
 # BUILD VISUALIZATION
 def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
+	# todo:
+	# 1) only do something if texte is TEI
+	# 2) test if same sort of viz exists (eg. don't do another StreamTimeline if already there)
+	# 3) be smart ! eg. create tag cloud of speakers involved when only textes are selected
+	
 	newVizu = None
-	
 	descr = VIZTYPESDESCR[typ]
-	
 	logging.info("makeViz:"+typ)
 	
 	if typ in ['Graph_SpeakersAttributes','Graph_SpeakersWords','Graph_SpeakersSpeakers']:
@@ -133,7 +136,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 			nViz[t.id].textes.add(t)
 			for s in t.speaker_set.all():
 				nViz[t.id].speakers.add(s)
-		# the create json
+		# then create json
 		for t in textes:
 			newVizu = nViz[t.id]
 			d = visMakeStreamTimeline(e,{'where':t})
@@ -185,6 +188,9 @@ def getDictLittleSpeakerSizesInText(t):
 	res['speakers']=arrSpeakers	
 	return res
 ###########################################################################
+
+
+
 
 
 
@@ -630,7 +636,10 @@ def visMakeStreamTimeline(e,param):
 	par_layers=[]
 	par_ids=[]
 	
-	maxPeriods = t.sentence_set.all().aggregate(Max('i')).values()[0]
+	try:
+		maxPeriods = t.sentence_set.all().aggregate(Max('i')).values()[0]
+	except:
+		maxPeriods = 0
 	nPeriods = int(maxPeriods/step)
 	
 	paravList=['silence','laugh','hesitation','interruption','break']

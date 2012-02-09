@@ -27,7 +27,7 @@ function recalculateLeftMenuSize() {
 
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
-// fullscreen mode toggle (for the moment in the document show view)
+// fullscreen mode toggle
 var fullscreenMode = false;
 function toggleFullScreenMode() {
 	var dur = 200;
@@ -45,8 +45,9 @@ function toggleFullScreenMode() {
 		$('#contentcontainer').removeClass("grid_13");
 		$('#contentcontainer').addClass("grid_16");
 		
-		$('#but_fullscreenmode').hide();
-		$('#but_normalmode').show();
+		$('#fullsOnImg').hide();
+		$('#fullsOffImg').show();
+		
 		// todo: make it ok when scrolled !
 		//$('#contentScrollToFixed').scrollToFixed();
 	}
@@ -60,9 +61,9 @@ function toggleFullScreenMode() {
 		
 		$('#contentcontainer').removeClass("grid_16");
 		$('#contentcontainer').addClass("grid_13");
-		
-		$('#but_normalmode').hide();
-		$('#but_fullscreenmode').show();
+
+		$('#fullsOffImg').hide();
+		$('#fullsOnImg').show();		
 	}
 	fullscreenMode=!fullscreenMode;
 }
@@ -338,9 +339,10 @@ function goCreateTagCloud(eid,speakers) {
 	}
 }
 //////////////////////////////////////////////////////////////////
-var thed=null;
 // VISUALIZATION CREATION
 function createVisualization(eid,vizType,moreparams) {
+	console.log("WILL BUILD VIZ");
+	
 	// check global vars
 	if(moreparams['attributetypes']) var selectedAttributeTypesIds = moreparams['attributetypes'];
 	else var selectedAttributeTypesIds = new Array();
@@ -361,65 +363,62 @@ function createVisualization(eid,vizType,moreparams) {
 		alert('That viz needs at least a selected Speaker');
 	}
 */
-	if(false) console.log("no test for the moment");
-	else { // ok, let's do it
-		var dict={};
-		dict['type']=vizType;
-		var attributetypes="";
-		var speakers="";
-		var textes="";
-		
-		if (moreparams) {
-			for (k in moreparams) {
-				console.log("PARAMS:"+k+":"+moreparams[k]);
-				dict[k] = moreparams[k];
-			}
-		} else console.log("PARAMS:empty");
-		
-		////////////////////////////////////////
-		if(selectedAttributeTypesIds.length>0) {
-			selectedAttributeTypesIds.forEach(function(e){
-				attributetypes+=""+e+",";
-			});
-			// remove last ","
-			attributetypes = attributetypes.slice(0,-1);
-			dict['attributetypes']=attributetypes;
+	
+	var dict={};
+	dict['type']=vizType;
+	var attributetypes="";
+	var speakers="";
+	var textes="";
+	
+	console.log("WILL BUILD VIZ0");
+	if (moreparams) {
+		for (k in moreparams) {
+			console.log("PARAMS:"+k+":"+moreparams[k]);
+			dict[k] = moreparams[k];
 		}
-		////////////////////////////////////////
-		if(selectedSpeakerIds.length>0) {
-			selectedSpeakerIds.forEach(function(e){
-				speakers+=""+e+",";
-			});
-			// remove last ","
-			speakers = speakers.slice(0,-1);
-			dict['speakers']=speakers;
-		}
-		////////////////////////////////////////
-		if(selectedTexteIds.length>0) {
-			selectedTexteIds.forEach(function(e){
-				textes+=""+e+",";
-			});
-			// remove last ","
-			textes = textes.slice(0,-1);
-			dict['textes']=textes;
-		}
-		////////////////////////////////////////
-
-		thed=dict;
-		// Send AJAX to create visualization
-		$.ajax({
-			type: "GET",
-			data: dict,
-			dataType: "html",
-			url: '/reanalyse/e/'+eid+'/v/make',
-			cache: false,
-			success: function updateProcessing(indata) { 
-				console.log("VIZU LAUNCHED");
-				return false;
-				// todo: you may want to insert received html into a div...
-			}
+	} else console.log("PARAMS:empty");
+	
+	////////////////////////////////////////
+	if(selectedAttributeTypesIds.length>0) {
+		selectedAttributeTypesIds.forEach(function(e){
+			attributetypes+=""+e+",";
 		});
+		// remove last ","
+		attributetypes = attributetypes.slice(0,-1);
+		dict['attributetypes']=attributetypes;
 	}
+	////////////////////////////////////////
+	if(selectedSpeakerIds.length>0) {
+		selectedSpeakerIds.forEach(function(e){
+			speakers+=""+e+",";
+		});
+		// remove last ","
+		speakers = speakers.slice(0,-1);
+		dict['speakers']=speakers;
+	}
+	////////////////////////////////////////
+	if(selectedTexteIds.length>0) {
+		selectedTexteIds.forEach(function(e){
+			textes+=""+e+",";
+		});
+		// remove last ","
+		textes = textes.slice(0,-1);
+		dict['textes']=textes;
+	}
+	////////////////////////////////////////
+	
+	// Send AJAX to create visualization
+	$.ajax({
+		type: "GET",
+		data: dict,
+		dataType: "html",
+		url: '/reanalyse/e/'+eid+'/v/make',
+		cache: false,
+		success: function updateProcessing(indata) { 
+			console.log("VIZU LAUNCHED");
+			return false;
+		}
+	});
 }
 
 

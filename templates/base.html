@@ -1,4 +1,4 @@
-<!-- for Internationalization -->
+<!-- for Internationalization en/fr -->
 {% load i18n %}
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -7,49 +7,47 @@
 	<title>BEQuali</title>
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
-	
 	<link rel="stylesheet" href="{{ MEDIA_URL }}/grid960/reset.css" />
 	<link rel="stylesheet" href="{{ MEDIA_URL }}/grid960/960.css" />
-	
 	<link href="{{ MEDIA_URL }}/css/default.css" rel="stylesheet" type="text/css" />
-	
 {% block head %}
-
 {% endblock %}
-
 </head>
 
 <body>
-<!-- =========================== HEADER -->
+<!-- =========================== HEADER =========================== -->
 <div class="container_16">
 	<div class="grid_16">
-		<div id="fullscreenContainer">
-			<!-- Button : Fullscreen Mode -->
-			<a href="" id="but_fullscreenmode" title="toggle fullscreen mode" onclick="toggleFullScreenMode();return false;">
-				<img src="{{ MEDIA_URL }}/images/toggle_fullscreen_on.png" alt="description"/>
-			</a>
-			<!-- Button : Normal Mode -->
-			<a href="" id="but_normalmode" style="display:none;" title="toggle fullscreen mode" onclick="toggleFullScreenMode();return false;">
-				<img src="{{ MEDIA_URL }}/images/toggle_fullscreen_off.png" alt="description"/>
-			</a>
-		</div>
+		<a href="" id="fullsLink" title="toggle fullscreen mode" onclick="toggleFullScreenMode();return false;">
+			<div id="fullsContainer">
+				<!-- Button : Normal Mode -->
+				<img id="fullsOffImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_off.png" alt="description" style="display:none;"/>
+				<!-- Button : Fullscreen Mode -->
+				<img id="fullsOnImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_on.png" alt="description"/>
+			</div>
+		</a>
 		<div id="loginContainer">
+			<!-- ================================================ -->
 			<div id="loginLanguage">
 				{% get_language_info for LANGUAGE_CODE as lang %}
-				<form action="/reanalyse/i18n/setlang/" method="post">
+				<form action="/reanalyse/i18n/setlang/" method="post" id="langform">
 					{% csrf_token %}
 					<input name="next" type="hidden" value="{{ request.build_absolute_uri }}" />
-					<select name="language">
+					<select name="language" id="langselect">
 						{% get_language_info_list for LANGUAGES as languages %}
 						{% for language in languages %}
 						<option {% if lang.code == language.code %}selected="selected"{% endif %} value="{{ language.code }}">
-						{{ language.name_local }} ({{ language.code }})
+						{{ language.name_local }}<!--({{ language.code }})-->
 						</option>
 						{% endfor %}
 					</select>
-					<input type="submit" value="Go" />
+					<!--<input type="submit" value="Go" />-->
+					<script type="text/javascript">
+						$("#langselect").change(function(e){ $("#langform").submit();});
+					</script>
 				</form>
 			</div>
+			<!-- ================================================ -->
 			<div id="loginStatus">
 				{% if perms.reanalyseapp.can_make %}
 					{% comment %}Translators: Main page{% endcomment %}
@@ -67,6 +65,7 @@
 				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register">{% trans 'access' %}</a>
 				{% endif %}
 			</div>
+			<!-- ================================================ -->
 			<div id="loginIn">
 				{% if user.is_authenticated %}
 					{% trans 'you are connected as' %} <span id="loginUsername">{{ user.username }}</span>
@@ -110,14 +109,14 @@
 		</div>
 	</div>
 	<div class="clear"></div>
-	<div id="menuband" class="grid_16">
+	<div id="menuband" class="grid_16 bodyid_{{bodyid}}"> <!-- keeping bodyid to customize css depending on view (normal=small,enquete=big) -->
 		<div class="prefix_3">
 			{% block headenquetetitle %}
 			{% endblock %}
 		</div>
 	</div>
 	<div class="clear"></div>
-	<!-- =========================== WRAPPER -->
+	<!-- =========================== WRAPPER =========================== -->
 
 	<div id="wrapper">
 		<div class="grid_3" id="leftmenucontainer">
@@ -141,30 +140,9 @@
 
 	<div class="clear"></div>
 	
-	{% comment %}
 	<!-- <div style="text-align:right;padding:10px;"><a href="javascript:history.back()">< Retour</a></div> -->
-	<!-- BEFORE
-	<div id="wrapper" class="grid_16">
-		<div class="grid_3">
-			<div id="leftmenu">
-				
-				{% block leftmenu %}
-			    {% endblock %}
-		    </div>
-		</div>
-		<div class="grid_13">
-			{% block submenu %}
-			{% endblock %}
-			<div id="content">
-			    {% block content %}
-			    {% endblock %}
-		    </div>
-		</div>
-	</div>
-	<div class="clear"></div>
-	-->
-	{% endcomment %}
-	<!-- =========================== FOOTER -->
+
+	<!-- =========================== FOOTER =========================== -->
 	<div id="footer">
 		<p id="legal">This is a copyright</p>
 		<p id="links"><a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
@@ -175,7 +153,7 @@
 </html>
 
 {% block bottom %}
-
+<!-- for onload javascripts -->
 {% endblock %}
 
 

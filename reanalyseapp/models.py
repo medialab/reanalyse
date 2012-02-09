@@ -37,91 +37,7 @@ from django.utils.safestring import mark_safe
 
 
 ####################################################################
-# for django_tables2
-#class TextNameColumn(tables.Column):
-#	def render(self, value):
-#		return mark_safe('<a href="">%s</a>' % value)
-####################################################################
-# NB
-# we do not use django tables anymore, cause we want more control over data
-# so we use jquery datatables instead
-####################################################################
-# class TextTable(tables.Table):
-# 	#name = TextNameColumn()
-# 	name = tables.TemplateColumn('<a href="{% url reanalyse.reanalyseapp.views.edShow record.enquete.id record.id %}">{{ record.name }}</a>',verbose_name='Nom')
-# 	
-# 	# filesize
-# 	size = tables.TemplateColumn('{{record.filesize}}'+' Ko')
-# 	
-# 	# status
-# 	statcomplete = '{% if record.doctype == "TEI" and record.status != "0" %} {{record.statuscomplete}}%{% endif %}'
-# 	status = tables.TemplateColumn('{{ record.get_status_display }}' + statcomplete, verbose_name='Status')
-# 	
-# 	#doctype = tables.Column(verbose_name='Type')
-# 	doctype = tables.TemplateColumn( '{{ record.get_doctype_display }}', verbose_name='Type')
-# 	speakerStr = '{% for p in record.speaker_set.all %}{% if forloop.counter < 99 %}<a href="{% url reanalyse.reanalyseapp.views.esShow record.enquete.id p.id %}">{{p.name}}</a>, {% endif %}{% endfor %}'
-# 	speaker = tables.TemplateColumn('---')
-# 	
-# 	########## (txt/xml/html) Data Contents
-# 	linkStr = '<a href="{% url reanalyse.reanalyseapp.views.ecShow c.enquete.id c.id %}">{{c.name}}</a>'
-# 	codesStr= '{% for c in record.code_set.all %}{% if forloop.counter < 99 %}'+linkStr+', {% endif %}{% endfor %}'
-# 	codes = tables.TemplateColumn('---')
-# 	
-# 	########## (txt/xml/html) Data Contents
-# 	tStyle='<span style="color:red;">'
-# 	dataStr='{% if record.content|length > 0 %}'+tStyle+'txt</span>&nbsp;{% endif %}{% if record.contenthtml|length > 0 %}'+tStyle+'html</span>&nbsp;{% endif %}{% if record.contentxml|length > 0 %}xml {% endif %}'
-# 	parseStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyse.reanalyseapp.views.edParseXml record.enquete.id record.id %}");return false;\'>parse </a>'
-# 	refreshStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyse.reanalyseapp.views.edStylizeContent record.enquete.id record.id %}");return false;\'>stylize </a>'
-# 	contentavailable = tables.TemplateColumn( dataStr+'{% if record.doctype == "TEI" or record.doctype == "CTX" %}'+parseStr+refreshStr+'{% endif %}' , verbose_name='Data')
-# 	
-# 	########### description of document
-# 	helpdescrimg ='<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/>'
-# 	description = tables.TemplateColumn('<a rel="tooltip" title="{{ record.description }}">'+helpdescrimg+'</a>')
-# 	
-# 	class Meta:
-# 		# for css
-# 		#attrs = {'id': 'enquetetexttable'}
-# 		attrs = {'class': 'paleblue'}
-# 		# order
-# 		sequence = ("doctype","name","size","status","contentavailable","codes","speaker","description")
-# ####################################################################
-# # For speakers, we can also do it with django-tables...
-# # or do it by hand, building a dictionnary in the view (let's try that for the moment)
-# class SpeakerTable(tables.Table):
-# 	name = tables.TemplateColumn('<a href="{% url reanalyse.reanalyseapp.views.esShow record.id %}">{{ record.name }}</a>',verbose_name='Participant')
-# 	# todo : make it work
-# 	attribute_set = tables.TemplateColumn('{% for a in record.attribute_set.all %}{{a.name}}{% endfor %}',verbose_name="Attributs")
-# 	class Meta:
-# 		# for css
-# 		#attrs = {'id': 'enquetetexttable'}
-# 		attrs = {'class': 'paleblue'}
-# 		# order
-# 		sequence = ("name","attribute_set")
-# ####################################################################
-
-
-
-
-
-
-
-
-
-
-####################################################################
-# SITECONTENT (for fixed html contents - for ex. Sites Enquetes)
-class SiteContent(models.Model):
-	name = models.CharField(max_length=200)
-	description = models.CharField(max_length=400)
-	lang = models.CharField(max_length=2, choices=LANG_CHOICES)
-	contenthtml = models.TextField()
-	def __unicode__(self):
-		return self.name
-####################################################################
-
-
-
-####################################################################
+# todo: integrate ESE in the ddi.xml, and then delete those models
 # ENQUETES SUR ENQUETES
 class EnqueteSurEnquete(models.Model):
 	name_id = models.CharField(max_length=200)
@@ -187,64 +103,7 @@ class ESESubChapter(models.Model):
 	summary = models.CharField(max_length=200)
 	mp3 = models.CharField(max_length=200)
 	ogg = models.CharField(max_length=200)
-############
-# DEPRECATED: before merge ese+e
-# def getEnqueteSurEnqueteExhibitJsonStream():
-# 	d=[]
-# 	for enq in EnqueteSurEnquete.objects.all():
-# 		d.append(enq.toDict())
-# 	u={}
-# 	u['items'] = d
-# 	#u['not'] = 12
-# 	return simplejson.dumps(u,indent=4,ensure_ascii=False)
 ####################################################################
-
-
-
-
-
-
-
-
-
-# Testing models on different databases ... à suivre
-#################################
-#class Poire(models.Model):
-#	connection_name="default"
-#	name = models.CharField(max_length=200)
-#	description = models.TextField()
-#	def __unicode__(self):
-#		return self.name
-#################################
-#class Pomme(models.Model):
-#	connection_name="enquetes"
-#	name = models.CharField(max_length=200)
-#	description = models.TextField()
-#	def __unicode__(self):
-#		return self.name
-#	def save(self):
-#		self.connection_name = "enquetes_"+self.name
-#		settings.DATABASES[self.connection_name]= {'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#		'NAME': self.connection_name,
-#		'USER': 'djgo',
-#		'PASSWORD': 'ogjdogjd',
-#		'HOST': '',
-#		'PORT': '',
-#	}
-#		super(Pomme, self).save()
-#################################
-#class SousPomme(models.Model):
-#	connection_name="enquetes"
-#	pomme = models.ForeignKey(Pomme)
-#	name = models.CharField(max_length=200)
-#	def __unicode__(self):
-#		return self.name
-#################################
-
-
-
-
-
 
 
 
@@ -264,7 +123,7 @@ class Enquete(models.Model):
 	ese = models.ForeignKey(EnqueteSurEnquete)
 	ddi_id = models.CharField(max_length=100)
 	#permission = models.ForeignKey(Permission)
-	class Meta: # Users & Groups are inited in views
+	class Meta: # Users & Groups are initialized in views
 		permissions = (
 			("can_browse", "BROWSE Can see enquete overview"),
 			("can_explore", "EXPLORE Can see whole enquete"),
@@ -277,8 +136,6 @@ class Enquete(models.Model):
 			return simplejson.loads(self.metadata)
 		else:
 			return {'metainfo':'no meta was parsed'}
-##############################################################################
-#class Graph(models.Model): # removed ! now a Graph is part of a visualization !
 ##############################################################################
 class Visualization(models.Model):
 	enquete = models.ForeignKey(Enquete)
@@ -307,33 +164,18 @@ class Texte(models.Model):
 	doccat = models.CharField(max_length=25)
 	name = models.CharField(max_length=100)
 	description = models.TextField()
+	# todo
 	date = models.DateField(default=datetime.datetime.today())	# "2011-01-02"
-	location = models.CharField(max_length=30) 				# "Paris" todo: change to gps specific field ?
+	location = models.CharField(max_length=30) 					# "Paris" todo: change to gps specific field ?
 	#
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
-	statuscomplete = models.BigIntegerField(default=0) # 0-100%
+	statuscomplete = models.BigIntegerField(default=0) 			# 0-100%
 	# for verbatims, we store content in DB
-	contenttxt = models.TextField()
-	contenthtml = models.TextField()
-	contentxml = models.TextField()
+	contenttxt = models.TextField()		# unused ? (full text for indexation)
+	contenthtml = models.TextField()	# styled html for display
+	contentxml = models.TextField()		# original xml TEI
 	def __unicode__(self):
 		return str(self.id)+":"+self.name
-############################### Deprecated : styling is made directly in the parsing
-# 	def stylizeContent(self):
-# 		self.status='3'
-# 		self.save()
-# #		try:
-# 		if self.doctype=='CTX':
-# 			# just building html based on existing Codes
-# 			self.contenthtml = stylizeCaqdasToHtml(self)
-# 		elif self.doctype=='TEI':
-# 			# creating html based on Structure
-# 			self.contenthtml = stylizeTeiToHtml(self)
-# 		self.status='0'
-# #		except:
-# #			self.status='-1'
-# 		self.save()
-###############################
 	def parseXml(self):
 		self.status='2'
 		self.save()
@@ -346,60 +188,34 @@ class Texte(models.Model):
 				#self.status='-1'
 		self.save()
 ##############################################################################
-class AttributeType(models.Model): # age,sex,etudes, & group
+
+
+		
+
+
+
+
+
+##############################################################################	
+# age,sex,profession,...
+class AttributeType(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	name = models.CharField(max_length=100)
 	publicy = models.CharField(max_length=1, choices=ATTRIBUTE_PUBLICY_CHOICES)
 	def __unicode__(self):
 		return self.name
-#############
-class Attribute(models.Model): # 45,33,12,H,F,pêcheur diplomé & groupeType2,groupeType3
+##############################################################################	
+# 45,33,12,H,F,pêcheur diplomé & groupeType2,groupeType3
+class Attribute(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	attributetype = models.ForeignKey(AttributeType)
 	name = models.CharField(max_length=150)
 	description = models.TextField() # could be long text to describe a group
 	def __unicode__(self):
 		return self.name
-#############
-
-
-		
-
-# DEPRECATED, groups are People Attributes
-#########################################
-# class Group(models.Model):
-#	enquete = models.ForeignKey(Enquete)
-#	name = models.CharField(max_length=200) # Droite rigoriste, Divers, Gauche
-#	attributes = models.ManyToManyField(Attribute)
-#	def __unicode__(self):
-#		return self.name
-#########################################
-
-
-# DEPRECATED NOW... to trash soon
-#########################################
-# class CodeType(models.Model):
-# 	enquete = models.ForeignKey(Enquete)
-# 	name = models.CharField(max_length=50)
-# 	#description = models.TextField()
-# 	def __unicode__(self):
-# 		return self.name
-#############
-# class AbstractCode(models.Model):
-# 	class Meta:
-# 		abstract = True
-# class CodeBase(AbstractCode):
-# 	name = models.CharField(max_length=50)
-# 	#status = models.CharField(max_length=?)
-# 	def __unicode__(self):
-# 		return self.name
-#########################################
-
-
-	
-		
 ##############################################################################
-class Code(models.Model): 	# [exclamative,interrogative,...] or [silence,break,comment] or ..?
+# for sentences [exclamative,interrogative,...] and for paraverbal[silence,break,comment]
+class Code(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	name = models.CharField(max_length=50)
 	textes = models.ManyToManyField(Texte)
@@ -411,7 +227,7 @@ class Speaker(models.Model):
 	name = models.CharField(max_length=50)
 	textes = models.ManyToManyField(Texte)
 	#################
-	## USED IN TEI XML
+	## USED IN TEI XML and CSV list of spk
 	ddi_id = models.CharField(max_length=100)
 	## USED TO KNOW (investigator/speaker/protagonist)
 	ddi_type = models.CharField(max_length=3, choices=SPEAKER_TYPE_CHOICES)
@@ -439,42 +255,7 @@ class SpeakerSet(models.Model):
 
 
 
-##############################################################################
-# ATLASTI = we have raw text, we store every codes & his exact position
-# This is DEPRECATED because too uncertain !
-##############################################################################
-# class Quotation(models.Model):
-# 	texte = models.ForeignKey(Texte)	
-# 	code = models.ForeignKey(CodeBase)
-# 	# offsets locates code in the Text ("(START)line,offset,(END)line,offset")
-# 	offs = models.CommaSeparatedIntegerField(max_length=50)
-# 	offe = models.CommaSeparatedIntegerField(max_length=50)
-# 	def __unicode__(self):
-# 		return self.id
-##############################################################################
 
-
-
-
-
-##############################################################################
-# OLDWAY : TEIXML = well coded : we store the text as a structure [Interventions > Sentences > Words]
-##############################################################################
-# DEPRECATED (unuseful!)
-# class Intervention(models.Model):
-# 	# Je ne le connais pas ! Enfin •• je crois ((rire)).
-# 	enquete = models.ForeignKey(Enquete)
-# 	texte = models.ForeignKey(Texte)
-# 	speaker = models.ForeignKey(Speaker)
-# 	#####
-# 	contenttxt = models.TextField()
-# 	contenthtml = models.TextField()
-# 	##### time location
-# 	i = models.BigIntegerField(default=0)
-# 	o = models.BigIntegerField(default=0)
-# 	######
-# 	def __unicode__(self):
-# 		return "Intervention"+str(self.i)+":"+self.speaker.name
 #################################################
 class Sentence(models.Model):
 	# Enfin •• je crois ((rire)).
@@ -495,8 +276,6 @@ class Sentence(models.Model):
 	def __unicode__(self):
 		return "part"+str(self.n)+"["+str(self.i)+","+str(self.o)+"]from"+str(self.speaker.id)+":"+self.contenttxt[:7]
 ####################################################################################
-# Word Entities will be soon deprecated ?
-####################################################################################
 class WordEntity(models.Model):
 	# Word used by all Speakers
 	enquete = models.ForeignKey(Enquete)
@@ -511,7 +290,8 @@ class WordEntity(models.Model):
 	maxspeakerid = models.BigIntegerField(default=0)
 	######
 	def __unicode__(self):
-		return "WordEntity:"+self.content	
+		return "WordEntity:"+self.content
+####################################################################################
 class WordEntitySpeaker(models.Model):
 	# Word used by a Speaker
 	speaker = models.ForeignKey(Speaker)
@@ -524,6 +304,7 @@ class WordEntitySpeaker(models.Model):
 	######
 	def __unicode__(self):
 		return "WordEntitySpeaker:"+self.speaker.name
+####################################################################################
 class Word(models.Model):
 	# Unique instance of WordEntitySpeaker in a Text
 	enquete = models.ForeignKey(Enquete)
@@ -535,8 +316,6 @@ class Word(models.Model):
 	def __unicode__(self):
 		return "Word:"+str(self.n)+":"+self.wordentity.content	
 ####################################################################
-
-
 
 
 
@@ -574,27 +353,13 @@ class NgramSpeaker(models.Model):
 
 
 
-####################################################################
-# here we are able to parse:
-#		- XML-TEI file made by TEI Drop 	(<Trans>)
-#		- XML-TXM file made by TXM			(<TEI>)
-#
-# todo: use DTD to parse any schema..
-####################################################################
 
 
 
-########################################################################################################################################
-######################################################################################################################################## XML PARSER
-########################################################################################################################################
-
-####################################################################
-def parseXmlDocument(texte):
-	# Build structure :
-	# Interventions (from Speaker)
-	# Sentences (in Intervention)
-	# Word (in Sentence)
-	
+############################################################################################
+# TEI XML PARSER
+############################################################################################
+def parseXmlDocument(texte):	
 	# WE ERASE ALL OBJECTS if there is (will erase Sentences & Words too)
 	texte.sentence_set.all().delete()
 	
@@ -602,10 +367,24 @@ def parseXmlDocument(texte):
 	root = tree.getroot()
 	roottag = root.tag
 	
-	#########################
-	# NB: we don't care about speaker ids ! name is already stored based on .csv
-	# ...however, we keep speaker array to store/update total txt content of each
+	######################### todo
+	# it may be better to use xslt to "parse" xml
+	# the current parsing loops are expensive !
+	# xslt could also fetch subparts of the original xml file !
+	
+	######################### NB
+	# we don't care about speakers !
+	# we just get_or_create(ddi_id=theidfoundinTEI)
+	# supposing all speaker infos/attributes were or will be updated using .csv file
+	# however, we keep a speaker array to store/update total txt content of each spk (see bellow)
+	
 	speakersArray=[]
+	
+	######################### NB
+	# only 2 DTD are supported :
+	#	- XML-TEI file made by Exmaralda > TEI Drop 	tag <Trans>
+	#	- XML-TXM file made by Transcriber > TXM		tag <TEI>
+	# todo: use DTD to parse any schema..
 	
 	######################### XML TXM
 	if roottag=='Trans':
@@ -628,7 +407,7 @@ def parseXmlDocument(texte):
 	
 	#########################
 	else:
-		logging.info("PB:XML file not parsed cause neither Trans or TEI")
+		logging.info("PB:XML file not parsed cause neither <Trans> or <TEI> tag was found")
 ####################################################################
 
 
@@ -636,7 +415,7 @@ def parseXmlDocument(texte):
 
 
 
-############################################################################################################### TXM
+############################################################################################################### PARSE TXM
 # NB: we build long sentences without looking at punctuation
 def parseTXMDivs(texte,nodes,speakersArray):
 	e=texte.enquete
@@ -718,7 +497,7 @@ def parseTXMWords(sentence,words,N):
 
 
 
-############################################################################################################### TEI
+############################################################################################################### PARSE TEI
 ####################################################################
 def getTeiAnchorTime(elem):
 	# because of weird TEI use of "#T453" or "T453" for time anchors
@@ -996,16 +775,13 @@ def parseTEIWords(sentence,nodes,N):
 #	0		4	5		B
 ################################################################################## TIMEPART 
 
-
-# to build text, we have to : order_by('i','speakerid','n')
-
+# to reconstruct text, we have to : order_by('i','speakerid','n')
 
 
-
-# NEW ONE FETCHING only [i,j] timeparts
+# NEW ONE FETCHING only [i,j] timeparts (if interested, see old deprecated way below)
 ####################################################################
 # getTextContent() returns an array of successive styled sentences
-# additionnal styling (for blocks of verbatim) is made in template
+# additionnal styling (for blocks of verbatim) is made in template render_d.html
 # the array is asked at each new texte pagination in the view
 #
 # NB: hard styled in sentence.contenthtml
@@ -1017,7 +793,7 @@ def parseTEIWords(sentence,nodes,N):
 #	<div class="text_part speakerColor_23">
 #	<div class="text_speaker"> ...
 #
-
+####################################################################
 def getTextContent(texte,fromT,toT):
 	RESARRAY = []
 	curTimePart = []
@@ -1065,46 +841,223 @@ def getTextContent(texte,fromT,toT):
 
 
 
-# OLD ONE FETCHING ALL TEXT, deprecated soon...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# DEPRECATED way to stylize verbatims
+# ####################################################################
+# # returns time-grouped same-speaker-parts made of 1+ sentences
+# def splitSentencesByTime(sentList):	
+# 	curTime = 0
+# 	curSpeakId = sentList[0].speaker.id
+# 	partList=[] 	# is the list of concurrent speaks = parts
+# 	sentInPart=[]	# for one speak (same speaker), there may be many sentences
+# 	for sent in sentList:
+# 		sId = sent.speaker.id
+# 		if sent.i!=curTime: # new part because new time !			
+# 			partList.append(sentInPart)		# add not-stored-last-part
+# 			yield [curTime,partList] 		# returns the new part
+# 			curTime=sent.i					# new time
+# 			curSpeakId=sId					# new speaker
+# 			partList=[]
+# 			sentInPart=[]
+# 			sentInPart.append(sent)			# adding curr sent to the same-speaker-part
+# 		else:	# same time, ...look at the cur sent
+# 			if sId!=curSpeakId:	# changing part cause new speaker
+# 				partList.append(sentInPart)	# add builded-(last)-part in the parts
+# 				curSpeakId=sId
+# 				sentInPart=[]				# new part
+# 				sentInPart.append(sent)		# put the current sent in the part
+# 			else:	# same speaker, same part
+# 				sentInPart.append(sent)		
+# 	partList.append(sentInPart)
+# 	yield [curTime,partList]
+# ####################################################################
+# # DEPRECATED New version, getting all sentences
+# def stylizeTeiToHtml(texte):
+# 	HTMLSTR=""
+# 	texte.statuscomplete=0
+# 	texte.save()
+# 	totalSentences=texte.sentence_set.count()
+# 	nDoneSents=0
+# 	
+# 	queueHtmlSentStr=""
+# 	queueOnlyMargin=True
+# 	# init lastSId to first speaker
+# 	lastSId = texte.sentence_set.all().order_by('i','speaker','n')[0].speaker.id
+# 	NPARTS=0
+# 	# looping over array made of each time
+# 	for sentParts in list( splitSentencesByTime(texte.sentence_set.all().order_by('i','speaker','n')) ):
+# 		curTimeStr = str(sentParts[0])
+# 		parts = sentParts[1]
+# 		nConcurent = len(parts)
+# 		sameTimeMultipleDiv=""
+# 		sameTimeSingleDiv=""
+# 		
+# 		firstSent = parts[0][0]
+# 		curAloneSId = firstSent.speaker.id
+# 		curSpeakName = firstSent.speaker.name
+# 		
+# 		# todo: !!!! flush the queue for the last element !!!!! not done there
+# 		
+# 		################# we have to regroup time-successive-alone-speaks to the same div
+# 		################# flush queued single-speaks if NEXT = new speaker OR multiple "speaks"
+# 		if queueHtmlSentStr:
+# 			if (nConcurent>1) or (nConcurent==1 and queuelastSId!=curAloneSId):
+# 				if queueOnlyMargin: # then, put it raw (it must be a div styled to be in margin)
+# 					HTMLSTR += queueHtmlSentStr
+# 				else:
+# 					speakNameDiv='<div class="text_speaker_name">'+queuelastSName+' <span class="text_speaker_namecount">.'+str(NPARTS)+'</span></div>'
+# 					sameTimeSingleDiv += '<div class="text_speaker speakerColor_'+str(queuelastSId)+' speaker_'+str(queuelastSId)+'">'
+# 					sameTimeSingleDiv += speakNameDiv + queueHtmlSentStr
+# 					sameTimeSingleDiv += '</div>'
+# 					HTMLSTR += '<div class="text_part part_'+str(NPARTS)+'" id="part_'+str(NPARTS)+'">' + sameTimeSingleDiv +'</div>'
+# 					NPARTS+=1
+# 				queueHtmlSentStr=""
+# 				queuelastSId=curAloneSId
+# 				queuelastSname=curSpeakName
+# 				queueOnlyMargin=True
+# 			
+# 		################# =1 : most of time, there is only one "speak"... queue them (we'll eventually flush them on next loop)
+# 		if nConcurent==1:
+# 			sents = parts[0]
+# 			inMargin,html = stylizeTeiSentencesToHtml(sents)
+# 			nDoneSents+=len(sents)
+# 			queueHtmlSentStr += html
+# 			queuelastSId=curAloneSId
+# 			queuelastSName=curSpeakName
+# 			queueOnlyMargin=queueOnlyMargin and inMargin
+# 
+# 		################# >1 : but sometimes, we have many "speaks" on the same time...
+# 		else:
+# 			# reset queue for alone speaks of same speakers (see above)
+# 			queueHtmlSentStr=""
+# 			htmlSentStr=""
+# 			
+# 			########## Before, we were trying a table view with 2/3 columns, so we had to set the width and borders
+# 			# <th> width depends on nConcurent
+# 			# we will use <th> border style to set horizontal margin between concurrent "interventions"
+# 			#thWidth = str(100/nConcurent)+"%"
+# 			#thBorder="5px solid white"
+# 			########## Now, we also use the table, but with different lines and a special-yellow border
+# 			
+# 			##### Looping over parts, made of same-speaker-sentences
+# 			for k,sents in enumerate(parts):
+# 				# get htmlStr for the 1+ sentences
+# 				# IMPORTANT: 	we dont care about inMargin
+# 				#				supposing (time:) & (comment:) alone are never involved in concurrent "speaks"
+# 				#				so if they are, we display them anyway
+# 				inMargin,htmlSentStr = stylizeTeiSentencesToHtml(sents)
+# 				nDoneSents+=len(sents)
+# 				speak = sents[0].speaker
+# 				sId = speak.id
+# 				sName = speak.name
+# 				speakNameDiv='<div class="text_speaker_name">'+sName+' <span class="text_speaker_namecount">.'+str(NPARTS)+'</span></div>'
+# 				# note: CLASS speakerColor_id to set bckg color		set in Template
+# 				# note: ID speaker_id to show/hide					set in Javascript
+# 				sameTimeMultipleDiv += '<tr><th class="speakerColor_'+str(sId)+'">'
+# 				sameTimeMultipleDiv += '<div class="text_speaker speakerColor_'+str(sId)+' speaker_'+str(sId)+'">'
+# 				sameTimeMultipleDiv += speakNameDiv
+# 				sameTimeMultipleDiv += htmlSentStr
+# 				sameTimeMultipleDiv += '</div></th></tr>'
+# 			# table with only one row and as many columns as concurrent "interventions"
+#  			HTMLSTR += '<div class="text_part part_'+str(NPARTS)+'" id="part_'+str(NPARTS)+'"><table>'
+#  			HTMLSTR += sameTimeMultipleDiv # note that there is only one speaker name div (the first one)
+#  			HTMLSTR += '</table></div>'	
+#  			NPARTS+=1
+#  		
+#  		################ From time to time say how much loading..
+#  		compl=int(nDoneSents*100/totalSentences) # not exact, because NPARTS < totalSentences, we dont care
+# 		if compl!=texte.statuscomplete and compl%5==0:
+# 			texte.statuscomplete = compl
+# 			texte.save()
+# 	return HTMLSTR
+# ####################################################################
+
+
+
+
+
+
+
+# DEPRECATED : now, styling is made directly in the parsing, storing an html version
+################################################ 
+# deprecated Texte Model method to build stylized version of text
+# 	def stylizeContent(self):
+# 		self.status='3'
+# 		self.save()
+# #		try:
+# 		if self.doctype=='CTX':
+# 			# just building html based on existing Codes
+# 			self.contenthtml = stylizeCaqdasToHtml(self)
+# 		elif self.doctype=='TEI':
+# 			# creating html based on Structure
+# 			self.contenthtml = stylizeTeiToHtml(self)
+# 		self.status='0'
+# #		except:
+# #			self.status='-1'
+# 		self.save()
+################################################ 
+
+
+
+
+
+
+
+
+# DEPRECATED OLD way TO FETCH ALL TEXT
 ####################################################################
 # return array of successive styled sentences (more styling made in template)
 # the array is used in texte pagination in the view
-def makeArrayFromTextContent(texte):
-	RESARRAY = []
-	curTimePart = []
-	curSentences = []
-	
-	sIdCur = texte.sentence_set.all().order_by('i','speaker','n')[0].speaker.id
-	timeCur = 0
-	onlyMargin = True
-	
-	for s in texte.sentence_set.all().order_by('i','speaker','n'):
-		
-		if s.i == timeCur: # SAME TIMEPART
-			if s.speaker.id != sIdCur: # NEW SPEAKER
-				curTimePart.append(curSentences)
-				curSentences = []
-			else: # SAME SPEAKER
-				donothing=1
-					
-		else: # NEW TIMEPART
-			curTimePart.append(curSentences)
-			RESARRAY.append([onlyMargin,curTimePart])
-			curTimePart = []
-			curSentences = []
-			onlyMargin = True
-		
-		timeCur = s.i 
-		sIdCur = s.speaker.id
-		if s.code.name != 'only_margin':
-			onlyMargin = False
-			
-		curSentences.append(s)
-	
-	# flush last part
-	curTimePart.append(curSentences)
-	RESARRAY.append([onlyMargin,curTimePart])
-	return RESARRAY
+# def makeArrayFromTextContent(texte):
+# 	RESARRAY = []
+# 	curTimePart = []
+# 	curSentences = []
+# 	
+# 	sIdCur = texte.sentence_set.all().order_by('i','speaker','n')[0].speaker.id
+# 	timeCur = 0
+# 	onlyMargin = True
+# 	
+# 	for s in texte.sentence_set.all().order_by('i','speaker','n'):
+# 		
+# 		if s.i == timeCur: # SAME TIMEPART
+# 			if s.speaker.id != sIdCur: # NEW SPEAKER
+# 				curTimePart.append(curSentences)
+# 				curSentences = []
+# 			else: # SAME SPEAKER
+# 				donothing=1
+# 					
+# 		else: # NEW TIMEPART
+# 			curTimePart.append(curSentences)
+# 			RESARRAY.append([onlyMargin,curTimePart])
+# 			curTimePart = []
+# 			curSentences = []
+# 			onlyMargin = True
+# 		
+# 		timeCur = s.i 
+# 		sIdCur = s.speaker.id
+# 		if s.code.name != 'only_margin':
+# 			onlyMargin = False
+# 			
+# 		curSentences.append(s)
+# 	
+# 	# flush last part
+# 	curTimePart.append(curSentences)
+# 	RESARRAY.append([onlyMargin,curTimePart])
+# 	return RESARRAY
 ####################################################################
 
 
@@ -1113,138 +1066,17 @@ def makeArrayFromTextContent(texte):
 
 
 
-
 ####################################################################
-# returns time-grouped same-speaker-parts made of 1+ sentences
-def splitSentencesByTime(sentList):	
-	curTime = 0
-	curSpeakId = sentList[0].speaker.id
-	partList=[] 	# is the list of concurrent speaks = parts
-	sentInPart=[]	# for one speak (same speaker), there may be many sentences
-	for sent in sentList:
-		sId = sent.speaker.id
-		if sent.i!=curTime: # new part because new time !			
-			partList.append(sentInPart)		# add not-stored-last-part
-			yield [curTime,partList] 		# returns the new part
-			curTime=sent.i					# new time
-			curSpeakId=sId					# new speaker
-			partList=[]
-			sentInPart=[]
-			sentInPart.append(sent)			# adding curr sent to the same-speaker-part
-		else:	# same time, ...look at the cur sent
-			if sId!=curSpeakId:	# changing part cause new speaker
-				partList.append(sentInPart)	# add builded-(last)-part in the parts
-				curSpeakId=sId
-				sentInPart=[]				# new part
-				sentInPart.append(sent)		# put the current sent in the part
-			else:	# same speaker, same part
-				sentInPart.append(sent)		
-	partList.append(sentInPart)
-	yield [curTime,partList]
+# DEPRECATED ? html site content
+# SITECONTENT (for fixed html contents - for ex. Sites Enquetes)
+# class SiteContent(models.Model):
+# 	name = models.CharField(max_length=200)
+# 	description = models.CharField(max_length=400)
+# 	lang = models.CharField(max_length=2, choices=LANG_CHOICES)
+# 	contenthtml = models.TextField()
+# 	def __unicode__(self):
+# 		return self.name
 ####################################################################
-# New version, getting all sentences
-def stylizeTeiToHtml(texte):
-	HTMLSTR=""
-	texte.statuscomplete=0
-	texte.save()
-	totalSentences=texte.sentence_set.count()
-	nDoneSents=0
-	
-	queueHtmlSentStr=""
-	queueOnlyMargin=True
-	# init lastSId to first speaker
-	lastSId = texte.sentence_set.all().order_by('i','speaker','n')[0].speaker.id
-	NPARTS=0
-	# looping over array made of each time
-	for sentParts in list( splitSentencesByTime(texte.sentence_set.all().order_by('i','speaker','n')) ):
-		curTimeStr = str(sentParts[0])
-		parts = sentParts[1]
-		nConcurent = len(parts)
-		sameTimeMultipleDiv=""
-		sameTimeSingleDiv=""
-		
-		firstSent = parts[0][0]
-		curAloneSId = firstSent.speaker.id
-		curSpeakName = firstSent.speaker.name
-		
-		# todo: !!!! flush the queue for the last element !!!!! not done there
-		
-		################# we have to regroup time-successive-alone-speaks to the same div
-		################# flush queued single-speaks if NEXT = new speaker OR multiple "speaks"
-		if queueHtmlSentStr:
-			if (nConcurent>1) or (nConcurent==1 and queuelastSId!=curAloneSId):
-				if queueOnlyMargin: # then, put it raw (it must be a div styled to be in margin)
-					HTMLSTR += queueHtmlSentStr
-				else:
-					speakNameDiv='<div class="text_speaker_name">'+queuelastSName+' <span class="text_speaker_namecount">.'+str(NPARTS)+'</span></div>'
-					sameTimeSingleDiv += '<div class="text_speaker speakerColor_'+str(queuelastSId)+' speaker_'+str(queuelastSId)+'">'
-					sameTimeSingleDiv += speakNameDiv + queueHtmlSentStr
-					sameTimeSingleDiv += '</div>'
-					HTMLSTR += '<div class="text_part part_'+str(NPARTS)+'" id="part_'+str(NPARTS)+'">' + sameTimeSingleDiv +'</div>'
-					NPARTS+=1
-				queueHtmlSentStr=""
-				queuelastSId=curAloneSId
-				queuelastSname=curSpeakName
-				queueOnlyMargin=True
-			
-		################# =1 : most of time, there is only one "speak"... queue them (we'll eventually flush them on next loop)
-		if nConcurent==1:
-			sents = parts[0]
-			inMargin,html = stylizeTeiSentencesToHtml(sents)
-			nDoneSents+=len(sents)
-			queueHtmlSentStr += html
-			queuelastSId=curAloneSId
-			queuelastSName=curSpeakName
-			queueOnlyMargin=queueOnlyMargin and inMargin
-
-		################# >1 : but sometimes, we have many "speaks" on the same time...
-		else:
-			# reset queue for alone speaks of same speakers (see above)
-			queueHtmlSentStr=""
-			htmlSentStr=""
-			
-			########## Before, we were trying a table view with 2/3 columns, so we had to set the width and borders
-			# <th> width depends on nConcurent
-			# we will use <th> border style to set horizontal margin between concurrent "interventions"
-			#thWidth = str(100/nConcurent)+"%"
-			#thBorder="5px solid white"
-			########## Now, we also use the table, but with different lines and a special-yellow border
-			
-			##### Looping over parts, made of same-speaker-sentences
-			for k,sents in enumerate(parts):
-				# get htmlStr for the 1+ sentences
-				# IMPORTANT: 	we dont care about inMargin
-				#				supposing (time:) & (comment:) alone are never involved in concurrent "speaks"
-				#				so if they are, we display them anyway
-				inMargin,htmlSentStr = stylizeTeiSentencesToHtml(sents)
-				nDoneSents+=len(sents)
-				speak = sents[0].speaker
-				sId = speak.id
-				sName = speak.name
-				speakNameDiv='<div class="text_speaker_name">'+sName+' <span class="text_speaker_namecount">.'+str(NPARTS)+'</span></div>'
-				# note: CLASS speakerColor_id to set bckg color		set in Template
-				# note: ID speaker_id to show/hide					set in Javascript
-				sameTimeMultipleDiv += '<tr><th class="speakerColor_'+str(sId)+'">'
-				sameTimeMultipleDiv += '<div class="text_speaker speakerColor_'+str(sId)+' speaker_'+str(sId)+'">'
-				sameTimeMultipleDiv += speakNameDiv
-				sameTimeMultipleDiv += htmlSentStr
-				sameTimeMultipleDiv += '</div></th></tr>'
-			# table with only one row and as many columns as concurrent "interventions"
- 			HTMLSTR += '<div class="text_part part_'+str(NPARTS)+'" id="part_'+str(NPARTS)+'"><table>'
- 			HTMLSTR += sameTimeMultipleDiv # note that there is only one speaker name div (the first one)
- 			HTMLSTR += '</table></div>'	
- 			NPARTS+=1
- 		
- 		################ From time to time say how much loading..
- 		compl=int(nDoneSents*100/totalSentences) # not exact, because NPARTS < totalSentences, we dont care
-		if compl!=texte.statuscomplete and compl%5==0:
-			texte.statuscomplete = compl
-			texte.save()
-	return HTMLSTR
-####################################################################
-
-
-
 
 
 
@@ -1427,6 +1259,80 @@ def stylizeTeiToHtml(texte):
 # 	return parts
 ####################################################################
 
+
+
+
+
+
+
+
+
+
+####################################################################
+# tryout using djangotables
+# DEPRECATED since we used jquery-datatables instead !
+####################################################################
+# for django_tables2
+#class TextNameColumn(tables.Column):
+#	def render(self, value):
+#		return mark_safe('<a href="">%s</a>' % value)
+####################################################################
+# NB
+# we do not use django tables anymore, cause we want more control over data
+# so we use jquery datatables instead
+####################################################################
+# class TextTable(tables.Table):
+# 	#name = TextNameColumn()
+# 	name = tables.TemplateColumn('<a href="{% url reanalyse.reanalyseapp.views.edShow record.enquete.id record.id %}">{{ record.name }}</a>',verbose_name='Nom')
+# 	
+# 	# filesize
+# 	size = tables.TemplateColumn('{{record.filesize}}'+' Ko')
+# 	
+# 	# status
+# 	statcomplete = '{% if record.doctype == "TEI" and record.status != "0" %} {{record.statuscomplete}}%{% endif %}'
+# 	status = tables.TemplateColumn('{{ record.get_status_display }}' + statcomplete, verbose_name='Status')
+# 	
+# 	#doctype = tables.Column(verbose_name='Type')
+# 	doctype = tables.TemplateColumn( '{{ record.get_doctype_display }}', verbose_name='Type')
+# 	speakerStr = '{% for p in record.speaker_set.all %}{% if forloop.counter < 99 %}<a href="{% url reanalyse.reanalyseapp.views.esShow record.enquete.id p.id %}">{{p.name}}</a>, {% endif %}{% endfor %}'
+# 	speaker = tables.TemplateColumn('---')
+# 	
+# 	########## (txt/xml/html) Data Contents
+# 	linkStr = '<a href="{% url reanalyse.reanalyseapp.views.ecShow c.enquete.id c.id %}">{{c.name}}</a>'
+# 	codesStr= '{% for c in record.code_set.all %}{% if forloop.counter < 99 %}'+linkStr+', {% endif %}{% endfor %}'
+# 	codes = tables.TemplateColumn('---')
+# 	
+# 	########## (txt/xml/html) Data Contents
+# 	tStyle='<span style="color:red;">'
+# 	dataStr='{% if record.content|length > 0 %}'+tStyle+'txt</span>&nbsp;{% endif %}{% if record.contenthtml|length > 0 %}'+tStyle+'html</span>&nbsp;{% endif %}{% if record.contentxml|length > 0 %}xml {% endif %}'
+# 	parseStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyse.reanalyseapp.views.edParseXml record.enquete.id record.id %}");return false;\'>parse </a>'
+# 	refreshStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyse.reanalyseapp.views.edStylizeContent record.enquete.id record.id %}");return false;\'>stylize </a>'
+# 	contentavailable = tables.TemplateColumn( dataStr+'{% if record.doctype == "TEI" or record.doctype == "CTX" %}'+parseStr+refreshStr+'{% endif %}' , verbose_name='Data')
+# 	
+# 	########### description of document
+# 	helpdescrimg ='<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/>'
+# 	description = tables.TemplateColumn('<a rel="tooltip" title="{{ record.description }}">'+helpdescrimg+'</a>')
+# 	
+# 	class Meta:
+# 		# for css
+# 		#attrs = {'id': 'enquetetexttable'}
+# 		attrs = {'class': 'paleblue'}
+# 		# order
+# 		sequence = ("doctype","name","size","status","contentavailable","codes","speaker","description")
+# ####################################################################
+# # For speakers, we can also do it with django-tables...
+# # or do it by hand, building a dictionnary in the view (let's try that for the moment)
+# class SpeakerTable(tables.Table):
+# 	name = tables.TemplateColumn('<a href="{% url reanalyse.reanalyseapp.views.esShow record.id %}">{{ record.name }}</a>',verbose_name='Participant')
+# 	# todo : make it work
+# 	attribute_set = tables.TemplateColumn('{% for a in record.attribute_set.all %}{{a.name}}{% endfor %}',verbose_name="Attributs")
+# 	class Meta:
+# 		# for css
+# 		#attrs = {'id': 'enquetetexttable'}
+# 		attrs = {'class': 'paleblue'}
+# 		# order
+# 		sequence = ("name","attribute_set")
+# ####################################################################
 
 
 
@@ -1835,3 +1741,131 @@ def stylizeTeiToHtml(texte):
 #	def ogg(self):
 #		return self.el.attrib['ogg']
 ####################################################################
+
+
+
+
+
+
+
+
+
+
+####################################################################################################################################
+# DEPRECATED MODELS
+####################################################################################################################################
+
+
+
+# DEPRECATED, groups are People Attributes
+#########################################
+# class Group(models.Model):
+#	enquete = models.ForeignKey(Enquete)
+#	name = models.CharField(max_length=200) # Droite rigoriste, Divers, Gauche
+#	attributes = models.ManyToManyField(Attribute)
+#	def __unicode__(self):
+#		return self.name
+#########################################
+
+
+# DEPRECATED NOW... to trash soon
+#########################################
+# class CodeType(models.Model):
+# 	enquete = models.ForeignKey(Enquete)
+# 	name = models.CharField(max_length=50)
+# 	#description = models.TextField()
+# 	def __unicode__(self):
+# 		return self.name
+#############
+# class AbstractCode(models.Model):
+# 	class Meta:
+# 		abstract = True
+# class CodeBase(AbstractCode):
+# 	name = models.CharField(max_length=50)
+# 	#status = models.CharField(max_length=?)
+# 	def __unicode__(self):
+# 		return self.name
+#########################################
+
+
+
+
+
+
+
+# Testing models on different databases ... à suivre
+#################################
+#class Poire(models.Model):
+#	connection_name="default"
+#	name = models.CharField(max_length=200)
+#	description = models.TextField()
+#	def __unicode__(self):
+#		return self.name
+#################################
+#class Pomme(models.Model):
+#	connection_name="enquetes"
+#	name = models.CharField(max_length=200)
+#	description = models.TextField()
+#	def __unicode__(self):
+#		return self.name
+#	def save(self):
+#		self.connection_name = "enquetes_"+self.name
+#		settings.DATABASES[self.connection_name]= {'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#		'NAME': self.connection_name,
+#		'USER': 'djgo',
+#		'PASSWORD': 'ogjdogjd',
+#		'HOST': '',
+#		'PORT': '',
+#	}
+#		super(Pomme, self).save()
+#################################
+#class SousPomme(models.Model):
+#	connection_name="enquetes"
+#	pomme = models.ForeignKey(Pomme)
+#	name = models.CharField(max_length=200)
+#	def __unicode__(self):
+#		return self.name
+#################################
+
+
+
+
+
+
+##############################################################################
+# ATLASTI = we have raw text, we store every codes & his exact position
+# This is DEPRECATED because too uncertain !
+##############################################################################
+# class Quotation(models.Model):
+# 	texte = models.ForeignKey(Texte)	
+# 	code = models.ForeignKey(CodeBase)
+# 	# offsets locates code in the Text ("(START)line,offset,(END)line,offset")
+# 	offs = models.CommaSeparatedIntegerField(max_length=50)
+# 	offe = models.CommaSeparatedIntegerField(max_length=50)
+# 	def __unicode__(self):
+# 		return self.id
+##############################################################################
+
+
+
+
+
+##############################################################################
+# OLDWAY : TEIXML = well coded : we store the text as a structure [Interventions > Sentences > Words]
+##############################################################################
+# DEPRECATED (unuseful!)
+# class Intervention(models.Model):
+# 	# Je ne le connais pas ! Enfin •• je crois ((rire)).
+# 	enquete = models.ForeignKey(Enquete)
+# 	texte = models.ForeignKey(Texte)
+# 	speaker = models.ForeignKey(Speaker)
+# 	#####
+# 	contenttxt = models.TextField()
+# 	contenthtml = models.TextField()
+# 	##### time location
+# 	i = models.BigIntegerField(default=0)
+# 	o = models.BigIntegerField(default=0)
+# 	######
+# 	def __unicode__(self):
+# 		return "Intervention"+str(self.i)+":"+self.speaker.name
+##############################################################################

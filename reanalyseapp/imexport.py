@@ -4,6 +4,9 @@ import settings
 import logging
 import os,re
 
+# csv.Dicteader
+import csv
+
 from reanalyse.reanalyseapp.models import *
 from reanalyse.reanalyseapp.utils import *
 
@@ -32,19 +35,6 @@ from subprocess import PIPE, Popen
 
 
 
-###########################################################################
-def exportEnquetesAsXML():
-	filePath = settings.REANALYSEUPLOADPATH+"export_enquetes.xml"
-	XMLSerializer = serializers.get_serializer("xml")
-	xml_serializer = XMLSerializer()
-	fileOut = open(filePath, "w")
-	xml_serializer.serialize(Enquete.objects.all(), stream=fileOut)
-	fileOut.close()
-	logging.info("exporting all Enquetes to XML:"+filePath)
-###########################################################################
-
-
-
 
 ###########################################################################
 def updateDictWithMeta(dic,root,name,xmlpath):
@@ -57,15 +47,16 @@ def updateDictWithMeta(dic,root,name,xmlpath):
 #		dic.update({name:['error']})
 	return dic
 ###########################################################################
+# ddi.xml parser
 def importEnqueteDDI2(inXmlPath):
 	tree = etree.parse(inXmlPath)
 	root = tree.getroot()
 	
 	#nodes = root.xpath('ns:docDscr/ns:citation/ns:titlStmt',namespaces={'XMLDDINMS':'http://www.icpsr.umich.edu/DDI'})
 	
-	# NB: we do removeAllSpacesReturns() to clean text value of xml tags
+	# NB: we do removeAllSpacesReturns() to clean text value in xml tags
 	
-	# GENERAL META
+	######### GENERAL META
 	name = root.findall(XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')[0].text
 	descr = root.findall(XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'abstract')[0].text
 	study_ddi_id = root.findall(XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'titlStmt/'+XMLDDINMS+'IDNo')[0].text
@@ -76,11 +67,11 @@ def importEnqueteDDI2(inXmlPath):
 	descr = makeHtmlFromText(descr)
 	shortdescr = descr.split('</p>')[0]+'</p>'
 	
-	# ALL OTHER META
+	######### ALL OTHER META
 	allmeta={}
 	allmeta['description'] = descr
 	
-	# Study Descr
+	######### Study Descr
 	updateDictWithMeta(allmeta,root,'docTitle',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')
 	updateDictWithMeta(allmeta,root,'docAuthEntry',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'rspStmt/'+XMLDDINMS+'AuthEnty')
 	updateDictWithMeta(allmeta,root,'doccopyright',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'copyright')
@@ -91,7 +82,7 @@ def importEnqueteDDI2(inXmlPath):
 	updateDictWithMeta(allmeta,root,'cgrantNo',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'grantNo')
 	updateDictWithMeta(allmeta,root,'cdistrbtr',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'distStmt/'+XMLDDINMS+'distrbtr')
 	
-	# Study Info
+	######### Study Info
 	updateDictWithMeta(allmeta,root,'snation',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'nation')
 	updateDictWithMeta(allmeta,root,'sgeogCover',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'geogCover')
 	updateDictWithMeta(allmeta,root,'sanlyUnit',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'anlyUnit')
@@ -101,7 +92,7 @@ def importEnqueteDDI2(inXmlPath):
 	updateDictWithMeta(allmeta,root,'mcollMode',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'collMode')
 	updateDictWithMeta(allmeta,root,'mcollSitu',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'collSitu')
 	
-	# Related Publications
+	######### Related Publications
 	relPubs = []
 	for relPubNode in root.findall(XMLDDINMS+'stdyDscr/'+XMLDDINMS+'othrStdyMat/'+XMLDDINMS+'relPubl/'+XMLDDINMS+'citation'):
 		title = relPubNode.findall(XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')[0].text
@@ -152,7 +143,7 @@ def importEnqueteDDI2(inXmlPath):
 			m_date = datetime.datetime.today()
 		
 		location = enquetePath + '/' + location
-		logging.info("creating document from path:"+name+" "+location)
+		logging.info("Document: "+name+" "+location)
 		# status=1 means object exists but not completely loaded yet
 		newDocument = Texte(enquete=newEnquete,name=name,locationpath=location,date=m_date,location=m_location,status='1')
 		# get file size
@@ -183,6 +174,7 @@ def importEnqueteDDI2(inXmlPath):
 					newDocument.save()
 					# assume this is a TEI XML document
 					parseDocumentTEI(newDocument)
+				# completely deprecated, forget now about CQDAS
 	# 			elif typ=='CAQDAS':
 	# 				newDocument.description="xml atlasti project was parsed, then all referenced rtf file was converted in txt and codes are stored as Quotations with their position (offset) in the text"
 	# 				newDocument.doctype='ATL'
@@ -221,73 +213,59 @@ def parseDocumentRTF(doc):
 def parseDocumentCSV(doc):
 	# supposing header where first column is id
 	# id_participant = PEOPLE
-	# DEPRECATED (id_type = GROUP)
 	# other = ATTRIBUTE
-	e=doc.enquete
+	e = doc.enquete
 	
-	p = parseCsvFile(doc.locationpath)
-	header = p['header']
-	content = p['content']
+	reader = csv.DictReader(open(doc.locationpath),delimiter='\t',quotechar='"')
+	headers = reader.fieldnames
 	
-	######################### now, create objects (only if csv is Table with "*id")
-	if "*id" in p['header']:
+	mandatories = ["*pseudo","*id","*type"]
+	if not False in [m in headers for m in mandatories]:
 		newSpeaker=None
 		
-		################## COLUMNS >3 : ATTRIBUTES CATEGORIES !
 		attributetypes=[]
-		for catval in header[3:]:
-			if catval.startswith("_") or catval.startswith("*"):
+		# create attributetypes (except for atts already in model: id,type,name)
+		for catval in headers:
+			if catval.startswith("_") or catval.startswith("*") or catval in mandatories:
 				publicy = '0'
 			else:
 				publicy = '1'
 			newAttType,isnew = AttributeType.objects.get_or_create(enquete=e,publicy=publicy,name=catval)
 			attributetypes.append(newAttType)
-			
-		for line in content: 
-			################### COLUMN 1		*id
-			################### COLUMN 2		*type 				(only 'speaker' is displayed in sBrowse)
-			################### COLUMN 3		*pseudo (>name)
-	
-			################### OTHERS			_anyattributes 		(not displayed in sBrowse)
-			################### OTHERS			any attributes		(displayed in sBrowse)
-			
-			maintype=header[0]
-			attval=line[maintype]
-			
-			# TRASH: newCodeType,isnew = CodeType.objects.get_or_create(enquete=e,name='speaker')
-			
-			pid = line['*id']
-			try:
-				pty = SPEAKER_TYPE_CSV_DICT[ line['*type'] ]
-			except:
-				pty = 'OTH'
-			
-			pna = line['*pseudo']
-			
+			#logging.info("Attributetype ("+doc.name+"): "+catval)
+		
+		for row in reader:
+			####### COLUMN		*id
+			####### COLUMN		*type 				(only 'speaker' is displayed in sBrowse)
+			####### COLUMN		*pseudo (>name)
+			####### OTHERS		_anyattributes 		(not displayed in sBrowse)
+			####### OTHERS		any attributes		(displayed in sBrowse)
+						
+			pid = row['*id']
+			pty = SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
+			pna = row['*pseudo']
 			if pna=="":
 				pna="Speaker"
 			
 			newSpeaker,isnew = Speaker.objects.get_or_create(enquete=e,ddi_id=pid,ddi_type=pty,name=pna)
 			
 			for attype in attributetypes:
-				attval=line[attype.name]
+				attval=row[attype.name]
 				if attval=='':
 					attval='[NC]'
 				newAttribute,isnew = Attribute.objects.get_or_create(enquete=e,attributetype=attype,name=attval)
 				newSpeaker.attributes.add(newAttribute)
 			newSpeaker.save()
-			
+	else:
+		# mandatory columns were not found, so what ?
+		praygod=1
+		#logging.info("csv file without mandatory fields:"+doc.name)
+		
 	doc.status='0'
 	doc.save()
-###########################################################################
-# todo: each time we create object PEOPLE or GROUP
-# test if already there (look at name) and update attributes
-# do not creates clones (for example if a Participant is defined at different places…)
-# DONE using "objects.get_or_create"
 ###########################################################################	
 def parseDocumentTEI(doc):
 	e = doc.enquete
-	
 	try:
 		# keep original xml in database
 		inDoc = open(doc.locationpath,'r')
@@ -305,7 +283,7 @@ def parseDocumentTEI(doc):
 		doc.status='-1'
 		doc.save()
 		
-	# you may want to get speakers-list here already (?)
+	# you may want to fetch the speaker list for that file (?)
 # 	tree = etree.parse(doc.locationpath)
 # 	root = tree.getroot()
 # 
@@ -316,13 +294,33 @@ def parseDocumentTEI(doc):
 # 		newSpeaker,isnew = Speaker.objects.get_or_create(enquete=e,name=name,codetype=theCodeType)
 # 		newSpeaker.textes.add(doc)
 # 		newSpeaker.save()
-	
-
 ###########################################################################
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+###########################################################################
+# def exportEnquetesAsXML():
+# 	filePath = settings.REANALYSEUPLOADPATH+"export_enquetes.xml"
+# 	XMLSerializer = serializers.get_serializer("xml")
+# 	xml_serializer = XMLSerializer()
+# 	fileOut = open(filePath, "w")
+# 	xml_serializer.serialize(Enquete.objects.all(), stream=fileOut)
+# 	fileOut.close()
+# 	logging.info("exporting all Enquetes to XML:"+filePath)
+###########################################################################
 
 
 

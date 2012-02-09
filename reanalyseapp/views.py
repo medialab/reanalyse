@@ -22,12 +22,11 @@ from django.conf import settings
 import glob
 import os
 
-###### UPLOAD
 # just to make unique folder name when uploading enquete
-# time already imported in models.py
+# note that time already imported in models.py
 from time import time
 
-# to remove folder (shutil.rmtree("/foldername")
+# to remove folder recursively (shutil.rmtree("/foldername")
 import shutil
 
 from django.core.servers.basehttp import FileWrapper
@@ -37,7 +36,6 @@ from django.core.urlresolvers import reverse
 
 # used to manual send token in context for eBrowse (then eAdd)
 from django.middleware.csrf import get_token
-
 from django.core import serializers
 
 # for esbrowse, visualization.json, etc..
@@ -81,6 +79,13 @@ import logging
 
 
 
+
+
+
+
+
+###########################################################################
+# LOGGING (todo cleaner!)
 ###########################################################################
 def init_mylogging():
 	 logging.basicConfig(level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s', filename=settings.REANALYSELOGPATH+'reanalyse.log', filemode='a+')
@@ -133,44 +138,35 @@ if not usersInitDone:
 	
 
 
-###########################################################################
-def testMe(request):
-	if request.POST:
-		content=request.POST
-		status=ok
-	else:
-		content=status='none'
-	d={'status':status,'content':content}
-	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
-	return HttpResponse(jsondata, mimetype="application/json")
-###########################################################################
+
+
+
+
 
 
 
 
 ###########################################################################
-# MAIN VIEW
+# MAIN VIEWS (static pages + login/register views)
+###########################################################################
+@login_required
+def eDelete(request,eid):
+	Enquete.objects.get(id=eid).delete()
+	return render_to_response('e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
 def logoutuser(request):
 	logout(request)
 	return redirect('/reanalyse')
 ###########################################################################
 def home(request):
-	# pname 	is the menu section		'project','method',...
-	# spname	is the subpage			'0','1' for subsections		OR	'login','register' for login
+	# (p)pname 	is the menu section		'project','method','access',...
+	# (q)spname	is the subpage			'0','1' for subsections		OR	'login','register' for login
 	
-	try:
-		pname = request.GET.get('p','project')
-	except:
-		pname = 'project'
-	try:
-		spname = request.GET.get('q','0')
-	except:
-		spname = '0'
-	
+	pname = request.GET.get('p','project')
+	spname = request.GET.get('q','0')
 	ctx={}
 	
-	######################################################################################################## STATIC PAGE
+	################################################################################### STATIC PAGE (PROJECT/METHOD)
 	if pname in ['project','method']:
 		# temp (remove once all pages activated)
 		if pname=='method' and spname=='0':
@@ -194,10 +190,8 @@ def home(request):
 			isActive = len(txtcont)>10
 			subpages.append([str(i),txttitl,isActive])
 		ctx.update({'contenthtml':contenthtml,'subpages':subpages})
-		
 	
-	
-	######################################################################################################## LOGIN/REGISTER PAGE
+	#################################################################################### LOGIN/REGISTER PAGE (ACCESS)
 	if pname=='access':
 		if spname=='0':
 			spname='register'
@@ -256,12 +250,7 @@ def home(request):
 	# Translators: home view				
 	ctx.update({'bodyid':pname,'pageid':spname})
 		
-	return render_to_response('home.html',ctx ,context_instance=RequestContext(request))
-###########################################################################
-@login_required
-def eDelete(request,eid):
-	Enquete.objects.get(id=eid).delete()
-	return render_to_response('e_browse.html', context_instance=RequestContext(request))
+	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
 ###########################################################################
 
 
@@ -271,15 +260,145 @@ def eDelete(request,eid):
 
 
 
-###########################################################################
-# TEMP
-###########################################################################
-def docShow(request):
-	filepath = settings.REANALYSESITECONTENTPATH + 'doc' + '_content.html'
-	contenthtml = getContentOfFile(filepath)
-	sc,isnew = SiteContent.objects.get_or_create(name='doc',contenthtml=contenthtml)
-	return render_to_response('home_doc.html', {'contenthtml':sc.contenthtml}, context_instance=RequestContext(request))
+
+
+
+
+
+
 ################################################################################
+# UPLOAD & PARSE enquete
+################################################################################
+@login_required
+def eUpload(request):
+	sessionFolderName = "up_"+str(time())
+	return render_to_response('upload.html', {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}, context_instance=RequestContext(request))
+################################################################################
+@login_required
+def eAddAjax(request):
+	d={}
+	success=""
+	if request.method == "POST":
+		foldname = request.GET['foldname']
+		if request.is_ajax( ):
+			upload = request
+			is_raw = True
+			try:
+				filename = request.GET['qqfile']
+			except KeyError:
+				return HttpResponseBadRequest( "AJAX request not valid" )
+		else:
+			is_raw = False
+			if len( request.FILES ) == 1:
+				upload = request.FILES.values( )[ 0 ]
+			else:
+				raise Http404( "Bad Upload" )
+			filename = upload.name
+	
+		success = save_upload( upload, foldname, filename, is_raw )
+		d['success'] = success
+		d['loc'] = foldname+"/"+filename
+	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
+	return HttpResponse(jsondata, mimetype="application/json")
+################################################################################
+@login_required
+def save_upload( uploaded, foldname, filename, raw_data ):
+	''' 
+	raw_data: if True, uploaded is an HttpRequest object with the file being
+			the raw post data 
+			if False, uploaded has been submitted via the basic form
+			submission and is a regular Django UploadedFile in request.FILES
+	'''
+	try:
+		from io import FileIO, BufferedWriter
+		# check if dir exist, create it if needed
+		wantedDir = settings.REANALYSEUPLOADPATH+"/"+foldname
+		if not os.path.exists(wantedDir):
+			os.mkdir(wantedDir)
+		with BufferedWriter( FileIO( wantedDir+"/"+filename, "wb" ) ) as dest:
+			# if the "advanced" upload, read directly from the HTTP request 
+			# with the Django 1.3 functionality
+			if raw_data:
+				foo = uploaded.read( 1024 )
+				while foo:
+					dest.write( foo )
+					foo = uploaded.read( 1024 ) 
+			# if not raw, it was a form upload so read in the normal Django chunks fashion
+			else:
+				for c in uploaded.chunks( ):
+					dest.write( c )
+		# got through saving the upload, report success
+		return True
+	except IOError:
+		# could not open the file most likely
+		pass
+	return False
+################################################################################
+@login_required
+def eParse(request):
+	d={}
+	folname = request.GET.get('foldname','')
+	logging.info("IMPORT ENQUETE from:"+folname )
+	
+	upPath = settings.REANALYSEUPLOADPATH+folname+"/"
+	
+	######## uploaded everything at once
+	if os.path.exists(upPath+"ddi.xml"):
+		e = importEnqueteDDI2(upPath+"ddi.xml")
+	######## uploaded a ddi.zip, assuming ddi.xml is directly in the archive (no subfolders!)
+	elif os.path.exists(upPath+"ddi.zip"):
+		os.mkdir(upPath+"extracted")
+		unzipper = unzip()
+		unzipper.extract(upPath+"ddi.zip",upPath+"extracted/")
+		e = importEnqueteDDI2(upPath+"extracted/ddi.xml")
+	
+	logging.info("enquete ddi.xml imported:"+e.name )
+	
+	e.status='1'
+	e.statuscomplete=0
+	e.save()
+	
+	####### PARSE TEI and UPDATE INDEX (and save statuscomplete to know loading status)
+	# we look at '5'='Waiting' TEI Documents...
+	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
+	docsCur = 0
+	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
+		logging.info("now parsing text:"+t.name )
+		t.parseXml()
+		logging.info("texte parsed, now updating solr index:"+t.name )
+		update_index.Command().handle(verbosity=0)
+		logging.info("solr index updated")
+		docsCur+=1
+		e.statuscomplete = int(docsCur*100/docsTotal)
+		e.save()
+		
+		# let's make stream timeline viz for each text
+		logging.info("make streamtimeline viz")
+		try:
+			makeViz(e,"TexteStreamTimeline",textes=[t])
+		except:
+			logging.info("PB: pb making streamtimeline viz for texte id: "+str(t.id))
+		
+	logging.info("all texts were sucessfully parsed")
+	
+	####### UPDATE ALL TFIDF
+	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
+	logging.info("now updating tfidf")
+	makeAllTfidf(e)
+	logging.info("tfidf sucessfully updated")
+	
+	e.status='0'
+	e.save()
+	logging.info("IMPORT ENQUETE DONE !")
+#	except:
+		#e.status='-1'
+		#e.save()
+		
+	d['status']='enquete imported'
+	json = simplejson.dumps(d,indent=4,ensure_ascii=False)
+	return HttpResponse(json, mimetype="application/json")
+################################################################################
+
 
 
 
@@ -313,160 +432,6 @@ def eBrowse(request):
 
 
 
-################################################################################
-def eUpload(request):
-	sessionFolderName = "up_"+str(time())
-	return render_to_response('upload.html', {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}, context_instance=RequestContext(request))
-################################################################################
-@login_required
-def eAddAjax(request):
-	d={}
-	success=""
-	if request.method == "POST":
-		foldname = request.GET['foldname']
-		if request.is_ajax( ):
-			upload = request
-			is_raw = True
-			try:
-				filename = request.GET['qqfile']
-			except KeyError:
-				return HttpResponseBadRequest( "AJAX request not valid" )
-		else:
-			is_raw = False
-			if len( request.FILES ) == 1:
-				upload = request.FILES.values( )[ 0 ]
-			else:
-				raise Http404( "Bad Upload" )
-			filename = upload.name
-	
-		success = save_upload( upload, foldname, filename, is_raw )
-		d['success'] = success
-		d['loc'] = foldname+"/"+filename
-	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
-	return HttpResponse(jsondata, mimetype="application/json")
-################################################################################
-def save_upload( uploaded, foldname, filename, raw_data ):
-	''' 
-	raw_data: if True, uploaded is an HttpRequest object with the file being
-			the raw post data 
-			if False, uploaded has been submitted via the basic form
-			submission and is a regular Django UploadedFile in request.FILES
-	'''
-	try:
-		from io import FileIO, BufferedWriter
-		# check if dir exist, create it if needed
-		wantedDir = settings.REANALYSEUPLOADPATH+"/"+foldname
-		if not os.path.exists(wantedDir):
-			os.mkdir(wantedDir)
-		with BufferedWriter( FileIO( wantedDir+"/"+filename, "wb" ) ) as dest:
-			# if the "advanced" upload, read directly from the HTTP request 
-			# with the Django 1.3 functionality
-			if raw_data:
-				foo = uploaded.read( 1024 )
-				while foo:
-					dest.write( foo )
-					foo = uploaded.read( 1024 ) 
-			# if not raw, it was a form upload so read in the normal Django chunks fashion
-			else:
-				for c in uploaded.chunks( ):
-					dest.write( c )
-		# got through saving the upload, report success
-		return True
-	except IOError:
-		# could not open the file most likely
-		pass
-	return False
-################################################################################
-# 	if request.method == 'GET':
-# 		if len(request.FILES.getlist('thefiles'))>0:
-# 			# create upload folder
-# 			newFolderPath = settings.REANALYSEUPLOADPATH + str(time())
-# 			os.mkdir(newFolderPath)
-# 			#logging.info( "///////therequest :"+request.POST )
-# 			#logging.info( "///////thefiles :"+request.FILES.getlist )
-# 			#uform = UploadFileForm(request.POST, request.FILES)
-# 			for f in request.FILES.getlist('thefiles'):
-# 				logging.info( "UPLOADING FILE: "+newFolderPath+"/"+f.name )
-# 				# not uploading for real, just get the right file in upload folder
-# 				destination = open(newFolderPath+"/"+f.name, 'wb+')
-# 				for chunk in f.chunks():
-# 					destination.write(chunk)
-# 				destination.close()
-# 			# every file has been uploaded, then create enquete
-# 			st = "from POST"
-# 			#importEnqueteDDI2(newFolderPath+"/"+"ddi.xml")
-# 		else:
-# 			st = "from already xml"
-# 			#importEnqueteDDI2(settings.REANALYSEUPLOADPATH+"PolitiqueEtEurope/PolitiqueEtEurope.xml")
-# 	d={}
-# 	d['message']=st
-# 	d['success']='true'
-# 	d['error']='pas vraiment de raison'+st
-# 	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
-# 	return HttpResponse(jsondata, mimetype="application/json")
-################################################################################
-def eParse(request):
-	d={}
-	status=''
-	folname = request.GET.get('foldname','')
-	logging.info("IMPORT ENQUETE from:"+folname )
-	
-	upPath = settings.REANALYSEUPLOADPATH+folname+"/"
-	
-	if os.path.exists(upPath+"ddi.xml"):
-		e = importEnqueteDDI2(upPath+"ddi.xml")
-	# assuming ddi.xml is directly in the archive (no subfolders!)
-	elif os.path.exists(upPath+"ddi.zip"):
-		os.mkdir(upPath+"extracted")
-		unzipper = unzip()
-		unzipper.extract(upPath+"ddi.zip",upPath+"extracted/")
-		e = importEnqueteDDI2(upPath+"extracted/ddi.xml")
-	
-	logging.info("enquete ddi.xml imported:"+e.name )
-	
-	e.status='1'
-	e.statuscomplete=0
-	e.save()
-	
-# 	try:		
-	####### PARSE TEI and UPDATE INDEX (and save statuscomplete to know loading status)
-	# we look at 'Waiting' TEI Documents...
-	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
-	docsCur = 0
-	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
-		logging.info("now parsing text:"+t.name )
-		t.parseXml()
-		logging.info("texte parsed, now updating solr index:"+t.name )
-		update_index.Command().handle(verbosity=0)
-		logging.info("solr index updated")
-		docsCur+=1
-		e.statuscomplete = int(docsCur*100/docsTotal)
-		e.save()
-		
-		# let's make stream timeline viz for each text
-		logging.info("make streamtimeline viz")
-		try:
-			makeViz(e,"TexteStreamTimeline",textes=[t])
-		except:
-			logging.info("PB: pb making streamtimeline viz for texte id: "+str(t.id))
-		
-	logging.info("all texts were sucessfully parsed + viz made")
-	
-	####### UPDATE ALL TFIDF
-	logging.info("now updating tfidf")
-	makeAllTfidf(e)
-	logging.info("tfidf sucessfully updated")
-	
-	e.status='0'
-	e.save()
-	logging.info("IMPORT ENQUETE DONE !")
-#	except:
-		#e.status='-1'
-		#e.save()	
-	d['status']=status
-	json = simplejson.dumps(d,indent=4,ensure_ascii=False)
-	return HttpResponse(json, mimetype="application/json")
-################################################################################
 
 
 
@@ -763,7 +728,7 @@ def esBrowse(request,eid):
 		
 		
 		ngramcount = str(s.ngramspeaker_set.count())
-		ngramjsonlink = ' <a href="'+ reverse(esGetSolrTermVector,args=[eid,s.id]) +'">json ngrams</a>'
+		ngramjsonlink = ' <a href="'+ reverse(esGetSolrTermVector,args=[eid,s.id]) +'">json_ngrams</a>'
 		ngramsStr = ngramcount + ngramjsonlink
 		
 		########################## VALUES
@@ -784,7 +749,7 @@ def esBrowse(request,eid):
 			nameStr = '<a href="'+linkDoc+'">'+tx.name+'</a>'
 			vals.append( nameStr )
 		else:
-			vals.append( "in "+str(len(texteslist))+" documents" )
+			vals.append( "in "+str(len(texteslist))+" docs" )
 		
 		########################## TO DICT
 		theDict={}	
@@ -861,6 +826,8 @@ def dGetHtmlAround(request,eid,sid):
 		
 	return render_to_response('render_d.html', ctx, context_instance=RequestContext(request))
 #####################################################
+# return styled html of a portion of the text, using template
+# todo: another solution: using XSLT from original TEI XML, this would be simpler without need to parse at the beginning!
 @login_required
 @permission_required('reanalyseapp.can_explore')
 def dGetHtmlContent(request,eid,did):
@@ -911,10 +878,6 @@ def edShow(request,eid,did):
 	texte = Texte.objects.get(id=did)
 	ctx = {'enquete':texte.enquete,'texte':texte,'bodyid':'e','pageid':'documents'}
 	
-# 	Deprecated pagination
-# 	page = request.GET.get('page',1)
-# 	perpage = request.GET.get('perpage',50)
-	
 	###### RELATED VIZ
 	ctx.update({'visualizations':getRelatedViz(textes=[texte])})
 	
@@ -935,23 +898,6 @@ def edShow(request,eid,did):
 			
 		ctx.update({'minpart':minPart,'maxpart':maxPart,'totalmaxparts':maxTextPart})
 		
-		### DEPRECATED : all text fetching is made AJAX
-# 		##(very deprecated...)textSplitedArray = makeArrayFromTextContent(texte)
-# 		timeparts = getTextContent(texte,minPart,maxPart)
-# 		ctx.update({'timeparts':timeparts})
-		
-		### DEPRECATED Paginator
-# 		paginator = Paginator(textSplitedArray, int(perpage))
-# 		try:
-# 			curPage = paginator.page(page)
-# 		except PageNotAnInteger:
-# 			# If page is not an integer, deliver first page.
-# 			curPage = paginator.page(1)
-# 		except EmptyPage:
-# 			# If page is out of range (e.g. 9999), deliver last page of results.
-# 			curPage = paginator.page(paginator.num_pages)
-# 		ctx.update({'page':curPage})
-		
 		### CODES_PARAVERBAL DICT FOR LEGEND (see globalvars)
 		ctx.update({'paraverbal':PARVBCODES})
 		
@@ -967,16 +913,6 @@ def edShow(request,eid,did):
 		spk = texte.speaker_set.filter(ddi_type="SPK")
 		pro = texte.speaker_set.filter(ddi_type="PRO")
 		ctx.update({'speakers':{'inv':inv,'spk':spk,'pro':pro}})
-		
-		### STATS (DEPRECATED?)
-# 		stats=dict()
-# 		stats['textes'] = [ texte ]
-# 		stats['speakers'] = texte.speaker_set.all()
-# 		stats['codes'] = Code.objects.filter(textes=texte)
-# 		stats['interventions'] = texte.intervention_set.count()
-# 		stats['wordentities'] = texte.wordentity_set.count()
-# 		stats['words'] = Word.objects.filter(sentence__intervention__texte=texte).count()
-# 		ctx.update({'stats':stats})
 	
 	######################################### CSV
 	if texte.doctype=='CSV':
@@ -1050,45 +986,7 @@ def ecShow(request,eid,cid):
 
 
 ###########################################################################
-# ENQUETES SUR ENQUETE
-###########################################################################
-# def eseHome(request):
-# 	filepath = settings.REANALYSESITECONTENTPATH + 'ese_intro' + '_content.html'
-# 	contenthtml = getContentOfFile(filepath)
-# 	sc,isnew = SiteContent.objects.get_or_create(name='ese_intro',contenthtml=contenthtml)
-# 	return render_to_response('ese_intro.html', {'contenthtml':sc.contenthtml} ,context_instance=RequestContext(request))
-# ###########################################################################
-# def eseBrowse(request):
-# 	# LOOK AT ENQUETES XMLs AND UPDATE MODEL OBJECTS DATABASE
-# 	enquetes = []
-# 	for infile in glob.glob( os.path.join(settings.REANALYSEESE_FILES, '*.xml') ):
-# 		# check if exists already
-# 		obj = EnqueteSurEnquete.objects.filter(localxml=infile)
-# 		if len(obj)==0:
-# 			newEse = EnqueteSurEnquete(localxml=infile)
-# 			newEse.buildMe()
-# 			#newEse.save()
-# 	for enq in EnqueteSurEnquete.objects.all():
-# 		enquetes.append(enq)
-# 	
-# 	# RETURN MODEL OBJECTS
-# 	return render_to_response('ese_browse.html', {'enquetes': enquetes}, context_instance=RequestContext(request))
-# ###########################################################################
-# @login_required
-# def eseIntro(request,eseid):
-# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
-# 	return render_to_response('ese_1.html', {'enquete': ese, 'selmen':['esetabactive',0,0]},context_instance=RequestContext(request))
-# @login_required
-# def eseContent(request,eseid):
-# 	#xmlPath = os.path.join(settings.REANALYSEESE_FILES, '%s.xml' %(enquete) )
-# 	#ese = Enquete(xmlPath)
-# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
-# 	return render_to_response('ese_2.html', {'enquete': ese, 'selmen':[0,'esetabactive',0]},context_instance=RequestContext(request))
-# @login_required
-# def eseOutro(request,eseid):
-# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
-# 	return render_to_response('ese_3.html', {'enquete': ese, 'selmen':[0,0,'esetabactive']},context_instance=RequestContext(request))
-###########################################################################
+# download link (for ESE report)
 @login_required
 def getfile(request, eseid):
 	ese = EnqueteSurEnquete.objects.get(id=eseid)
@@ -1100,7 +998,7 @@ def getfile(request, eseid):
 	response['Content-Disposition'] = 'attachment; filename='+pdfname
 	return response
 ###########################################################################
-#The following view uses mod_xsendfile which lets apache do the file streaming
+#The following view uses mod_xsendfile which lets apache do the file audio streaming for ESE
 @login_required
 def stream(request, eseid, path):
 	# todo: filepath/name should be stored in model...
@@ -1152,7 +1050,7 @@ def serveGraph(request,gid):
 	fsock = open(g.locationpath,"rb").read()
 	response = HttpResponse(fsock, mimetype="text/plain")
 	return response
-# serve pdf (showing pdf files
+# serve pdf (showing pdf files)
 def servePdf(request,did):
 	d = Texte.objects.get(id=did)
 	fsock = open(d.locationpath,"rb").read()
@@ -1753,6 +1651,7 @@ def makeVisualization(request,eid):
 	e = Enquete.objects.get(id=eid)
 	
 	typ = request.GET.get('type','')
+	
 	speakerIds = request.GET.get('speakers','').split(",")
 	texteIds = request.GET.get('textes','').split(",")
 	attributetypesIds = request.GET.get('attributetypes','').split(",")
@@ -1772,17 +1671,9 @@ def makeVisualization(request,eid):
 	else:
 		attributetypes=[AttributeType.objects.get(id=aid) for aid in attributetypesIds]
 				
-	try:
-		count = int(request.GET.get('count'))
-	except:
-		count = 0	
+	count = int(request.GET.get('count','0'))
 	
 	newVizu = makeViz(e,typ,speakers=speakers,textes=textes,attributetypes=attributetypes,count=count)
-	
-	# if you want to render it as html using context and template, you can :
-	#t = loader.get_template('e_visualization.html')
-	#c = Context({'enquete':e,'visualization':newVizu })
-	#newVizu.contenthtml = t.render(c)
 		
 	return HttpResponse(newVizu.json, mimetype="application/json")
 ###########################################################################
@@ -1912,12 +1803,48 @@ def getJsonData(request,eid,data):
 		a=0
 	return HttpResponse(jsondata, mimetype="application/json")
 ###########################################################################
-def getHtml(request,templateName):
-#	htmlfile=open(templateName+".html",'r')
-#	html=''.join(htmlfile.readlines())
-#	return HttpResponse(html, mimetype="text/plain")
-#	return render_to_response(templateName+".html")
-	return HttpResponse(getIntroHtmlAsJson(templateName), mimetype="application/json")
+
+
+
+
+
+
+
+
+
+
+
+
+
+# DEPRECATED: upload part
+################################################################################
+# 	if request.method == 'GET':
+# 		if len(request.FILES.getlist('thefiles'))>0:
+# 			# create upload folder
+# 			newFolderPath = settings.REANALYSEUPLOADPATH + str(time())
+# 			os.mkdir(newFolderPath)
+# 			#logging.info( "///////therequest :"+request.POST )
+# 			#logging.info( "///////thefiles :"+request.FILES.getlist )
+# 			#uform = UploadFileForm(request.POST, request.FILES)
+# 			for f in request.FILES.getlist('thefiles'):
+# 				logging.info( "UPLOADING FILE: "+newFolderPath+"/"+f.name )
+# 				# not uploading for real, just get the right file in upload folder
+# 				destination = open(newFolderPath+"/"+f.name, 'wb+')
+# 				for chunk in f.chunks():
+# 					destination.write(chunk)
+# 				destination.close()
+# 			# every file has been uploaded, then create enquete
+# 			st = "from POST"
+# 			#importEnqueteDDI2(newFolderPath+"/"+"ddi.xml")
+# 		else:
+# 			st = "from already xml"
+# 			#importEnqueteDDI2(settings.REANALYSEUPLOADPATH+"PolitiqueEtEurope/PolitiqueEtEurope.xml")
+# 	d={}
+# 	d['message']=st
+# 	d['success']='true'
+# 	d['error']='pas vraiment de raison'+st
+# 	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
+# 	return HttpResponse(jsondata, mimetype="application/json")
 ###########################################################################
 
 
@@ -1925,7 +1852,81 @@ def getHtml(request,templateName):
 
 
 
+
+
+
+
+###########################################################################
+# DEPRECATED : to dispay raw html content of file
+# def docShow(request):
+# 	filepath = settings.REANALYSESITECONTENTPATH + 'doc' + '_content.html'
+# 	contenthtml = getContentOfFile(filepath)
+# 	sc,isnew = SiteContent.objects.get_or_create(name='doc',contenthtml=contenthtml)
+# 	return render_to_response('home_doc.html', {'contenthtml':sc.contenthtml}, context_instance=RequestContext(request))
+################################################################################
+
+
+
+
+
+
+###########################################################################
+# DEPRECATED ENQUETES SUR ENQUETE views (before merge within enquetes
+###########################################################################
+# def eseHome(request):
+# 	filepath = settings.REANALYSESITECONTENTPATH + 'ese_intro' + '_content.html'
+# 	contenthtml = getContentOfFile(filepath)
+# 	sc,isnew = SiteContent.objects.get_or_create(name='ese_intro',contenthtml=contenthtml)
+# 	return render_to_response('ese_intro.html', {'contenthtml':sc.contenthtml} ,context_instance=RequestContext(request))
+# ###########################################################################
+# def eseBrowse(request):
+# 	# LOOK AT ENQUETES XMLs AND UPDATE MODEL OBJECTS DATABASE
+# 	enquetes = []
+# 	for infile in glob.glob( os.path.join(settings.REANALYSEESE_FILES, '*.xml') ):
+# 		# check if exists already
+# 		obj = EnqueteSurEnquete.objects.filter(localxml=infile)
+# 		if len(obj)==0:
+# 			newEse = EnqueteSurEnquete(localxml=infile)
+# 			newEse.buildMe()
+# 			#newEse.save()
+# 	for enq in EnqueteSurEnquete.objects.all():
+# 		enquetes.append(enq)
+# 	
+# 	# RETURN MODEL OBJECTS
+# 	return render_to_response('ese_browse.html', {'enquetes': enquetes}, context_instance=RequestContext(request))
+# ###########################################################################
+# @login_required
+# def eseIntro(request,eseid):
+# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
+# 	return render_to_response('ese_1.html', {'enquete': ese, 'selmen':['esetabactive',0,0]},context_instance=RequestContext(request))
+# @login_required
+# def eseContent(request,eseid):
+# 	#xmlPath = os.path.join(settings.REANALYSEESE_FILES, '%s.xml' %(enquete) )
+# 	#ese = Enquete(xmlPath)
+# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
+# 	return render_to_response('ese_2.html', {'enquete': ese, 'selmen':[0,'esetabactive',0]},context_instance=RequestContext(request))
+# @login_required
+# def eseOutro(request,eseid):
+# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
+# 	return render_to_response('ese_3.html', {'enquete': ese, 'selmen':[0,0,'esetabactive']},context_instance=RequestContext(request))
+# ###########################################################################
+
+
+
+
+
+
+
+
 # DEPRECATED
+###########################################################################
+# if you need to get html content of file, can be useful for raw content (about pages)
+#def getHtml(request,templateName):
+#	htmlfile=open(templateName+".html",'r')
+#	html=''.join(htmlfile.readlines())
+#	return HttpResponse(html, mimetype="text/plain")
+#	return render_to_response(templateName+".html")
+#	return HttpResponse(getIntroHtmlAsJson(templateName), mimetype="application/json")
 ###########################################################################
 # def getWordStat(request,eid,wid):
 # 	e = Enquete.objects.get(id=eid)
@@ -1972,3 +1973,18 @@ def getHtml(request,templateName):
 
 
 
+
+
+
+
+###########################################################################
+# def testMe(request):
+# 	if request.POST:
+# 		content=request.POST
+# 		status=ok
+# 	else:
+# 		content=status='none'
+# 	d={'status':status,'content':content}
+# 	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
+# 	return HttpResponse(jsondata, mimetype="application/json")
+###########################################################################

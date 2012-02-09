@@ -143,6 +143,7 @@
 {% if texte.doctype == 'TEI' %}
 
 <div class="introHtml">
+	<!-- ========================================================================= -->
 	<b>Investigator: </b>
 		{% if speakers.inv %}
 		<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.inv.0.id %}">{{speakers.inv.0.name}}</a>, 
@@ -158,6 +159,7 @@
 	
 	<!-- ========================================================================= -->
 	<!-- Form to tune display of words in verbatim. javascript to update css -->
+	<!-- note bug with dropdownchecklist if "display:none;" at the beginning -->
 	<a href="#" onclick='$("#verb_controls").toggle("fast"); return false;'>Experimental: display tuning</a>
 	<div id="verb_controls" style="display:none;">
 		Here you can tune the display of words/lemmas
@@ -183,69 +185,10 @@
 	</div>
 </div>
 
-	<!-- =========================== A. using PAGINATION (from list made in view, styling here in template) -->
+	<!-- ========================================================================= -->
+	<!-- before we used to feed the "render_d.html" template with data, now everything is made using ajax (see bottom or render_d.html template) -->
+	<div class="text_verbatim" id="verbatim"></div>
 
-{% comment %}
-<!--
-	<span class="document-pagination">
-		showing {{ page.paginator.per_page }} interventions per page (rather show
-		<a href="?page=1&perpage=50">50</a> | 
-		<a href="?page=1&perpage=100">100</a> | 
-		<a href="?page=1&perpage=200">200</a>)
-		</br>
-		{% if page.has_previous %}
-			<a href="?page={{ page.previous_page_number }}&perpage={{ page.paginator.per_page }}">previous</a>
-		{% endif %}
-		
-		{% for kp in page.paginator.page_range %}
-			{% if kp != page.number %}
-					<a href="?page={{ kp }}&perpage={{ page.paginator.per_page }}"> {{kp}} </a>
-			{% else %}
-					<b>  {{kp}}  </b>
-			{% endif %}
-			{% endfor %}
-		
-		{% if page.has_next %}
-			<a href="?page={{ page.next_page_number }}&perpage={{ page.paginator.per_page }}">next</a>
-		{% endif %}
-	</span>
--->
-{% endcomment %}
-
-	<!-- 
-		Page is an array of timeparts
-		each timepart is an array of already styled sentences 
-		so we just have to loop
-		
-		EXAMPLE :
-			
-						timepart				[s is html styled sentence made when parsing]
-	
-				
-		onlyone				0		div			s s s				
-				
-		concourrant			1		tablerow	s s s s
-									tablerow	s s
-									
-		inmargin			2		div			s
-		
-	-->
-	
-	<!--
-	{%comment%}
-	<div class="teiSliderLabel">
-		Display utterances <div id="teiIntervalText"></div>
-	</div>
-	<div id="teiIntervalSlider"></div>
-	<br/>
-	{%endcomment%}
-	-->
-	
-	<div class="text_verbatim" id="verbatim">
-		{%comment%}{% include "render_d.html" with timeparts=timeparts %}{%endcomment%}
-	</div>
-
-	
 {% endif %}
 
 
@@ -329,7 +272,6 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}/js/dragscrollable.js"></script>
 
 <script type="text/javascript">
-var pomme=null;
 
 function loadSampleStopwordsList() {
 	$.get("{{MEDIA_URL}}/xmlsamples/stopwords_fr.txt", function success(data) {
@@ -437,7 +379,7 @@ function loadSampleStopwordsList() {
 			//'minWidth':150,
 		});
 				
-		///////////////// get the actual txt content
+		///////////////// get the actual txt content !
 		getVerbatimParts(fromTextPart,toTextPart);
 		
 		{% endif %}
@@ -521,3 +463,37 @@ function loadSampleStopwordsList() {
 
 {% endblock %}
 
+
+
+
+
+
+
+
+{% comment %}
+<!--
+	DEPRECATED: B.C. we used pagination to navigate through verbatim
+	<span class="document-pagination">
+		showing {{ page.paginator.per_page }} interventions per page (rather show
+		<a href="?page=1&perpage=50">50</a> | 
+		<a href="?page=1&perpage=100">100</a> | 
+		<a href="?page=1&perpage=200">200</a>)
+		</br>
+		{% if page.has_previous %}
+			<a href="?page={{ page.previous_page_number }}&perpage={{ page.paginator.per_page }}">previous</a>
+		{% endif %}
+		
+		{% for kp in page.paginator.page_range %}
+			{% if kp != page.number %}
+					<a href="?page={{ kp }}&perpage={{ page.paginator.per_page }}"> {{kp}} </a>
+			{% else %}
+					<b>  {{kp}}  </b>
+			{% endif %}
+			{% endfor %}
+		
+		{% if page.has_next %}
+			<a href="?page={{ page.next_page_number }}&perpage={{ page.paginator.per_page }}">next</a>
+		{% endif %}
+	</span>
+-->
+{% endcomment %}
