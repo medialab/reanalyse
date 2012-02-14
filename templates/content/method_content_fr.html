@@ -54,28 +54,66 @@ NB: Page en cours de rédaction...
 	Le dossier <span class="content_norm_file">_meta/</span> permet de regrouper l'ensemble des métadonnées d'une enquête.<br/>
 	Remarques sur les tableaux de données .csv:
 		<ul>
+		<li>les couleurs (gris/bleu) des tableaux suivants ne servent qu'à améliorer la lisibilité</li>
 		<li>tous les ids (première colonne) doivent être uniques</li>
-		<li>les colonnes avec * sont obligatoires</li>
-		<li>les colonnes avec _ sont normalisées selon les namespaces:
+		<li>les colonnes qui commencent par * sont obligatoires pour le chargement dans un site enquête</li>
+		<li>les colonnes qui commencent par _ seront masquées dans le site enquête</li>
+		<li>à suivre pour les namespaces normalisés:
 			<ul>
 			<li><a href="http://dublincore.org/documents/dces/">DublinCore</a>: dc:type, dc:title, dc:date, dc:creator, dc:author, ...</li>
 			<li><a href="http://xmlns.com/foaf/spec/">FOAF</a>: foaf:name, foaf:age, foaf:organization, ...</li>
 			<li>EXIF</li>
 			</ul>
 		</li>
-		<li>les autres colonnes sont libres</li>
 		</ul>
 
 	<ol>
 	<li><h4>Table des métadonnées de l'enquête <span class="content_norm_file">meta_study.csv</span></h4>
 		Cette table contient les métadonnées générales concernant une enquête.
 		<table class="content_norm_ex">
-			<tr><td>*field</td><td>*value</td><td>DDI XPath (pour info)</td></tr>
-			<tr><td>*ddi_id</td><td>univ.ddi.study.675381</td><td>stdyDscr/citation/titlStmt/IDNo</td></tr>
-			<tr><td>*name</td><td>Enquête Pilote</td><td>stdyDscr/citation/titlStmt/titl</td></tr>
-			<tr><td>*author</td><td>John Smith</td><td>stdyDscr/citation/AuthEnty</td></tr>
-			<tr><td>*date</td><td>2009</td><td>stdyDscr/...</td></tr>
-			<tr><td>*description</td><td>Enquête créee en 2010 permettant d'exhiber l'archivage et la structuration de données qualitatives.</td><td>stdyDscr/stdyInfo/abstract</td></tr>
+			<tr><td>*field</td><td>*value</td><td>*description</td><td>DDI XML</td></tr>
+			<tr><td>*IDNo</td><td>cdsp.bequali.enqupilot.ddi</td>
+				<td class="content_norm_orig">id global unique de l'enquête</td>	
+				<td>/stdyDscr/citation/titlStmt/IDNo</td></tr>
+			<tr><td>*titl</td><td>Enquête Pilote</td>
+				<td class="content_norm_orig">intitulé de l'enquête</td>	
+				<td>/stdyDscr/citation/titlStmt/titl</td></tr>
+			<tr><td>*AuthEnty</td><td>John Smith</td>
+				<td class="content_norm_orig">auteur de l'enquête</td>	
+				<td>/stdyDscr/citation/AuthEnty</td></tr>
+			<tr><td>*AuthEnty</td><td>Julia Trevise</td>
+				<td class="content_norm_orig">-</td>	
+				<td>/stdyDscr/citation/AuthEnty</td></tr>
+			<tr><td>*fundAg</td><td>Laboratoire ABCD</td>
+				<td class="content_norm_orig">agence financeur</td>	
+				<td>/stdyDscr/citation/prodStmt/fundAg</td></tr>
+			<tr><td>*fundAg</td><td>Entreprise ABCD</td>
+				<td class="content_norm_orig">-</td>	
+				<td>/stdyDscr/citation/prodStmt/fundAg</td></tr>	
+			<tr><td>*grantNo</td><td>Bourse ABCD</td>
+				<td class="content_norm_orig">-</td>	
+				<td>/stdyDscr/citation/prodStmt/grantNo</td></tr>
+			<tr><td>*distrbtr</td><td>Centre de données socio-politiques</td>
+				<td class="content_norm_orig">distribution</td>	
+				<td>/stdyDscr/citation/distStmt/distrbtr</td></tr>
+			<tr><td>*depositr</td><td>Sophie Duchesne</td>
+				<td class="content_norm_orig">dépositaire</td>	
+				<td>/stdyDscr/citation/distStmt/depositr</td></tr>
+			<tr><td>*abstract</td><td>Enquête créee en 2010 permettant d'exhiber l'archivage et la structuration de données qualitatives [...]</td>
+				<td class="content_norm_orig">description de l'enquête (dizaine de phrases)</td>	
+				<td>/stdyDscr/stdyInfo/abstract</td></tr>
+			<tr><td>*nation</td><td>France</td>
+				<td class="content_norm_orig">pays impliqués</td>	
+				<td>/stdyDscr/sumDscr/nation</td></tr>
+			<tr><td>*nation</td><td>Belgium</td>
+				<td class="content_norm_orig">-</td>	
+				<td>/stdyDscr/sumDscr/nation</td></tr>
+			<tr><td>*AuthEnty</td><td>John Larchiveur</td>
+				<td class="content_norm_orig">responsable de l'archive</td>	
+				<td>/docDscr/citation/rspStmt/AuthEnty</td></tr>
+			<tr><td>*copyright</td><td>CDSP 2011</td>
+				<td class="content_norm_orig">copyright de production de l'archive</td>	
+				<td>/docDscr/citation/prodStmt/copyright</td></tr>
 		</table>
 	</li>
 	
@@ -84,22 +122,40 @@ NB: Page en cours de rédaction...
 		Notez les deux dernière colonnes permettant de conserver l'historique des modifications liées à l'archivage.<br/>
 		S'il existe une enquête sur enquête (ESE), les documents associés sont également listés.
 		<table class="content_norm_ex">
-			<tr><td>*id</td><td>*file location</td><td>*name</td><td>*type</td><td>_description</td><td>_date</td><td>_location</td><td>info source</td><td>info conversion</td></tr>
-		 	<tr><td>d001</td><td class="content_norm_file">types_ideologiques.csv</td><td>Tableau idéologique</td><td>preparatory</td>
-		 		<td>Descriptions des différents types idéologiques analysés</td><td>2009-10</td><td></td>
+			<tr><td>*id</td><td>*file</td><td>*name</td><td>*category</td><td>description</td><td>date</td><td>location</td><td>*source</td><td>*source_info</td></tr>
+			<tr class="content_norm_expl">
+				<td>*descr</td>
+				<td>emplacement du fichier dans le dossier enquête, ou lien externe</td>
+				<td>nom dans le site enquête</td>
+				<td>/preparatory /analyse /verbatim /publication /ese</td>
+				<td></td>
+				<td>date de création au format JJ/MM/AA</td>
+				<td>Ville, Pays</td>
+				<td>fichier original s'il y a eu conversion lors de l'archivage</td>
+				<td>opération(s) appliquées lor de la conversion</td>
+			</tr>
+		 	<tr><td>d000</td><td class="content_norm_file">_data/ types_ideologiques.csv</td><td>Tableau idéologique</td><td>preparatory</td>
+		 		<td>Descriptions des différents types idéologiques analysés</td><td>20/10/86</td><td></td>
 		 		<td class="content_norm_file content_norm_orig">Tableau4 types.doc</td><td class="content_norm_orig">ordonné par abétique avec normalisation des dates</td></tr>
-		 	<tr><td>d001</td><td class="content_norm_file">guide_entretiens.html</td><td>Guide des entretiens</td><td>preparatory</td>
-		 		<td>Guide d'entretiens et syntaxe de transcription</td><td>2009-10</td><td></td>
+		 	<tr><td>d001</td><td class="content_norm_file">_data/ guide_entretiens.html</td><td>Guide des entretiens</td><td>preparatory</td>
+		 		<td>Guide d'entretiens et syntaxe de transcription</td><td>00/10/86</td><td></td>
 		 		<td class="content_norm_file content_norm_orig">guide d'entretiens.docx</td><td class="content_norm_orig">export html (balises h1/h2/div/p)</td></tr>
-		 	<tr><td>d002</td><td class="content_norm_file">entretien_27.txt</td><td>Entretien 27</td><td>verbatim</td>
-		 		<td>Focus Group n°27</td><td>2009-05</td><td>Paris, France</td>
-		 		<td class="content_norm_file content_norm_orig">entr n°27 reludéfinitif.rtf</td><td class="content_norm_orig">extraction du texte et encodage en UTF-8</td></tr>
-			<tr><td>d003</td><td class="content_norm_file">rapport.pdf</td><td>Rapport d'enquête</td><td>analyse</td>
-				<td>Article publié suite à l'enquête</td><td>2009-10</td><td></td>
+		 	<tr><td>d002</td><td class="content_norm_file">_verbatim/ entretien_27.txt</td><td>Entretien 27</td><td>verbatim</td>
+		 		<td>Focus Group n°27 au format TXT</td><td>00/05/98</td><td>Paris, France</td>
+		 		<td class="content_norm_file content_norm_orig">entr n°27 reludéfinitif.rtf</td><td class="content_norm_orig">extraction du texte (UTF-8) et adaptation du codage</td></tr>
+		 	<tr><td>d003</td><td class="content_norm_file">_verbatim/ entretien_27.xml</td><td>Entretien 27</td><td>verbatim</td>
+		 		<td>Focus Group n°27 au format XML TEI</td><td>00/05/95</td><td>Paris, France</td>
+		 		<td class="content_norm_file content_norm_orig">_verbatim/ entretien_27.txt</td><td class="content_norm_orig">Exmaralda > TEI Drop</td></tr>
+			<tr><td>d004</td><td class="content_norm_file">_data/ rapport.pdf</td><td>Rapport d'enquête</td><td>analyse</td>
+				<td>Article publié suite à l'enquête</td><td>00/10/12</td><td></td>
 				<td class="content_norm_file content_norm_orig">Rapport d'enquête.doc</td><td class="content_norm_orig">export pdf</td></tr>
-			<tr class="content_norm_ese"><td>d004</td><td class="content_norm_file">ese_summary.html</td><td>ESE Summary</td><td>ese</td>
-				<td></td><td></td><td></td>
+			<tr><td>d005</td><td class="content_norm_file">http:// publi.fr/article.pdf</td><td>Publication</td><td>publication</td>
+				<td>Intervention dans le rapport du ministère ...</td><td>11/10/12</td><td></td>
+				<td class="content_norm_file content_norm_orig">Rapport d'enquête.doc</td><td class="content_norm_orig">export pdf</td></tr>
+			<tr class="content_norm_ese"><td>d006</td><td class="content_norm_file">_ese/ ese.xml</td><td>Enquête sur Enquête</td><td>ese</td>
+				<td>ce fichier xml décrit l'ensemble des fichiers de l'ESE (html, audio) se trouvant dans le dossier _ese</td><td></td><td></td>
 				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
+<!--
 			<tr class="content_norm_ese"><td>d005</td><td class="content_norm_file">ese_1_researcher.html</td><td>ESE 1.Researcher</td><td>ese</td>
 				<td></td><td></td><td></td>
 				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
@@ -112,46 +168,67 @@ NB: Page en cours de rédaction...
 			<tr class="content_norm_ese"><td>d008</td><td class="content_norm_file">ese_1_researcher.b.mp3</td><td>ESE 1.b Posture personnelle</td><td>ese</td>
 				<td></td><td></td><td></td>
 				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
+-->
 		 </table>
 	</li>
 	
 	<li><h4>Tables des intervenants <span class="content_norm_file">meta_speakers.csv</span></h4>
-		Contient les métadonnées relatives aux personnes impliquées dans l'enquête.
+		Contient les métadonnées relatives aux personnes impliquées dans l'enquête.<br/>
+		Les colonnes dont le nom commence par _ seront masquées dans le site enquête.
 		<table class="content_norm_ex">
-			<tr><td>*id</td><td>*pseudo</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>_location</td><td>_profession</td><td>groupe</td></tr>
-			<tr class="content_norm_expl"><td>note</td><td></td><td></td><td></td><td></td><td>_age par tranches</td><td></td><td></td><td>catégorisation déductive en 3 groupes. voir groupes.csv</td></tr>
-			<tr><td>s001</td><td>Etienne</td><td>investigator</td><td>chercheur</td><td></td><td></td><td></td><td></td><td></td></tr>
-			<tr><td>s002</td><td>Marc</td><td>speaker</td><td></td><td>18</td><td>15-19</td><td>Paris, France</td><td>student</td><td>Gauche</td></tr>
-			<tr><td>s003</td><td>Julie</td><td>speaker</td><td></td><td>22</td><td>20-24</td><td>Lyon, France</td><td>teacher</td><td>Divers</td></tr>
-			<tr><td>s004</td><td>NC</td><td>protagonist</td><td>mère de Julie</td><td>46</td><td>45-49</td><td>Lyon, France</td><td></td><td></td></tr>
+			<tr>
+				<td>*id</td><td>*pseudo</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>location</td><td>_profession</td><td>profession</td><td>groupe</td>
+			</tr>
+			<tr class="content_norm_expl">
+				<td>*descr</td>
+				<td>nom dans le site enquête</td>
+				<td>/protagonist /investigator /speaker (seuls les speaker seront affichés dans le site enquête)</td>
+				<td></td>
+				<td></td>
+				<td>_age par tranches de 5 ans</td>
+				<td>Ville, Pays</td>
+				<td></td>
+				<td>_profession en catégories /ouvrier /cadre /autre</td>
+				<td>catégorisation déductive en 3 groupes. voir documents préparatoires</td>
+			</tr>
+			<tr><td>s001</td><td>Etienne</td><td>investigator</td><td>chercheur</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td>s002</td><td>Marc</td><td>speaker</td><td></td><td>18</td><td>15_19</td><td>Paris, France</td><td>étudiant lettres</td><td>autre</td><td>Gauche</td></tr>
+			<tr><td>s003</td><td>Julie</td><td>speaker</td><td></td><td>22</td><td>20_24</td><td>Lyon, France</td><td>directeur PME</td><td>cadre</td><td>Divers</td></tr>
+			<tr><td>s004</td><td>NC</td><td>protagonist</td><td>mère de Julie</td><td>46</td><td>45_49</td><td>Lyon, France</td><td></td><td></td><td></td></tr>
 		</table>
-		Colonnes nécéssaires:
-		<ul>
-		<li>*id</li>
-		<li>*type (seuls les 'speaker' sont affichés dans le site enquête)</li>
-		<li>*pseudo (deviendra le 'Nom')</li>
-		</ul>
-		Pour toutes les autres colonnes: si le nom commence par _, elles seront masqués dans le site enquête
+	
 	</li>
 		
 	<li><h4>Table des codages <span class="content_norm_file">meta_codes.csv</span></h4>
 		Décrit les <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> utilisés dans les verbatims.
 		<table class="content_norm_ex">
-			<tr><td>*id</td><td>*label</td><td>*type</td><td>hiat</td><td>transcriber</td><td>description</td><td>syntaxe originelle</td><td>info conversion</td></tr>
+			<tr><td>*id</td><td>*label</td><td>*type</td><td>hiat</td><td>transcriber</td><td>*description</td><td>*source</td><td>*source_info</td></tr>
+			<tr class="content_norm_expl">
+				<td>*descr</td>
+				<td></td>
+				<td>/inline /outline /inword (voir <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a>)</td>
+				<td>syntaxe Exmaralda (HIAT)</td>
+				<td>syntaxe Transcriber</td>
+				<td>explication de la signification du code</td>
+				<td>syntaxe originelle du chercheur</td>
+				<td>opération de conversion (souvent manuelle)</td>
+			</tr>
 			<!--<tr><td>c234</td><td>east_europe</td><td>caqdas</td><td>((theme:east_europe))</td><td>{}</td><td>CAQDAS coded parts</td></tr>-->
-			<tr><td>c001</td><td>silence_short</td><td>verbatim</td><td>•</td><td></td><td>silence < 5 secondes</td>
+			<tr><td>c001</td><td>silence_short</td><td>inline</td><td>•</td><td></td><td>silence < 5 secondes</td>
 				<td class="content_norm_orig">(.)</td><td class="content_norm_orig">regexp</td></tr>
-			<tr><td>c002</td><td>silence_long</td><td>verbatim</td><td>•••</td><td></td><td>silence > 5 secondes</td>
+			<tr><td>c002</td><td>silence_long</td><td>inline</td><td>•••</td><td></td><td>silence > 5 secondes</td>
 				<td class="content_norm_orig">(x sec.)</td><td class="content_norm_orig">regexp</td></tr>
-			<tr><td>c003</td><td>event</td><td>verbatim</td><td>((event:*))</td><td>{}</td><td>évenement quelconque</td>
+			<tr><td>c003</td><td>event</td><td>inline</td><td>((event:*))</td><td>{}</td><td>évenement quelconque</td>
 				<td class="content_norm_orig">(tousse)</td><td class="content_norm_orig">regexp (*)</td></tr>
-			<tr><td>c004</td><td>comment</td><td></td><td>((comment:*))</td><td>[]</td><td>commentaire du chercheur</td>
+			<tr><td>c004</td><td>comment</td><td>outline</td><td>((comment:*))</td><td>[]</td><td>commentaire du chercheur</td>
 				<td class="content_norm_orig">en italique</td><td class="content_norm_orig">remplacement à la main</td></tr>
 			<!--<tr><td>c001</td><td>cough</td><td>verbatim</td><td>((body:cough))</td><td>{}</td><td>toux ou éternuement</td><td>(tousse)</td><td>regexp (*)</td></tr>-->
-			<tr><td>c005</td><td>time</td><td></td><td>((time:*))</td><td>{}</td><td>temps écoulé depuis le début de l'interview (en minutes)</td>
+			<tr><td>c005</td><td>time</td><td>outline</td><td>((time:*))</td><td>{}</td><td>temps écoulé depuis le début de l'interview (en minutes)</td>
 				<td class="content_norm_orig">[1h32]</td><td class="content_norm_orig">remplacement à la main</td></tr>
-			<tr><td>c006</td><td>question</td><td></td><td>((question:*))</td><td>{}</td><td>question (si l'entretien est dirigé)</td>
+			<tr><td>c006</td><td>question</td><td>outline</td><td>((question:*))</td><td>{}</td><td>question (si l'entretien est dirigé)</td>
 				<td class="content_norm_orig">titres en italique</td><td class="content_norm_orig">regexp (*)</td></tr>
+			<tr><td>c007</td><td>uncertain</td><td>inword</td><td>((uncertain:*))</td><td>{}</td><td>si une partie du texte est inaudible, doute dans la trasncription</td>
+				<td class="content_norm_orig">suivi par (?)</td><td class="content_norm_orig">à la main</td></tr>
 			<!--<tr><td>c008</td><td>speaker</td><td>verbatim*</td><td>((ref:*))</td><td>{}</td><td>référence à un intervenant</td><td>(tousse)</td><td>regexp (*)</td></tr>-->
 		</table>
 	</li>
@@ -425,6 +502,17 @@ NB: Page en cours de rédaction...
 			<li><b>sémantique</b>: ontologies et thésaurus (gars,mec,type = personne)</li>
 		</ul>
 		</p>
+		Exemples de codage pour l'analyse du discours
+		<table>
+			<tr><td>type</td><td>syntaxique</td><td>lexical</td></tr>
+			<tr><td>entités</td><td>nom/gp de nom</td><td>thèmes, personnages</td></tr>
+			<tr><td>épreuves</td><td>verbes</td><td>action/jugement</td></tr>
+			<tr><td>qualités</td><td>adjectifs</td><td>qualification des entités</td></tr>
+			<tr><td>marqueurs</td><td>adverbes</td><td>modalités, connecteurs, quantficateurs</td></tr>
+			<tr><td>mots-outils</td><td>articles, conjonctions,pronoms</td><td>éléments d'articulations</td></tr>
+			<tr><td>nombres</td><td>valeurs numériques</td><td>mesures, datations, quantifications</td></tr>
+			<tr><td>indéfinis</td><td>chaines de chars</td><td>résidu non pertinent</td></tr>
+		</table>
 		La précision du codage conditionne celle de l'exploration et de la recherche.</br>
 		Un texte enrichi de codes est généralement décrit au format XML:
 		<div class="content_norm_verb">
@@ -435,20 +523,28 @@ NB: Page en cours de rédaction...
 			exemple de texte brut dont seuls les tours de paroles sont codés (en rouge)
 		</div>
 		<div class="content_norm_verb">
-		<div>
-		<span class="content_norm_verbm">< c="PRO_PERS je" ></span>j'<span class="content_norm_verbm">< /c ></span>
-		<span class="content_norm_verbm">< c="VERB_PAST manger" ></span>ai mangé<span class="content_norm_verbm">< /c ></span> à 
-		<span class="content_norm_verbmcon">< c="city" ></span>Paris<span class="content_norm_verbmcon">< /c ></span>
-		</div>
-		<div><span class="content_norm_verbmc">< c="rires" /></span>
-		</div>
-		<div>
-		 certes <span class="content_norm_verbmc">< c="silence court" /></span> mais seulement à 
-		<span class="content_norm_verbmcon">< c="city" ></span>Londres<span class="content_norm_verbmcon">< /c ></span></div>
+			<div>
+				<span class="content_norm_verbm">< c="PRO_PERS je" ></span>j'<span class="content_norm_verbm">< /c ></span>
+				<span class="content_norm_verbm">< c="VERB_PAST manger" ></span>ai mangé<span class="content_norm_verbm">< /c ></span> à 
+				<span class="content_norm_verbmcon">< c="city" ></span>Paris<span class="content_norm_verbmcon">< /c ></span>
+			</div>
+			<div><span class="content_norm_verbmc">< c="rires" /></span>
+			</div>
+			<div>
+				 certes <span class="content_norm_verbmc">< c="silence court" /></span> mais seulement à 
+				<span class="content_norm_verbmcon">< c="city" ></span>Londres<span class="content_norm_verbmcon">< /c ></span>
+			</div>
 		</div>
 		<div class="content_norm_vleg">
 			exemple avec part-of-speech et lemmes (rouge), paraverbal (jaune) et sémantique (vert)
-		</div>	
+		</div>
+		On distingue 3 grandes familles de codes:
+		<ul>
+			<li><b>inline</b>: les codes en plein texte, sans contenu; ex. rire, silence, bruit</li>
+			<li><b>inline_content</b>: les codes en plein texte, avec description; ex. bruit:"un avion passe", bruit:"applaudissements dehors"</li>
+			<li><b>outline</b>: les codes hors texte; ex. comment:"tout le monde se regarde", break:"changement de cassette", time:"65min"</li>
+			<li><b>inword</b>: code s'appliquant au texte; ex. uncertain:"or|alors", strong:"vraiment"</li>
+		</ul>
 	</li>
 	<!-- ================================ -->
 	<li><a name="gloss_ngram"><h2>Indexation et Ngrams</h2></a>

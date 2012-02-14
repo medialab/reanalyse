@@ -17,10 +17,12 @@ DOCUMENT_TYPE_CHOICES = (
 	('PDF', 'PDF'),
 	('TEI', 'XML TEI'),
 	('TXT', 'Text File'),
+	('HTM', 'HTML File'),
 	('RTF', 'RTF'),
 	('CSV', 'CSV Table'),
 	('ATL', 'XML Atlas.Ti'),
 	('CTX', 'CAQDAS RTF'),
+	('LNK', 'External link'),
 )
 # To know if we show/hide speaker attributes
 ATTRIBUTE_PUBLICY_CHOICES = (
@@ -28,7 +30,7 @@ ATTRIBUTE_PUBLICY_CHOICES = (
 	('1', 'Public'),
 	('2', '**Unused'),	
 )
-# Speaker type values in CSV
+# Speaker type translator for CSV
 SPEAKER_TYPE_CSV_DICT = {
 	'speaker':'SPK',
 	'investigator':'INV',

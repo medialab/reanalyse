@@ -81,8 +81,25 @@ import logging
 
 
 
+###########################################################################
+# SOLR simple process manager
+###########################################################################
+def checkSolrProcess():
+	tmp = os.popen("ps -Af").read()
+	process_name = "startreanalysesolr.jar"
+	if process_name not in tmp[:]:
+		logging.info("Solr is not running. Let's restart it")
+		newprocess = "cd %s && nohup java -jar startreanalysesolr.jar &" % (settings.REANALYSEPROJECTPATH+"/solr/")
+		os.system(newprocess)
+		return True
+	else:
+		return False
+###########################################################################
 
 
+
+
+    
 
 ###########################################################################
 # LOGGING (todo cleaner!)
@@ -272,7 +289,12 @@ def home(request):
 @login_required
 def eUpload(request):
 	sessionFolderName = "up_"+str(time())
-	return render_to_response('upload.html', {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}, context_instance=RequestContext(request))
+	ctx = {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}
+	if checkSolrProcess():
+		ctx.update({'solrstatus':'was off. wait 5,7s and refresh page to be sure'})
+	else:
+		ctx.update({'solrstatus':'running'})
+	return render_to_response('admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 @login_required
 def eAddAjax(request):
@@ -350,7 +372,16 @@ def eParse(request):
 		os.mkdir(upPath+"extracted")
 		unzipper = unzip()
 		unzipper.extract(upPath+"ddi.zip",upPath+"extracted/")
-		e = importEnqueteDDI2(upPath+"extracted/ddi.xml")
+		if os.path.exists(upPath+"extracted/ddi.xml"):
+			########### there is a ddi.xml file pointing at every other file of the study
+			e = importEnqueteDDI2(upPath+"extracted/ddi.xml")
+		elif os.path.exists(upPath+"extracted/_meta/"):
+			########### there is the _meta folder, containing meta_documents.csv, ...
+			e = importEnqueteUsingMeta(upPath+"extracted/")
+		else:
+			logging.info("no zipped ddi.xml file nor _meta folder found")
+	else:
+		logging.info("no ddi.xml nor ddi.zip found")
 	
 	logging.info("enquete ddi.xml imported:"+e.name )
 	
@@ -417,9 +448,9 @@ def eBrowse(request):
 		themetas=[]
 		m = e.meta()
 		try:
-			themetas.append(m['cAuthEnty'][0])
-			themetas.append(m['snation'][0])
-			themetas.append(m['cdistrbtr'][0])
+			themetas.append(m['AuthEnty'][0])
+			themetas.append(m['nation'][0])
+			themetas.append(m['distrbtr'][0])
 		except:
 			themetas.append("error")
 		enquetesandmeta.append([e,themetas])
@@ -484,31 +515,32 @@ def eReset(request):
 ###########################################################################
 def eShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	ese = e.ese
+	ese = e.enquetesurenquete_set.all()[0]
 	meta = e.meta()
 	
 	metashort=[]
 	metalong=[]
 	#try:
-	metashort.append(['Study Author', meta['cAuthEnty'][0]])
-	metashort.append(['Funding Agency', meta['cfundAg'][0]])
-	metashort.append(['Country', meta['snation'][0]])
-	metashort.append(['Geographic Coverage', meta['sgeogCover'][0]])
-	metashort.append(['Data Distribution', meta['cdistrbtr'][0]])
-	metashort.append(['Metadata', meta['docAuthEntry'][0]+", Copyright  "+meta['doccopyright'][0]])
+	metashort.append(['Study Author', meta['AuthEnty'][0]])
+	metashort.append(['Funding Agency', meta['fundAg'][0]])
+	metashort.append(['Country', meta['nation'][0]])
+	metashort.append(['Geographic Coverage', meta['geogCover'][0]])
+	metashort.append(['Data Distribution', meta['distrbtr'][0]])
+	metashort.append(['Metadata', meta['AuthEnty'][0]+", Copyright  "+meta['copyright'][0]])
 	#metashort.append(['Date', meta['InterviewDuration']])
 	
-	metalong.append(['Context', meta['mtimeMeth'][0]])
-	metalong.append(['Sample', meta['msampProc'][0]])
-	metalong.append(['Collection Mode', meta['mcollMode'][0] + meta['mcollSitu'][0]])
-	
-	publis = meta['relPubl']
+	#metalong.append(['Context', meta['timeMeth'][0]])
+	#metalong.append(['Sample', meta['sampProc'][0]])
+	#metalong.append(['Collection Mode', meta['collMode'][0] + meta['collSitu'][0]])
+
+	# relPubl is deprecated, since we now use .csv to describe documents : related publications are listed in the meta_documents.csv and appear in the edBrowse view	
+	#publis = meta['relPubl']
 # 	except:
 # 		metashort.append(["error","errormetashort"])
 # 		metalong.append(["error","errormetalong"])
 # 		publis=["errorpublis"]
 				
-	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'ese': ese,'metashort':metashort,'metalong':metalong,'description':meta['description'],'publications':publis}
+	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'ese': ese,'metashort':metashort,'metalong':metalong,'description':meta['abstract'][0]}
 	
 	canexp = request.user.has_perm('reanalyseapp.can_explore_'+str(e.id)) or request.user.has_perm('reanalyseapp.can_make')
 	ctx.update({'currentperm':canexp})
@@ -518,10 +550,12 @@ def eShow(request,eid):
 @login_required
 def eseShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	ese = e.ese
+	ese = e.enquetesurenquete_set.all()[0]
 	chapters = ese.esechapter_set.order_by('id')
 	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese': ese,'chapters':chapters}
 	return render_to_response('e_eseShow.html',ctx ,context_instance=RequestContext(request))
+###########################################################################
+
 	
 	
 	
@@ -540,7 +574,8 @@ def getStrFromVizList(relViz):
 def edBrowse(request,eid):
 	# ENQUETE
 	e = Enquete.objects.get(id=eid)
-	textes = e.texte_set.all()
+	only = Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')
+	textes = e.texte_set.filter(only)
 	
 	ctx = {'bodyid':'e','pageid':'documents','enquete':e}
 	
@@ -575,8 +610,14 @@ def edBrowse(request,eid):
 	
 		eiddid = [e.id,t.id]
 		# DOC NAME
-		linkDoc = reverse(edShow,args=eiddid)
-		nameStr = '<a href="'+linkDoc+'" onclick="event.stopPropagation();">'+t.name+'</a>'+' ('+t.get_doctype_display().lower()+')'
+		if t.doctype=='LNK':
+			# external link
+			linkDoc = t.locationpath
+			nameStr = t.name + ' <a target="_new" href="'+linkDoc+'" onclick="event.stopPropagation();"><span class="imExternalLink"> </span></a>'
+		else:
+			# display link using edShow
+			linkDoc = reverse(edShow,args=eiddid)
+			nameStr = '<a href="'+linkDoc+'" onclick="event.stopPropagation();">'+t.name+'</a>'+' ('+t.get_doctype_display().lower()+')'
 
 		# DATA
 		dataStr=""
@@ -592,7 +633,7 @@ def edBrowse(request,eid):
 			dataStr += vStyle +'parsed' + endStyle
 		
 		if t.filesize==0:
-			sizeStr = '< 1Ko'
+			sizeStr = '-'
 		else:
 			sizeStr = str(t.filesize)+" Ko"
 			
@@ -1737,7 +1778,7 @@ def eSolrIndexUpdate(request):
 ###########################################################################
 def esGetSolrTermVector(request,eid,sid):
 	speaker = Speaker.objects.get(id=sid)
-	res = getSolrTermVectorsDict([speaker],'ngrams',0)
+	res = getSolrTermVectorsDict([speaker],'ngrams',count=0,mintn=3)
 	json = simplejson.dumps(res,indent=4,ensure_ascii=False)
 	return HttpResponse(json, mimetype="application/json")
 ###########################################################################

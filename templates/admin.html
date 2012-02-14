@@ -20,15 +20,18 @@
 			<!-- or put a simple form for upload here -->
 		</noscript>
 		</div>
+		<hr/>
 		You can choose to either upload:
 		<ul style='margin:5px 0 0 20px;'>
 			<li>all the files in the same time, with the mandatory ddi.xml file</li>
 			<li>a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
+			<li>a study.zip archive file, with the mandatory ./_meta/meta_*.csv files describing metadatas</li>
 		</ul>
 		<br/>
 		NB
 		<ul style='margin:5px 0 0 20px;'>
-			<li>make sure <a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> in online if you need documents to be indexed</li>
+			<li>if you don't understand, please read the <a href="/reanalyse/?p=method&q=3">normalization</a> page carefully</li>
+			<li>make sure <a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> in online if you need documents to be indexed (status: {{solrstatus}})</li>
 			<li>for verbatims, only XML is supported (TXM made from Transcriber file, or TEI made from Exmaralda > TEI Drop)</li>
 		</ul>
 	</div>
@@ -86,7 +89,7 @@
 					//event.preventDefault();
 					//window.location.href="{% url reanalyse.reanalyseapp.views.eBrowse %}";
 					//window.location.reload();
-					$("#eBrowseNewEnquete").html("Enquete was added. Go look at it");
+					$("#eBrowseNewEnquete").html('Enquete was added. Go <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">look</a> at it');
 					return false;
 					
 				});

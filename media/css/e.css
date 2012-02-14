@@ -157,6 +157,8 @@
 /* =================================================================================== GENERAL ALWAYS */
 
 /* Icons !! */
+.imExternalLink { background-image: url("../images/link.png"); display:inline-block; width:10px; height:10px; }
+
 .imDocument { background-image: url("../silkicons/page_copy.png"); display:inline-block; width:16px; height:16px; }
 .imSpeaker { background-image: url("../silkicons/user_red.png"); display:inline-block; width:16px; height:16px; }
 .imVisualisation { background-image: url("../silkicons/rainbow.png"); display:inline-block; width:16px; height:16px; }

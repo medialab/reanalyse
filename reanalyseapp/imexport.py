@@ -32,9 +32,143 @@ from subprocess import PIPE, Popen
 
 
 
+###########################################################################
+def importEnqueteUsingMeta(folderPath):
+	stdPath=folderPath+'_meta/meta_study.csv'
+	docPath=folderPath+'_meta/meta_documents.csv'
+	spkPath=folderPath+'_meta/meta_speakers.csv'
+	codPath=folderPath+'_meta/meta_codes.csv'
+	
+	logging.info("parsing:"+stdPath)
+	###### Parsing Study metadatas
+	std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
+	headers = std.fieldnames
+	allmeta={}
+	for row in std:
+		field = row['*field'][1:] #removing *
+		value = row['*value']
+		if field not in allmeta.keys():
+			allmeta[field] = [value]
+		else:
+			allmeta[field] += [value]
+		if field=='IDNo':
+			study_ddi_id = value
+		if field=='titl':
+			study_name = value
+		if field=='abstract':
+			study_descr = value
+
+	# create enquete object
+	newEnquete = Enquete(name=study_name,ddi_id=study_ddi_id,description=study_descr,status='1')
+	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
+	newEnquete.save()
+	# create permission for this enquete
+	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
+	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name='EXPLORE enquete '+str(newEnquete.id),content_type=content_type)
+	
+	logging.info("parsing:"+docPath)
+	###### Parsing Documents
+	doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
+	for row in doc:
+		if row['*id']!='*descr':
+			file_location = 	folderPath+row['*file']
+			file_extension = 	file_location.split(".")[-1].upper()
+			doc_name = 			row['*name']
+			doc_category = 		row['*category']
+			doc_description = 	row['description']
+			try:
+				doc_date = datetime.strptime(row['date'], "%d/%m/%y") #"31-12-12"
+			except:
+				doc_date = datetime.datetime.today()
+			doc_location = 		row['location']
+			doc_public = 		doc_category in ['verbatim','analyse','preparatory'] # don't show others in edBrowse
+			logging.info("Document:"+file_location)
+			newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
+			try:
+				newDocument.filesize = int(os.path.getsize(file_location)/1024)
+			except:
+				newDocument.filesize = 0
+			newDocument.doctype = file_extension[:3]
+			newDocument.doccat = doc_category
+			newDocument.description = doc_description
+			newDocument.save()
+			if not os.path.exists(file_location):
+				# means that it may be an external link
+				newDocument.doctype='LNK'
+				newDocument.locationpath = row['*file']
+				newDocument.status='0'
+				newDocument.save()	
+			else:
+				if file_extension in ['XML','PDF','HTM']:
+					if file_extension=='XML':
+						if doc_category=='verbatim':
+							newDocument.status='5'
+							newDocument.doctype='TEI'
+							newDocument.save()
+						elif doc_category=='ese':
+							#eseXmlPath = settings.REANALYSEESE_FILES + study_ddi_id +".xml"
+							ese = EnqueteSurEnquete(localxml=file_location,enquete=newEnquete)
+							ese.buildMe()
+							ese.save()
+					elif file_extension=='PDF':
+						newDocument.status='0'
+						newDocument.save()
+					elif file_extension=='HTM':
+						newDocument.status='0'
+						newDocument.save()
+
+				
+	logging.info("parsing:"+spkPath)			
+	###### Parsing Speakers
+	spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
+	headers = spk.fieldnames
+	mandatories = ["*pseudo","*id","*type"]
+	attributetypes=[]
+	for catval in headers:
+		if catval not in mandatories: # we create only "un-mandatory" attributetypes, since mandatories are stored in speaker model structure
+			if catval.startswith("_") or catval.startswith("*"):
+				publicy = '0'
+			else:
+				publicy = '1'
+			newAttType,isnew = AttributeType.objects.get_or_create(enquete=newEnquete,publicy=publicy,name=catval)
+			attributetypes.append(newAttType)
+	for row in spk:
+		if row['*id']!='*descr':
+			spk_id = 	row['*id']
+			spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
+			spk_name = 	row['*pseudo']
+			newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
+			for attype in attributetypes:
+				attval=row[attype.name]
+				if attval=='':
+					attval='[NC]'
+				newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
+				newSpeaker.attributes.add(newAttribute)
+			newSpeaker.save()
+	setSpeakerColorsFromType(newEnquete)
+	
+	logging.info("parsing:"+codPath)
+	###### Parsing Codes
+	cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
+	# to do later..
+	
+	newEnquete.status='0'
+	newEnquete.save()
+	return newEnquete
+###########################################################################
 
 
 
+
+
+
+
+
+
+
+
+# nb: before, we used to parse DDI.xml file
+# will be soon deprecated, because it's cleaner/easier to parse meta_*.csv files
 
 ###########################################################################
 def updateDictWithMeta(dic,root,name,xmlpath):
@@ -72,44 +206,38 @@ def importEnqueteDDI2(inXmlPath):
 	allmeta['description'] = descr
 	
 	######### Study Descr
-	updateDictWithMeta(allmeta,root,'docTitle',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')
-	updateDictWithMeta(allmeta,root,'docAuthEntry',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'rspStmt/'+XMLDDINMS+'AuthEnty')
-	updateDictWithMeta(allmeta,root,'doccopyright',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'copyright')
+	updateDictWithMeta(allmeta,root,'titl',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')
+	updateDictWithMeta(allmeta,root,'AuthEnty',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'rspStmt/'+XMLDDINMS+'AuthEnty')
+	updateDictWithMeta(allmeta,root,'copyright',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'copyright')
 	#updateDictWithMeta(allmeta,root,'docUsingSoftware',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'software')
 	
-	updateDictWithMeta(allmeta,root,'cAuthEnty',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'rspStmt/'+XMLDDINMS+'AuthEnty')
-	updateDictWithMeta(allmeta,root,'cfundAg',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'fundAg')
-	updateDictWithMeta(allmeta,root,'cgrantNo',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'grantNo')
-	updateDictWithMeta(allmeta,root,'cdistrbtr',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'distStmt/'+XMLDDINMS+'distrbtr')
+	#updateDictWithMeta(allmeta,root,'AuthEnty',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'rspStmt/'+XMLDDINMS+'AuthEnty')
+	updateDictWithMeta(allmeta,root,'fundAg',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'fundAg')
+	updateDictWithMeta(allmeta,root,'grantNo',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'prodStmt/'+XMLDDINMS+'grantNo')
+	updateDictWithMeta(allmeta,root,'distrbtr',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'distStmt/'+XMLDDINMS+'distrbtr')
 	
 	######### Study Info
-	updateDictWithMeta(allmeta,root,'snation',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'nation')
-	updateDictWithMeta(allmeta,root,'sgeogCover',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'geogCover')
-	updateDictWithMeta(allmeta,root,'sanlyUnit',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'anlyUnit')
+	updateDictWithMeta(allmeta,root,'nation',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'nation')
+	updateDictWithMeta(allmeta,root,'geogCover',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'geogCover')
+	updateDictWithMeta(allmeta,root,'anlyUnit',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'sumDscr/'+XMLDDINMS+'anlyUnit')
 	
-	updateDictWithMeta(allmeta,root,'mtimeMeth',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'timeMeth')
-	updateDictWithMeta(allmeta,root,'msampProc',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'sampProc')		
-	updateDictWithMeta(allmeta,root,'mcollMode',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'collMode')
-	updateDictWithMeta(allmeta,root,'mcollSitu',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'collSitu')
+	updateDictWithMeta(allmeta,root,'timeMeth',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'timeMeth')
+	updateDictWithMeta(allmeta,root,'sampProc',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'sampProc')		
+	updateDictWithMeta(allmeta,root,'collMode',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'collMode')
+	updateDictWithMeta(allmeta,root,'collSitu',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'method/'+XMLDDINMS+'dataColl/'+XMLDDINMS+'collSitu')
 	
 	######### Related Publications
-	relPubs = []
-	for relPubNode in root.findall(XMLDDINMS+'stdyDscr/'+XMLDDINMS+'othrStdyMat/'+XMLDDINMS+'relPubl/'+XMLDDINMS+'citation'):
-		title = relPubNode.findall(XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')[0].text
-		relPubs.append(removeSpacesReturns(title))
-	allmeta['relPubl']=relPubs
-	
+	# relPubl is deprecated, since we now use .csv to describe documents : related publications are listed in the meta_documents.csv and appear in the edBrowse view
+# 	relPubs = []
+# 	for relPubNode in root.findall(XMLDDINMS+'stdyDscr/'+XMLDDINMS+'othrStdyMat/'+XMLDDINMS+'relPubl/'+XMLDDINMS+'citation'):
+# 		title = relPubNode.findall(XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')[0].text
+# 		relPubs.append(removeSpacesReturns(title))
+# 	allmeta['relPubl']=relPubs
 	
 	logging.info("creating Enquete:"+name)
 	
-	# nb: for the moment ese is not included in study, that's bad !
-	eseXmlPath = settings.REANALYSEESE_FILES + study_ddi_id +".xml"
-	ese = EnqueteSurEnquete(localxml=eseXmlPath)
-	ese.buildMe()
-	ese.save()
-	
 	# status=1 means object exists but not completely loaded yet
-	newEnquete = Enquete(name=name,ddi_id=study_ddi_id,ese=ese,description=shortdescr,status='1')
+	newEnquete = Enquete(name=name,ddi_id=study_ddi_id,description=shortdescr,status='1')
 	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
 	newEnquete.save()
 	
@@ -117,6 +245,11 @@ def importEnqueteDDI2(inXmlPath):
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
 	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name='EXPLORE enquete '+str(newEnquete.id),content_type=content_type)
 
+	# nb: for the moment ese is not included in study, that's bad !
+	eseXmlPath = settings.REANALYSEESE_FILES + study_ddi_id +".xml"
+	ese = EnqueteSurEnquete(localxml=eseXmlPath,enquete=newEnquete)
+	ese.buildMe()
+	ese.save()
 	
 	###################################################################### IMPORT DOCUMENTS REFERENCED IN XML
 	# documents paths are relative to the ddi.xml, let's get that path
@@ -226,13 +359,14 @@ def parseDocumentCSV(doc):
 		attributetypes=[]
 		# create attributetypes (except for atts already in model: id,type,name)
 		for catval in headers:
-			if catval.startswith("_") or catval.startswith("*") or catval in mandatories:
-				publicy = '0'
-			else:
-				publicy = '1'
-			newAttType,isnew = AttributeType.objects.get_or_create(enquete=e,publicy=publicy,name=catval)
-			attributetypes.append(newAttType)
-			#logging.info("Attributetype ("+doc.name+"): "+catval)
+			if catval not in mandatories: # we create only "un-mandatory" attributetypes, since mandatories are stored in speaker model structure
+				if catval.startswith("_") or catval.startswith("*"):
+					publicy = '0'
+				else:
+					publicy = '1'
+				newAttType,isnew = AttributeType.objects.get_or_create(enquete=e,publicy=publicy,name=catval)
+				attributetypes.append(newAttType)
+				#logging.info("Attributetype ("+doc.name+"): "+catval)
 		
 		for row in reader:
 			####### COLUMN		*id

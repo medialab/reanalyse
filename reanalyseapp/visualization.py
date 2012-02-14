@@ -305,12 +305,12 @@ def visMakeTermVectorGraph(e,viz,param):
 				di.update({'att_'+atype.name:att.name})
 		g.add_node('Speaker_'+str(s.id),di)
 		# deprecated : before we stored all the values, to be able to filter ngrams...
-		#termVectorDic[s.id] = getSolrTermVectorsDict([s],'ngrams',howmany)
+		#termVectorDic[s.id] = getSolrTermVectorsDict([s],'ngrams',count=howmany,mintn=3)
 
 	############ USAGE A = keeping all ngrams(tf/df/tfidf) from Solr
 # 	for s in speakers:
 # 		logging.info("making speakers-words graph:looking at speaker:"+s.name)
-# 		wdic = getSolrTermVectorsDict([s],'ngrams',howmany)
+# 		wdic = getSolrTermVectorsDict([s],'ngrams',count=howmany,mintn=3)
 # 		for w in wdic.keys():
 # 			edgedic = wdic[w]
 # 			# ngram nodes are quite simple
@@ -775,7 +775,7 @@ def getSolrSimilarArray(speaker,maxcount):
 			logging.info("epic fail in getSolrSimilarArray (compairing speakers from different enquete!) from speaker:"+str(speaker.id))
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
-def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
+def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams'
 	# USING PYSOLR or PYTHONSOLR : same syntax
 	# http://jiminy-dev.medialab.sciences-po.fr:8983/solr/select?q=speakerid:36&fq=django_ct:(reanalyseapp.speaker)&qt=tvrh&fl=text&tv.fl=ngrams&tv.all=true
 	p = {'fq':'django_ct:(reanalyseapp.speaker)','qt':'tvrh','fl':'text','tv.fl':field,'tv.all':'true','wt':'json'}
@@ -829,9 +829,11 @@ def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
 		out={}
 		for w,d in alldic.items():
 			keepw = len(w)>2
-			###### RULE 1 : dont keep words which appear only 1 time for that speaker and never else (df=tf=1)
+			###### RULE 1 : dont keep ngrams which appear only 1 time for that speaker and never else (df=tf=1)
 			keepw = keepw and d['df']+d['tf']!=2
-			###### RULE 2 : dont keep words included in other-longer-word (if same df/tf)
+			###### RULE 1 bis: keep ngrams that appears at least mintn
+			keepw = keepw and d['tf']>=mintn
+			###### RULE 2 : dont keep ngrams included in other-longer-word (if same df/tf)
 			keepw = keepw and not True in [(w in otherw and w!=otherw and d['df']==alldic[otherw]['df'] and d['tf']==alldic[otherw]['tf']) for otherw in alldic.keys()]
 			
 			if keepw:
@@ -840,7 +842,8 @@ def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
 				tfidf = 1000*tf/df
 				newd = {'dn':d['df'],'tn':d['tf'], 'df':df, 'tf':tf, 'tfidf':tfidf}
 				out[w] = newd
-		
+		if len(out)==0:
+			return {'nongramsfoundwith_mintn='+str(mintn)+"_spk="+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
 		# todo: only keep 'n' top wanted based on tfidf (can we do it in solr query rather than python ?)
 		# we can do it here, or later when making graph/tagcloud
 		 
@@ -857,14 +860,14 @@ def getSolrTermVectorsDict(speakers,field,maxcount): # field = 'text'/'ngrams'
 		# 'text': {'df': 24, 'tf': 4, 'tf-idf': 0.16666666666666666 }
 		# 'tout': {'df': 464, 'tf': 1, 'tf-idf': 0.0021551724137931034 }
 	except:
-		return {'nosolrtermvectordictforspeakers_'+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
+		return {'nosolrtermvectordict_spk='+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
 ####################################################################
 # to avoid querying solr everyday, we store ngrams in DB
 def makeAllTfidf(e):
 	for s in e.speaker_set.all():
 		logging.info("now reseting tfidf ngrams for speaker:"+str(s.id))
 		s.ngramspeaker_set.all().delete()
-		termd = getSolrTermVectorsDict([s],'ngrams',0)
+		termd = getSolrTermVectorsDict([s],'ngrams',count=0,mintn=3)
 		for w in termd.keys():
 			d=termd[w]
 			newNgram,isnew = Ngram.objects.get_or_create(enquete=e,content=w,df=d['df'])	
@@ -893,7 +896,7 @@ def visMakeTagCloudFromTermVectors(e,param):
   	
   	############################################# SOLR QUERY !
   	#if len(speakers)>1:
-	d = getSolrTermVectorsDict(speakers,'ngrams',howmany)
+	d = getSolrTermVectorsDict(speakers,'ngrams',count=howmany,mintn=3)
 	for w in d.keys():
 		dic = {'word':w,'count':d[w]['tfidf']}
 		dic.update(d[w])

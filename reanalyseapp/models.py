@@ -35,11 +35,36 @@ from django.utils.safestring import mark_safe
 
 
 
-
+##############################################################################		
+# ENQUETE
+##############################################################################
+class Enquete(models.Model):
+	#connection_name="enquetes"
+	name = models.CharField(max_length=200)
+	description = models.TextField()
+	metadata = models.TextField(default='{}') # store all metadata as json dict
+	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
+	statuscomplete = models.BigIntegerField(default=0) # 0-100%
+	date = models.DateField(auto_now_add=True)
+	ddi_id = models.CharField(max_length=100)
+	#permission = models.ForeignKey(Permission)
+	class Meta: # Users & Groups are initialized in views
+		permissions = (
+			("can_browse", "BROWSE Can see enquete overview"),
+			("can_explore", "EXPLORE Can see whole enquete"),
+			("can_make", "MAKE Can upload enquetes and make viz"),
+		)
+	def __unicode__(self):
+		return str(self.id)+":"+self.name
+	def meta(self):
+		if self.metadata:
+			return simplejson.loads(self.metadata)
+		else:
+			return {'metainfo':'no meta was parsed'}
 ####################################################################
-# todo: integrate ESE in the ddi.xml, and then delete those models
 # ENQUETES SUR ENQUETES
 class EnqueteSurEnquete(models.Model):
+	enquete = models.ForeignKey(Enquete)
 	name_id = models.CharField(max_length=200)
 	name = models.CharField(max_length=200)
 	description = models.CharField(max_length=800)
@@ -108,34 +133,6 @@ class ESESubChapter(models.Model):
 
 
 
-
-##############################################################################		
-# ENQUETE
-##############################################################################
-class Enquete(models.Model):
-	#connection_name="enquetes"
-	name = models.CharField(max_length=200)
-	description = models.TextField()
-	metadata = models.TextField(default='{}') # store all metadata as json dict
-	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
-	statuscomplete = models.BigIntegerField(default=0) # 0-100%
-	date = models.DateField(auto_now_add=True)
-	ese = models.ForeignKey(EnqueteSurEnquete)
-	ddi_id = models.CharField(max_length=100)
-	#permission = models.ForeignKey(Permission)
-	class Meta: # Users & Groups are initialized in views
-		permissions = (
-			("can_browse", "BROWSE Can see enquete overview"),
-			("can_explore", "EXPLORE Can see whole enquete"),
-			("can_make", "MAKE Can upload enquetes and make viz"),
-		)
-	def __unicode__(self):
-		return str(self.id)+":"+self.name
-	def meta(self):
-		if self.metadata:
-			return simplejson.loads(self.metadata)
-		else:
-			return {'metainfo':'no meta was parsed'}
 ##############################################################################
 class Visualization(models.Model):
 	enquete = models.ForeignKey(Enquete)
@@ -157,7 +154,7 @@ class Visualization(models.Model):
 class Texte(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	# file
-	locationpath = models.CharField(max_length=150)
+	locationpath = models.CharField(max_length=500)
 	filesize = models.BigIntegerField(default=0)
 	# meta
 	doctype = models.CharField(max_length=3, choices=DOCUMENT_TYPE_CHOICES)
@@ -168,6 +165,7 @@ class Texte(models.Model):
 	date = models.DateField(default=datetime.datetime.today())	# "2011-01-02"
 	location = models.CharField(max_length=30) 					# "Paris" todo: change to gps specific field ?
 	#
+	public = models.BooleanField(default=False)
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
 	statuscomplete = models.BigIntegerField(default=0) 			# 0-100%
 	# for verbatims, we store content in DB
@@ -214,14 +212,6 @@ class Attribute(models.Model):
 	def __unicode__(self):
 		return self.name
 ##############################################################################
-# for sentences [exclamative,interrogative,...] and for paraverbal[silence,break,comment]
-class Code(models.Model):
-	enquete = models.ForeignKey(Enquete)
-	name = models.CharField(max_length=50)
-	textes = models.ManyToManyField(Texte)
- 	def __unicode__(self):
- 		return self.name
-##############################################################################
 class Speaker(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	name = models.CharField(max_length=50)
@@ -256,6 +246,14 @@ class SpeakerSet(models.Model):
 
 
 
+##############################################################################
+# for sentences[exclamative,interrogative,...] and for paraverbal[silence,break,comment]
+class Code(models.Model):
+	enquete = models.ForeignKey(Enquete)
+	name = models.CharField(max_length=50)
+	textes = models.ManyToManyField(Texte)
+ 	def __unicode__(self):
+ 		return self.name
 #################################################
 class Sentence(models.Model):
 	# Enfin •• je crois ((rire)).
@@ -398,12 +396,21 @@ def parseXmlDocument(texte):
 	######################### XML TEI
 	elif roottag==XMLTEINMS+'TEI':
 		persons = root.findall(XMLTEINMS+'teiHeader/'+XMLTEINMS+'profileDesc/'+XMLTEINMS+'particDesc/'+XMLTEINMS+'person')
-		for n,p in enumerate(persons):
-			speakersArray.append( p.attrib[XMLNMS+'id'] )
+		# putting speakers ddi_id from TEI header in a dict to access them (if the <who> tags contains #references to that header)
+		speakersDDIDict={}
+		if persons[0].attrib[XMLNMS+'id']=='SPK0': # means that ddi ids are defined in header
+			for n,p in enumerate(persons):
+				pid=p.attrib[XMLNMS+'id']
+				name=p.findall(XMLTEINMS+'persName/'+XMLTEINMS+'abbr')[0].text
+				speakersDDIDict['#'+pid]=name
+				speakersArray.append( name )
+		else:
+			for n,p in enumerate(persons):
+				speakersArray.append( p.attrib[XMLNMS+'id'] )
 		# every speaker turn
 		tnode = root.findall(XMLTEINMS+'text/'+XMLTEINMS+'body')[0]
 		childs = tnode.getchildren()
-		parseTEIDivs(texte,childs,speakersArray)
+		parseTEIDivs(texte,childs,speakersArray,speakersDDIDict)
 	
 	#########################
 	else:
@@ -520,7 +527,7 @@ def splitElemListByTimeAnchor(elemList,initTime):
 	# last part
 	yield [anchorTime, elemList[j:k+1]]
 ######################################################################## manage list of all <div>
-def parseTEIDivs(texte,nodes,speakersArray):
+def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 	# init speakerContentDict which will store all text for one speaker
 	speakerContentDict = dict((theid,'') for theid in speakersArray)
 		
@@ -534,6 +541,8 @@ def parseTEIDivs(texte,nodes,speakersArray):
 		if node.tag==XMLTEINMS+'div':
 			unode = node.findall(XMLTEINMS+'u')[0]
 			ddiid = unode.attrib['who']
+			if ddiid.startswith('#'): # means that the real ddi_id is in the header
+				ddiid = speakersDDIDict[ddiid]
 			# DEPRECATED: theCodeType,isnew = CodeType.objects.get_or_create(enquete=texte.enquete,name='speaker')
 			theSpeaker,isnew = Speaker.objects.get_or_create(enquete=texte.enquete,ddi_id=ddiid)
 			theSpeaker.textes.add(texte)
