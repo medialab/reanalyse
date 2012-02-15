@@ -86,7 +86,7 @@
 <div class="allPage pageDisabled">{% trans 'Research on the Research' %}</div>
 {% endif %}
 
-{% if perms.reanalyseapp.can_explore %}
+{% if permexplorethis %}
 <a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div></a>
 <a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div></a>
 <a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %}
@@ -105,7 +105,7 @@
 <div class="allPage pageDisabled">{% trans 'Search' %}</div>
 {% endif %}
 
-{% if not perms.reanalyseapp.can_explore %}
+{% if not permexplorethis %}
 
 	</br>
 	{% comment %}Translators: Left menu link to register page{% endcomment %}

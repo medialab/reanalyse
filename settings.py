@@ -6,6 +6,11 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 
+STAFF_EMAIL = 'pierre.jdlf.medialab@gmail.com'
+EMAIL_HOST = 'smtp.sciences-po.fr'
+EMAIL_PORT = 25
+
+
 #REANALYSEPROJECTPATH = ''
 #REANALYSEESE_FILES = ''
 #ALLOWED_INCLUDE_ROOTS = (REANALYSEESE_FILES)

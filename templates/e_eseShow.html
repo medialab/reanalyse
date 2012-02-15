@@ -27,6 +27,7 @@
 
 
 {% block content %}
+	{% if ese %}
 	<div class="verticalslider" id="mesTabs">
 		<ul class="verticalslider_tabs">
 		{% for chapter in chapters %}
@@ -86,9 +87,12 @@
 	<div style="margin-top:240px;">
 	<hr>
 	{% comment %}Translators: ESE final report download{% endcomment %}
-	{% trans 'The final report can be downloaded' %}: <a href="{% url reanalyse.reanalyseapp.views.getfile enquete.id %}">{{enquete.name}}</a>
+	{% trans 'The final report can be downloaded' %}: <a href="{% url reanalyse.reanalyseapp.views.getEseReport enquete.id %}">rapport Enquête sur Enquête</a>
 	<hr>
 	</div>
+{% else %}
+	<p>No Research on Research was found for this study</p>
+{% endif %}
 	
 {% endblock %}
 
@@ -97,6 +101,7 @@
 {% block bottom %}
 <script type="text/javascript">
 
+{% if ese %}
 	$(document).ready(function(){
 	{% for chapter in chapters %}
 		var audioPlaylist_{{forloop.counter}} = new Playlist("{{forloop.counter}}", [
@@ -127,6 +132,7 @@
 		});
 	{% endfor %}		
 	});
+{% endif %}
 	
 </script>
 {% endblock %}

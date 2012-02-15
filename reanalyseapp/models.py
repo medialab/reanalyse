@@ -83,8 +83,18 @@ class EnqueteSurEnquete(models.Model):
 		header = root.findall('StudyUnit/Header')[0]
 		self.name = header.attrib["name"]
 		self.name_id = header.attrib["id"]
-		self.summaryhtml = settings.REANALYSEESE_FILES + header.attrib["summary"]
-		self.report = header.attrib["report"]
+		
+		baseEsePath = settings.REANALYSEESE_FILES
+		if not os.path.exists(baseEsePath + header.attrib["summary"]):
+			# if summary.html not found in settings.REANALYSEESE_FILES
+			# then ESE is included in study archive, and every link is relative to the ese.xml file
+			baseEsePath = "/".join(self.localxml.split("/")[:-1])+'/'
+		
+		logging.info("ESE basepath:"+baseEsePath)
+		
+		self.summaryhtml = baseEsePath + header.attrib["summary"]
+		self.report = baseEsePath + header.attrib["report"]
+		
 		self.description = header.attrib["description"]
 		self.author = header.attrib["author"]
 		self.date = datetime.datetime.strptime( header.attrib['date'], "%Y" )
@@ -92,7 +102,7 @@ class EnqueteSurEnquete(models.Model):
 		# creates also chapters and subchapters
 		for chapter in root.findall('StudyUnit/Content/Chapter'):
 			name = chapter.attrib["name"]
-			summary = settings.REANALYSEESE_FILES + chapter.attrib['summary']
+			summary = baseEsePath + chapter.attrib['summary']
 			chapobj = self.esechapter_set.create(name=name,summary=summary)
 			chapobj.save()
 			for subChapter in chapter.findall('SubChapter'):

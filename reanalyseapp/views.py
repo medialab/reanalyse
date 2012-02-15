@@ -19,6 +19,9 @@ from django.template import loader, Context
 
 from django.conf import settings
 
+# to send emails for registration
+from django.core.mail import send_mail
+
 import glob
 import os
 
@@ -131,12 +134,12 @@ def init_users():
 	#eEnquete2,isnew = Permission.objects.get_or_create(codename='can_explore_2',name='EXPLORE enquete 2',content_type=content_type)
 		
 	######## Users
-	bUser,isnew = User.objects.get_or_create(username='browse',password='browse',is_active=True)
+	bUser,isnew = User.objects.get_or_create(username='browse',password='-',is_active=True)
 	bUser.groups.add(bGroup)
-	eUser,isnew = User.objects.get_or_create(username='explore',password='explore',is_active=True)
+	eUser,isnew = User.objects.get_or_create(username='explore',password='-',is_active=True)
 	eUser.groups.add(eGroup)
 	#eUser.user_permissions.add(eEnquete2)
-	cUser,isnew = User.objects.get_or_create(username='create',password='create',is_active=True)
+	cUser,isnew = User.objects.get_or_create(username='create',password='-',is_active=True)
 	cUser.groups.add(cGroup)
 	#cUser.user_permissions.add(eEnquete1)
 	#cUser.user_permissions.add(eEnquete2)
@@ -157,6 +160,15 @@ if not usersInitDone:
 
 
 
+###########################################################################
+# adds key depending on current user & enquete
+def updateCtxWithPerm(ctx,request,e):
+	permexplorethis = Permission.objects.get(codename='can_explore_'+str(e.id))
+	permexplore = Permission.objects.get(codename='can_explore')
+	permmake = Permission.objects.get(codename='can_make')
+	canexplorethis = request.user.has_perm(permexplorethis) or request.user.has_perm(permexplore) or request.user.has_perm(permmake)
+	ctx.update({'permexplorethis':canexplorethis})
+###########################################################################
 
 
 
@@ -222,13 +234,14 @@ def home(request):
 				return redirect(nextpage)
 	
 		if spname=='register':
+			curUser = request.user
 			# get table with status
 			lang = request.LANGUAGE_CODE
 			filepath = settings.REANALYSESITECONTENTPATH + 'access_content_'+lang+'.html'
 			contenthtml = getContentOfFile(filepath)
 			ctx.update({'contenthtml':contenthtml})
 			################################################ In case of user creation
-			if not request.user.has_perm('reanalyseapp.can_browse'):
+			if not curUser.has_perm('reanalyseapp.can_browse'):
 				if request.method == 'POST':
 					form = BrowseUserForm(request.POST)
 				else:
@@ -237,30 +250,40 @@ def home(request):
 					new_user = form.save()
 					new_user.is_active = False
 					new_user.save()
-					
 					group = Group.objects.get(name='BROWSE')
-					
 					new_user.groups.add(group)
 					new_user.save()
-					ctx.update({'account':new_user})
+					subject = '[reanalyse] request_browse'
+					message = 'username: '+form.cleaned_data['username']
+					message += '\nprenom: '+form.cleaned_data['first_name']
+					message += '\nnom: '+form.cleaned_data['last_name']
+					message += '\nemail: '+form.cleaned_data['email']
+					footer = '\n\nPlease go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(new_user.id)+' to activate this user.'
+					message += '\n\n==============================\n'+footer
+					send_mail(subject,message,new_user.email,[settings.STAFF_EMAIL],fail_silently=False)
 				ctx.update({'form':form})
 			################################################
-			else: # can_browse, asking for can_explore
-				try:
-					eid = int(request.GET.get('e'))
+			else: # can_browse, asking for can_explore	
+				eid = int(request.GET.get('e',-1))
+				if eid!=-1:
 					wantedenquete = Enquete.objects.get(id=eid)
 					if request.method == 'POST':
 						form = ExploreUserForm(request.POST)
 					else:
-						form = ExploreUserForm()
+						form = ExploreUserForm(initial={'enqueteid':eid})
 					if form.is_valid():
-						# update group for this user
-						# deactivated for the moment
-						group = Group.objects.get(name='EXPLORE')
-						#request.user.groups.add(group)
-						#request.user.save()
+						# don't add permission corresponding to the current enquete
+						#curPerm = Permission.objects.get(codename='can_explore_'+str(eid))
+						#curUser.user_permissions.add(curPerm)
+						#curUser.save()
+						# rather send mail to CDSP staff
+						subject = '[reanalyse] request_explore: '+wantedenquete.name
+						message = 'motivation:\n\n'+form.cleaned_data['motivation']
+						footer = 'Please go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(curUser.id)+'  to add permission for this study.'
+						message += '\n\n==============================\n'+footer
+						send_mail(subject,message,curUser.email,[settings.STAFF_EMAIL],fail_silently=False)
 					ctx.update({'form':form,'wantedenquete':wantedenquete})
-				except:
+				else:
 					# no enqueteid was specified
 					donothing=1
 					
@@ -287,7 +310,7 @@ def home(request):
 # UPLOAD & PARSE enquete
 ################################################################################
 @login_required
-def eUpload(request):
+def eAdmin(request):
 	sessionFolderName = "up_"+str(time())
 	ctx = {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}
 	if checkSolrProcess():
@@ -515,7 +538,6 @@ def eReset(request):
 ###########################################################################
 def eShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	ese = e.enquetesurenquete_set.all()[0]
 	meta = e.meta()
 	
 	metashort=[]
@@ -539,20 +561,22 @@ def eShow(request,eid):
 # 		metashort.append(["error","errormetashort"])
 # 		metalong.append(["error","errormetalong"])
 # 		publis=["errorpublis"]
-				
-	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'ese': ese,'metashort':metashort,'metalong':metalong,'description':meta['abstract'][0]}
 	
-	canexp = request.user.has_perm('reanalyseapp.can_explore_'+str(e.id)) or request.user.has_perm('reanalyseapp.can_make')
-	ctx.update({'currentperm':canexp})
-	
-	return render_to_response('e_show.html',ctx , context_instance=RequestContext(request))
+	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metashort':metashort,'metalong':metalong,'description':meta['abstract'][0]}
+	updateCtxWithPerm(ctx,request,e)
+	return render_to_response('e_show.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 @login_required
 def eseShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	ese = e.enquetesurenquete_set.all()[0]
-	chapters = ese.esechapter_set.order_by('id')
+	try:
+		ese = e.enquetesurenquete_set.all()[0]
+		chapters = ese.esechapter_set.order_by('id')
+	except:
+		ese = []
+		chapters = []
 	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese': ese,'chapters':chapters}
+	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('e_eseShow.html',ctx ,context_instance=RequestContext(request))
 ###########################################################################
 
@@ -705,6 +729,7 @@ def edBrowse(request,eid):
 	colarray.append({'label':'Textes'})
 	
 	ctx.update({'tTable':tTable, 'speakersColors':speakersColors, 'attributeTypes':colarray})
+	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('ed_browse.html', ctx, context_instance=RequestContext(request))
 ################################################################################
 @login_required
@@ -826,7 +851,7 @@ def esBrowse(request,eid):
 	speakersColors = getSpeakersColorsDict(e,None)	
 	
 	ctx.update({'sTable':sTable,'attributeTypes':colarray,'speakersets':speakersets,'speakersColors':speakersColors})
-	
+	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 @login_required
@@ -847,8 +872,9 @@ def ewShow(request,eid,wid):
 	# get Textes using this word & how much for each Speaker
 	#theWordEntitySpeakers = WordEntitySpeaker.objects.filter(speaker__enquete=e,wordentity=we)
 	#stat['texts']=0
-	
-	return render_to_response('ew_show.html', {'word':we,'stat':stat}, context_instance=RequestContext(request))
+	ctx = {'word':we,'stat':stat}
+	updateCtxWithPerm(ctx,request,e)
+	return render_to_response('ew_show.html', ctx, context_instance=RequestContext(request))
 #####################################################
 @login_required
 @permission_required('reanalyseapp.can_explore')
@@ -977,6 +1003,7 @@ def edShow(request,eid,did):
 		ctx.update({'csvTable':{'columns':columns,'values':values}})
 	#########################################
 	
+	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('ed_show.html', ctx , context_instance=RequestContext(request))
 ###################################################################################################################################
 @login_required
@@ -1004,12 +1031,14 @@ def esShow(request,eid,sid):
 	ngrams = speaker.ngramspeaker_set.order_by('-tfidf')
 	
 	ctx.update({'content':content,'attributes':attributes,'ngrams':ngrams})
-	
+	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('es_show.html', ctx , context_instance=RequestContext(request))
 #####################################################
 @login_required
 @permission_required('reanalyseapp.can_explore')
 def ecShow(request,eid,cid):
+	e = Enquete.objects.get(id=eid)
+	
 	# CODE
 	# object
 	code = Code.objects.get(id=cid)
@@ -1017,7 +1046,10 @@ def ecShow(request,eid,cid):
 	stats=dict()
 	stats['textes']=1
 	stats['speaker']=1
-	return render_to_response('ec_show.html', {'code':code,'stats':stats}, context_instance=RequestContext(request))
+	
+	ctx = {'code':code,'stats':stats}
+	updateCtxWithPerm(ctx,request,e)
+	return render_to_response('ec_show.html',ctx, context_instance=RequestContext(request))
 ################################################################################
 
 
@@ -1029,9 +1061,10 @@ def ecShow(request,eid,cid):
 ###########################################################################
 # download link (for ESE report)
 @login_required
-def getfile(request, eseid):
-	ese = EnqueteSurEnquete.objects.get(id=eseid)
-	filepath = settings.REANALYSEESE_FILES + ese.report
+def getEseReport(request,eid):
+	ese = EnqueteSurEnquete.objects.get(enquete__id=eid)
+	filepath = ese.report
+	logging.info("Downloading ESE report:"+filepath)
 	#pdfname = eseid + "_"+ese.report.split('/')[-1]
 	pdfname = removeBadChars(ese.name) + '.pdf'
 	response = HttpResponse(mimetype="application/pdf")
@@ -1111,39 +1144,7 @@ def servePdf(request,did):
 
 
 
-###########################################################################
-# Simple search tool : without haystack / deprecated
-# def eDeprecatedSearch(request):
-# 	resultsall=[]
-# 	resultsexcerpts=[]
-# 	resultslinks=[]
-# 	query_string = ''
-# 	found_entries = None
-# 	if ('q' in request.GET) and request.GET['q'].strip():
-# 		query_string = request.GET['q']
-# 		
-# 		# search in textes.content
-# 		#entry_query = get_query(query_string, ['content',])
-# 		
-# 		# search in wordentities.name
-# 		entry_query = get_query(query_string, ['wordentity__content',])
-# 		
-# 		logging.info("SEARCHQUERY:"+query_string)
-# 		found_entries = Texte.objects.filter(entry_query).distinct().order_by('-id')
-# 		resultslinks=[]
-# 		for obj in found_entries:
-# 			# only gives object (Textes) to build link
-# 			resultslinks.append(obj)
-# 			
-# # 		# 1st version - deprecated
-# # 		for obj in found_entries:
-# # 			# gives objects with whole content (too much!)
-# # 			resultsall += giveAllContent(obj, query_string)
-# # 			# gives extracts
-# # 			resultsexcerpts += giveExcerpts(obj,query_string)
-# 
-# 	return render_to_response('e_searchresults.html', { 'query_string':query_string, 'results':resultslinks}, context_instance=RequestContext(request))
-###########################################################################
+
 
 
 
@@ -1458,12 +1459,6 @@ def eSearch(request,eid):
 	#involvedAttributesViz = makeViz(e,'Attributes',textes=involvedTextes,speakers=involvedSpeakers)
 	#ctx['visualizations']=getRelatedViz(textes=involvedTextes,speakers=involvedSpeakers)
 	
-	
-	
-	
-	
-	
-	
 	################################# BUILDING THE VIEW #################################
 	
 	####### BEFORE JC : works well but ...  how to add things in the context ? FACETS OK
@@ -1513,12 +1508,59 @@ def eSearch(request,eid):
 	ctx.update(formcontext)
 	ctx.update({'bodyid':'e','pageid':'search'})
 	
+	updateCtxWithPerm(ctx,request,e)
 	########### RESPONSE
 	if request.GET.get('q'):
 		return render_to_response('search_results.html', ctx, context_instance=RequestContext(request))
 	else:
 		return render_to_response('search.html', ctx, context_instance=RequestContext(request))
 ###########################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+###########################################################################
+# Simple search tool : without haystack / deprecated
+# def eDeprecatedSearch(request):
+# 	resultsall=[]
+# 	resultsexcerpts=[]
+# 	resultslinks=[]
+# 	query_string = ''
+# 	found_entries = None
+# 	if ('q' in request.GET) and request.GET['q'].strip():
+# 		query_string = request.GET['q']
+# 		
+# 		# search in textes.content
+# 		#entry_query = get_query(query_string, ['content',])
+# 		
+# 		# search in wordentities.name
+# 		entry_query = get_query(query_string, ['wordentity__content',])
+# 		
+# 		logging.info("SEARCHQUERY:"+query_string)
+# 		found_entries = Texte.objects.filter(entry_query).distinct().order_by('-id')
+# 		resultslinks=[]
+# 		for obj in found_entries:
+# 			# only gives object (Textes) to build link
+# 			resultslinks.append(obj)
+# 			
+# # 		# 1st version - deprecated
+# # 		for obj in found_entries:
+# # 			# gives objects with whole content (too much!)
+# # 			resultsall += giveAllContent(obj, query_string)
+# # 			# gives extracts
+# # 			resultsexcerpts += giveExcerpts(obj,query_string)
+# 
+# 	return render_to_response('e_searchresults.html', { 'query_string':query_string, 'results':resultslinks}, context_instance=RequestContext(request))
+###########################################################################
+
 
 
 
@@ -1659,6 +1701,7 @@ def evBrowse(request,eid):
 		overviewStats[s.id]=e.visualization_set.filter(speakers=s).count()
 	ctx['overviewStats']=overviewStats
 	
+	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('ev_browse.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 # Delete Visualizations

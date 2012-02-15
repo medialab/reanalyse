@@ -64,7 +64,7 @@ def importEnqueteUsingMeta(folderPath):
 	newEnquete.save()
 	# create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
-	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name='EXPLORE enquete '+str(newEnquete.id),content_type=content_type)
+	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name='EXPLORE enq_'+str(newEnquete.id) + ' '+newEnquete.name ,content_type=content_type)
 	
 	logging.info("parsing:"+docPath)
 	###### Parsing Documents
@@ -168,7 +168,7 @@ def importEnqueteUsingMeta(folderPath):
 
 
 # nb: before, we used to parse DDI.xml file
-# will be soon deprecated, because it's cleaner/easier to parse meta_*.csv files
+# the following will be soon deprecated, because it's cleaner/easier to parse meta_*.csv files
 
 ###########################################################################
 def updateDictWithMeta(dic,root,name,xmlpath):
@@ -204,6 +204,8 @@ def importEnqueteDDI2(inXmlPath):
 	######### ALL OTHER META
 	allmeta={}
 	allmeta['description'] = descr
+	
+	updateDictWithMeta(allmeta,root,'abstract',XMLDDINMS+'stdyDscr/'+XMLDDINMS+'stdyInfo/'+XMLDDINMS+'abstract')
 	
 	######### Study Descr
 	updateDictWithMeta(allmeta,root,'titl',XMLDDINMS+'docDscr/'+XMLDDINMS+'citation/'+XMLDDINMS+'titlStmt/'+XMLDDINMS+'titl')

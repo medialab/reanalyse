@@ -17,7 +17,7 @@ urlpatterns = patterns('reanalyse',
 	########## STREAMS & FILE REQUESTS
 	
 	(r'^stream/(?P<eseid>\w+)/(?P<path>[-\._\w\d\/]+\.(mp3|ogg))+', 'reanalyseapp.views.stream'),
-	(r'^pdf/(?P<eseid>\w+)', 'reanalyseapp.views.getfile'),					# ESE report download
+	(r'^getesereport/(?P<eid>\w+)', 'reanalyseapp.views.getEseReport'),		# ESE report download
 	(r'^graph/download/(?P<gid>\w+)', 'reanalyseapp.views.downloadGraph'),
 	(r'^graph/serve/(?P<gid>\w+).gexf', 'reanalyseapp.views.serveGraph'),	# for gexf display (sigma?)
 	(r'^graph/serve/(?P<did>\w+).pdf', 'reanalyseapp.views.servePdf'),		# for simple pdf display
@@ -25,7 +25,7 @@ urlpatterns = patterns('reanalyse',
 	######################################################################################################
 	########## ENQUETES
 	(r'^e/$', 'reanalyseapp.views.eBrowse'),
-	(r'^e/upload$', 'reanalyseapp.views.eUpload'),						# ADD ENQUETE PaGE
+	(r'^e/admin$', 'reanalyseapp.views.eAdmin'),						# ADMIN PAGE : upload !
 	(r'^e/add$', 'reanalyseapp.views.eAddAjax'),						# ajax-ADD (upload one file at a time)
 	(r'^e/reset$', 'reanalyseapp.views.eReset'),						# RESET (erase temp upload folder)
 	(r'^e/parse$', 'reanalyseapp.views.eParse'),						# PARSE (once all files uploaded in a specific folder)

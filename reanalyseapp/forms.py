@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 
 from django import forms
 
+# for TextInput
+from django.forms.widgets import Textarea
+
 # haystack forms
 from haystack.forms import *
 
@@ -29,8 +32,8 @@ class BrowseUserForm(UserCreationForm):
 ############################################################
 # UPDATE USER STATUS FOR ENQUETE
 class ExploreUserForm(forms.Form):
-	enqueteid = forms.CharField(label=("Enquete Id"),max_length=100,required=True)
-	motivation = forms.CharField(label=("Motivation"),max_length=100,required=True)
+	#enqueteid = forms.CharField(label=("Enquete Id"),max_length=20,required=True)
+	motivation = forms.CharField(widget=Textarea(attrs={'rows':15,'cols':40,'title':"Motivation"}))
 	class Meta:
 		fields = ('motivation') 
 ############################################################

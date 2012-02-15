@@ -101,8 +101,8 @@
 				<li id="{%if bodyid == 'e'%}menuCurrent{%endif%}">
 				<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>
 				{% if perms.reanalyseapp.can_make %}
-				<li id="{%if bodyid == 'upload'%}menuCurrent{%endif%}">
-				<a href="{% url reanalyse.reanalyseapp.views.eUpload %}">{% trans 'Upload' %}</a></li>
+				<li id="{%if bodyid == 'admin'%}menuCurrent{%endif%}">
+				<a href="{% url reanalyse.reanalyseapp.views.eAdmin %}">{% trans 'Admin' %}</a></li>
 				{% endif %}
 
 			</ul>
