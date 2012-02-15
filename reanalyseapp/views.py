@@ -163,10 +163,13 @@ if not usersInitDone:
 ###########################################################################
 # adds key depending on current user & enquete
 def updateCtxWithPerm(ctx,request,e):
+	user = request.user
 	permexplorethis = Permission.objects.get(codename='can_explore_'+str(e.id))
-	permexplore = Permission.objects.get(codename='can_explore')
-	permmake = Permission.objects.get(codename='can_make')
-	canexplorethis = request.user.has_perm(permexplorethis) or request.user.has_perm(permexplore) or request.user.has_perm(permmake)
+	#permexplore = Permission.objects.get(codename='can_explore')
+	#permmake = Permission.objects.get(codename='can_make')
+	eGroup = Group.objects.get(name='EXPLORE')
+	cGroup = Group.objects.get(name='CREATE')
+	canexplorethis = user.has_perm(permexplorethis) or eGroup in user.groups.all() or cGroup in user.groups.all()
 	ctx.update({'permexplorethis':canexplorethis})
 ###########################################################################
 
@@ -599,6 +602,7 @@ def edBrowse(request,eid):
 	# ENQUETE
 	e = Enquete.objects.get(id=eid)
 	only = Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')
+	only = only|Q(doccat='Analyse')|Q(doccat='Preparatory')|Q(doccat='Verbatim')|Q(doccat='Publication')
 	textes = e.texte_set.filter(only)
 	
 	ctx = {'bodyid':'e','pageid':'documents','enquete':e}
@@ -614,7 +618,7 @@ def edBrowse(request,eid):
 	if request.user.has_perm('reanalyseapp.can_make'):
 		colArr=['Category','Name','Size','Action/Status','Visualizations','Investigator','Speakers','Length']
 	else:
-		colArr=['Category','Name','Size','Visualizations','Investigator','Speakers','Length']
+		colArr=['Category','Name','Size','Visualizations','Investigator','Speakers']
 	
 	
 	######################################### VALUES
@@ -705,7 +709,7 @@ def edBrowse(request,eid):
 		if request.user.has_perm('reanalyseapp.can_make'):
 			tArr=[t.doccat,nameStr,sizeStr,statusStr,vizStr,investStr,speakersStr,contentStr]
 		else:
-			tArr=[t.doccat,nameStr,sizeStr,vizStr,investStr,speakersStr,contentStr]
+			tArr=[t.doccat,nameStr,sizeStr,vizStr,investStr,speakersStr]
 			
 		docDict['texte']=t
 		docDict['vals']=tArr
@@ -946,7 +950,10 @@ def edShow(request,eid,did):
 	ctx = {'enquete':texte.enquete,'texte':texte,'bodyid':'e','pageid':'documents'}
 	
 	###### RELATED VIZ
-	ctx.update({'visualizations':getRelatedViz(textes=[texte])})
+	# we can take all related viz if we want
+	#ctx.update({'visualizations':getRelatedViz(textes=[texte])})
+	# now testing with only the textstreamtimeline
+	ctx.update({'visualization':Visualization.objects.get(viztype='TexteStreamTimeline')})
 	
 	######################################### TEI
 	if texte.doctype=='TEI':

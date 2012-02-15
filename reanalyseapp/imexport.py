@@ -64,7 +64,8 @@ def importEnqueteUsingMeta(folderPath):
 	newEnquete.save()
 	# create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
-	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name='EXPLORE enq_'+str(newEnquete.id) + ' '+newEnquete.name ,content_type=content_type)
+	permname = 'EXPLORE e_'+str(newEnquete.id) + ' '+newEnquete.name
+	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name=permname,content_type=content_type)
 	
 	logging.info("parsing:"+docPath)
 	###### Parsing Documents
@@ -114,6 +115,10 @@ def importEnqueteUsingMeta(folderPath):
 						newDocument.status='0'
 						newDocument.save()
 					elif file_extension=='HTM':
+						f = open(file_location,'r')
+						wholecontent=f.read()
+						newDocument.contenthtml=wholecontent
+						f.close()
 						newDocument.status='0'
 						newDocument.save()
 
@@ -245,8 +250,9 @@ def importEnqueteDDI2(inXmlPath):
 	
 	# create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
-	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name='EXPLORE enquete '+str(newEnquete.id),content_type=content_type)
-
+	permname = 'EXPLORE e_'+str(newEnquete.id) + ' '+newEnquete.name
+	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name=permname,content_type=content_type)
+	
 	# nb: for the moment ese is not included in study, that's bad !
 	eseXmlPath = settings.REANALYSEESE_FILES + study_ddi_id +".xml"
 	ese = EnqueteSurEnquete(localxml=eseXmlPath,enquete=newEnquete)

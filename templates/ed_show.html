@@ -1,5 +1,6 @@
 {% extends "e_base.html" %}
 
+{% load i18n %}
 {% load tags %}
 
 {% block enqueteheadmore %}
@@ -19,8 +20,7 @@
 	<!-- Dropdownmenu checklist jquery plugin (POS display selection) -->
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />	
-{% endif %}
-	
+
 	<!-- =============================== FOR VIZ -->
 	<!-- d3.js -->
 	<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
@@ -29,8 +29,11 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
+	<!-- the only viz we display for the moment: -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
 
-	
+{% endif %}
+
 	<!-- =============================== CSS FOR SPEAKERS COLORS (used for css verbatim block + d3.js viz -->
 	<style type="text/css">
 		{% for k,v in speakersColors.items %}.speakerColor_{{k}} {background-color:{{v}};fill:{{v}};}
@@ -99,34 +102,35 @@
 
 
 {% block contenttop %}
+
 	{% if texte.doctype == 'TEI' %}
 	<!-- =================================== FIXED TO SCROLL RELATED VIZ -->
 	<div id="contentScrollToFixed">
 		<div id="relatedViz">
-			{% if visualizations %}
+			<!-- before we tryed to display all the related viz... now just showing the texte streamtimeline used to navigate within text -->
+			{% if visualization %}
 			<div id="relatedVizContainer" style="display:none;">
-				{% for v in visualizations %}
-					<div class="vizContainer" id="vizContainer_{{forloop.counter}}" style="display:none;">
-						<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_{{v.viztype}}.js"></script>
-						{% include "render_v.html" with enquete=enquete v=v nk=forloop.counter %}
-					</div>
-				{% endfor %}
+				<div class="vizContainer" id="vizContainer_0">
+					{% include "render_v.html" with enquete=enquete v=visualization nk=0 %}
+				</div>
 			</div>
-			<div id="relatedVizToggle" {%if visualizations|length%}onclick='$("#relatedVizContainer").toggle("fast");return false;'{%endif%}>
-				- {{visualizations|length}} related viz - 
-				{% for v in visualizations %}
-	<a href="#" onclick='$("#relatedVizContainer").toggle(true,"fast");$(".vizContainer").toggle(false);$("#vizContainer_{{forloop.counter}}").toggle(true);event.stopPropagation();return false;'>({{v.id}}) {{v.viztype}}</a>
-					{% if not forloop.last %} | {% endif %}
-				{% endfor %}
+			<div id="relatedVizToggle" onclick='$("#relatedVizContainer").toggle("fast");return false;'>
+			{% comment %}Translators: edShow: toggle text for streamtimeline viz{% endcomment %}
+	<a href="#" onclick='$("#relatedVizContainer").toggle(true,"fast");$(".vizContainer").toggle(false);$("#vizContainer_0").toggle(true);event.stopPropagation();return false;'>{% trans 'exploration using viz' %}</a>
 			</div>
 			{% else %}
-				You may want to 
-				<a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"textes":["{{texte.id}}"]});return false;'>create</a> a StreamTimeline viz (will help you navigate trough text), then refresh...
+	<!-- let's suppose TextStreamTimeline was always created on upload (ie no need a 'create link' here -->
+	<!--
+	You may want to 
+	<a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"textes":["{{texte.id}}"]});return false;'>create</a> 
+	a StreamTimeline viz (will help you navigate trough text), then refresh...
+	-->
 			{% endif %}
 		</div>
 	</div>
 	<!-- =================================== -->
 	{% endif %}
+	
 {% endblock %}
 
 
@@ -138,7 +142,6 @@
 	<h1>{{texte.name}}</h1>
 </div>
 
-<!-- ===================================================================================================================================== -->
 <!-- ===================================================================================================================================== -->
 {% if texte.doctype == 'TEI' %}
 
@@ -157,6 +160,8 @@
 		{% endif %}
 	<h2>Transcription</h2>
 	
+	
+	{% comment %}
 	<!-- ========================================================================= -->
 	<!-- Form to tune display of words in verbatim. javascript to update css -->
 	<!-- note bug with dropdownchecklist if "display:none;" at the beginning -->
@@ -183,6 +188,8 @@
 		<select id="verb_dictionnary_pos"></select>
 		<br/><br/>
 	</div>
+	{% endcomment %}
+	
 </div>
 
 	<!-- ========================================================================= -->
@@ -190,9 +197,6 @@
 	<div class="text_verbatim" id="verbatim"></div>
 
 {% endif %}
-
-
-<!-- ===================================================================================================================================== -->
 <!-- ===================================================================================================================================== -->
 {% if texte.doctype == 'CSV' %}
 
@@ -214,9 +218,7 @@
 		{% endfor%}
 	</tbody>	
 </table>
-
 {% endif %}
-<!-- ===================================================================================================================================== -->
 <!-- ===================================================================================================================================== -->
 {% if texte.doctype == 'RTF' %}
 	<div class="textdiv">
@@ -225,40 +227,21 @@
 		{% endautoescape %}
 	</div>
 {% endif %}
-<!-- ======================================================= -->
+<!-- ===================================================================================================================================== -->
 {% if texte.doctype == 'PDF' %}
 	<object data="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}" type="application/pdf" width="100%" height="100%">
 		alt : <a href="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}">{{texte.name}}</a>
 	</object>
 {% endif %}
-<!-- ======================================================= -->
-{% if texte.doctype == 'CTX' %}
-	<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.edStylizeContent texte.id %}");//window.location.reload(true);'>> Refresh Texte contenthtml from TXT and QUOTATIONS</a>
-	<h1>Texte: {{ texte.name }}</h1>
-	<!--<div class="textdiv">-->
+<!-- ===================================================================================================================================== -->
+{% if texte.doctype == 'HTM' %}
+	<div class="textdiv">
 		{% autoescape off %}
 		{{texte.contenthtml}}
 		{% endautoescape %}
-	<!--</div>-->
-
+	</div>
 {% endif %}
-<!-- ======================================================= -->
-
-
-
-
-
-{% if texte.doctype == 'CTX' %}
-	<!-- jquery plugin scrollTo -->
-	</br>
-	<a href="#" onclick="$.scrollTo( {top:'0', left:'0'}, 500 );return false;">Scroll to Top</a>
-	<!-- Scriptaculous smooth scroll to top -->
-	<!--<a href="#" onclick="Effect.ScrollTo('topanchor', { duration:'0.5', offset:-10 });return false;">Scroll to Top</a>-->
-	<!-- ======================================================= -->
-{% endif %}
-
-
-
+<!-- ===================================================================================================================================== -->
 {% endblock %}
 
 
@@ -273,17 +256,17 @@
 
 <script type="text/javascript">
 
-function loadSampleStopwordsList() {
-	$.get("{{MEDIA_URL}}/xmlsamples/stopwords_fr.txt", function success(data) {
-		$("#verb_inputfilt_w").val(data);
-		// negative mode, we want to hide them
-		$("#verb_checkfilt_negative").attr('checked','checked');
-		changeVerbatimWordsDisplay( data, "w_", $("#verb_checkfilt_negative").attr('checked')!='checked' );
-		//console.log("file received:"+);
-	});
-};
-		
 {% if texte.doctype == 'TEI' %}
+	function loadSampleStopwordsList() {
+		$.get("{{MEDIA_URL}}/xmlsamples/stopwords_fr.txt", function success(data) {
+			$("#verb_inputfilt_w").val(data);
+			// negative mode, we want to hide them
+			$("#verb_checkfilt_negative").attr('checked','checked');
+			changeVerbatimWordsDisplay( data, "w_", $("#verb_checkfilt_negative").attr('checked')!='checked' );
+			//console.log("file received:"+);
+		});
+	};
+
 	///// global vars to feed d3.js streamTimeline
 	var fromTextPart = {{minpart}};
 	var toTextPart = {{maxpart}};
@@ -398,7 +381,7 @@ function loadSampleStopwordsList() {
 			//"bSort": false,
 			"sScrollY": "600px",
 			"sScrollX": "100%", // not taken into acount !!
- 			//"sScrollXInner": "2800px",
+ 			//"sScrollXInner": "100%",
 			"bScrollCollapse": true,
 			"bPaginate": false,
 			//"bJQueryUI": true,				// jQuery UI Theme
@@ -471,6 +454,33 @@ function loadSampleStopwordsList() {
 
 
 {% comment %}
+
+
+
+<!-- CTX was for CAQDAS files, deprecated man -->
+<!-- ======================================================= -->
+{% if texte.doctype == 'CTX' %}
+	<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.edStylizeContent texte.id %}");//window.location.reload(true);'>> Refresh Texte contenthtml from TXT and QUOTATIONS</a>
+	<h1>Texte: {{ texte.name }}</h1>
+	<!--<div class="textdiv">-->
+		{% autoescape off %}
+		{{texte.contenthtml}}
+		{% endautoescape %}
+	<!--</div>-->
+
+{% endif %}
+<!-- ======================================================= -->
+{% if texte.doctype == 'CTX' %}
+	<!-- jquery plugin scrollTo -->
+	</br>
+	<a href="#" onclick="$.scrollTo( {top:'0', left:'0'}, 500 );return false;">Scroll to Top</a>
+	<!-- Scriptaculous smooth scroll to top -->
+	<!--<a href="#" onclick="Effect.ScrollTo('topanchor', { duration:'0.5', offset:-10 });return false;">Scroll to Top</a>-->
+{% endif %}
+<!-- ======================================================= -->
+
+
+
 <!--
 	DEPRECATED: B.C. we used pagination to navigate through verbatim
 	<span class="document-pagination">

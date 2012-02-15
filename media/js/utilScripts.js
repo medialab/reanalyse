@@ -714,13 +714,8 @@ function initParaverbalTogglesAndSymbols( mediaUrl, arrTrans, arrVerb ) {
 	
 	pDom = $('#paraverbalShowHide');
 	
-	// checkbox for all paraverbal in the same time
+	// checkbox for toggle all
 	var checkball = $('<input>').attr( {id:"paraCheckAll", type:"checkbox", checked:"checked"} );
-	checkball.click(function() {
-		var chk = $(this).attr("checked");
-		arrTrans.forEach(function(e) { $("#paraCheck_"+e).attr("checked",chk); $(".text_"+e).toggle(chk); });
-		arrVerb.forEach(function(e) { $("#paraCheck_"+e).attr("checked",chk); $(".text_"+e).toggle(chk); });
-	});
 	pDom.append(checkball);
 	pDom.append(" toggle all");
 	
@@ -729,10 +724,25 @@ function initParaverbalTogglesAndSymbols( mediaUrl, arrTrans, arrVerb ) {
 	initParaverbalList( pDom, mediaUrl, arrTrans );
 	pDom.append($('<h1>').text('-- Verbatim')) ;
 	initParaverbalList( pDom, mediaUrl, arrVerb );
+	
+	// click action for toggle all. todo: to improve
+	checkball.click(function() {
+		arrTrans.forEach(function(e) {
+			var chk = $('#paraCheckAll').attr("checked");
+			if (chk!='checked') chk=null;
+			$("#paraCheck_"+e).attr("checked",chk);
+			$(".text_"+e).toggle(chk!=null);
+		});
+		arrVerb.forEach(function(e) {
+			var chk = $('#paraCheckAll').attr("checked");
+			if (chk!='checked') chk=null;
+			$("#paraCheck_"+e).attr("checked",chk);
+			$(".text_"+e).toggle(chk!=null);
+		});
+	});
 }
 function initParaverbalList( pDom, mediaUrl, array ) {
 	array.forEach(function(e){
-		var item = $
 		var image = $('<img>').attr( {src:mediaUrl+"/images/text_"+e+".png"} ) ;
 		var checkb = $('<input>').attr( {id:"paraCheck_"+e, type:"checkbox", name:e , checked:"checked"} ) ;
 		// toggle when checkboxed

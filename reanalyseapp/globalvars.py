@@ -63,10 +63,10 @@ SENTENCE_UTT_SYMBOLS['interrogative']='? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
 ########## VERBATIM Dict : TEI HIAT to CODES
-# THOSE DISPLAYED IN edShow View toggle show/hide
+# THOSE DISPLAYED IN edShow view to toggle show/hide
 PARVBCODES={}
 PARVBCODES['transcription'] = 	['inaudible','break','comment','time','question']
-PARVBCODES['verbatim'] = 		['hesitation','interruption','laugh','silence','body']
+PARVBCODES['verbatim'] = 		['hesitation','interruption','laugh','silence','body','directed']
 
 CODES_IMAGE_TOOLTIP={} # with content (tooltip!)
 CODES_IMAGE_TOOLTIP['break:']=			'break'
@@ -75,18 +75,19 @@ CODES_IMAGE_TOOLTIP['comment:']=		'comment'
 CODES_IMAGE_TOOLTIP['time:']=			'time'
 CODES_IMAGE_TOOLTIP['question:']=		'question'
 CODES_IMAGE_TOOLTIP['to:']=				'directed'
+CODES_IMAGE_TOOLTIP['directed:']=		'directed'
 
 CODES_IMAGE={} # without content (only image)
 CODES_IMAGE['hesitation']=				'hesitation'
 CODES_IMAGE['interruption']=			'interruption'
-#CODES_IMAGE['part:echo:']=				'interruption'
 CODES_IMAGE['part:echo']=				'interruption'
 CODES_IMAGE['inaudible']=				'inaudible'
 CODES_IMAGE['laugh']=					'laugh'
+CODES_IMAGE['silence']=					'silence'
 CODES_IMAGE['points de suspension']=	'silence'
 
+#CODES_TEXT_TOOLTIP['anonym:']=			'anonym'
 CODES_TEXT_TOOLTIP={} # text styling (with tooltip)
-CODES_TEXT_TOOLTIP['anonym:']=			'anonym'
 CODES_TEXT_TOOLTIP['sic:']=				'sic'
 CODES_TEXT_TOOLTIP['uncertain:']=		'uncertain'
 

@@ -634,8 +634,9 @@ def parseTEIWords(sentence,nodes,N):
 			# TRASH: codeTypeName = 'word'
 			wordContent = node.text
 			allSentenceTxt += wordContent+" "
-			# nb: we put content in css class to allow some display
-			allSentenceHtml += '<span class="w_'+wordContent+'">' + wordContent + "</span> "
+			# nb: if we want to, we can put content in css class to allow some display
+			#allSentenceHtml += '<span class="w_'+wordContent+'">' + wordContent + "</span> "
+			allSentenceHtml += wordContent + " "
 		elif node.tag==XMLTEINMS+'c':
 			# TRASH: codeTypeName = 'ponctuation'
 			wordContent = node.text
@@ -650,7 +651,6 @@ def parseTEIWords(sentence,nodes,N):
 				wordContent = node.attrib['type'] # short/long
 			except:
 				wordContent = 'silence'
-			allSentenceHtml += wordContent+" "
 		elif node.tag==XMLTEINMS+'incident':
 			# TRASH: codeTypeName = 'paraverbal'
 			isParaverbal = True
@@ -671,6 +671,10 @@ def parseTEIWords(sentence,nodes,N):
 				for nms in CODES_TEXT_TOOLTIP.keys():
 					if incidDesc.startswith(nms):
 						codeName = CODES_TEXT_TOOLTIP[nms]
+						incidDesc = incidDesc[len(nms):]
+				for nms in CODES_TEXT.keys():
+					if incidDesc.startswith(nms):
+						codeName = CODES_TEXT[nms]
 						incidDesc = incidDesc[len(nms):]
 			################################
 		else:

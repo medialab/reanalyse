@@ -1301,7 +1301,6 @@ span.text_speaker_namecount {
 /* ========================== TEXT STYLING */
 .text_sic,
 .text_uncertain,
-.text_strong,
 .text_anonym {
 	width:auto;
 	-moz-border-radius: 5px;
@@ -1312,6 +1311,12 @@ span.text_speaker_namecount {
 	padding-left:3px;
 	padding-right:3px;	
 }
+.text_strong {
+	text-decoration: underline;
+	font-weight: bold;
+	padding-right:4px;
+}
+
 a.text_sic,
 a.text_uncertain,
 a.text_anonym {
