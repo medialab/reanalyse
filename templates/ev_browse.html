@@ -43,51 +43,55 @@
 {% block enqueteleftmenumore %}
 {% endblock %}
 
+{% comment %}
 {% block enqueteleftmenumorescroll %}
-		
-		<!-- =============================== VIZ SHOW HIDE-->
-		<div class="leftmenublock">
-			<h1 onclick='$("#vizShowHide").toggle("fast");return false;'>Toggle / Show</h1>
-			<div id="vizShowHide" style="display:none;">
-				<a href="" id="butAllAll">all</a> | 
-				<a href="" id="butAllHeader">headers</a> | 
-				<a href="" id="butAllDescr">descr</a> | 
-				<a href="" id="butAllViz">viz</a>
-			<h1>Show only viz types</h1>
-				<ul>
-				{% for typ in viztypes %}
-					<li><a href="" id="butAllOnly_{{typ}}">{{typ}}</a></li>
-				{% endfor %}
-				</ul>
-			</div>
+
+	<!-- =============================== VIZ SHOW HIDE (deactivated) -->
+	<div class="leftmenublock">
+		<h1 onclick='$("#vizShowHide").toggle("fast");return false;'>Toggle / Show</h1>
+		<div id="vizShowHide" style="display:none;">
+			<a href="" id="butAllAll">all</a> | 
+			<a href="" id="butAllHeader">headers</a> | 
+			<a href="" id="butAllDescr">descr</a> | 
+			<a href="" id="butAllViz">viz</a>
+		<h1>Show only viz types</h1>
+			<ul>
+			{% for typ in viztypes %}
+				<li><a href="" id="butAllOnly_{{typ}}">{{typ}}</a></li>
+			{% endfor %}
+			</ul>
 		</div>
-		
-		<!-- =============================== OVERVIEW VIZ-->
-		<div class="leftmenublock">
-			<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Viz Repartition</h1>
-			<div id="vizOverViewContainer" style="display:none;">
-				<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>
-				<!-- NB: re-do it by hand (not including) -->
-				{%comment%}{% include "render_v.html" with enquete=enquete v=overviewViz nk="overview" %}{%endcomment%}
-				<div id="theViz_over" style="width:100%;"></div>
-				<script type="text/javascript">
-					$(document).ready(function() {
-					$.ajax({
-						url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
-						success: function(data){
-							//console.log("data received for viz:{{nk}}");
-							$("#theViz_over").html("");
-							var statdat = { 'mode':'weight','stats':{ {%for k,v in overviewStats.items%}'{{k}}':{{v}},{%endfor%} } };
-							buildD3_Overview(data,"theViz_over",statdat);
-							},
-						});
+	</div>
+	
+	<!-- =============================== OVERVIEW VIZ (deactivated) -->
+	<div class="leftmenublock">
+		<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Viz Repartition</h1>
+		<div id="vizOverViewContainer" style="display:none;">
+			<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>
+
+			<!-- tryout using template (deprecated) -->
+			<!--{% include "render_v.html" with enquete=enquete v=overviewViz nk="overview" %}-->
+			
+			<!-- rather re-doing it by hand -->
+			<div id="theViz_over" style="width:100%;"></div>
+			<script type="text/javascript">
+				$(document).ready(function() {
+				$.ajax({
+					url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
+					success: function(data){
+						//console.log("data received for viz:{{nk}}");
+						$("#theViz_over").html("");
+						var statdat = { 'mode':'weight','stats':{ {%for k,v in overviewStats.items%}'{{k}}':{{v}},{%endfor%} } };
+						buildD3_Overview(data,"theViz_over",statdat);
+						},
 					});
-				</script>
-			</div>
+				});
+			</script>
 		</div>
+	</div>
 		
 {% endblock %}
-
+{% endcomment %}
 
 {% block content %}
 

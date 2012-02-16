@@ -1,101 +1,76 @@
-<table class="bottomTable">
+<table class="selectTable">
 <thead>
 	<th>1. Select {{source}}</th>
 	<th>2. Launch Visualization</th>
 </thead>
 <tbody>
 <tr>
-<td>
-	{% if source = 'Documents' %}
-	
-		<span id="documentsSelectedCountDiv">0</span> docs 
-		(select <a href="" onclick='selectAllDocs();return false;'>all</a> | 
-		<a href="" onclick='deselectAllDocs();return false;'>none</a>) 
-		<div class="selectedList" id="documentsSelectedListDiv"></div>
+	<td>
+		<!-- ============================================================================================= -->	
+		{% if source = 'Documents' %}
 		
-	{% endif %}
-	{% if source = 'Speakers' %}
-<!-- ============================================================================================= -->	
-		<div class="speakerSelectionLeftHeader">
-			<div class="speakerSelectionLeftParts">
-				<a href='' id="goCreateSet">create new set</a>
-			</div>
-			<div class="speakerSelectionLeftParts">
-select <a href="" onclick='selectAllSpeakers();return false;'>all</a> | 
-<a href="" onclick='deselectAllSpeakers();return false;'>none</a> | 
-<!-- ========================================= SPEAKERS SELECTION DropDownCheckList-->
-<select id="spkSelectDropDownList" multiple="multiple">
-{% for c in sTable.columns %}
-	{% if c.values|length > 2 %}
-		<optgroup label="{{c.label}}">
-			{% for a in c.values %}
-				<option id="option:{{forloop.parentloop.counter0}}:{{a.name}}">{{a.name}}</option>
-			{% endfor %}
-			<!--<option selected="selected">selectedName</option>-->
-		</optgroup>
-	{% endif %}
-{% endfor%}
-</select>
-<!-- ========================================= -->
-			</div>
-		</div>
-<!-- ============================================================================================= -->				
-		<div class="speakerSelectionLeftCenter">
-			<div class="inTableListContainer">
-				<ul id="speakerSetsList"> 		<!-- ===================== SpeakerSets -->
-				{% if speakersets %}
-				{% for spks in speakersets %}
-					<li id="spkset_{{spks.id}}"><a href='' onclick='onSpeakerSetClick({{enquete.id}},{{spks.id}});return false;'>({{spks.speakers.count}}) {{spks.name}}</a></li>
-				{% endfor %}
-				{% else %}
-					<li id="nospeakerset">no set</li>
+			<span id="documentsSelectedCountDiv">0</span> selected docs 
+			(select <a href="" onclick='selectAllDocs();return false;'>all</a> | 
+			<a href="" onclick='deselectAllDocs();return false;'>none</a>) 
+			<ul class="selectedList" id="documentsSelectedList"></ul>
+			
+		{% endif %}
+		<!-- ============================================================================================= -->	
+		{% if source = 'Speakers' %}
+			
+			<!-- here is a simplified version of what we can do with speaker sets -->
+			<!-- if you want to be able to create/load speaker sets, you can use the commented code at the end of this file -->
+			
+			<span id="speakersSelectedCountDiv">0</span> selected speakers 
+			(select <a href="" onclick='selectAllSpeakers();return false;'>all</a> | 
+			<a href="" onclick='deselectAllSpeakers();return false;'>none</a> | 
+			<!-- dropdown list to select by attribute -->
+			<select id="spkSelectDropDownList" multiple="multiple">
+			{% for c in sTable.columns %}
+				{% if c.values|length > 2 %}
+					<optgroup label="{{c.label}}">
+						{% for a in c.values %}
+							<option id="option:{{forloop.parentloop.counter0}}:{{a.name}}">{{a.name}}</option>
+						{% endfor %}
+					</optgroup>
 				{% endif %}
-				</ul>
-			</div>
-			<div class="inTableListContainer">
-				<ul id="speakerSelectedList"> 	<!-- ===================== Speakers Selected -->
-					<li id="nospeaker">no speaker</li>
-				</ul>		
-			</div>
-		</div>
-<!-- ============================================================================================= -->
-		<div class="speakerSelectionLeftBottom">
-			<div class="speakerSelectionLeftParts">
-<a href='' onclick='doGetAtUrl("{% url reanalyseapp.views.deleteSpeakerSets enquete.id %}");$("#speakerSetsList").html("<li id=\"nospeakerset\">no set</li>");return false;'>delete all sets</a>
-			</div>
-			<div class="speakerSelectionLeftParts">
-total: <span id="speakerSelectedCountDiv">0</span> speakers 
-			</div>
-		</div>
-<!-- ============================================================================================= -->
-	{% endif %}
-</td>
+			{% endfor%}	
+			</select>)
+			<ul class="selectedList" id="speakersSelectedList"></ul>
+	
+		{% endif %}
+	</td>
+	<!-- ============================================================================================= -->
 <td>
-	<ul>
-	
-<li>
-	<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds});return false;'>Graph Speakers-Attributes</a>
-	<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
-		<select id="attSelectDropDownList" multiple="multiple">
-		{% for c in attributeTypes %}
-			{% if c.values|length > 2 %}
-				<option id="option:{{c.id}}:{{c.label}}">{{c.label}}</option>
-			{% endif %}
-		{% endfor%}
-		</select>
-	<!-- ========================== -->
-</li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Speakers (solr similarity)</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Words (django ngrams)</a></li>
-<li id="Cloud_SolrSpeakerTagCloud"><a href='' id="goCreateTagCloud">Tag Cloud (ngrams from solr)</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>TexteStreamTimeline (for each text)</a></li>
-<li><a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a></li>
-<!--<li><a href="" onclick='createVisualization({{enquete.id}},"Overview",{});return false;'>Overview</a></li>-->
-<!--<li><a href="" onclick='createVisualization({{enquete.id}},"StudyOverview",{});return false;'>Study Overview</a></li>-->
-<!--<li><a href="" onclick='createVisualization({{enquete.id}},"SpeakersByText");return false;'>(all) Speakers/Texts</a></li>-->
-<!--<li><a href="" onclick='createVisualization({{enquete.id}},"WordsBySpeaker");return false;'>(t) Words/Speaker</a></li>-->
-<!--<li><a href="" onclick='createVisualization({{enquete.id}},"Cloud_TeiSpeakerTagCloud");return false;'>(s) from TEI</a></li>-->
-	
+	<ul class="vizLaunchList">
+		<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds});return false;'>Graph Speakers-Attributes</a> using 
+			<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
+				<select id="attSelectDropDownList" multiple="multiple">
+				{% for c in attributeTypes %}
+					{% if c.values|length > 2 %}
+						<option id="option:{{c.id}}:{{c.label}}">{{c.label}}</option>
+					{% endif %}
+				{% endfor%}
+				</select>
+			<!-- ========================== -->
+		</li>
+		<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Speakers</a> (solr similarity)</li>
+		<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Words</a> (django ngrams)</li>
+		<li><a href="" onclick='createVisualization({{enquete.id}},"Cloud_SolrSpeakerTagCloud",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Tag cloud</a> (for each text)</li>		
+		<li><a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Interaction dynamics</a> (for each text)</li>
+		<li><a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a></li>
+
+		<!-- experimental 2 steps viz creation to choose nb of ngrams produced -->
+		<!--<li id="Cloud_SolrSpeakerTagCloud"><a href='' id="goCreateTagCloud">Tag Cloud (ngrams from solr)</a></li>
+		<li>-->
+				
+		<!-- some very experimental or old visualizations deactivated -->
+		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"Overview",{});return false;'>Overview</a></li>-->
+		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"StudyOverview",{});return false;'>Study Overview</a></li>-->
+		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"SpeakersByText");return false;'>(all) Speakers/Texts</a></li>-->
+		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"WordsBySpeaker");return false;'>(t) Words/Speaker</a></li>-->
+		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"Cloud_TeiSpeakerTagCloud");return false;'>(s) from TEI</a></li>-->
+			
 	</ul>				
 </td>
 </tr>
@@ -104,7 +79,10 @@ total: <span id="speakerSelectedCountDiv">0</span> speakers
 
 <script type="text/javascript">
 	$(document).ready(function() {
+
+{% if source = 'Speakers' %}
 		//////////////////////////////////////////////// GO for creation NEW SPEAKER SET
+/*
 		$("#goCreateSet").click( function(event) {
 			goCreateSpeakerSet({{enquete.id}},"{% url reanalyseapp.views.makeSpeakerSet enquete.id %}");
 			// to avoid click getting caught by 'html' ie removing form !
@@ -118,31 +96,37 @@ total: <span id="speakerSelectedCountDiv">0</span> speakers
 			event.stopPropagation();
 			event.preventDefault();
 			return false;
-		});		
-		
+		});
+*/		
+
 		//////////////////////////////////////////////// Manage DropDownList jquery plugin to select by Attributes
 		$("#spkSelectDropDownList").dropdownchecklist({
 			'emptyText':'by attribute',
 			//'onItemClick':onDropDownSelectClick,
-			'onComplete': function(selector) {
+			'onComplete': function(selector) {				
 				//console.log("dropDownSelected:"+checkbox+":"+selector);
 				var theSelec = $("#spkSelectDropDownList option:selected");
+
+				// deselect spk cause decheck all checkboxes  in dropdownlist
+				deselectAllSpeakers();
+				
 				for(var k=0;k<theSelec.length;k++) {
 					var theid = theSelec[k].id ; // looks like "option:12:Divers Droite"
 					console.log("dropDownSelectedId:"+theid);
 					selectFrom(theid.split(":")[1],theid.split(":")[2]);
 				}
 			},
-			'maxDropHeight':150,
-			'positionHow':'absolute',//'relative'
-			'width':50,
-			'minWidth':150,
+			'width':70,
+			'maxDropHeight':200,
+			//'positionHow':'absolute',//'relative'
+			//'minWidth':150,
 			//'zIndex':9999,
 		});
+{% endif %}
 		
 		//////////////////////////////////////////////// attribute selection for graph viz
 		$("#attSelectDropDownList").dropdownchecklist({
-			'emptyText':'select attributeTypes for graph...',
+			'emptyText':'all attributeTypes',
 			'onComplete': function(selector) {
 				//console.log("dropDownSelected:"+checkbox+":"+selector);
 				var theSelec = $("#attSelectDropDownList option:selected");
@@ -153,8 +137,78 @@ total: <span id="speakerSelectedCountDiv">0</span> speakers
 				}
 				console.log("attributeDropDownSelectedIds:"+selectedAttributeTypesIds);
 			},
-			'maxDropHeight':150,
-			'positionHow':'absolute',//'relative'
+			'width':90,
+			'maxDropHeight':200,
+			//'positionHow':'absolute',//'relative'
 		});
+
+
+
 	});
+
 </script>
+
+
+
+
+
+
+{% comment %}
+
+	<!-- This is some sort of table allowing to create/load speaker sets -->
+	<!-- as we were testing, lets comment it for the moment -->
+	<!-- ===================== HEADER -->
+	<div class="speakerSelectionLeftHeader">
+		<div class="speakerSelectionLeftParts">
+			<a href='' id="goCreateSet">create new set</a>
+		</div>
+		<div class="speakerSelectionLeftParts">
+			select <a href="" onclick='selectAllSpeakers();return false;'>all</a> | 
+			<a href="" onclick='deselectAllSpeakers();return false;'>none</a> | 
+			<!-- ========================================= SPEAKERS SELECTION DropDownCheckList-->
+			<select id="spkSelectDropDownList" multiple="multiple">
+			{% for c in sTable.columns %}
+				{% if c.values|length > 2 %}
+					<optgroup label="{{c.label}}">
+						{% for a in c.values %}
+							<option id="option:{{forloop.parentloop.counter0}}:{{a.name}}">{{a.name}}</option>
+						{% endfor %}
+						<!--<option selected="selected">selectedName</option>-->
+					</optgroup>
+				{% endif %}
+			{% endfor%}
+			</select>
+			<!-- ========================================= -->
+		</div>
+	</div>
+	<!-- ===================== MIDDLE -->
+	<div class="speakerSelectionLeftCenter">
+		<div class="inTableListContainer">
+			<ul id="speakerSetsList"> 		<!-- ===================== SpeakerSets -->
+			{% if speakersets %}
+			{% for spks in speakersets %}
+				<li id="spkset_{{spks.id}}"><a href='' onclick='onSpeakerSetClick({{enquete.id}},{{spks.id}});return false;'>({{spks.speakers.count}}) {{spks.name}}</a></li>
+			{% endfor %}
+			{% else %}
+				<li id="nospeakerset">no set</li>
+			{% endif %}
+			</ul>
+		</div>
+		<div class="inTableListContainer">
+			<ul id="speakersSelectedList"> 	<!-- ===================== Speakers Selected -->
+				<li id="nospeaker">no speaker</li>
+			</ul>		
+		</div>
+	</div>
+	<!-- ===================== FOOTER -->
+	<div class="speakerSelectionLeftBottom">
+		<div class="speakerSelectionLeftParts">
+<a href='' onclick='doGetAtUrl("{% url reanalyseapp.views.deleteSpeakerSets enquete.id %}");$("#speakerSetsList").html("<li id=\"nospeakerset\">no set</li>");return false;'>delete all sets</a>
+		</div>
+		<div class="speakerSelectionLeftParts">
+total: <span id="speakersSelectedCountDiv">0</span> speakers 
+		</div>
+	</div>
+
+{% endcomment %}
+

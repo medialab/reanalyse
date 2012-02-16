@@ -616,9 +616,9 @@ def edBrowse(request,eid):
 	
 	######################################### COLUMNS
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colArr=['Category','Name','Size','Action/Status','Visualizations','Investigator','Speakers','Length']
+		colArr=['Category','Name','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
 	else:
-		colArr=['Category','Name','Size','Visualizations','Investigator','Speakers']
+		colArr=['Category','Name','Size','Viz','Investigator','Speakers']
 	
 	
 	######################################### VALUES
@@ -647,33 +647,30 @@ def edBrowse(request,eid):
 			linkDoc = reverse(edShow,args=eiddid)
 			nameStr = '<a href="'+linkDoc+'" onclick="event.stopPropagation();">'+t.name+'</a>'+' ('+t.get_doctype_display().lower()+')'
 
-		# DATA
-		dataStr=""
-		linkParse = reverse(edParseXml,args=eiddid)
-		parseStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkParse+'");return false;\'>parse</a>&nbsp;'
-		#linkStyle = reverse(edStylizeContent,args=eiddid)
-		#refreshStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkStyle+'");return false;\'>stylize</a>&nbsp;'
-		#if t.doctype=='TEI' or t.doctype=='CTX':
-		#	dataStr += parseStr
-		if request.user.has_perm('reanalyseapp.can_make') and t.doctype=='TEI':
-			dataStr += parseStr
-		if len(t.contenttxt)>0 and request.user.has_perm('reanalyseapp.can_make'):
-			dataStr += vStyle +'parsed' + endStyle
-		
+		# FILESIZE
 		if t.filesize==0:
 			sizeStr = '-'
 		else:
 			sizeStr = str(t.filesize)+" Ko"
-			
+		
+		# DATA / STATUS / ACTIONS
+		dataStr=""
+		#linkParse = reverse(edParseXml,args=eiddid)
+		#parseStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkParse+'");return false;\'>parse</a>&nbsp;'
+		#linkStyle = reverse(edStylizeContent,args=eiddid)
+		#refreshStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkStyle+'");return false;\'>stylize</a>&nbsp;'
+		#if t.doctype=='TEI' or t.doctype=='CTX':
+		#	dataStr += parseStr
+		#if request.user.has_perm('reanalyseapp.can_make') and t.doctype=='TEI':
+		#	dataStr += parseStr
+		#if len(t.contenttxt)>0 and request.user.has_perm('reanalyseapp.can_make'):
+		#	dataStr += vStyle +'parsed' + endStyle
 		statusStr = t.get_status_display()
 		if t.status!='0' and (t.doctype=='TEI' or t.doctype=='CTX') :
 			statusStr += ' ' + str(t.statuscomplete) + '%'
-		statusStr += " "+dataStr
-		
-		# DOWNLOADs Xml/HtmL
-		if t.doctype=='TEI':
-			linkDl = reverse(edXmlShow,args=eiddid)
-			statusStr += ' <a href="'+linkDl+'">xhtml</a>'
+		#if t.doctype=='TEI':
+		#	linkDl = reverse(edXmlShow,args=eiddid)
+		#	statusStr += ' <a href="'+linkDl+'">xhtml</a>'
 		
 		# VIZ
 		vizStr = getStrFromVizList(getRelatedViz(textes=[t]))
@@ -693,7 +690,8 @@ def edBrowse(request,eid):
 			speakersStr=""
 			investStr=""
 			
-		# CONTENT
+		# CONTENT (LENGTH)
+		# simple viz experimentation to display length of verbatim, with colors for each spk involved
 		if request.user.has_perm('reanalyseapp.can_make'):
 			# d3 make it
 			contentStr=\
@@ -707,7 +705,7 @@ def edBrowse(request,eid):
 		
 		################# VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
-			tArr=[t.doccat,nameStr,sizeStr,statusStr,vizStr,investStr,speakersStr,contentStr]
+			tArr=[t.doccat,nameStr,sizeStr,statusStr,vizStr,investStr,speakersStr] #+ [contentStr]
 		else:
 			tArr=[t.doccat,nameStr,sizeStr,vizStr,investStr,speakersStr]
 			
@@ -764,10 +762,12 @@ def esBrowse(request,eid):
 	
 	
 	############################### COLUMNS
+	# nb: color cells {'label':''} managed by javascript were commented
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'},{'label':'django_ngrams '+str(Ngram.objects.count())}]
+		#colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'},{'label':'django_ngrams '+str(Ngram.objects.count())}]
+		colarray=[{'label':'Id'},{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'},{'label':'Ngrams'}]
 	else:
-		colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'}]
+		colarray=[{'label':'Id'},{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'}]
 		
 	for att in attributeTypes:
 		coldict={'id':att.id, 'label':att.name}
@@ -779,17 +779,20 @@ def esBrowse(request,eid):
 	
 	
 	############################### VALUES
-	globalMaxSentences = 1
+	globalMaxCount = 1
 	for sp in e.speaker_set.all():
-		globalMaxSentences = max(globalMaxSentences, sp.sentence_set.count())
-	
+		#globalMaxCount = max(globalMaxCount, sp.sentence_set.count())
+		globalMaxCount = max(globalMaxCount, len(sp.contenttxt))
+		
 	for s in speakers:
+		txtlen = len(s.contenttxt)
 		
 		nameLinkStr = \
 			'<a onclick="event.stopPropagation();" href="'+ reverse(esShow,args=[eid,s.id]) +'">'+ s.name +'</a>'
-		littleFriseStr = \
-			'<span style="display:none;">'+intToSortableStr(s.sentence_set.count())+'</span>'+\
-			'<div class="littleFrise" style="width:'+str(int(s.sentence_set.count()*LITTLEFRISEMAXWIDTH/globalMaxSentences))+'px"></div>'
+		countStr = \
+			'<span style="display:none;">'+intToSortableStr(txtlen)+'</span>'+\
+			'<div class="littleFrise" style="width:'+str(txtlen*LITTLEFRISEMAXWIDTH/globalMaxCount)+'px"></div>'
+			#' '+ str(txtlen)
 		typeStr = \
 			'<span style="display:none;">'+s.get_ddi_type_display()+'</span>'+\
 			'<span class="imSpk'+s.get_ddi_type_display()+'"></span>'
@@ -798,63 +801,47 @@ def esBrowse(request,eid):
 		
 		
 		ngramcount = str(s.ngramspeaker_set.count())
-		ngramjsonlink = ' <a href="'+ reverse(esGetSolrTermVector,args=[eid,s.id]) +'">json_ngrams</a>'
-		ngramsStr = ngramcount + ngramjsonlink
+		#ngramjsonlink = ' <a href="'+ reverse(esGetSolrTermVector,args=[eid,s.id]) +'">json_ngrams</a>'
+		ngramsStr = ngramcount
 		
-		########################## VALUES
-		if request.user.has_perm('reanalyseapp.can_make'):
-			vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr,ngramsStr]
-		else:
-			vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr]
-				
-		## one column for each attribute
-		for k,attype in enumerate(attributeTypes):
-			vals.append( s.attributes.get(attributetype=attype).name )
-			
 		## text presence list
 		texteslist = [t for t in s.textes.all()]
 		if len(texteslist)==1:
 			tx = texteslist[0]
 			linkDoc = reverse(edShow,args=[e.id,tx.id])
 			nameStr = '<a href="'+linkDoc+'">'+tx.name+'</a>'
-			vals.append( nameStr )
 		else:
-			vals.append( "in "+str(len(texteslist))+" docs" )
+			nameStr = "in "+str(len(texteslist))+" docs"
+					
+		########################## VALUES
+		if request.user.has_perm('reanalyseapp.can_make'):
+			#vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr,ngramsStr]
+			vals = [s.id,nameLinkStr,nameStr,vizStr,countStr,ngramsStr]
+		else:
+			vals = [s.id,nameLinkStr,nameStr,vizStr,countStr]
+						
+		## one column for each attribute
+		for k,attype in enumerate(attributeTypes):
+			vals.append( s.attributes.get(attributetype=attype).name )
 		
 		########################## TO DICT
-		theDict={}	
-		theDict['speaker']=s.id 	# id after updated with speaker object directly
-		theDict['vals']=vals
-		valArray.append(theDict)
+		valArray.append({'sid':s.id,'vals':vals})
 	
-
-	colarray.append({'label':'<span class="imDocument"></span> Textes'})
 	sTable['columns']=colarray
 	sTable['values']=valArray
-		
-		
-# 		speakerTableViz.json = simplejson.dumps(sTable,indent=2,ensure_ascii=False)
-# 		speakerTableViz.save()
-# 	else:
-# 		# already stored, just get the dict
-# 		sTable = simplejson.loads(speakerTableViz.json)
-	
-	
-	# update speaker list (because not serialized)
-	# ie replace sid by speaker
-	for di in sTable['values']:
-		di['speaker'] = Speaker.objects.get(id=di['speaker'])
-	sTable['speakers']=speakers
-		
-	#sTable['diffvalues']=diffValues
 	
 	#### Speaker Sets
-	speakersets = e.speakerset_set.all()
-	
+	#speakersets = e.speakerset_set.all()
+	#ctx.update({'speakersets':speakersets})
 	#### Colors
-	speakersColors = getSpeakersColorsDict(e,None)	
+	#speakersColors = getSpeakersColorsDict(e,None)	
+	#ctx.update({'speakersColors':speakersColors})
 	
-	ctx.update({'sTable':sTable,'attributeTypes':colarray,'speakersets':speakersets,'speakersColors':speakersColors})
+	# sScrollXInner for datatables (because difficult to estimate width needed to put attributes
+	# lets give 100px for each column
+	ctx.update({'sScrollXInner':len(colarray)*400})
+	
+	ctx.update({'sTable':sTable,'attributeTypes':colarray})
 	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
 ################################################################################

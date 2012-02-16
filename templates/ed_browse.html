@@ -22,7 +22,7 @@
 
 	<!-- Dropdownmenu checklist jquery plugin -->
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.reanalyse.css" />
 	
 	<!-- d3 vizus (little frises + viz) -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.min.js"></script>
@@ -174,7 +174,7 @@
 
 <script type="text/javascript">
 	
-	var dTable = null;
+	var me=null;
 	
 	//////////////////////////////////////////////////////////////////////
 	function selectAllDocs() {
@@ -186,54 +186,48 @@
 		for (var i=0 ; i<aTrs.length ; i++) deselectDoc(aTrs[i]);
 	};
 	//////////////////////////////////////////////////////////////////////
-	function selectDoc( elem ) {
+	function selectDoc(elem) {
 		theTr=$(elem);
 		if ( !theTr.hasClass('row_selected') ) {
+			me=elem;
+			// elem.id = "texte_2738"
+			var tid = elem.id.split("_")[1];
+			// both left tr and right tr
+			$('.'+elem.id).addClass('row_selected');
 			theTr.addClass('row_selected');
 			// update column 'selected' TAKES LONG !!!!
 			//var rowPos = sTable.fnGetPosition(elem);
 			//sTable.fnUpdate( 'yes', rowPos, 0);
-			// update selected names
-			$('#documentsSelectedListDiv').html(getAllDocumentsSelectedNames());
+			// update selected names list (new <li>)
+			var sNameLink = $(theTr.children()[1]).html()
+			var newElem = $("<li>").attr({'id':'selected_'+tid}).append(sNameLink);
+			$('#documentsSelectedList').append(newElem);
 			// update array with selected ids
-			var tid = elem.id.split("_")[1];
 			selectedTexteIds.push(tid);
 			// update total count
 			$('#documentsSelectedCountDiv').html(selectedTexteIds.length);
 			//console.log("selectedTexteIds:"+selectedTexteIds);
 		}
 	}
-	function deselectDoc( elem ) {
+	function deselectDoc(elem) {
 		theTr=$(elem);
 		if ( theTr.hasClass('row_selected') ) {
+			var tid = elem.id.split("_")[1];
 			theTr.removeClass('row_selected');
 			// update column 'selected' TAKES LONG !!!!
 			//var rowPos = sTable.fnGetPosition(elem);
 			//sTable.fnUpdate( 'no', rowPos, 0);
-			// update selected names
-			$('#documentsSelectedListDiv').html(getAllDocumentsSelectedNames());
+			$('#documentsSelectedList').find("#selected_"+tid).remove();
 			// update array with selected ids
-			var tid = elem.id.split("_")[1];
 			var ind = selectedTexteIds.indexOf(tid);
 			if(ind!=-1) selectedTexteIds.splice(ind,1);
 			// update total count
 			$('#documentsSelectedCountDiv').html(selectedTexteIds.length);
 		}
 	}
-	//////////////////////////////////////////////////////////////////////
-	function getAllDocumentsSelectedNames() {
-		var aTrs = dTable.fnGetNodes();
-		var outStr="";
-		for ( var i=0 ; i<aTrs.length ; i++ ) {
-			if ( $(aTrs[i]).hasClass('row_selected') ) {
-				var cell = $(aTrs[i]).children("td:eq(1)");
-				var nam = cell.html();
-				outStr+= nam+"</br>";
-			}
-		}
-		//console.log("Docs Selected Names:"+outStr);
-		return outStr;
-	};
+
+
+	
 	//////////////////////////////////////////////////////////////////////
 	$(document).ready(function() {
 		//////////////////////////////////////////////////////////////////////
@@ -242,8 +236,8 @@
 			"bFilter": true,
 			//"bSort": false,
 			"sScrollY": "400px", // rather take max width
-			"sScrollX": "100%",
- 			"sScrollXInner": "850px",
+			//"sScrollX": "100%",
+ 			//"sScrollXInner": "100%",
 			"bScrollCollapse": true,
 			"bPaginate": false,
 			//"bJQueryUI": true,				// jQuery UI Theme
@@ -259,7 +253,7 @@
 			}
 		);
 		
-		// todo: we could also try filtering for each column
+		// todo: we could also try filtering for each column (with textfields on header
 		// you would have to import a patched version of the datatableplugin
 		// example: ../datatables/js/jquery.dataTables.columnFilter_patched.js">
 		// .. and play with header, adding <tr id="headrfilter"> ..etc..
@@ -277,11 +271,6 @@
 		});
 */
 
-
-		
-		// todo: understand why "sScrollX" is not taken into account !
-		// we have to set it manually !
-		$(".dataTables_scroll").width(720);	
 		
 {% if perms.reanalyseapp.can_make %}
 
@@ -297,10 +286,12 @@
 
 {% endif %}
 
-		
+
 {% if perms.reanalyseapp.can_make %}
+{% comment %}
 		//////////////////////////////////////////////////////////////////////
 		// Ask for each d3 graph json to fill column "content" , ONLY IF IN MAKE MODE
+/*
 		{% for row in tTable.values %}
 			{% if row.texte.doctype == 'TEI' and row.texte.status == '0' and row.texte.speaker_set.count > 0 %}
 				$.ajax({
@@ -311,6 +302,8 @@
 				});
 			{% endif %}
 		{% endfor %}
+*/
+{% endcomment %}
 {% else %}
 
 		$('.dataTables_scrollBody').dragscrollable({dragSelector: '#docTable:first', acceptPropagatedEvent: true});

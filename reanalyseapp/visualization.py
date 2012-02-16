@@ -890,6 +890,8 @@ def makeAllTfidf(e):
 def visMakeTagCloudFromTermVectors(e,param):
 	speakers = param['who']
 	howmany = int(param['count'])
+	if howmany==0:
+		howmany=170
 	#similcount = param['similcount']
 
 	wordsArr=[]

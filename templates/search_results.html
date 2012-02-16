@@ -97,7 +97,7 @@
 					<a href="#" onclick='launchSearch("sortb=speaker");return false;'>sort by Speaker</a>
 				</div>
 				<div class="res_middle" style="text-align:center">
-					<a href="#" onclick='launchSearch();return false;'>sort by Relevance score</a>
+					<!--<a href="#" onclick='launchSearch();return false;'>sort by Relevance score</a>-->
 				</div>
 				<div class="res_right">
 					<a href="#" onclick='launchSearch("sortb=texte");return false;'>sort by Texte</a>
@@ -106,11 +106,13 @@
 		</li>
 	{% for r in page.object_list %}
 		<li>
+			<!-- don't display relevance score for now -->
+			<!--
 			<div class="searchResult_relevance">
 				<div class="searchResult_relevance" style=" background:#CC9933; width:{% widthratio r.score 1 70 %}px;"></div>
 				<span style="margin:4px;">{{r.score|floatformat}}</span>
 			</div>
-			<div class="searchResult">
+			-->
 				<!-- ////////////////////////////////////////////////////////// SPEAKER -->
 				<a class="res_left_link" href="{% url reanalyseapp.views.esShow enquete.id r.object.speaker.id %}">
 					<div class="res_left speaker_{{r.object.speaker.id}}">
@@ -150,7 +152,6 @@
 				int from SPEAKER: </br>
 				int from TEXTE: {{ r.object.texte.name }}</br>
 				-->
-			</div>
 		</li>
 	<!-- //////////////////////////////////////////////////// -->
 	{% empty %}
@@ -253,6 +254,7 @@
 
 
 
+{% comment %}
 <!-- /////////////////////////////////////////////////////////////////////////////////////////// CONTENTTOP = Related Viz -->
 <div id="divRelatedViz" style="display:none;">
 	<!-- =================================== FIXED TO SCROLL RELATED VIZ -->
@@ -277,7 +279,7 @@
 	</div>
 	<!-- =================================== -->
 </div>
-
+{% endcomment %}
 
 
 
@@ -287,12 +289,15 @@
 <script type="text/javascript">
 $(document).ready(function() {	
 	//////////////////////// put content in the right place
-	$('#ajaxContentTopRelatedViz').html( $('#divRelatedViz').html() );
-	$('#divRelatedViz').html(" ");
 	
 	$('#search_pagination_bottom').html( $('#search_pagination_top').html() );
 	
-	//////////////////////// put facets in the right place
+	{% comment %}
+	// deactivated for the moment
+	//$('#ajaxContentTopRelatedViz').html( $('#divRelatedViz').html() );
+	//$('#divRelatedViz').html(" ");
+	
+	//////////////////////// put facets (overview viz) in the right place
 	//$('#ajaxLeftFacets').html( $('#divFacets').html() );
 	//$('#divFacets').html(" ");
 	$.ajax({
@@ -304,20 +309,8 @@ $(document).ready(function() {
 			buildD3_Overview(data,"theViz_over",param);
 		},
 	});
-	
-	
-	//////////////////////// Init words tfidf datatable
-/*
-	var tfTable = $('#wordsTfidfTable').dataTable({
-		//"bFilter": true,
-		"sScrollY": "270px",
-		"sScrollX": "700px",
-		//"sScrollXInner": "700px",
-		"bScrollCollapse": true,
-		"bPaginate": false,
-		"aaSorting": [[ 0, "desc" ]],
-	});
-*/
+	{% comment %}	
+
 
 		
 	});

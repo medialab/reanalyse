@@ -10,16 +10,16 @@
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/FixedColumns.min.js"></script>
 	
-	
-	<!-- COLORPICKER !!! -->
-	
-	<!-- /////////// jpicker [http://www.digitalmagicpro.com/jPicker/] -->
+	{% comment %}
+	<!-- COLORPICKER tryout, js interactive color updater for each cell on column color -->
+	<!-- /////////// TRY A (deprecated?): jpicker [http://www.digitalmagicpro.com/jPicker/] -->
 	<!--<link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}/jpicker/jPicker.css" />
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jpicker/jpicker-1.1.6.min.js"></script>-->	
-	<!-- /////////// colorpicker other [http://www.eyecon.ro/colorpicker/] -->
+	<!-- /////////// TRY B: colorpicker other [http://www.eyecon.ro/colorpicker/] -->
 	<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}/colorpicker/css/colorpicker.css" />
 	<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}/colorpicker/css/layout.css" />
 	<script type="text/javascript" src="{{ MEDIA_URL }}/colorpicker/js/colorpicker.js"></script>
+	{% endcomment %}
 	
 	<!-- jquery ui for dropdownmenu -->
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
@@ -30,7 +30,7 @@
 
 	<!-- Dropdownmenu checklist jquery plugin -->
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.reanalyse.css" />
 
 	<!-- d3 vizus -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.min.js"></script>
@@ -41,10 +41,12 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>	
 	
 	<!-- =============================== CSS FOR SPEAKERS COLORS (div background) -->
+	{% comment %}
 	<style type="text/css">
 		{% for k,v in speakersColors.items %}.speakerColor_{{k}} {fill:{{v}};background:{{v}};}
 		{% endfor %}
 	</style>
+	{% endcomment %}
 	<!-- ======================================================= -->
 	
 	<!-- =============================== SELECTION for VISUALIZATIONS -->
@@ -64,7 +66,7 @@
 
 
 {% block content %}
-
+{{sScrollXInner}}
 {% if sTable.values %}
 <div id="divToGetWidth" style="width:100%;height:1px;"></div>
 <!-- =============================================================== USING JQUERY DATATABLES -->
@@ -73,47 +75,26 @@
 	<thead>
 		<tr>
 			{% for c in sTable.columns %}
-			<th>
-				{% autoescape off %}
-				{{c.label}}
-				{% endautoescape %}
-				
-				{% comment %}
-				<!-- DEPRECATED : link to select/deselect all from value -->
-				<!--
-				{% if c.values|length > 1 %}
-					<div class="hiddentooltip" style="display:none;"> 
-						<ul>
-						{% for a in c.values %}
-						<li><a href='' onclick='event.stopPropagation();selectFrom({{forloop.parentloop.counter0}},"{{a.name}}");return false;'>{{a.name}}</a></li>
-						{% endfor %}
-						</ul>
-					</div>
-					<a rel="sSelectionTooltip"><img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
-				{% endif %}
-				-->
-				{% endcomment %}
-				
-			</th>
+				<th>{% autoescape off %}{{c.label}}{% endautoescape %}</th>
 			{% endfor%}
 		</tr>
 	</thead>
 	<tbody>
 		{% for row in sTable.values %}
 			<!-- NB: BC, we used only id, now class too to select/deselct in both fixed/scrolled tables -->
-			<tr class="gradeA speakerRow speaker_{{row.speaker.id}}" id="speaker_{{row.speaker.id}}">
+			<tr class="gradeA speakerRow speaker_{{row.sid}}" id="speaker_{{row.sid}}">
 				{% for v in row.vals %}
-					{% if forloop.counter0 == 1 %}
+					{% comment %}
+						{% if forloop.counter0 == 1 %}
 						<!-- todo: manage speakers colors using css class... -->
 						<!-- NB: we put color value invisible to allow sort -->
-						<td style="background-color:{{v}};"><span style="display:none;">{{v}}</span>
-						<div></div>
-						</td>
-					{% else %}
+						<td style="background-color:{{v}};"><span style="display:none;">{{v}}</span><div></div></td>
+						{% else %}
+					{% endcomment %}
+					
 					<!-- NB: IMPORTANT be careful to put it all in one line, because we use html() to compare contents at the byattributeSelection-->
 					<!-- column 'Count' is labeled in view "<div id..>" accessible for d3 -->
-						<td>{% autoescape off %}{{v}}{% endautoescape %}</td>
-					{% endif %}
+					<td>{% autoescape off %}{{v}}{% endautoescape %}</td>
 				{% endfor%}
 			</tr>
 		{% endfor%}
@@ -123,9 +104,14 @@
 </br>
 
 	{% if perms.reanalyseapp.can_make %}
-	</br>
-	<a href='#' onclick='doGetAtUrlAndRefresh("{% url reanalyse.reanalyseapp.views.resetColors enquete.id %}");return false;'>set random colors on all speakers and refresh...</a>
-	</br>
+	
+	{% comment %}
+		<!-- if you want to set random colors for all spks -->
+		<a href='#' onclick='doGetAtUrlAndRefresh("{% url reanalyse.reanalyseapp.views.resetColors enquete.id %}");return false;'>
+		set random colors on all speakers and refresh...
+		</a>
+	{% endcomment %}
+	
 	<!-- ==================================================================== SELECTION -->
 	{% include "e_selectviz.html" with source='Speakers' attributeTypes=attributeTypes %}
 	<!-- ====================================================================== -->
@@ -135,120 +121,6 @@
 	{% comment %}Translators: Speakers browse when null{% endcomment %}
 	{% trans 'There is no linked speakers in this study' %}
 {% endif %}
-
-
-
-
-
-
-
-
-{% comment %}
-<!-- ======================================================= DEPRECATED HANDMADE -->
-<div class="sTable">
-	<!-- ======================= HEADERS-->
-	<div class="sTableHeaders">
-		<div class="sTableLeftHeader">
-			<div class="sTableColumn spColor">
-				<div class="sTableCell"></div>
-			</div>
-			<div class="sTableColumn spName">
-				<div class="sTableCell">Nom</div>
-			</div>
-		</div>	
-		<div class="sTableCenterHeader">
-			<div class="sTableCenterScrollHeader scrollHorizContent">
-				{% for c in sTable.columns %}
-				<div class="sTableColumn">
-					<div class="sTableCell">{{c}}</div>
-				</div>
-				{% endfor%}
-			</div>
-		</div>
-		<div class="sTableRightHeader">
-			<div class="sTableColumn">
-				<div class="sTableCell">Textes</div>
-			</div>
-		</div>
-	</div>
-	<div class="scroll-bar-wrap ui-widget-content ui-corner-bottom">
-		<div class="scroll-bar"></div>
-	</div>
-	<!-- ======================= CONTENT -->
-	<div class="sTableContent">
-		<div class="sTableLeftContent">
-			<div class="sTableColumn spColor">
-				{% for col in sTable.colors %}
-				{% cycle "seven" "sodd" as rowclass silent %}
-				<div class="sTableCell {{rowclass}}" style="background:{{col}};"></div>
-				{% endfor%}
-			</div>
-			<div class="sTableColumn spName">
-				{% for s in sTable.speakers %}
-				{% cycle "seven" "sodd" as rowclass silent %}
-				<div class="sTableCell {{rowclass}}">{{s.name}}</div>
-				{% endfor%}
-			</div>
-		</div>
-		<!-- ======================= -->
-		<div class="sTableCenterContent">
-			<div class="sTableCenterScrollContent scrollHorizContent">
-				<span id="sContentWidthDiv"> <!-- to get real content width-->
-					{% for col in sTable.values %}
-						<div class="sTableColumn">
-							{% for v in col %}
-							{% if forloop.counter == 1 %}
-							{% cycle "seven" "sodd" as rowclass silent %}
-							{% else %}
-							{% cycle "sodd" "seven" as rowclass silent %}
-							{% endif %}
-							<div class="sTableCell {{rowclass}}">{{v}}</div>
-							{% endfor%}
-						</div>
-					{% endfor%}
-				</span>
-			</div>
-		</div>
-		<!-- ======================= -->
-		<div class="sTableRightContent">
-			<div class="sTableColumn">
-				{% for tstr in sTable.intext %}
-				{% cycle "seven" "sodd" as rowclass silent %}
-				<div class="sTableCell {{rowclass}}">{{tstr}}</div>
-				{% endfor%}
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- ======================================================= -->
-<!-- SPEAKER LIST -->
-	<!-- OR we render it directly -->
-	{% render_table sTable %}
-	<!-- OR we do it by hand to customize -->
-	<div class="speaker_table">
-	<table class="paleblue">
-	    <thead>
-	        <tr>
-	        {% for column in table.columns %}
-	            <th><a href="{% set_url_param sort=column.name_toggled %}" onclick="event.stopPropagation();">{{ column }}</a></th>
-	        {% endfor %}
-	        </tr>
-	    </thead>
-	    <tbody>
-	        {% for row in table.rows %}
-	        {% cycle "even" "odd" as rowclass silent %}
-	        <tr class={{rowclass}}>
-	            {% for cell in row %}
-	            <td>{{ cell }}</td>
-	            {% endfor %}
-	        </tr>
-	        {% endfor %}
-	    </tbody>
-	</table>
-	</div>
-<!-- ======================================================= -->
-{% endcomment %}
 
 {% endblock %}
 
@@ -260,15 +132,14 @@
 <!-- ======================================================= -->
 <script type="text/javascript">
 	
-	var ttt = null;
-	var cc,uu = null;
-	var sTable = null;
+	var NAMECOLUMNINDEX = 1; // to fetch content when spk selection
+	var NFIXEDCOLUMNS = 2; // set to 3 if you want to try colorpickers column (see view)
 	
 	//////////////////////////////////////////////////////////////////////
 	function selectFrom(kColumn,theVal) {	
 		console.log("selecting all vals from column:"+kColumn+":"+theVal);
 		var allvalues = sTable.fnGetNodes();
-		var realCol = kColumn-3; // because of FixedColumn decalage
+		var realCol = kColumn-NFIXEDCOLUMNS; // because of FixedColumn decalage
 		$.each(allvalues, function(i, val) {
 			//console.log("val:"+val);
 			var v = $(val).children("td:eq("+realCol+")").text();
@@ -278,21 +149,6 @@
 			}
 		});
 	}
-	//////////////////////////////////////////////////////////////////////
-/*
-	DEPRECATED, TO REMOVE
-	function buildButtons() {
-		var ul = $("<ul>").appendTo('#cButtons');
-		var diffValues = new Array();
-		var allvalues = sTable.fnGetData(4,4);
-		$.each(allvalues, function(i, val) {
-			console.log("looping:"+val);
-			//var li = $("<li>");
-			//$("<a>").attr({'href':'','onclick':'selectAllValues();return false;'}).text("alink").appendTo(li);
-			//li.appendTo(ul);
-		});
-	};
-*/
 	//////////////////////////////////////////////////////////////////////
 	function selectAllSpeakers() {
 		// uncheck dropdown list
@@ -308,12 +164,12 @@
 		$("#spkSelectDropDownList").dropdownchecklist("refresh");
 		// deselect each line in table
 		$('.row_selected').removeClass('row_selected');
-		$('#speakerSelectedList').html('<li id="nospeaker">no speaker</li>');
 		selectedSpeakerIds = new Array();
-		$('#speakerSelectedCountDiv').html("0");
+		$('#speakersSelectedList').html('');
+		$('#speakersSelectedCountDiv').html("0");
 	};
 	//////////////////////////////////////////////////////////////////////
-	function selectSpeaker( elem ) {
+	function selectSpeaker(elem) {
 		ttt = elem;
 		theTr=$(elem);
 		if ( !theTr.hasClass('row_selected') ) {
@@ -326,18 +182,19 @@
 			//var rowPos = sTable.fnGetPosition(elem);
 			//sTable.fnUpdate( 'yes', rowPos, 0);
 			// new <li> in selected list
-			$('#speakerSelectedList').find("#nospeaker").remove();
-			var sNameLink = $($(".DTFC_Cloned").find("#speaker_"+tid).children()[2]).html()
+			$('#speakersSelectedList').find("#nospeaker").remove();
+			var sNameLink = $($(".DTFC_Cloned").find("#speaker_"+tid).children()[NAMECOLUMNINDEX]).html()
 			var newElem = $("<li>").attr({'id':'selected_'+tid}).append(sNameLink);
-			$('#speakerSelectedList').append(newElem);
+			$('#speakersSelectedList').append(newElem);
+			
 			// update array with selected ids
 			selectedSpeakerIds.push(tid);
 			// update total count
-			$('#speakerSelectedCountDiv').html(selectedSpeakerIds.length);
+			$('#speakersSelectedCountDiv').html(selectedSpeakerIds.length);
 			//console.log("selected:"+tid);
 		}
 	}
-	function deselectSpeaker( elem ) {
+	function deselectSpeaker(elem) {
 		ttt = elem;
 		theTr=$(elem);
 		if ( theTr.hasClass('row_selected') ) {
@@ -348,42 +205,120 @@
 			//var rowPos = sTable.fnGetPosition(elem);
 			//sTable.fnUpdate( 'no', rowPos, 0);
 			// update selected names
-			$('#speakerSelectedList').find("#selected_"+tid).remove();
+			$('#speakersSelectedList').find("#selected_"+tid).remove();
 			// update array with selected ids
 			var ind = selectedSpeakerIds.indexOf(tid);
 			if(ind!=-1) selectedSpeakerIds.splice(ind,1);
 			// update total count
-			$('#speakerSelectedCountDiv').html(selectedSpeakerIds.length);
+			$('#speakersSelectedCountDiv').html(selectedSpeakerIds.length);
 		}
 	}
 	//////////////////////////////////////////////////////////////////////
-	function getAllSpeakersSelectedNames() {
-		var leftRows = $(".DTFC_Cloned tr.gradeA");
-		var outStr="";
-		for ( var i=0 ; i<leftRows.length ; i++ ) {
-			var el = leftRows[i];
-			if ( $(el).hasClass('row_selected') ) {
-				var cell = $(el).children()[2];
-				var nam = $(cell).html();
-				outStr+= nam+"</br>";
-			}
-		}
-		//console.log("Speaker Selected Names:"+outStr);
-		return outStr;
-	};
+	
+	
+	
+	
 	//////////////////////////////////////////////////////////////////////
-	
-	
+	$(document).ready(function() {		
+		// Init datatable
+		sTable = $('#speakerTable').dataTable( {
+			//"bFilter": true,
+			//"bSort": false,
+			"sScrollY": "400px", // rather take max width
+			"sScrollX": "550px", // not taken into acount !! set manually below
+ 			//"sScrollXInner": "auto",
+ 			//"sScrollXInner": "{{sScrollXInner}}px",
+			"bScrollCollapse": true,
+			"bPaginate": false,
+			//"bJQueryUI": true,				// jQuery UI Theme
+			"aaSorting": [[ 1, "desc" ]],
+			//"aoColumnDefs": [ { "sWidth": "10px", "aTargets": [ 4 ] } ],		// column width
+			"oLanguage": {
+				"sSearch": "Filtrer:",
+				"sLengthMenu": "Display _MENU_ records per page",
+				"sZeroRecords": "Nothing found - sorry",
+				"sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+				"sInfoEmpty": "Showing 0 to 0 of 0 records",
+				"sInfoFiltered": "(filtered from _MAX_ total records)"
+				},
+			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+				//get ccontent (color) of column 1 and set background color
+				var ccol = $('td:eq(1)',nRow).html();
+				$('td:eq(1)',nRow).css('background',ccol);
+				//$('td:eq(1)',nRow).html('');
+				return nRow;
+			},
+			"fnDrawCallback": function() {
+				//alert( 'DataTables has redrawn the table' );
+			},
+		});
+		
+		new FixedColumns( sTable, {
+ 			"iLeftColumns": NFIXEDCOLUMNS,
+ 			"sLeftWidth":'fixed',
+ 			"iLeftWidth": 160,
+ 			"fnDrawCallback": function () {		
+ 				///////////// REDO LEFT Things
+ 				// color pickers - deactivated
+ 				//initColorPickers();
+				// click handler for row selection	
+				$('.DTFC_Cloned .speakerRow').click( function() {
+					if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);
+					else selectSpeaker(this);
+				} );
+        	}
+ 		} );
+		
+		// todo: understand why "sScrollXInner" is not taken into account !
+		// we have to set it manually !
+		$("#speakerTable tr").width({{sScrollXInner}});
+		
+{% if perms.reanalyseapp.can_make %}
+		
+		// NB: we have to dinstinguish LEFT/RIGHT click handlers, baecause at each redraw left-handler disapear ! (?)
+		// RIGHT : click handler for row selection	
+		$('#speakerTable .speakerRow').click( function() {
+			if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);
+			else selectSpeaker(this);
+		} );
+		
+{% else %}
+
+		$('.dataTables_scrollBody').dragscrollable({dragSelector: '#speakerTable:first', acceptPropagatedEvent: true});
+		
+{% endif %}	
+
+
+		///////////////////////////////////////////// viz involved modal dialogs
+		initVizInvolvedModals("{% url reanalyse.reanalyseapp.views.getVizHtml enquete.id %}");
+	});
+</script>
+<!-- ======================================================= -->
+
+{% endblock %}
 
 
 
 
-	
-	
 
 
 
-	///////////////////////////////////////////////////////////////////// init color picker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	{% comment %}
+	///////////////////////////////////////////////////////////////////// (deactivated) init color picker
 	function initColorPickers() {
 		$('.colorPicker').each( function(i,elem) {
 			cc = elem;
@@ -455,131 +390,4 @@
 		});
 	}
 	//////////////////////////////////////////////////////////////////////
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//////////////////////////////////////////////////////////////////////
-	$(document).ready(function() {		
-		// Init datatable
-		sTable = $('#speakerTable').dataTable( {
-			//"bFilter": true,
-			//"bSort": false,
-			"sScrollY": "400px", // rather take max width
-			"sScrollX": "100%", // not taken into acount !!
- 			"sScrollXInner": "1400px",
-			"bScrollCollapse": true,
-			"bPaginate": false,
-			//"bJQueryUI": true,				// jQuery UI Theme
-			"aaSorting": [[ 2, "desc" ]],
-			//"aoColumnDefs": [ { "sWidth": "10px", "aTargets": [ 4 ] } ],		// column width
-			"oLanguage": {
-				"sSearch": "Filtrer:",
-				"sLengthMenu": "Display _MENU_ records per page",
-				"sZeroRecords": "Nothing found - sorry",
-				"sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
-				"sInfoEmpty": "Showing 0 to 0 of 0 records",
-				"sInfoFiltered": "(filtered from _MAX_ total records)"
-				},
-			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-				//get ccontent (color) of column 1 and set background color
-				var ccol = $('td:eq(1)',nRow).html();
-				$('td:eq(1)',nRow).css('background',ccol);
-				//$('td:eq(1)',nRow).html('');
-				return nRow;
-			},
-			"fnDrawCallback": function() {
-				//alert( 'DataTables has redrawn the table' );
-			},
-		});
-		
-		// dirty workaround to adjust width of table
-		// unused now (working now ? unstable ?)
-/*
-		var realWidth = 600;
-		$('.dataTables_scrollHead').css({'width':realWidth});
-		$('.dataTables_scrollBody').css({'width':realWidth});
-		var realWidth = $('.dataTables_scroll').width();
-		$('.dataTables_scrollHead').css({'width':realWidth});
-		$('.dataTables_scrollBody').css({'width':realWidth});
-*/
-		
-		new FixedColumns( sTable, {
- 			"iLeftColumns": 3,
- 			"sLeftWidth":'fixed',
- 			"iLeftWidth": 170,
- 			"fnDrawCallback": function () {		
- 				///////////// REDO LEFT Things
- 				// color pickers
- 				initColorPickers();
-				// click handler for row selection	
-				$('.DTFC_Cloned .speakerRow').click( function() {
-					if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);
-					else selectSpeaker(this);
-				} );
-        	}
- 		} );
-		
-		// todo: understand why "sScrollX" is not taken into account !
-		// we have to set it manually !
-		$(".dataTables_scroll").width(550);
-		
-{% if perms.reanalyseapp.can_make %}
-		
-		// NB: we have to dinstinguish LEFT/RIGHT click handlers, baecause at each redraw left-handler disapear ! (?)
-		// RIGHT : click handler for row selection	
-		$('#speakerTable .speakerRow').click( function() {
-			if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);
-			else selectSpeaker(this);
-		} );
-		
-{% else %}
-
-		$('.dataTables_scrollBody').dragscrollable({dragSelector: '#speakerTable:first', acceptPropagatedEvent: true});
-		
-{% endif %}	
-
-
-		///////////////////////////////////////////// viz involved modal dialogs
-		initVizInvolvedModals("{% url reanalyse.reanalyseapp.views.getVizHtml enquete.id %}");
-
-				
-		
-		{% comment %}
-		//////////////////////////////////////////////////////////////////////
-		// Ask for each d3 graph json to fill column "Count"
-		// UNUSED for the moment, we make divs with good width in the view, its simpler
-/*
-		{% for row in sTable.values %}
-			$.ajax({
-				url: "{% url reanalyse.reanalyseapp.views.getLittleFriseJson enquete.id row.texte.id %}",
-				success: function(data){
-					buildD3_TexteContentLittleFrise(data,"d3_speaker_{{row.speaker.id}}");
-				},
-			});
-		{% endfor %}		
-*/
-		{% endcomment %}
-		
-		
-		
-		///////////////////////////////////////// DEPRECATED (WHEN DOING TABLE BY HAND)
-		// scroll bar controlling mvt of 2 divs (using jquery)
-		//initSpeakerTableScrollBar();
-		
-		// scrolling by hand (using dragscrollable.js jquery plugin)
-		// to do : do it by hand to make it compatbible with custom scroll bar...
-		//$('.sTableCenterContent').dragscrollable({dragSelector: '.sTableCenterScrollContent:first', acceptPropagatedEvent: true});
-	});
-</script>
-<!-- ======================================================= -->
-
-{% endblock %}
-
+	{% endcomment %}

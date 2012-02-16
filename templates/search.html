@@ -53,12 +53,14 @@
 				{{ form.q.errors }}
 				{{ form.q }}
 				<input id="id_searchsubmit" type="image" name="_search" value="Search" src="{{ MEDIA_URL }}/images/button_search.png"/>
-				(OR,AND,-a,"a b"=a_b)
 			</div>
-
+			
+			{% comment %}
 			<!-- ADVANCED OPTIONS -->
 			<a href="#" onclick='$("#toggle_appear").toggle("fast"); return false;'>advanced options</a>
 			<div id="toggle_appear" style="display:none;">
+				
+				(OR,AND,-a,"a b"=a_b)
 				
 				<!-- ///////////////////////// OPTIONS -->
 				{{ form.rawQuery.errors }}
@@ -70,17 +72,22 @@
 				<!-- ///////////////////////// NEW FACETS, by hand -->
 				<a href="#" onclick='resetFacetsAndResearch(); return false;'>> reset facets</a>
 				
-		<br/>Note:
-		<br/>+ please make sure <a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> is on and already has an index (made of all Interventions)
-		<br/>+ stopwords return all the index (not displaying correctly?)
+				<br/>Note:
+				<br/>+ please make sure
+				<a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> 
+				is on and already has an index (made of all Interventions)
+				<br/>+ stopwords return all the index (not displaying correctly?)
 				<!-- initially, facets are just the list of Texts/Speakers -->
 				<!-- built by the view and available ein the context as "handfacets.textes & handfacets.speakers" -->
 				<!-- when searching, order and counts are updated (from search_results.html template), using javascript -->
 			</div>
+			{% endcomment %}
+			
 		</form>
 	</div>
 	
-	<!-- ================================================== FACETS OVERVIEW VIZ -->
+	<!-- ================================================== FACETS OVERVIEW VIZ (deactivated) -->
+	{% comment %}
 	<div class="leftmenublock">
 		<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Overview Facets</h1>
 		<div id="vizOverViewContainer" style="display:none;">
@@ -88,61 +95,15 @@
 			<div id="theViz_over" style="width:100%;"></div>
 		</div>
 	</div>		
-	
-	
-	
-				{% comment %}
-				<!-- ... FACETS ... (loaded in search_results.html) -->
-				<!-- <div id="ajaxLeftFacets"></div>	-->
-				
-				<!--
-				<div class="fieldWrapper">
-					{{ form.inTextes.errors }}
-					<label for="id_inTextes">Dans les textes:</label>
-					{{ form.inTextes }}
-				</div>
-				<div class="fieldWrapper">
-					{{ form.inSpeakers.errors }}
-					<label for="id_inSpeakers">Participants:</label>
-					{{ form.inSpeakers }}
-				</div>
-				-->
-				{% endcomment %}
-	
-	<!-- ///////////////////////// OLD FACETS (USING HAYSTACK FACETS) -->
-	{% comment %}
-	<!--
-	<div class="leftmenublock">
-		<a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?q={{query|urlencode}}">reset facets</a>
-		</br>Filter by Texte: 
-		{% if facets.fields.texte %}
-		<ul class="facetList" id="facetText">
-			{% for t in facets.fields.texte %}
-				<li>({{ t.1 }}) <a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?q={{query|urlencode}}&amp;selected_facets=texte_exact:{{ t.0|urlencode }}">{{ t.0 }}</a></li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-		</br>Filter by Participant: 
-		{% if facets.fields.speaker %}
-		<ul class="facetList" id="facetSpeaker">
-			{% for t in facets.fields.speaker %}
-				<li>({{ t.1 }}) <a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?q={{query|urlencode}}&amp;selected_facets=speaker_exact:{{ t.0|urlencode }}">{{ t.0 }}</a></li>
-				WASBEFORE: <a href="{{ request.get_full_path }}&amp;selected_facets=speaker_exact:{{ t.0|urlencode }}">{{ t.0 }}</a>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	</div>
-	-->
 	{% endcomment %}
-	
-	
-	
+		
 {% endblock %}
 
 
 
 {% block contenttop %}
-	<div id="ajaxContentTopRelatedViz"></div>
+	<!-- deactivated for the moment -->
+	<!--<div id="ajaxContentTopRelatedViz"></div>-->
 {% endblock %}
 
 

@@ -74,7 +74,6 @@ CODES_IMAGE_TOOLTIP['body:']=			'body'
 CODES_IMAGE_TOOLTIP['comment:']=		'comment'
 CODES_IMAGE_TOOLTIP['time:']=			'time'
 CODES_IMAGE_TOOLTIP['question:']=		'question'
-CODES_IMAGE_TOOLTIP['to:']=				'directed'
 CODES_IMAGE_TOOLTIP['directed:']=		'directed'
 
 CODES_IMAGE={} # without content (only image)
@@ -84,7 +83,6 @@ CODES_IMAGE['part:echo']=				'interruption'
 CODES_IMAGE['inaudible']=				'inaudible'
 CODES_IMAGE['laugh']=					'laugh'
 CODES_IMAGE['silence']=					'silence'
-CODES_IMAGE['points de suspension']=	'silence'
 
 #CODES_TEXT_TOOLTIP['anonym:']=			'anonym'
 CODES_TEXT_TOOLTIP={} # text styling (with tooltip)
@@ -93,6 +91,10 @@ CODES_TEXT_TOOLTIP['uncertain:']=		'uncertain'
 
 CODES_TEXT={} # text styling (no image no tooltip)
 CODES_TEXT['strong:']=			'strong'
+
+# some additional mapping, because some transcriptions of the 3 test-studies may contain thoses codes
+CODES_IMAGE_TOOLTIP['to:']=				'directed'
+CODES_IMAGE['points de suspension']=	'silence'
 
 
 ########## TREETAGGER CODES
