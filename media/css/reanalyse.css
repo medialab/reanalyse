@@ -642,11 +642,11 @@ div.currentPage {
 }
 #relatedVizToggle:hover {
 	background-color:#FFCC99;
+	cursor:pointer;
 }
 #relatedVizContainer {
 	background:white;
-	height:230px;
-	overflow-y:auto;
+	height:210px; /* based on the TextSTreamtimeline (fixed) height */
 }
 #relatedVizContainer ul {
 	list-style-type:none;
@@ -1574,6 +1574,74 @@ div.text_silence:after {
 	text-decoration: none;
 	color:#606060;
 }
-/* IE hack removed..., see later */
 /* ============================================ */
 
+
+
+
+/* ============================================ ENQUETE SUR ENQUETE */
+
+.jplayerzone {
+	float:left;
+}
+.chapter-summary {
+	float:left;
+	width:435px;
+	overflow:auto;
+	padding:0px 20px 0px 20px;
+}       
+
+/* ============================================ */
+
+#esetabs {
+	/*
+	margin-top: 10px;
+	margin-bottom: 20px;
+	background-color:#D19552;
+	*/
+}
+#esetabs ul {
+	list-style: none;	
+	background-color:#D19552;
+	/*height:35px;*/
+	padding:10px;
+}
+#esetabs li {
+	display: inline;
+	background-color:#D19552;
+	font-family: Tahoma, Geneva, sans-serif;
+	letter-spacing: 1px;
+	vertical-align:center;
+}
+
+#esetabs li:first-child {
+    list-style: none;
+    /*
+    font-size:13px;
+    padding-left:20px;
+	padding-right:20px;
+	*/
+	padding:10px;
+	color:#FFFFFF;
+}
+
+#esetabs a {
+	padding:10px;
+	background-color:#F2DEA0;
+	color:#585858;
+	text-align: center;
+	text-decoration: none;
+}
+
+#esetabs a:hover, #esetabs .active a {
+	background: #F2F1ED;
+	/*
+	color: #FFFFFF;
+	padding: 15px;
+	*/
+}
+#esetabs #esetabactive {
+	background: #F2F1ED;
+}
+
+/* ============================================ */

@@ -49,7 +49,6 @@ class TexteAdmin(admin.ModelAdmin):
 #############################################################
 
 #admin.site.register(SiteContent, SiteContentAdmin) # tryout to edit html contents using admin
-admin.site.register(EnqueteSurEnquete)
 admin.site.register(Enquete)
 admin.site.register(Texte,TexteAdmin)
 ############################################################

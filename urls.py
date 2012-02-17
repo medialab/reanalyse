@@ -16,11 +16,11 @@ urlpatterns = patterns('reanalyse',
 	######################################################################################################
 	########## STREAMS & FILE REQUESTS
 	
-	(r'^stream/(?P<eseid>\w+)/(?P<path>[-\._\w\d\/]+\.(mp3|ogg))+', 'reanalyseapp.views.stream'),
-	(r'^getesereport/(?P<eid>\w+)', 'reanalyseapp.views.getEseReport'),		# ESE report download
-	(r'^graph/download/(?P<gid>\w+)', 'reanalyseapp.views.downloadGraph'),
-	(r'^graph/serve/(?P<gid>\w+).gexf', 'reanalyseapp.views.serveGraph'),	# for gexf display (sigma?)
-	(r'^graph/serve/(?P<did>\w+).pdf', 'reanalyseapp.views.servePdf'),		# for simple pdf display
+	(r'^stream/(?P<eid>\d+)/(?P<path>[-\._\w\d\/]+\.(mp3|ogg))+', 'reanalyseapp.views.stream'),
+	(r'^getesereport/(?P<eid>\d+)', 'reanalyseapp.views.getEseReport'),		# ESE report download
+	(r'^graph/download/(?P<gid>\d+)', 'reanalyseapp.views.downloadGraph'),
+	(r'^graph/serve/(?P<gid>\d+).gexf', 'reanalyseapp.views.serveGraph'),	# for gexf display (sigma?)
+	(r'^graph/serve/(?P<did>\d+).pdf', 'reanalyseapp.views.servePdf'),		# for simple pdf display
 	
 	######################################################################################################
 	########## ENQUETES

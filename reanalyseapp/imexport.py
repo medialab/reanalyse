@@ -4,6 +4,9 @@ import settings
 import logging
 import os,re
 
+# for ese json
+import simplejson
+
 # csv.Dicteader
 import csv
 
@@ -107,10 +110,9 @@ def importEnqueteUsingMeta(folderPath):
 							newDocument.doctype='TEI'
 							newDocument.save()
 						elif doc_category=='ese':
-							#eseXmlPath = settings.REANALYSEESE_FILES + study_ddi_id +".xml"
-							ese = EnqueteSurEnquete(localxml=file_location,enquete=newEnquete)
-							ese.buildMe()
-							ese.save()
+							esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+							newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+							newEnquete.save()
 					elif file_extension=='PDF':
 						newDocument.status='0'
 						newDocument.save()
@@ -168,7 +170,48 @@ def importEnqueteUsingMeta(folderPath):
 
 
 
-
+###########################################################################
+# return json with all data from ese
+def getEnqueteSurEnqueteJson(eseXmlPath,e):
+	logging.info("Fetching ese infos from xml:"+eseXmlPath)
+	res={}
+	
+	tree = ElementTree()
+	tree.parse(eseXmlPath)
+	root = tree.getroot()
+	
+	baseEseXmlFolder = '/'+'/'.join(eseXmlPath.split('/')[:-1])+'/'
+	
+	# Fetching summary
+	summary = root.findall('StudyUnit/Summary')[0]
+	res['reportpath'] = baseEseXmlFolder + summary.attrib['report']
+	res['html'] = summary.text
+	
+	# Fetching chapters
+	thechapters = []
+	for chapter in root.findall('StudyUnit/Chapters/Chapter'):
+		chapt = {}
+		chapt['name'] = chapter.attrib['name']
+		chapt['html'] = chapter.findall('text')[0].text
+		thesubchapters = []
+		for subChapter in chapter.findall('SubChapter'):
+			subchapt = {}
+			subchapt['name'] = subChapter.attrib['name']
+			subchapt['audiopath'] = subChapter.attrib['location']
+			# as the mp3 files may be located
+			# either (good) in the _ese folder
+			# either in the REANALYSEESE_FILES folder
+			# we need to check availability, mmh..
+			if os.path.exists(baseEseXmlFolder+subchapt['audiopath']):
+				subchapt['audiopath'] = baseEseXmlFolder + subchapt['audiopath']
+			else:
+				subchapt['audiopath'] = settings.REANALYSEESE_FILES+'/'+e.ddi_id+'/'+ subchapt['audiopath']
+			thesubchapters.append(subchapt)
+		chapt['subchapters'] = thesubchapters
+		thechapters.append(chapt)
+	res['chapters'] = thechapters
+	return res
+###########################################################################
 
 
 

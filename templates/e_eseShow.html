@@ -4,8 +4,6 @@
 {% load ssi from future %}
 
 {% block enqueteheadmore %}
-
-	<link rel="stylesheet" href="{{ MEDIA_URL }}/css/ese.css"/>
 	
 	<script src="{{ MEDIA_URL }}/jplayer/js/jquery.jplayer.min.js"></script>
 	<script src="{{ MEDIA_URL }}/jplayer/js/customPlayer.js"></script>
@@ -17,30 +15,27 @@
 	
 	<script type="text/javascript"> 
 	$(document).ready(function(){
-	// 		$( "#accordion" ).accordion({fillSpace: true});
+	 	//$( "#accordion" ).accordion({fillSpace: true});
 		$("#mesTabs").verticaltabs({speed: 500,slideShow: false,activeIndex: 0});
-		});
+	});
 	</script> 
 
 {% endblock %}
-
 
 
 {% block content %}
 	{% if ese %}
 	<div class="verticalslider" id="mesTabs">
 		<ul class="verticalslider_tabs">
-		{% for chapter in chapters %}
-			<li><a href="#">{{ chapter.name }}</a></li>
+		{% for chapter in ese.chapters %}
+			<li><a href="#">{{chapter.name}}</a></li>
 		{% endfor %}
 		</ul>
 		
 		<ul class="verticalslider_contents">
-		{% for chapter in chapters %}
+		{% for chapter in ese.chapters %}
 			<li>
-			{% if chapter.summary %}
-			<div class="chapter-summary">{% ssi chapter.summary %}</div>
-			{% endif %}
+			<div class="chapter-summary">{%autoescape off%}{{chapter.html}}{%endautoescape%}</div>
 			
 			<div class="jplayerzone">		
 			<div id="jquery_jplayer_{{forloop.counter}}" class="jp-jplayer"></div>
@@ -103,14 +98,13 @@
 
 {% if ese %}
 	$(document).ready(function(){
-	{% for chapter in chapters %}
+	{% for chapter in ese.chapters %}
 		var audioPlaylist_{{forloop.counter}} = new Playlist("{{forloop.counter}}", [
 			
-			{% for subchapter in chapter.esesubchapter_set.all %}
+			{% for subchapter in chapter.subchapters %}
 			{
 			name:"{{subchapter.name|escapejs}}",
-			mp3:"{% url reanalyse.reanalyseapp.views.stream ese.name_id subchapter.mp3 %}",
-			ogg:"{% url reanalyse.reanalyseapp.views.stream ese.name_id subchapter.ogg %}"
+			mp3:"{% url reanalyse.reanalyseapp.views.stream enquete.id subchapter.audiopath %}",
 			}
 			{% if not forloop.last %},{% endif %}
 			{% endfor %}

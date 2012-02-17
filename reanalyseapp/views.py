@@ -563,13 +563,8 @@ def eShow(request,eid):
 @login_required
 def eseShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	try:
-		ese = e.enquetesurenquete_set.all()[0]
-		chapters = ese.esechapter_set.order_by('id')
-	except:
-		ese = []
-		chapters = []
-	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese': ese,'chapters':chapters}
+	ese = simplejson.loads(e.ese)
+	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese':ese}
 	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('e_eseShow.html',ctx ,context_instance=RequestContext(request))
 ###########################################################################
@@ -1055,11 +1050,12 @@ def ecShow(request,eid,cid):
 # download link (for ESE report)
 @login_required
 def getEseReport(request,eid):
-	ese = EnqueteSurEnquete.objects.get(enquete__id=eid)
-	filepath = ese.report
+	e = Enquete.objects.get(id=eid)
+	ese = simplejson.loads(e.ese)
+	filepath = ese['reportpath']
 	logging.info("Downloading ESE report:"+filepath)
 	#pdfname = eseid + "_"+ese.report.split('/')[-1]
-	pdfname = removeBadChars(ese.name) + '.pdf'
+	pdfname = 'enquetesurenquete.pdf'
 	response = HttpResponse(mimetype="application/pdf")
 	response['X-Sendfile'] = filepath
 	response['Content-Disposition'] = 'attachment; filename='+pdfname
@@ -1067,13 +1063,11 @@ def getEseReport(request,eid):
 ###########################################################################
 #The following view uses mod_xsendfile which lets apache do the file audio streaming for ESE
 @login_required
-def stream(request, eseid, path):
-	# todo: filepath/name should be stored in model...
-	
-	#note that MP3_STORAGE should not be in MEDIA_ROOT
-	#enq = EnqueteSurEnquete.objects.get(id=enquete)
-	#enquetename = enq.id
-	path = '%s/%s' % (unicode(settings.REANALYSEESE_FILES), unicode(path))
+def stream(request,eid,path):
+	e = Enquete.objects.get(id=eid)
+	# todo: to improve
+	path='/'+path # (cause sent in the url first / doesnt appear)
+	logging.info("Streaming audio file path:"+path)
 	response = HttpResponse(mimetype="audio/mpeg")
 	#response['Content-Disposition'] = 'filename=%s' % 'blarg.mp3'#smart_str(file_name)
 	#Requires mod_xsendfile
@@ -1947,47 +1941,6 @@ def getJsonData(request,eid,data):
 
 
 
-###########################################################################
-# DEPRECATED ENQUETES SUR ENQUETE views (before merge within enquetes
-###########################################################################
-# def eseHome(request):
-# 	filepath = settings.REANALYSESITECONTENTPATH + 'ese_intro' + '_content.html'
-# 	contenthtml = getContentOfFile(filepath)
-# 	sc,isnew = SiteContent.objects.get_or_create(name='ese_intro',contenthtml=contenthtml)
-# 	return render_to_response('ese_intro.html', {'contenthtml':sc.contenthtml} ,context_instance=RequestContext(request))
-# ###########################################################################
-# def eseBrowse(request):
-# 	# LOOK AT ENQUETES XMLs AND UPDATE MODEL OBJECTS DATABASE
-# 	enquetes = []
-# 	for infile in glob.glob( os.path.join(settings.REANALYSEESE_FILES, '*.xml') ):
-# 		# check if exists already
-# 		obj = EnqueteSurEnquete.objects.filter(localxml=infile)
-# 		if len(obj)==0:
-# 			newEse = EnqueteSurEnquete(localxml=infile)
-# 			newEse.buildMe()
-# 			#newEse.save()
-# 	for enq in EnqueteSurEnquete.objects.all():
-# 		enquetes.append(enq)
-# 	
-# 	# RETURN MODEL OBJECTS
-# 	return render_to_response('ese_browse.html', {'enquetes': enquetes}, context_instance=RequestContext(request))
-# ###########################################################################
-# @login_required
-# def eseIntro(request,eseid):
-# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
-# 	return render_to_response('ese_1.html', {'enquete': ese, 'selmen':['esetabactive',0,0]},context_instance=RequestContext(request))
-# @login_required
-# def eseContent(request,eseid):
-# 	#xmlPath = os.path.join(settings.REANALYSEESE_FILES, '%s.xml' %(enquete) )
-# 	#ese = Enquete(xmlPath)
-# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
-# 	return render_to_response('ese_2.html', {'enquete': ese, 'selmen':[0,'esetabactive',0]},context_instance=RequestContext(request))
-# @login_required
-# def eseOutro(request,eseid):
-# 	ese = EnqueteSurEnquete.objects.get(id=eseid)
-# 	return render_to_response('ese_3.html', {'enquete': ese, 'selmen':[0,0,'esetabactive']},context_instance=RequestContext(request))
-# ###########################################################################
-
 
 
 
@@ -2032,21 +1985,7 @@ def getJsonData(request,eid,data):
 
 
 
-# DEPRECATED : before merge ese+e
-###########################################################################
-# def getEseExhibitJson(request):
-# 	# JSON : USE DJANGO SERIALIZER
-# #	json_serializer = serializers.get_serializer("json")()
-# #	all_objects = list(EnqueteSurEnquete.objects.all()) + list( ESEChapter.objects.all())
-# #	enquetesjson = json_serializer.serialize(all_objects, ensure_ascii=False,fields=('name','date'))
-# #	return render_to_response('home_navigate.html', {'enquetes': enquetesjson}, context_instance=RequestContext(request))
-# 	# JSON : more options available if using "DjangoFullSerializers" (http://code.google.com/p/wadofstuff/wiki/DjangoFullSerializers)
-# 	#enquetesjson = json_serializer.serialize(all_objects, ensure_ascii=False,fields=('name','date'), relations=('permissions',))
-# 	# JSON : DO IT YOURSELF
-# 	jsondata = getEnqueteSurEnqueteExhibitJsonStream()
-# 	# RETURN RAW JSON 
-# 	return HttpResponse(jsondata, mimetype="application/json")
-###########################################################################
+
 
 
 

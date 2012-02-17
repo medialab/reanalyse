@@ -47,6 +47,8 @@ class Enquete(models.Model):
 	statuscomplete = models.BigIntegerField(default=0) # 0-100%
 	date = models.DateField(auto_now_add=True)
 	ddi_id = models.CharField(max_length=100)
+	# since ese is not yet included (structured) in enquete, let's put all infos from ese.xml into a json dict
+	ese = models.TextField()
 	#permission = models.ForeignKey(Permission)
 	class Meta: # Users & Groups are initialized in views
 		permissions = (
@@ -62,83 +64,7 @@ class Enquete(models.Model):
 		else:
 			return {'metainfo':'no meta was parsed'}
 ####################################################################
-# ENQUETES SUR ENQUETES
-class EnqueteSurEnquete(models.Model):
-	enquete = models.ForeignKey(Enquete)
-	name_id = models.CharField(max_length=200)
-	name = models.CharField(max_length=200)
-	description = models.CharField(max_length=800)
-	author = models.CharField(max_length=200)
-	date = models.DateField()
-	localxml = models.CharField(max_length=200)
-	summaryhtml = models.CharField(max_length=200)
-	report = models.CharField(max_length=200)
-	def __unicode__(self):
-		return self.name
-	def buildMe(self):
-		logging.info("ESE path:"+self.localxml)
-		tree = ElementTree()
-		tree.parse(self.localxml)
-		root = tree.getroot()
-		header = root.findall('StudyUnit/Header')[0]
-		self.name = header.attrib["name"]
-		self.name_id = header.attrib["id"]
-		
-		baseEsePath = settings.REANALYSEESE_FILES
-		if not os.path.exists(baseEsePath + header.attrib["summary"]):
-			# if summary.html not found in settings.REANALYSEESE_FILES
-			# then ESE is included in study archive, and every link is relative to the ese.xml file
-			baseEsePath = "/".join(self.localxml.split("/")[:-1])+'/'
-		
-		logging.info("ESE basepath:"+baseEsePath)
-		
-		self.summaryhtml = baseEsePath + header.attrib["summary"]
-		self.report = baseEsePath + header.attrib["report"]
-		
-		self.description = header.attrib["description"]
-		self.author = header.attrib["author"]
-		self.date = datetime.datetime.strptime( header.attrib['date'], "%Y" )
-		self.save()
-		# creates also chapters and subchapters
-		for chapter in root.findall('StudyUnit/Content/Chapter'):
-			name = chapter.attrib["name"]
-			summary = baseEsePath + chapter.attrib['summary']
-			chapobj = self.esechapter_set.create(name=name,summary=summary)
-			chapobj.save()
-			for subChapter in chapter.findall('SubChapter'):
-				name = subChapter.attrib['name']
-				summary = "no summary file"
-				mp3 = subChapter.attrib['location']
-				ogg = subChapter.attrib['location']
-				subchap = chapobj.esesubchapter_set.create(name=name,summary=summary,mp3=mp3,ogg=ogg)
-				subchap.save()
-	def toDict(self):
-		fields = []
-		for field in self._meta.fields:
-			if field.name!='date': # json does not support date format
-				fields.append(field.name)
-		d = {}
-		for attr in fields:
-			d[attr] = getattr(self, attr)
-		d['year'] = self.date.year
-		# needed for exhibit :
-		d["type"] = 'Enquête(s) sur Enquête'
-		d["label"] = self.name
-		d["link"] = '/reanalyse/ese/a/'+str(self.id)
-		return d
-############
-class ESEChapter(models.Model):
-	enquetesurenquete = models.ForeignKey(EnqueteSurEnquete)
-	name = models.CharField(max_length=200)
-	summary = models.CharField(max_length=200)
-############
-class ESESubChapter(models.Model):
-	esechapter = models.ForeignKey(ESEChapter)
-	name = models.CharField(max_length=200)
-	summary = models.CharField(max_length=200)
-	mp3 = models.CharField(max_length=200)
-	ogg = models.CharField(max_length=200)
-####################################################################
+
 
 
 

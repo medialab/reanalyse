@@ -54,14 +54,20 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var stepLegend = 14;
 	var pixelStep = 10; 
 	var leftMargin = 105;
-	var rightMargin = 80;
+	var rightMargin = 58; // for legend (sentences)
 	
-	var topParvbMargin = stepLegend*nParaverbal+30; // space for paraverbal
+	var topParvbMargin = stepLegend*nParaverbal+15; // space for paraverbal
 	var graphTopMargin = 5; // inside graph only
 	var graphBottomMargin = 20;
 	var spaceForSpeakers = Math.max(100,stepLegend*nLayers+65);
-	var totalW = 720;
 	var totalH = topParvbMargin + spaceForSpeakers;
+	/////////////////////////////////////
+	var wantedWidth = 760; //'100%'
+	var vis = vizdiv.append("svg:svg")
+		.attr("width", wantedWidth)
+		.attr("height", totalH);
+	var totalW = wantedWidth; //$(unik).width();
+	console.log("width:"+totalW);
 	var maxPeriods = thedata.maxPeriods;
 	var graphW = totalW-rightMargin-leftMargin;
 
@@ -112,11 +118,6 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var scaleEchantill = d3.scale.pow()
         .domain([0,100])
         .range([1,nEnchantill/2.0]);
-	
-	/////////////////////////////////////
-	var vis = vizdiv.append("svg:svg")
-		.attr("width", totalW)
-		.attr("height", totalH);
 	
 	////////////////////////////////////////////////////////////////// SLIDER to update precision (jquery!!)
 	var bottomDiv = vizdiv.append("div")
@@ -503,7 +504,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.attr("y1",totalH)
 		.attr("stroke","gray");
 	vis.append("svg:text")
-		.attr("x",leftMargin+graphW+5)
+		.attr("x",leftMargin+graphW+12)
 		.attr("y",totalH-5)
 		.text("Sentences");
 

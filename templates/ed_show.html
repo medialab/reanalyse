@@ -110,6 +110,7 @@
 			<!-- before we tryed to display all the related viz... now just showing the texte streamtimeline used to navigate within text -->
 			{% if visualization %}
 			<div id="relatedVizContainer" style="display:none;">
+				<!-- nb: if you hide it by default, the viz may have pb to build, cause may need the width() to check the available width -->
 				<div class="vizContainer" id="vizContainer_0">
 					{% include "render_v.html" with enquete=enquete v=visualization nk=0 %}
 				</div>
