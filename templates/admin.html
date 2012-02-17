@@ -20,23 +20,18 @@
 		<div>
 			<h3>You can choose to either upload:</h3>
 			<ul>
-				<li>all the files in the same time, with the mandatory ddi.xml file</li>
-				<li>a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
-				<li>a ddi.zip archive file, with the mandatory ./_meta/meta_*.csv files describing metadatas</li>
+				<li>(v1, deprecated soon) all the files in the same time, with the mandatory ddi.xml file</li>
+				<li>(v2, deprecated soon) a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
+				<li>(v3) a ddi.zip archive file, with the mandatory ./_meta/meta_*.csv files describing metadatas</li>
 			</ul>
 		</div>
 		<div>
 			<h3>Note that</h3>
 			<ul>
-				<li>if you don't understand a thing, please read the <a href="/reanalyse/?p=method&q=3">normalization</a> page carefully</li>
 				<li>make sure <a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> in online if you need documents to be indexed (status: {{solrstatus}})</li>
 				<li>you can also <a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a> if you know what that means</li>
-				<li>for verbatims, only XML is supported
-					<ul>
-						<li>either TXM made from Transcriber file</li>
-						<li>either TEI made from Exmaralda > TEI Drop</li>
-					</ul>
-				</li>
+				<li>for verbatims, the required format is TEI XML made using Exmaralda & TEI Drop</li>
+				<li>if you don't understand a thing, please read the <a href="/reanalyse/?p=method&q=3">normalization</a> page carefully</li>
 			</ul>
 		</div>
 		<h1>If you feel ready, go on</h1>

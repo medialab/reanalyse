@@ -100,7 +100,7 @@ def importEnqueteUsingMeta(folderPath):
 				newDocument.status='0'
 				newDocument.save()	
 			else:
-				if file_extension in ['XML','PDF','HTM']:
+				if file_extension in ['XML','PDF','HTM','CSV']:
 					if file_extension=='XML':
 						if doc_category=='verbatim':
 							newDocument.status='5'
@@ -119,6 +119,9 @@ def importEnqueteUsingMeta(folderPath):
 						wholecontent=f.read()
 						newDocument.contenthtml=wholecontent
 						f.close()
+						newDocument.status='0'
+						newDocument.save()
+					elif file_extension=='CSV':
 						newDocument.status='0'
 						newDocument.save()
 

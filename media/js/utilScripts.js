@@ -341,7 +341,7 @@ function goCreateTagCloud(eid,speakers) {
 //////////////////////////////////////////////////////////////////
 // VISUALIZATION CREATION
 function createVisualization(eid,vizType,moreparams) {
-	console.log("WILL BUILD VIZ");
+	//console.log("WILL BUILD VIZ");
 	
 	// check global vars
 	if(moreparams['attributetypes']) var selectedAttributeTypesIds = moreparams['attributetypes'];
@@ -370,7 +370,6 @@ function createVisualization(eid,vizType,moreparams) {
 	var speakers="";
 	var textes="";
 	
-	console.log("WILL BUILD VIZ0");
 	if (moreparams) {
 		for (k in moreparams) {
 			console.log("PARAMS:"+k+":"+moreparams[k]);

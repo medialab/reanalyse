@@ -1,3 +1,202 @@
+/* ============================================ GENERAL DEFAULT */
+body {
+	background-color:#333333; 
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	color: #606060;
+}
+h1, h2, h3 {
+	color: #585858;
+
+}
+h1 {
+	margin-top:10px;
+	margin-bottom:7px;
+	font-size: 13px;
+}
+p, blockquote, ul, ol {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+}
+p {
+	margin-bottom: 5px;
+	text-align:justify;
+}
+ul, ol, li {
+	margin: 0px;
+	padding: 0px;
+}
+
+a {
+	text-decoration: none;
+	color: #F40C42;
+}
+a:hover {
+	text-decoration: underline;
+	color: #F40C42;
+}
+/* ============================================ HEADER */
+#header {
+	height: 110px;
+	background-color:#333;
+}
+#logo {
+	padding:10px;
+	margin-left:15px;
+}
+
+#logo h1 {
+	margin: 0px;
+	padding: 0px;
+	font: normal 46px Georgia, "Times New Roman", Times, serif;
+}
+#logo h1 a {
+	/*color:lightgray;*/
+}
+#logo h2 {
+	letter-spacing: 1px;
+	font-size: 10px;
+	font-weight: normal;
+	color: #B0B0B0;
+}
+#logo h2 a {
+	color: #D9170E;
+}
+#logo h2 a:hover {
+	text-decoration: underline;
+	color: #D9170E;
+}
+#logo a {
+	text-decoration: none;
+	color: #D9170E;
+}
+
+/* ============================================ GENERAL TOP MENU */
+#menuband {
+	height:30px;
+	background-color:darkgray;
+	z-index:-10;
+	border-bottom:1px solid #585858;
+}
+#menuband.bodyid_e {
+	/*bodyid allows to customize css depending on view (normal=small,enquete=big)*/
+	height:75px;
+}
+
+#menu {
+	height:7px;
+}
+#menu ul {
+	list-style: none;
+}
+#menu li {
+	display: inline;
+}
+#menu a {
+	position:relative;
+	bottom:20px;
+	padding:10px;
+	letter-spacing: 1px;
+	text-decoration: none;
+	/*font-family: Tahoma, Geneva, sans-serif;*/
+	font-family:"CA BND Web Bold",Arial,sans;
+	/*font-family: Lucida Grande,Arial,sans; */
+	/*text-transform:uppercase;*/
+	/*text-shadow:1px 1px white;*/
+	font-size: 1.3em;
+	/*font-weight: strong;*/
+	color: #383B3F;
+	background-color:#E8E8E8;
+}
+
+#menu a:hover, #menu .active a {
+	background-color: #CC3300 ;
+	color: #FFFFFF;
+	border-bottom:7px solid lightgray;
+}
+
+#menuCurrent a {
+	background-color:#707070;
+	color: #FFFFFF;
+	border-bottom:7px solid lightgray;
+}
+
+/* ============================================ LEFT MENU */
+#leftmenu {
+	float:left;
+	display:inline;
+	width:100%;
+	padding:0px 0px 20px 0px;
+}
+
+#leftmenucontent {
+	/*padding:2px;*/
+}
+.leftmenublock {
+	background:#FFFDFA;
+	border:solid 1px lightgray;
+	padding:7px;
+	margin:2px;
+}
+.leftmenublock h1 {
+	margin-top:0px;
+	margin-bottom:5px;
+	font-size: 10px;
+	border-bottom:1px solid lightgray;
+}
+.leftmenublock ul {
+	list-style-type:none;
+}
+
+/* ============================================ CONTENT */
+#wrapper {
+	margin:0 auto;
+	min-height:100%;
+	/*position:relative;*/ /* enables faux columns to be positioned relative to wrapper */
+	background:#999;
+	overflow:hidden; /* clears floated columns in FX, Opera, Safari, & Chrome */
+	background-color:#F2E6CE;
+}
+#contenttop {
+	//float:left;
+	//display:inline;
+	/*width:770px;*/
+}
+#content {
+	/*float:left;
+	display:inline;*/
+	padding:25px 20px 120px 20px;
+	min-height:600px; 
+	height:auto !important;
+	height:600px;
+	background-color:#F2F1ED;
+	/*width:100%;*/
+}
+
+/* ============================================ FOOTER */
+#footer { 
+	background-color:#333;
+	height:100px;
+	padding:20px;
+}
+
+#footer p {
+	margin: 0;
+	text-align: center;
+	font-size: 11px;
+}
+
+#footer a {
+	text-decoration: underline;
+	color: #757E82;
+}
+
+#footer a:hover {
+	text-decoration: none;
+	color: #F90542;
+}
+
+
 /* =================================================================================== HOME / INTRO / (project/methodology/access/....) HTML CONTENT TEXTS */
 .introDiv {
 	margin-right:10%;
@@ -446,7 +645,7 @@ div.currentPage {
 }
 #relatedVizContainer {
 	background:white;
-	height:250px;
+	height:230px;
 	overflow-y:auto;
 }
 #relatedVizContainer ul {

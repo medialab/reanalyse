@@ -27,21 +27,23 @@ NB: Page en cours de rédaction...
 <h2>Overview</h2>
 <img src="/reanalyse/media/images/content_overview.png" alt="normalisation">
 <h2>Description complète de la normalisation d'une enquête</h2>
+	<p>Vous pouvez télécharger un exemple d'archive standard: <a href="/reanalyse/media/xmlsamples/ddi.zip">enquête squelette</a>, respectant toutes les contraintes décrites ci-après.</p>
 <ol>
-
 <li><h3>Conversion des documents</h3>
 	Certains fichiers doivent être convertis pour pouvoir être archivés.<br/>
 	Aux formats propriétaires sont préférés des formats ouverts et aisément interopérables.<br/>
 	Tous les documents originaux sont conservés dans le dossier <span class="content_norm_file">_source/</span>
 	<table class="content_norm_ex">
-		<tr><td>format(s) source</td><td>format de destination</td><td>remarques</td></tr>
-		<tr><td class="content_norm_orig">xls</td><td>.csv</td><td class="content_norm_orig">pour les tableaux de données (Excel par exemple permet d'exporter sous ce format: [enregistrer sous: texte (séparateur: tabulation) puis renommer le fichier en .csv])</td></tr>
-		<tr><td class="content_norm_orig">doc, docx</td><td>.txt</td><td class="content_norm_orig">pour les verbatims (fichiers intermédiaires)</td></tr>
-		<tr><td class="content_norm_orig">rtf</td><td>.htm</td><td class="content_norm_orig">limite la mise en page et le formattage à quelques éléments simples (titres, sous-titres, paragraphes) mais permet l'indexation (recherche dans le texte)</td></tr>
-		<tr><td class="content_norm_orig">ppt</td><td>.pdf</td><td class="content_norm_orig">pas d'indexation du texte, mais conservation de la mise en page</td></tr>
+		<tr><td>format(s) source</td><td>format de destination</td><td>remarques</td><td>actif</td></tr>
+		<tr><td class="content_norm_orig">xls</td><td>.csv</td><td class="content_norm_orig">pour les tableaux de données (Excel par exemple permet d'exporter sous ce format: [enregistrer sous: texte (séparateur: tabulation) puis renommer le fichier en .csv])</td><td>oui</td></tr>
+		<tr><td class="content_norm_orig">doc, docx</td><td>.txt</td><td class="content_norm_orig">pour les verbatims (fichiers intermédiaires). ces fichiers .txt doivent être ensuite convertis au format TEI .xml (voir plus bas)</td><td>oui</td></tr>
+		<tr><td class="content_norm_orig">rtf</td><td>.htm</td><td class="content_norm_orig">limite la mise en page et le formattage à quelques éléments simples (titres, sous-titres, paragraphes) mais permet l'indexation (recherche dans le texte)</td><td>oui</td></tr>
+		<tr><td class="content_norm_orig">ppt</td><td>.pdf</td><td class="content_norm_orig">pas d'indexation du texte, mais conservation de la mise en page</td><td>oui</td></tr>
+		<tr><td class="content_norm_orig">image</td><td>.jpg</td><td class="content_norm_orig">...</td><td>non</td></tr>
+		<tr><td class="content_norm_orig">audio</td><td>.mp3</td><td class="content_norm_orig">...</td><td>non</td></tr>
 	</table>
 	Lorsque le choix de l'encodage est proposé, toujours préférer "UTF-8"<br/>
-	Les noms des fichiers convertis ne peuvent contenir que des caractères alphanumériques (a-z/0-9) (pas d'accents, de cédilles, d'apostrophes, etc...)
+	Les noms des fichiers convertis ne peuvent contenir que des caractères alphanumériques [a-z/0-9] (pas d'accents, de cédilles, d'apostrophes, etc...)
 	<table class="content_norm_ex">
 		<tr><td>nom original</td><td>nom normalisé</td></tr>
 		<tr><td class="content_norm_file">Tableau4 types.xls</td><td class="content_norm_file">types_ideologiques.csv</td></tr>
@@ -55,7 +57,7 @@ NB: Page en cours de rédaction...
 	Le dossier <span class="content_norm_file">_meta/</span> permet de regrouper l'ensemble des métadonnées d'une enquête.<br/>
 	Remarques sur les tableaux de données .csv:
 		<ul>
-		<li>les couleurs (gris/bleu) des tableaux suivants ne servent qu'à améliorer la lisibilité</li>
+		<li>les couleurs (gris/bleu) des tables de la présente page ne servent qu'à améliorer la lisibilité</li>
 		<li>tous les ids (première colonne) doivent être uniques</li>
 		<li>les colonnes qui commencent par * sont obligatoires pour le chargement dans un site enquête</li>
 		<li>les colonnes qui commencent par _ seront masquées dans le site enquête</li>

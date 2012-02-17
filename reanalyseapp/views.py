@@ -544,28 +544,19 @@ def eShow(request,eid):
 	meta = e.meta()
 	
 	metashort=[]
-	metalong=[]
-	#try:
 	metashort.append(['Study Author', meta['AuthEnty'][0]])
 	metashort.append(['Funding Agency', meta['fundAg'][0]])
 	metashort.append(['Country', meta['nation'][0]])
 	metashort.append(['Geographic Coverage', meta['geogCover'][0]])
 	metashort.append(['Data Distribution', meta['distrbtr'][0]])
 	metashort.append(['Metadata', meta['AuthEnty'][0]+", Copyright  "+meta['copyright'][0]])
-	#metashort.append(['Date', meta['InterviewDuration']])
-	
-	#metalong.append(['Context', meta['timeMeth'][0]])
-	#metalong.append(['Sample', meta['sampProc'][0]])
-	#metalong.append(['Collection Mode', meta['collMode'][0] + meta['collSitu'][0]])
 
-	# relPubl is deprecated, since we now use .csv to describe documents : related publications are listed in the meta_documents.csv and appear in the edBrowse view	
-	#publis = meta['relPubl']
-# 	except:
-# 		metashort.append(["error","errormetashort"])
-# 		metalong.append(["error","errormetalong"])
-# 		publis=["errorpublis"]
+	try:
+		description	= meta['description'][0]
+	except:
+		description = "There wasn't any *description field in the meta_study.csv, sorry."
 	
-	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metashort':metashort,'metalong':metalong,'description':meta['abstract'][0]}
+	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metashort':metashort,'description':description}
 	updateCtxWithPerm(ctx,request,e)
 	return render_to_response('e_show.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
@@ -936,14 +927,22 @@ def edShow(request,eid,did):
 	texte = Texte.objects.get(id=did)
 	ctx = {'enquete':texte.enquete,'texte':texte,'bodyid':'e','pageid':'documents'}
 	
-	###### RELATED VIZ
-	# we can take all related viz if we want
-	#ctx.update({'visualizations':getRelatedViz(textes=[texte])})
-	# now testing with only the textstreamtimeline
-	ctx.update({'visualization':Visualization.objects.get(viztype='TexteStreamTimeline')})
-	
 	######################################### TEI
 	if texte.doctype=='TEI':
+	
+		###### RELATED VIZ
+		# we can take all related viz if we want
+		#ctx.update({'visualizations':getRelatedViz(textes=[texte])})
+		# now testing with only the textstreamtimeline
+		try:
+			streamtimelineviz = Visualization.objects.get(textes=texte,viztype='TexteStreamTimeline')
+		except:
+			try:
+				streamtimelineviz = Visualization.objects.filter(textes=texte,viztype='TexteStreamTimeline')[0]
+			except:
+				streamtimelineviz = None
+		ctx.update({'visualization':streamtimelineviz})
+	
 		maxTextPart = texte.sentence_set.aggregate(Max('i')).values()[0]
 		
 		if request.GET.get('highlight'):
