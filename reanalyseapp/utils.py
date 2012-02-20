@@ -202,72 +202,7 @@ def getHtmlAroundIntervention(intervention):
 
 
 
-####################################################################
-# NB:
-#
-#tf			nocc of a word / nb of words for a speaker
-#			Speaker s
-#			WordEntity we
-#			TF = we.word_set.count() / s.word.count()
-#
-#df			number of speaker having a word / total number of speakers
-#			WordEntity we
-#			DF = we.wordentityspeaker_set.count() / Speaker.objects.count()
-#			
-#idf		log(1/df)
-#tf-idf		tf * idf
-####################################################################
-# DEPRECATED handmade TFIDF
-####################################################################
-# def calculateTfidf(enquete):
-# 	# Update DF/ TF-IDF
-# 	# todo: https://docs.djangoproject.com/en/dev/topics/db/queries/
-# 	# more efficient using Queries with F()
-# 	# to calculate directly in SQL queries
-# 	# ex: Entry.objects.all().update(n_pingbacks=F('n_pingbacks') + 1)
-# 	enquete.status=1
-# 	enquete.save()
-# 	
-# 	############## DF
-# 	a=True
-# 	#nSpeakers = Speaker.objects.count()
-# 	#for the moment, testing with 3 texts and 3 speakers
-# 	nSpeakers = 10
-# 	for we in WordEntity.objects.all():
-# 		we.df = we.wordentityspeaker_set.count() / float(nSpeakers)
-# 		if a:
-# 			logging.info("Sample DF:" + str(we.df))
-# 		a=False
-# 		we.save()
-# 	############## TF-IDF
-# 	a=True
-# 	for wes in WordEntitySpeaker.objects.all():
-# 		# TF
-# 		s = wes.speaker
-# 		we = wes.wordentity
-# 		wes.tf = wes.word_set.count() / float(s.word_set.count())
-# 		if a:
-# 			logging.info("Sample TF:" + str(wes.tf))
-# 		wes.tfidf = wes.tf * math.log( 1 / float(we.df) )
-# 		if a:
-# 			logging.info("Sample TF-IDF:" + str(wes.tfidf))
-# 		a=False
-# 		wes.save()
-# 	############## Storing max(TF-IDF,for each WordEntitySpeaker) in each WordEntity
-# 	for we in WordEntity.objects.all():
-# 		maxtfidf=0
-# 		maxspeakerid=0
-# 		for wes in we.wordentityspeaker_set.all():
-# 			if wes.tfidf > maxtfidf:
-# 				maxtfidf = wes.tfidf
-# 				maxspeakerid = wes.speaker.id
-# 		we.maxtfidf = maxtfidf
-# 		we.maxspeakerid = maxspeakerid
-# 		we.save()
-# 	
-# 	enquete.status=0
-# 	enquete.save()
-####################################################################
+
 
 
 
@@ -542,4 +477,74 @@ class unzip:
 
 
 
+
+
+
+
+####################################################################
+# NB:
+#
+#tf			nocc of a word / nb of words for a speaker
+#			Speaker s
+#			WordEntity we
+#			TF = we.word_set.count() / s.word.count()
+#
+#df			number of speaker having a word / total number of speakers
+#			WordEntity we
+#			DF = we.wordentityspeaker_set.count() / Speaker.objects.count()
+#			
+#idf		log(1/df)
+#tf-idf		tf * idf
+####################################################################
+# DEPRECATED handmade TFIDF
+####################################################################
+# def calculateTfidf(enquete):
+# 	# Update DF/ TF-IDF
+# 	# todo: https://docs.djangoproject.com/en/dev/topics/db/queries/
+# 	# more efficient using Queries with F()
+# 	# to calculate directly in SQL queries
+# 	# ex: Entry.objects.all().update(n_pingbacks=F('n_pingbacks') + 1)
+# 	enquete.status=1
+# 	enquete.save()
+# 	
+# 	############## DF
+# 	a=True
+# 	#nSpeakers = Speaker.objects.count()
+# 	#for the moment, testing with 3 texts and 3 speakers
+# 	nSpeakers = 10
+# 	for we in WordEntity.objects.all():
+# 		we.df = we.wordentityspeaker_set.count() / float(nSpeakers)
+# 		if a:
+# 			logging.info("Sample DF:" + str(we.df))
+# 		a=False
+# 		we.save()
+# 	############## TF-IDF
+# 	a=True
+# 	for wes in WordEntitySpeaker.objects.all():
+# 		# TF
+# 		s = wes.speaker
+# 		we = wes.wordentity
+# 		wes.tf = wes.word_set.count() / float(s.word_set.count())
+# 		if a:
+# 			logging.info("Sample TF:" + str(wes.tf))
+# 		wes.tfidf = wes.tf * math.log( 1 / float(we.df) )
+# 		if a:
+# 			logging.info("Sample TF-IDF:" + str(wes.tfidf))
+# 		a=False
+# 		wes.save()
+# 	############## Storing max(TF-IDF,for each WordEntitySpeaker) in each WordEntity
+# 	for we in WordEntity.objects.all():
+# 		maxtfidf=0
+# 		maxspeakerid=0
+# 		for wes in we.wordentityspeaker_set.all():
+# 			if wes.tfidf > maxtfidf:
+# 				maxtfidf = wes.tfidf
+# 				maxspeakerid = wes.speaker.id
+# 		we.maxtfidf = maxtfidf
+# 		we.maxspeakerid = maxspeakerid
+# 		we.save()
+# 	
+# 	enquete.status=0
+# 	enquete.save()
+####################################################################
 

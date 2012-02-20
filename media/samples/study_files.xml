@@ -1,16 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <folder>study/
-	<file>study_ddi.xml</file>
 	<folder>_ese/
+		<file>ese.xml</file>
+		<file>report.pdf</file>
 	</folder>
 	<folder>_meta/
-		<file>for_study.csv</file>
-		<file>for_documents.csv</file>
-		<file>for_speakers.csv</file>
-		<file>for_codes.csv</file>
+		<file>meta_study.csv</file>
+		<file>meta_documents.csv</file>
+		<file>meta_speakers.csv</file>
+		<file>meta_codes.csv</file>
 	</folder>
 	<folder>_verbatim/
 		<file>entretien_27.txt</file>
+		<file>entretien_27.exb</file>
 	</folder>
 	<folder>_data/
 		<file>types_ideologiques.csv</file>

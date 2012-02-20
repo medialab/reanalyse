@@ -473,12 +473,12 @@ def eBrowse(request):
 	for e in Enquete.objects.all().order_by('id'):
 		themetas=[]
 		m = e.meta()
-		try:
+		try: # Author | Country | Distributeur
 			themetas.append(m['AuthEnty'][0])
 			themetas.append(m['nation'][0])
 			themetas.append(m['distrbtr'][0])
 		except:
-			themetas.append("error")
+			themetas.append("NC")
 		enquetesandmeta.append([e,themetas])
 	return render_to_response('e_browse.html', {'bodyid':'e' ,'enquetesandmeta':enquetesandmeta}, context_instance=RequestContext(request))
 ################################################################################	

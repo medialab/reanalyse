@@ -174,8 +174,6 @@
 
 <script type="text/javascript">
 	
-	var me=null;
-	
 	//////////////////////////////////////////////////////////////////////
 	function selectAllDocs() {
 		var aTrs = dTable.fnGetNodes();
@@ -189,7 +187,6 @@
 	function selectDoc(elem) {
 		theTr=$(elem);
 		if ( !theTr.hasClass('row_selected') ) {
-			me=elem;
 			// elem.id = "texte_2738"
 			var tid = elem.id.split("_")[1];
 			// both left tr and right tr

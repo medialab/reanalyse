@@ -44,7 +44,7 @@ UIMTreeProcessor.prototype.doProcess = function(){
 
 	this.vsTraverse($(_root), _a_feed);
 
-	var _treedata = [{"data":"<"+_root[0].nodeName+">","children":_a_feed, "state":"open"}];
+	var _treedata = [{"data":"<"+_root[0].nodeName+">","children":_a_feed, "state":"closed"}];
 	this.initTree(_treedata);
 }
 
@@ -62,7 +62,7 @@ UIMTreeProcessor.prototype.vsTraverse = function(node, arr){
 		}
 */
 		if(null!=_ch[i].firstChild && 3==_ch[i].firstChild.nodeType){
-			arr.push([{"data":"<"+_ch[i].nodeName+nodeAttsSt+"> " + _ch[i].firstChild.textContent,"children":_vsArr, "state":"open"}]);
+			arr.push([{"data":"<"+_ch[i].nodeName+nodeAttsSt+"> " + _ch[i].firstChild.textContent,"children":_vsArr, "state":"closed"}]);
 		}else{
 			arr.push([{"data":"<"+_ch[i].nodeName+nodeAttsSt+"> ","children":_vsArr, "state":"open"}]);
 		}

@@ -1,5 +1,5 @@
 function buildXmlDisplay(divid,xmlurl) {
-	console.log("Building XML tree: "+xmlurl);
+	//console.log("Building XML tree: "+xmlurl);
 	
 	$.ajax({
 		type: "GET",
@@ -14,10 +14,10 @@ function buildXmlDisplay(divid,xmlurl) {
 			_uimTree.doProcess();
 			//processXML(data);
 			
-			// todo: close every node on load..
-			// pb is that jstree doesn't provide onLoaded() callback !
-			//$("#divid").jstree("close_all");
-			//$("#xml_tei_bfm_div").jstree("close_all");
+			// to set nodes closed on load, set 'state':closed in UIMTreeProcessor.js
+			
+			// the following is not working
+			//$("#"+divid).jstree("close_all");
 		},
 		error:function(e){
 			alert("Error: "+e);

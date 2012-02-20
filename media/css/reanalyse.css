@@ -363,16 +363,16 @@ a:hover {
 /* select spk/doc and launch viz */
 .imVizBut { background-image: url("../images/viz_but.png"); display:inline-block; width:10px; height:10px; }
 /* main menu*/
-.imDocument { background-image: url("../silkicons/page_copy.png"); display:inline-block; width:16px; height:16px; }
-.imSpeaker { background-image: url("../silkicons/user_red.png"); display:inline-block; width:16px; height:16px; }
-.imVisualisation { background-image: url("../silkicons/rainbow.png"); display:inline-block; width:16px; height:16px; }
-.imSearch { background-image: url("../silkicons/zoom.png"); display:inline-block; width:16px; height:16px; }
+.imDocument { background-image: url("../images/page_copy.png"); display:inline-block; width:16px; height:16px; }
+.imSpeaker { background-image: url("../images/user_red.png"); display:inline-block; width:16px; height:16px; }
+.imVisualisation { background-image: url("../images/rainbow.png"); display:inline-block; width:16px; height:16px; }
+.imSearch { background-image: url("../images/zoom.png"); display:inline-block; width:16px; height:16px; }
 
-.imTei { background-image: url("../silkicons/comment.png"); display:inline-block; width:16px; height:16px; }
+.imTei { background-image: url("../images/comment.png"); display:inline-block; width:16px; height:16px; }
 
-.imSpkInvestigator { background-image: url("../silkicons/user_edit.png"); display:inline-block; width:16px; height:16px; }
-.imSpkSpeaker { background-image: url("../silkicons/user_comment.png"); display:inline-block; width:16px; height:16px; }
-.imSpkProtagonist { background-image: url("../silkicons/user_gray.png"); display:inline-block; width:16px; height:16px; }
+.imSpkInvestigator { background-image: url("../images/user_edit.png"); display:inline-block; width:16px; height:16px; }
+.imSpkSpeaker { background-image: url("../images/user_comment.png"); display:inline-block; width:16px; height:16px; }
+.imSpkProtagonist { background-image: url("../images/user_gray.png"); display:inline-block; width:16px; height:16px; }
 
 
 /* Useful */

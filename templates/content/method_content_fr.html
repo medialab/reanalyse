@@ -14,20 +14,20 @@ NB: Page en cours de rédaction...
 <link href="/reanalyse/media/XMLDisplay/XMLDisplay.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="/reanalyse/media/XMLDisplay/XMLDisplay.js"></script>
 <div id="xml_tei_bfm_div"></div>
-<script>LoadXML("xml_tei_bfm_div","/reanalyse/media/xmlsamples/tei_bfm.xml");</script>
+<script>LoadXML("xml_tei_bfm_div","/reanalyse/media/samples/tei_bfm.xml");</script>
 -->
 <!-- new way using jsTree jquery plugin -->
 <!-- + see http://uimonster.com/wiki/index.php?title=JSTree_and_custom_XML -->
 <script type="text/javascript" src="/reanalyse/media/jstree/jquery.jstree.js"></script>
 <script type="text/javascript" src="/reanalyse/media/jstree/xmldisplay.js"></script>
 <script type="text/javascript" src="/reanalyse/media/jstree/UIMTreeProcessor.js"></script>
-			
-			
+
+
 <div class="content_norm">
 <h2>Overview</h2>
 <img src="/reanalyse/media/images/content_overview.png" alt="normalisation">
 <h2>Description complète de la normalisation d'une enquête</h2>
-	<p>Vous pouvez télécharger un exemple d'archive standard: <a href="/reanalyse/media/xmlsamples/ddi.zip">enquête squelette</a>, respectant toutes les contraintes décrites ci-après.</p>
+	<p>Vous pouvez télécharger un exemple d'archive standard: <a href="/reanalyse/media/samples/enquete.zip">enquete.zip</a>, respectant toutes les contraintes décrites ci-après.</p>
 <ol>
 <li><h3>Conversion des documents</h3>
 	Certains fichiers doivent être convertis pour pouvoir être archivés.<br/>
@@ -53,7 +53,12 @@ NB: Page en cours de rédaction...
 	</table>
 </li>
 
-<li><h3>Normalisation des métadonnées: dossier <span class="content_norm_file">_meta/</span></h3>
+<li><h3>Enquête sur Enquête: <span class="content_norm_file">dossier _ese/</span></h3>
+	L'enquête sur enquête, pour être présentée dans le site-enquête, doit être structurée dans le dossier <span class="content_norm_file">_ese/</span><br/>
+	Vous pouvez vous référer à l'archive <a href="/reanalyse/media/samples/enquete.zip">enquete.zip</a> qui contient un exemple d'enquête sur enquête (sans les fichiers audio)
+</li>
+
+<li><h3>Normalisation des métadonnées: <span class="content_norm_file">dossier _meta/</span></h3>
 	Le dossier <span class="content_norm_file">_meta/</span> permet de regrouper l'ensemble des métadonnées d'une enquête.<br/>
 	Remarques sur les tableaux de données .csv:
 		<ul>
@@ -284,7 +289,7 @@ NB: Page en cours de rédaction...
 		
 		<div class="content_norm_verb">
 			<div id="xml_tei_exm_div"></div>
-			<script>buildXmlDisplay("xml_tei_exm_div","/reanalyse/media/xmlsamples/tei_exm.xml");</script>
+			<script>buildXmlDisplay("xml_tei_exm_div","/reanalyse/media/samples/tei_exm.xml");</script>
 		</div>
 		<div class="content_norm_vleg">
 			<span class="content_norm_file">entretien_27_tei.xml</span> avec syntaxe TEI (Exmaralda > TEI Drop)<br/>
@@ -293,39 +298,38 @@ NB: Page en cours de rédaction...
 		
 		<div class="content_norm_verb">
 			<div id="xml_tei_txm_div"></div>
-			<script>buildXmlDisplay("xml_tei_txm_div","/reanalyse/media/xmlsamples/tei_txm.xml");</script>
+			<script>buildXmlDisplay("xml_tei_txm_div","/reanalyse/media/samples/tei_txm.xml");</script>
 		</div>
 		<div class="content_norm_vleg"><span class="content_norm_file">entretien_27_tei.xml</span> avec syntaxe TEI-TXM</div>
 		
 		<div class="content_norm_verb">
 			<div id="xml_tei_bfm_div"></div>
-			<script>buildXmlDisplay("xml_tei_bfm_div","/reanalyse/media/xmlsamples/tei_bfm.xml");</script>
+			<script>buildXmlDisplay("xml_tei_bfm_div","/reanalyse/media/samples/tei_bfm.xml");</script>
 		</div>
 		<div class="content_norm_vleg"><span class="content_norm_file">entretien_27_tei.xml</span> avec syntaxe TEI-BFM</div>
 	</li>
 </ol>
 </li>
-
+<!--
 <li><h3>Encapsulation DDI <span class="content_norm_file">_meta/</span> > <span class="content_norm_file">study_ddi.xml</span></h3>
 	<div class="content_norm_verb">
 		<div id="xml_ddi_div"></div>
-		<script>buildXmlDisplay("xml_ddi_div","/reanalyse/media/xmlsamples/ddi.xml");</script>	
+		<script>buildXmlDisplay("xml_ddi_div","/reanalyse/media/samples/ddi.xml");</script>	
 	</div>
 	<div class="content_norm_vleg"><span class="content_norm_file">study_ddi.xml</span> décrivant tous les fichiers</div>
 </li>
-
+-->
 <li><h3>Hierarchie du dossier de l'enquête structurée</h3>
 	<div class="content_norm_verb">
 		<div id="xml_studyfiles_div"></div>
-		<script>buildXmlDisplay("xml_studyfiles_div","/reanalyse/media/xmlsamples/study_files.xml");</script>
+		<script>buildXmlDisplay("xml_studyfiles_div","/reanalyse/media/samples/study_files.xml");</script>
 	</div>
 	<div class="content_norm_vleg">Hierarchie des dossiers</div>
 </li>
 
 <li><h3>Upload dans le site réanalyse</h3>
 	<div>
-	Le dossier ci-dessus, compressé dans une archive <span class="content_norm_file">study.zip</span> peut ensuite être uploadé dans le site.<br/>
-	Ceux-ci sont alors parsés puis indexés par le moteur lucène/solr.
+	Le dossier ci-dessus, compressé dans une archive <a href="/reanalyse/media/samples/enquete.zip">enquete.zip</a> peut ensuite être chargé dans le site.<br/>
 	</div>
 </li>
 

@@ -22,13 +22,13 @@ def texteVisibleCount(e):
 	return e.texte_set.filter(Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')).count()
 @register.filter
 def speakerVisibleCount(e):
-	return e.speaker_set.filter(ddi_type='INV').count()
+	return e.speaker_set.filter(ddi_type='SPK').count()
 ###########################################################################    
 # to get speaker description ON THE LEFT
 @register.filter
 def speakerDescription(s):
 	try:
-	    return s.attributes.get(attributetype__name='_description').name
+	    return s.attributes.get(attributetype__name='description').name
 	except:
 	   	return 'error fetching description'
 ###########################################################################
@@ -36,16 +36,17 @@ def speakerDescription(s):
 @register.filter
 def speakerMeta(s):
 	try:
-		if s.ddi_type=='INV':
-			return speakerDescription(s)
-		else:
-			st=s.attributes.get(attributetype__name='Sexe').name
-			st+=", "+s.attributes.get(attributetype__name='Age').name+"ans"
-			st+=", "+s.attributes.get(attributetype__name='_profession_enquete').name
-			st+=", "+s.attributes.get(attributetype__name='Lieu').name
-			return st
+		return s.attributes.get(attributetype__name='description').name
+# 		if s.ddi_type=='INV':
+# 			return speakerDescription(s)
+# 		else:
+# 			st=s.attributes.get(attributetype__name='Sexe').name
+# 			st+=", "+s.attributes.get(attributetype__name='Age').name+"ans"
+# 			st+=", "+s.attributes.get(attributetype__name='_profession_enquete').name
+# 			st+=", "+s.attributes.get(attributetype__name='Lieu').name
+# 			return st
 	except:
-		'error fetching meta for speaker'
+		return 'error fetching meta for speaker'
 ###########################################################################
 # to get enquete author
 @register.filter
