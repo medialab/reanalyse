@@ -125,13 +125,13 @@ NB: Page en cours de rédaction...
 		Notez les deux dernière colonnes permettant de conserver l'historique des modifications liées à l'archivage.<br/>
 		S'il existe une enquête sur enquête (ESE), les documents associés sont également listés.
 		<table class="content_norm_ex">
-			<tr><td>*id</td><td>*file</td><td>*name</td><td>*category</td><td>description</td><td>date</td><td>location</td><td>*source</td><td>*source_info</td></tr>
+			<tr><td>*id</td><td>*file</td><td>*name</td><td>*category</td><td>*description</td><td>*date</td><td>*location</td><td>*source</td><td>*source_info</td></tr>
 			<tr class="content_norm_expl">
 				<td>*descr</td>
 				<td>emplacement du fichier dans le dossier enquête, ou lien externe</td>
 				<td>nom dans le site enquête</td>
 				<td>/preparatory /analyse /verbatim /publication /ese</td>
-				<td></td>
+				<td>apparaît en infobulle à coté de chaque document</td>
 				<td>date de création au format JJ/MM/AA</td>
 				<td>Ville, Pays</td>
 				<td>fichier original s'il y a eu conversion lors de l'archivage</td>
@@ -180,7 +180,7 @@ NB: Page en cours de rédaction...
 		Les colonnes dont le nom commence par _ seront masquées dans le site enquête.
 		<table class="content_norm_ex">
 			<tr>
-				<td>*id</td><td>*pseudo</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>location</td><td>_profession</td><td>profession</td><td>groupe</td>
+				<td>*id</td><td>*pseudo</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>location</td><td>_profession</td><td>profession</td><td>groupe</td><td>...</td>
 			</tr>
 			<tr class="content_norm_expl">
 				<td>*descr</td>
@@ -193,11 +193,12 @@ NB: Page en cours de rédaction...
 				<td></td>
 				<td>_profession en catégories /ouvrier /cadre /autre</td>
 				<td>catégorisation déductive en 3 groupes. voir documents préparatoires</td>
+				<td>...</td>
 			</tr>
-			<tr><td>s001</td><td>Etienne</td><td>investigator</td><td>chercheur</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-			<tr><td>s002</td><td>Marc</td><td>speaker</td><td></td><td>18</td><td>15_19</td><td>Paris, France</td><td>étudiant lettres</td><td>autre</td><td>Gauche</td></tr>
-			<tr><td>s003</td><td>Julie</td><td>speaker</td><td></td><td>22</td><td>20_24</td><td>Lyon, France</td><td>directeur PME</td><td>cadre</td><td>Divers</td></tr>
-			<tr><td>s004</td><td>NC</td><td>protagonist</td><td>mère de Julie</td><td>46</td><td>45_49</td><td>Lyon, France</td><td></td><td></td><td></td></tr>
+			<tr><td>s001</td><td>Etienne</td><td>investigator</td><td>chercheur</td><td></td><td></td><td></td><td></td><td></td><td></td><td>...</td></tr>
+			<tr><td>s002</td><td>Marc</td><td>speaker</td><td></td><td>18</td><td>15_19</td><td>Paris, France</td><td>étudiant lettres</td><td>autre</td><td>Gauche</td><td>...</td></tr>
+			<tr><td>s003</td><td>Julie</td><td>speaker</td><td></td><td>22</td><td>20_24</td><td>Lyon, France</td><td>directeur PME</td><td>cadre</td><td>Divers</td><td>...</td></tr>
+			<tr><td>s004</td><td>NC</td><td>protagonist</td><td>mère de Julie</td><td>46</td><td>45_49</td><td>Lyon, France</td><td></td><td></td><td></td><td>...</td></tr>
 		</table>
 	
 	</li>

@@ -390,24 +390,24 @@ def eParse(request):
 	
 	upPath = settings.REANALYSEUPLOADPATH+folname+"/"
 	
-	######## uploaded everything at once
+	######## (DEPRECATED) uploaded everything at once 
 	if os.path.exists(upPath+"ddi.xml"):
 		e = importEnqueteDDI2(upPath+"ddi.xml")
-	######## uploaded a ddi.zip, assuming ddi.xml is directly in the archive (no subfolders!)
-	elif os.path.exists(upPath+"ddi.zip"):
+	######## archive folder
+	elif os.path.exists(upPath+"archive.zip"):
 		os.mkdir(upPath+"extracted")
 		unzipper = unzip()
-		unzipper.extract(upPath+"ddi.zip",upPath+"extracted/")
+		unzipper.extract(upPath+"archive.zip",upPath+"extracted/")
 		if os.path.exists(upPath+"extracted/ddi.xml"):
-			########### there is a ddi.xml file pointing at every other file of the study
+			########### (DEPRECATED) there is a ddi.xml file pointing at every other file of the study
 			e = importEnqueteDDI2(upPath+"extracted/ddi.xml")
 		elif os.path.exists(upPath+"extracted/_meta/"):
-			########### there is the _meta folder, containing meta_documents.csv, ...
+			########### (GOOD WAY!) there is the _meta folder, containing meta_documents.csv, ...
 			e = importEnqueteUsingMeta(upPath+"extracted/")
 		else:
 			logging.info("no zipped ddi.xml file nor _meta folder found")
 	else:
-		logging.info("no ddi.xml nor ddi.zip found")
+		logging.info("no ddi.xml nor archive.zip found")
 	
 	logging.info("enquete ddi.xml imported:"+e.name )
 	
@@ -544,12 +544,15 @@ def eShow(request,eid):
 	meta = e.meta()
 	
 	metashort=[]
-	metashort.append(['Study Author', meta['AuthEnty'][0]])
-	metashort.append(['Funding Agency', meta['fundAg'][0]])
-	metashort.append(['Country', meta['nation'][0]])
-	metashort.append(['Geographic Coverage', meta['geogCover'][0]])
-	metashort.append(['Data Distribution', meta['distrbtr'][0]])
-	metashort.append(['Metadata', meta['AuthEnty'][0]+", Copyright  "+meta['copyright'][0]])
+# 	metashort.append(['Study Author', meta['AuthEnty'][0]])
+# 	metashort.append(['Funding Agency', meta['fundAg'][0]])
+# 	metashort.append(['Country', meta['nation'][0]])
+# 	metashort.append(['Geographic Coverage', meta['geogCover'][0]])
+# 	metashort.append(['Data Distribution', meta['distrbtr'][0]])
+# 	metashort.append(['Metadata', meta['AuthEnty'][0]+", Copyright  "+meta['copyright'][0]])
+
+	for k in meta.keys():
+		metashort.append([k,meta[k][0]])
 
 	try:
 		description	= meta['description'][0]

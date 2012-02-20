@@ -43,7 +43,7 @@ def importEnqueteUsingMeta(folderPath):
 	codPath=folderPath+'_meta/meta_codes.csv'
 	
 	logging.info("parsing:"+stdPath)
-	###### Parsing Study metadatas
+	###### Parsing Study metadatas (the only file mandatory!)
 	std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
 	headers = std.fieldnames
 	allmeta={}
@@ -70,98 +70,107 @@ def importEnqueteUsingMeta(folderPath):
 	permname = 'EXPLORE e_'+str(newEnquete.id) + ' '+newEnquete.name
 	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name=permname,content_type=content_type)
 	
-	logging.info("parsing:"+docPath)
-	###### Parsing Documents
-	doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
-	for row in doc:
-		if row['*id']!='*descr':
-			file_location = 	folderPath+row['*file']
-			file_extension = 	file_location.split(".")[-1].upper()
-			doc_name = 			row['*name']
-			doc_category = 		row['*category']
-			doc_description = 	row['description']
-			try:
-				doc_date = datetime.strptime(row['date'], "%d/%m/%y") #"31-12-12"
-			except:
-				doc_date = datetime.datetime.today()
-			doc_location = 		row['location']
-			doc_public = 		doc_category in ['verbatim','analyse','preparatory'] # don't show others in edBrowse
-			logging.info("Document:"+file_location)
-			newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
-			try:
-				newDocument.filesize = int(os.path.getsize(file_location)/1024)
-			except:
-				newDocument.filesize = 0
-			newDocument.doctype = file_extension[:3]
-			newDocument.doccat = doc_category
-			newDocument.description = doc_description
-			newDocument.save()
-			if not os.path.exists(file_location):
-				# means that it may be an external link
-				newDocument.doctype='LNK'
-				newDocument.locationpath = row['*file']
-				newDocument.status='0'
-				newDocument.save()	
-			else:
-				if file_extension in ['XML','PDF','HTM','CSV']:
-					if file_extension=='XML':
-						if doc_category=='verbatim':
-							newDocument.status='5'
-							newDocument.doctype='TEI'
+	if os.path.exists(docPath):
+		#mandatoryFields = ['*id','*name','*category','*description','*location','*date']
+		logging.info("parsing:"+docPath)
+		###### Parsing Documents
+		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
+		for row in doc:
+			if row['*id']!='*descr':
+				file_location = 	folderPath+row['*file']
+				file_extension = 	file_location.split(".")[-1].upper()
+				doc_name = 			row['*name']
+				doc_category = 		row['*category']
+				doc_description = 	row['*description']
+				doc_location = 		row['*location']
+				try:
+					doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
+				except:
+					doc_date = datetime.datetime.today()
+				doc_public = 		doc_category in ['verbatim','analyse','preparatory','publication'] # don't show others in edBrowse
+				logging.info("Document:"+file_location)
+				newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
+				try:
+					newDocument.filesize = int(os.path.getsize(file_location)/1024)
+				except:
+					newDocument.filesize = 0
+				newDocument.doctype = file_extension[:3]
+				newDocument.doccat = doc_category
+				newDocument.description = doc_description
+				newDocument.save()
+				if not os.path.exists(file_location):
+					# means that it may be an external link
+					newDocument.doctype='LNK'
+					newDocument.locationpath = row['*file']
+					newDocument.status='0'
+					newDocument.save()	
+				else:
+					if file_extension in ['XML','PDF','HTM','CSV']:
+						if file_extension=='XML':
+							if doc_category=='verbatim':
+								newDocument.status='5'
+								newDocument.doctype='TEI'
+								newDocument.save()
+							elif doc_category=='ese':
+								esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+								newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+								newEnquete.save()
+						elif file_extension=='PDF':
+							newDocument.status='0'
 							newDocument.save()
-						elif doc_category=='ese':
-							esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
-							newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
-							newEnquete.save()
-					elif file_extension=='PDF':
-						newDocument.status='0'
-						newDocument.save()
-					elif file_extension=='HTM':
-						f = open(file_location,'r')
-						wholecontent=f.read()
-						newDocument.contenthtml=wholecontent
-						f.close()
-						newDocument.status='0'
-						newDocument.save()
-					elif file_extension=='CSV':
-						newDocument.status='0'
-						newDocument.save()
-
-				
-	logging.info("parsing:"+spkPath)			
-	###### Parsing Speakers
-	spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
-	headers = spk.fieldnames
-	mandatories = ["*pseudo","*id","*type"]
-	attributetypes=[]
-	for catval in headers:
-		if catval not in mandatories: # we create only "un-mandatory" attributetypes, since mandatories are stored in speaker model structure
-			if catval.startswith("_") or catval.startswith("*"):
-				publicy = '0'
-			else:
-				publicy = '1'
-			newAttType,isnew = AttributeType.objects.get_or_create(enquete=newEnquete,publicy=publicy,name=catval)
-			attributetypes.append(newAttType)
-	for row in spk:
-		if row['*id']!='*descr':
-			spk_id = 	row['*id']
-			spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
-			spk_name = 	row['*pseudo']
-			newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
-			for attype in attributetypes:
-				attval=row[attype.name]
-				if attval=='':
-					attval='[NC]'
-				newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
-				newSpeaker.attributes.add(newAttribute)
-			newSpeaker.save()
-	setSpeakerColorsFromType(newEnquete)
+						elif file_extension=='HTM':
+							f = open(file_location,'r')
+							wholecontent=f.read()
+							newDocument.contenthtml=wholecontent
+							f.close()
+							newDocument.status='0'
+							newDocument.save()
+						elif file_extension=='CSV':
+							newDocument.status='0'
+							newDocument.save()
+	else:
+		logging.info("parsing:no doc meta found")
 	
-	logging.info("parsing:"+codPath)
-	###### Parsing Codes
-	cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
-	# to do later..
+	if os.path.exists(spkPath):
+		logging.info("parsing:"+spkPath)			
+		###### Parsing Speakers
+		spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
+		headers = spk.fieldnames
+		mandatories = ["*pseudo","*id","*type"]
+		attributetypes=[]
+		for catval in headers:
+			if catval not in mandatories: # we create only "un-mandatory" attributetypes, since mandatories are stored in speaker model structure
+				if catval.startswith("_") or catval.startswith("*"):
+					publicy = '0'
+				else:
+					publicy = '1'
+				newAttType,isnew = AttributeType.objects.get_or_create(enquete=newEnquete,publicy=publicy,name=catval)
+				attributetypes.append(newAttType)
+		for row in spk:
+			if row['*id']!='*descr':
+				spk_id = 	row['*id']
+				spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
+				spk_name = 	row['*pseudo']
+				newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
+				for attype in attributetypes:
+					attval=row[attype.name]
+					if attval=='':
+						attval='[NC]'
+					newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
+					newSpeaker.attributes.add(newAttribute)
+				newSpeaker.save()
+		setSpeakerColorsFromType(newEnquete)
+	else:
+		logging.info("parsing:no spk meta found")
 	
+	if os.path.exists(codPath):
+		logging.info("parsing:"+codPath)
+		###### Parsing Codes
+		cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
+		# to do later..
+	else:
+		logging.info("parsing:no cod meta found")
+		
 	newEnquete.status='0'
 	newEnquete.save()
 	return newEnquete
