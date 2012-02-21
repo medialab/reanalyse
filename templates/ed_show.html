@@ -51,7 +51,7 @@
 	<div class="leftmenublock">
 		<a href="#" onclick='$("#speakersShowHide").toggle("fast"); return false;'><h1>Show/Hide Speakers</h1></a>
 		<div id="speakersShowHide" style="display:none;">
-			<h1>Investigator</h1>
+			<h2>Investigator(s)</h2>
 			<div id="speakersShowHide">
 				<ul class="spkcheckboxes">
 				{% for s in speakers.inv %}
@@ -62,7 +62,7 @@
 				{% endfor %}
 				</ul>
 			</div>
-			<h1>Speaker</h1>
+			<h2>Speaker(s)</h2>
 			<div id="speakersShowHide">
 				<ul class="spkcheckboxes">
 				{% for s in speakers.spk %}
@@ -73,8 +73,8 @@
 				{% endfor %}
 				</ul>
 			</div>
-			{% if speakers.2 %}
-			<h1>Adjuvant</h1>
+			{% if speakers.pro %}
+			<h2>Protagonist(s)</h2>
 			<div id="speakersShowHide">
 				<ul class="spkcheckboxes">
 				{% for s in speakers.pro %}

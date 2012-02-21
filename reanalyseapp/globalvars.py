@@ -34,7 +34,7 @@ ATTRIBUTE_PUBLICY_CHOICES = (
 SPEAKER_TYPE_CSV_DICT = {
 	'speaker':'SPK',
 	'investigator':'INV',
-	'adjuvant':'PRO',
+	'protagonist':'PRO',
 }
 SPEAKER_TYPE_CHOICES = (
 	('INV', 'Investigator'),
@@ -62,39 +62,55 @@ SENTENCE_UTT_SYMBOLS['declarative']='. '
 SENTENCE_UTT_SYMBOLS['interrogative']='? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
-########## VERBATIM Dict : TEI HIAT to CODES
-# THOSE DISPLAYED IN edShow view to toggle show/hide
+########## CODES ACTIVATED (every code need to be declared in DEFINITIONS below anyway)
+# ACTIVATED CODES (displayed IN edShow view to toggle show/hide)
 PARVBCODES={}
-PARVBCODES['transcription'] = 	['inaudible','break','comment','time','question']
-PARVBCODES['verbatim'] = 		['hesitation','interruption','laugh','silence','body','directed']
+PARVBCODES['transcription'] = 	['break','comment','inaudible','question','time']
+PARVBCODES['verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
 
-CODES_IMAGE_TOOLTIP={} # with content (tooltip!)
+# THOSE YOU WANT TO PUT SPECIALLY on the margin (will add a css class)
+PARVBMARGL = ['comment','break']
+PARVBMARGR = ['time']
+
+########## CODES DEFINITION
+# SIMPLE IMAGE
+CODES_IMAGE={}
+CODES_IMAGE['hesitation']=				'hesitation'
+CODES_IMAGE['inaudible']=				'inaudible'
+CODES_IMAGE['interruption']=			'interruption'
+CODES_IMAGE['part:echo']=				'interruption'
+CODES_IMAGE['laugh']=					'laugh'
+CODES_IMAGE['silence']=					'silence'
+CODES_IMAGE['points de suspension']=	'silence'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
+
+# IMAGE WITH TOOLTIP
+CODES_IMAGE_TOOLTIP={}
 CODES_IMAGE_TOOLTIP['break:']=			'break'
 CODES_IMAGE_TOOLTIP['body:']=			'body'
 CODES_IMAGE_TOOLTIP['comment:']=		'comment'
-CODES_IMAGE_TOOLTIP['time:']=			'time'
-CODES_IMAGE_TOOLTIP['question:']=		'question'
 CODES_IMAGE_TOOLTIP['directed:']=		'directed'
+CODES_IMAGE_TOOLTIP['question:']=		'question'
+CODES_IMAGE_TOOLTIP['time:']=			'time'
+CODES_IMAGE_TOOLTIP['to:']=				'directed'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
 
-CODES_IMAGE={} # without content (only image)
-CODES_IMAGE['hesitation']=				'hesitation'
-CODES_IMAGE['interruption']=			'interruption'
-CODES_IMAGE['part:echo']=				'interruption'
-CODES_IMAGE['inaudible']=				'inaudible'
-CODES_IMAGE['laugh']=					'laugh'
-CODES_IMAGE['silence']=					'silence'
+# TEXT STYLING
+CODES_TEXT={} # text styling (no image no tooltip)
+CODES_TEXT['strong:']=			'strong'
 
-#CODES_TEXT_TOOLTIP['anonym:']=			'anonym'
+# TEXT STYLING WITH TOOLTIP
 CODES_TEXT_TOOLTIP={} # text styling (with tooltip)
 CODES_TEXT_TOOLTIP['sic:']=				'sic'
 CODES_TEXT_TOOLTIP['uncertain:']=		'uncertain'
 
-CODES_TEXT={} # text styling (no image no tooltip)
-CODES_TEXT['strong:']=			'strong'
-
-# some additional mapping, because some transcriptions of the 3 test-studies may contain thoses codes
-CODES_IMAGE_TOOLTIP['to:']=				'directed'
-CODES_IMAGE['points de suspension']=	'silence'
+########## ALL CODES TO CSS CLASSES
+CODE_TO_CSS={}
+ALLCODES={}
+ALLCODES.update(CODES_IMAGE)
+ALLCODES.update(CODES_IMAGE_TOOLTIP)
+ALLCODES.update(CODES_TEXT)
+ALLCODES.update(CODES_TEXT_TOOLTIP)
+for k in ALLCODES.values():
+	CODE_TO_CSS[k]='text_'+k
 
 
 ########## TREETAGGER CODES
@@ -142,19 +158,7 @@ CODES_TREETAGGER['VERBES']['VER_subp'] = "verbes au subjonctif présent"
 
 
 
-############################################################
-########## VERBATIM Dict : CODES to CSS CLASSES
-CQDAS_CLASS={}
-CQDAS_CLASS['speaker']='text_speaker'
-CQDAS_CLASS['theme']='text_theme' # DEPRECATED ?
 
-ALLCODES={}
-ALLCODES.update(CODES_IMAGE)
-ALLCODES.update(CODES_IMAGE_TOOLTIP)
-ALLCODES.update(CODES_TEXT)
-ALLCODES.update(CODES_TEXT_TOOLTIP)
-for k in ALLCODES.values():
-	CQDAS_CLASS[k]='text_'+k
 
 ################################################################################ COLORS
 ########## COLORS FOR STYLING VERBATIMs (cyclic)
@@ -191,35 +195,31 @@ XMLTXM = '{http://textometrie.org/1.0}'
 ########## ACTIVATED VIZ TYPES (show/hide in evBrowse)
 VIZTYPES=['Cloud_SolrSpeakerTagCloud','Graph_SpeakersSpeakers','Graph_SpeakersWords','Graph_SpeakersAttributes','TexteStreamTimeline','Attributes']
 
-VIZTYPESDESCR={}
-########### D3
-VIZTYPESDESCR['StudyOverview'] = 'aimed to be the main overview viz at study home page'
-VIZTYPESDESCR['Overview'] = 'trying a simple graph overview for left menu facet'
-VIZTYPESDESCR['Attributes'] =			'\
-	Simple display of attributes.<br/>\
-	Click to see the repartition of other attributes (label is then gray-scaled based on number of speakers).'
-#VIZTYPESDESCR['SpeakersByText'] = 		'Showing all texts with color for each speaker'
-#VIZTYPESDESCR['WordsBySpeaker'] = 		'For a text, showing all speakers and their amount of words'
-#VIZTYPESDESCR['ParaverbalTimeline'] = 	'Timeline of speakers turns and paraverbal'
-VIZTYPESDESCR['TexteStreamTimeline'] = 	'\
-	Timeline of speakers interventions and paraverbal. Time(x) is based on number of sentences.<br/>\
-	Change step value to change sentence-count-interval.'
-########### TAG CLOUDS
-VIZTYPESDESCR['Cloud_SolrSpeakerTagCloud'] = '\
-	<b>Most freq n-grams with tfidf (fetched from solr indexing)</b><br/>\
-	<b>DF</b> = (normalized) number of speakers using ngram<br/>\
-	<b>TF</b> = (normalized) ngram count for that speaker >>> <b>GRAY-LEVEL</b><br/>\
-	<b>TFIDF</b> = TF/DF = specificity of ngram for that speaker >>> <b>SIZE</b><br/>\
-	NB: we exclude ngrams if [DF=TF=1] OR [included in other longer with same DF,TF]'
+########## VIZ DESCRIPTION
+# nb: viz description is used to document the viz, not to explain them technically
+# to have informations about viz types, see Normalization page
 
-#VIZTYPESDESCR['Cloud_SolrWordSpeakerTagCloud'] = 	'(using solr facets) Most freq solr words'
-#VIZTYPESDESCR['Cloud_SolrTermVectorsTagCloud'] = 	'(using termVector) Speaker terms with their tf-idf'
-#VIZTYPESDESCR['Cloud_TeiSpeakerTagCloud'] = 		'Simple tag cloud using TEI words parsed in DB'
-########### GRAPHS
-VIZTYPESDESCR['Graph_SpeakersSpeakers'] = 		'Speakers Similarities Graph'
-VIZTYPESDESCR['Graph_SpeakersWords'] = 			'Bipart Graph Speakers - Words'
-VIZTYPESDESCR['Graph_SpeakersAttributes'] = 	'Bipart Graph Speakers - Attributes'
-#VIZTYPESDESCR['Graph_SolrSpeakerWords'] = 		'Bipart Graph Speakers - Solr Words'
+
+VIZTYPESDESCR = 'Please clic me to update (html) description. If you need general technical information about that viz type, please clic the blue bubble above.'
+
+# VIZTYPESDESCR={}
+# VIZTYPESDESCR['Graph_SpeakersSpeakers'] = 		'Speakers Similarities Graph'
+# VIZTYPESDESCR['Graph_SpeakersWords'] = 			'Bipart Graph Speakers - Words'
+# VIZTYPESDESCR['Graph_SpeakersAttributes'] = 	'Bipart Graph Speakers - Attributes'
+# VIZTYPESDESCR['StudyOverview'] = 'aimed to be the main overview viz at study home page'
+# VIZTYPESDESCR['Overview'] = 'trying a simple graph overview for left menu facet'
+# VIZTYPESDESCR['Attributes'] = '\
+# 	Simple display of attributes.<br/>\
+# 	Click to see the repartition of other attributes (label is then gray-scaled based on number of speakers).'
+# VIZTYPESDESCR['TexteStreamTimeline'] = 	'\
+# 	Timeline of speakers interventions and paraverbal. Time(x) is based on number of sentences.<br/>\
+# 	Change step value to change sentence-count-interval.'
+# VIZTYPESDESCR['Cloud_SolrSpeakerTagCloud'] = '\
+# 	<b>Most freq n-grams with tfidf (fetched from solr indexing)</b><br/>\
+# 	<b>DF</b> = (normalized) number of speakers using ngram<br/>\
+# 	<b>TF</b> = (normalized) ngram count for that speaker >>> <b>GRAY-LEVEL</b><br/>\
+# 	<b>TFIDF</b> = TF/DF = specificity of ngram for that speaker >>> <b>SIZE</b><br/>\
+# 	NB: we exclude ngrams if [DF=TF=1] OR [included in other longer with same DF,TF]'
 ########################################################################################################################
 
 

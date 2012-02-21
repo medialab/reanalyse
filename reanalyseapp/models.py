@@ -610,7 +610,12 @@ def parseTEIWords(sentence,nodes,N):
 		###################################################################### PARAVERBAL HTML
 		if isParaverbal:
 			try:
-				cssClass='text_anyparvb ' + CQDAS_CLASS[codeName]
+				cssClass='text_anyparvb ' + CODE_TO_CSS[codeName]
+				# add classes if you want certain types to be located on the margin
+				if codeName in PARVBMARGL:
+					cssClass+= ' text_margL'
+				if codeName in PARVBMARGR:
+					cssClass+= ' text_margR'
 			except:
 				cssClass='text_anyparvb text_incident'
 			
@@ -619,17 +624,18 @@ def parseTEIWords(sentence,nodes,N):
 			if codeName in CODES_IMAGE.values(): 				# dont keep content, only image
 				#allSentenceHtml += '<div class="'+cssClass+'">&nbsp;</div>'
 				# todo: content even if no descr (rappel)
-				allSentenceHtml += '<a rel="text_tooltip" title="'+codeName+'" class="'+cssClass+'"><div>&nbsp;</div></a>'
+				allSentenceHtml += '<a rel="text_tooltip" title="'+codeName+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
 			elif codeName in CODES_IMAGE_TOOLTIP.values(): 		# keep content as popup on image (tooltip made with js)
-				allSentenceHtml += '<a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a>'
+				allSentenceHtml += '<a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
 			elif codeName in CODES_TEXT.values(): 				# text styling
+				allSentenceTxt += incidDesc+" "
 				allSentenceHtml += '<div class="'+cssClass+'">'+incidDesc+'</div> '
 			elif codeName in CODES_TEXT_TOOLTIP.values(): 		# text styling with tooltip
-				allSentenceHtml += '<a rel="text_tooltip" title="'+codeName+'" class="'+cssClass+'"><div>'+incidDesc+'</div></a>&nbsp;'
+				allSentenceHtml += '<a rel="text_tooltip" title="'+codeName+'" class="'+cssClass+'"><div>'+incidDesc+'</div></a> '
 			else: # unkown (ie 'incident')
-				allSentenceHtml += '<a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a>'
+				allSentenceHtml += '<a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
 			
-			if codeName not in ['time','comment','break']:
+			if codeName not in PARVBMARGL+PARVBMARGR:
 				onlyMarginParaverbal=False
 		else:
 			onlyMarginParaverbal=False

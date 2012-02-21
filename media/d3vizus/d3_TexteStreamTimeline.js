@@ -27,16 +27,17 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		};
 	}
 	///////////// Parvbl flags to show/hide
+	// default = all displayed
 	var displayParvbBool = new Array();
 	for (i in thedata.par_layers) {
 		displayParvbBool.push(true);
 	}
+
 	var showHideAllParaverbal = function(flag) {
 		for(i in thedata.par_layers)
 			if(displayParvbBool[i] || !flag) showHideParaverbal(i,flag);
 	};
 	var showHideParaverbal = function(i,flag) {
-		//displayParvbBool[i] = !displayParvbBool[i];
 		//console.log("clicked:"+i+":"+displayParvbBool[i]);
 		//visGraph.selectAll(".par_graph_"+i).attr("display", flag ? "visible":"none");
 		visGraph.selectAll(".par_graph_"+i).attr("opacity", flag ? fadePar:fadeMinPar);
@@ -57,17 +58,17 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var rightMargin = 58; // for legend (sentences)
 	
 	var topParvbMargin = stepLegend*nParaverbal+15; // space for paraverbal
-	var graphTopMargin = 5; // inside graph only
+	var graphTopMargin = 5; // 5 ? inside graph only
 	var graphBottomMargin = 20;
 	var spaceForSpeakers = Math.max(100,stepLegend*nLayers+65);
 	var totalH = topParvbMargin + spaceForSpeakers;
 	/////////////////////////////////////
-	var wantedWidth = 760; //'100%'
+	var wantedWidth = 720; //'100%'
 	var vis = vizdiv.append("svg:svg")
 		.attr("width", wantedWidth)
 		.attr("height", totalH);
 	var totalW = wantedWidth; //$(unik).width();
-	console.log("width:"+totalW);
+	//console.log("width:"+totalW);
 	var maxPeriods = thedata.maxPeriods;
 	var graphW = totalW-rightMargin-leftMargin;
 
@@ -83,41 +84,37 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	}
 		
 	///////////////////////////////////////////////////////// DATA
-	var nEnchantill = thedata.nPeriods;
-	//console.log("nEnchantill:"+ nEnchantill);
+	var nEchantill = thedata.nPeriods;
+	//console.log("nEchantill:"+ nEchantill);
 	
 	var scx = d3.scale.linear()
 		.domain([0,maxTextPartsInt])
 		.range([0,graphW]);
 	var tx = function(d){return "translate("+scx(d)+",0)";};
 	
-	/////////////// DEFAULT ECHANTILLONNAGE
-	var periodWantedInt = 3; // we take one i over "periodWantedInt"
-	var periodWantedScaled = 3;
-	var reEchantillonate = function(v) {
-		echantillFactor = v;
-		redraw();
-	};   
+	/////////////// DEFAULT ECHANTILLONNAGE on load
+	// CASE A : default = best resolution ! 
+	//var periodWantedInt = 1; // we take one i over "periodWantedInt"
+	//var periodWantedScaled = 1;
+	// CASE B : default = ~ 50 steps for the whole window
+	var periodWantedInt = 1 + parseInt(nEchantill/30.0);
+	var periodWantedScaled = periodWantedInt;
 	
 	///////////////////////// PARAVERBAL SCALES
 	// deprecated (same max for every prvbal)
 	//var maxValueForParaverbal = d3.max( thedata.par_layers, function(d,i) { return d3.max(d); } );
 	// now ONE max, and ONE scale PER paraverbal
 	// todo: make it work !!! for the moment, cheating by declarating it above
-	parYScales = new Array();
+	var parYScales = new Array();
 	for (i in thedata.par_layers) {
 		var m = d3.max(thedata.par_layers[i]);
 		var scaleParavb = d3.scale.linear()
         	.domain([0,m])
         	.range([topParvbMargin,graphTopMargin]);
         parYScales.push( scaleParavb );
-        //console.log("found max value for paraverbal"+i+":"+m);
+        //console.log(unik+"found max value for paraverbal"+i+":"+m);
 	}
-	
-	//////////////////////////////////////////////////////////////////
-	var scaleEchantill = d3.scale.pow()
-        .domain([0,100])
-        .range([1,nEnchantill/2.0]);
+
 	
 	////////////////////////////////////////////////////////////////// SLIDER to update precision (jquery!!)
 	var bottomDiv = vizdiv.append("div")
@@ -137,6 +134,10 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	bottomDiv.append("span")
 		.attr("id","sliderlabel_"+theId)
 		.text(parseInt(periodWantedScaled*periodStep)+" sentences");
+	
+	var scaleEchantill = d3.scale.pow()
+        .domain([0,100])
+        .range([1,(nEchantill/2.0)-1]);
 	$("#slider_"+theId).slider({
 		min:0,
 		max:100,
@@ -146,7 +147,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			periodWantedInt = parseInt(periodWantedScaled);
 			//console.log("changing echantill val:"+ui.value);
 			//console.log("changing echantill scal:"+periodWantedScaled);
-			d3.select("#sliderlabel_"+theId).text(parseInt(periodWantedScaled*periodStep)+" sentence");
+			d3.select("#sliderlabel_"+theId).text(parseInt(periodWantedScaled*periodStep)+" sentences");
 			redraw();
 		},
 	});
@@ -436,7 +437,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 				.on("mouseup",stopMouse);
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////// PARAVERBAL
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////// PARAVERBAL LEGEND
 	vis.selectAll("par_legendRects")
 		.data(thedata.par_ids)
 		.enter().append("svg:rect")
@@ -463,7 +464,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			.on("mouseover", function(d,i){ showHideAllParaverbal(false); showHideParaverbal(i,true); })
 			.on("mouseout", function(d,i){ showHideAllParaverbal(false); showHideAllParaverbal(true); });	
 			
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////// SPEAKER
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////// SPEAKER LEGEND
 	vis.selectAll("spk_legendRects")
 		.data(thedata.spk_ids)
 		.enter().append("svg:rect")
@@ -511,11 +512,10 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var scale=1,
 		decx=0;
 
-
 	var scaleX = d3.scale.linear()
-		.domain([0,nEnchantill])
-		.range([0,graphW]);		
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PARAVERBAL
+		.domain([0,nEchantill])
+		.range([0,graphW]);
+	///////////////////////////////////////////////////////////////////////////////////////////////////// PARAVERBAL GRAPH
 	var par_Area = function(d,nPar) {
 		var thearea = d3.svg.area()
 			.x(function(d,i) { return decx + scaleX(i); })
@@ -536,13 +536,13 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			.attr("d", function(d,i) {return par_Area(d,i);} );	
 			//.attr("d", function(d,i) {return displayParvbBool[i] ? testArea(d,i) : " ";} );	
 			
-	///////////////////////////////////////////////////////////////////// SPEAKERS		
+	///////////////////////////////////////////////////////////////////////////////////////////////////// SPEAKERS GRAPH
 	var spk_StackData = d3.layout.stack().offset("zero")(thedata.spk_layers);
 	var ymax = d3.max(spk_StackData, function(d) {
 		return d3.max(d, function(d) { return d.y0 + d.y; });
 	});
 	var spk_Area = d3.svg.area()
-		.x(function(d,i) { return decx + scaleX(i); })
+		.x(function(d,i) { return scaleX(i); }) // we used to add decx to manage mouse drag...
 		.y0(function(d) { return topParvbMargin + d.y0 * (totalH-topParvbMargin-graphBottomMargin)/ymax; })
 		.y1(function(d) { return topParvbMargin + (d.y + d.y0) * (totalH-topParvbMargin-graphBottomMargin)/ymax; })
 		.interpolate("linear");
@@ -557,34 +557,34 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 
 
 	////////////////////////////////////////////////////////////////////////////// GRAPHS ARRAY MODIF (echantillonage)
+	// those 2 functions make new arrays based on the echantill. you need (ie. cumulating values each 'periodWantedInt)
 	function mod_stack(dataIn,periodWantedInt) {
 		var n = dataIn.length;
 		return d3.range(n).map(function(lay) {
 			var a = [], k;
 			var laydatsource = dataIn[lay];
 			cumul=0;
-			for (k = 0; k < laydatsource.length; k++) {
-				if(k!=0 && k%periodWantedInt==0) {
+			if(periodWantedInt==1) cumul=laydatsource[0].y;
+			for (k=0; k < laydatsource.length; k++) {
+				if(periodWantedInt==1 || (k!=0 && k%periodWantedInt==0)) {
 					a.push(cumul/parseFloat(periodWantedInt));
 					cumul=0;
 				}
-				cumul+=laydatsource[k].y;
+				cumul += laydatsource[k].y;
 			}
 			return a.map( function(d, i) {return {x: i, y: Math.max(0, d)}; });
 		});
 	};
-	function mod_array(dataIn,periodWantedInt) {
-		var n = dataIn.length;
-		return d3.range(n).map(function(index) {
+	function mod_array(arrayIn,periodWantedInt) {
+		var nPars = arrayIn.length;
+		return d3.range(nPars).map(function(index) {
 			var a = [], k;
-			var thearray = dataIn[index];
+			var oneParArray = arrayIn[index];
 			cumul=0;
-			for (k = 1; k < thearray.length; k++) {
-				cumul += thearray[k];
-				//console.log("cumul:"+k)
+			for (k=0; k < oneParArray.length; k++) {
+				cumul += oneParArray[k];
 				if(periodWantedInt==1 || (k!=0 && k%periodWantedInt==0)) {
-					//console.log("add:"+k)
-					a.push(cumul/periodWantedInt);
+					a.push(cumul/parseFloat(periodWantedInt));
 					cumul=0;
 				}
 			}
@@ -602,23 +602,22 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		//////////////// UPDATE DATA & SCALES		
 		spk_Data = mod_stack(thedata.spk_layers,periodWantedInt);
 		par_Data = mod_array(thedata.par_layers,periodWantedInt);
-		ttt=par_Data;
 		
 		scaleX.domain([0,par_Data[0].length-1]);
 		scaleX.range([0,scale*graphW]);
-		//console.log("maxI:"+par_Data[0].length);
+		//console.log("par_Data length:"+par_Data[0].length);
+		//console.log("spk_Data length:"+spk_Data[0].length);
 		
 		//////////////// UPDATE GRAPH PARAVERBAL
 		var par_Area = function(d,nPar) {
 			var thearea = d3.svg.area()
-				.x(function(d,i) { return decx + scaleX(i); })
+				.x(function(d,i) { return scaleX(i); }) // we used to add decx to manage mouse drag...
 				.y0(function(d) { return topParvbMargin; })
 				.y1(function(d,i) { return parYScales[nPar](d); });
 			return thearea(d);
 		};
 		par_Layers.data(par_Data);
 		par_Layers.attr("d", function(d,i) {return par_Area(d,i);} );
-		//console.log("maxI:"+spk_Data[0].length);
 		
 		//////////////// UPDATE GRAPH SPEAKERS
 		spk_StackData = d3.layout.stack().offset("zero")(spk_Data);
@@ -632,7 +631,15 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		spk_Layers.attr("d",spk_Area);
 	}
 	
+	// INIT
 	redraw();
+	// default: all of except first
+	for (i in thedata.par_layers) {
+		displayParvbBool[i]=false;
+		showHideParaverbal(i,false);
+	}
+	displayParvbBool[0]=true;
+	showHideParaverbal(0,true);
 	
 	var fx = scx.tickFormat(10);
 	///////// Generate x-ticks

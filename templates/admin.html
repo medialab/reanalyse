@@ -13,14 +13,25 @@
 {% block content %}
 <! ================================================= -->
 	<div class="introHtml">
-		<h1>Admin</h1>
-		To see active users and update permissions, please go to the <a href="/reanalyse/admin">admin</a> page
+		<h1>Admin & Users</h1>
+		As described (for the public) in the <a href="/reanalyse/?p=access">access</a> page, here is how it works:
+		<ol>
+			<li>Public users (without login) can only access Overview pages for every study</li>
+			<li>They can ask for a Discover status [using online form]</li>
+			<li>An unactivated user is created, and a mail is sent to: <i>{{staffemail}}</i></li>
+			<li>Staff can then activate the user in the <a href="/reanalyse/admin">admin</a> panel (and send a mail to congratulate the guy).</li>
+			<li>With this Discover status, the user can also access to the Research & Research page for every study.</li>
+			<li>She/he can ask (from a study page) for an Explore status [using online form]</li>
+			<li>A mail is also sent to the staff, including the 'motivation' field</li>
+			<li>Staff can then add the permission for this enquete ('EXPLORE e_[id]') to this user on the <a href="/reanalyse/admin">admin</a> panel (and send a mail to the the so happy guy).</li>
+		</ol>
+		
 		<h1>Add a new study</h1>
 		<div>
 			<h3>You can choose to either upload:</h3>
 			<ul>
-				<li>(v1, deprecated soon) all the files in the same time, with the mandatory ddi.xml file</li>
-				<li>(v2, deprecated soon) a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
+				<li>(v1, deprecated) all the files in the same time, with the mandatory ddi.xml file</li>
+				<li>(v2, deprecated) a ddi.zip archive file, with the mandatory ddi.xml file at the first level</li>
 				<li>(v3) a archive.zip file, with the mandatory ./_meta/meta_*.csv files describing metadatas</li>
 			</ul>
 		</div>
@@ -67,7 +78,7 @@
             debug: true,
             multiple: true,
 			params: {
-				'csrf_token': '{{ csrf_token }}',
+				'csrf_token': '{{csrf_token}}',
 				'csrf_name': 'csrfmiddlewaretoken',
 				'csrf_xname': 'X-CSRFToken',
 				'foldname': '{{foldname}}',

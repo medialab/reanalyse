@@ -97,7 +97,7 @@
 					{% else %}
 						{% comment %}Translators: Access page: request explore status sent{% endcomment %}
 						{% blocktrans with wantedenquete.name as enquetename %}
-							</br>You request concerning study <b>{{enquetename}}</b> was successfully sent. You will soon receive information in your mailbox
+							</br>You request concerning study <b>{{enquetename}}</b> was successfully sent. You will soon receive information in your mailbox.
 						{% endblocktrans %}
 					{% endif %}
 				{% else %}
@@ -109,8 +109,8 @@
 			{% else %}
 			<!-- =============================== -->
 				{% if form %}
-					{% comment %}Translators: Access page: ask for browse status{% endcomment %}
-					<h2>{% trans 'You can ask for a consultation status' %}</h2>
+					{% comment %}Translators: Access page: ask for browse(discover) status{% endcomment %}
+					<h2>{% trans 'You can ask for a Discover status' %}</h2>
 					{% if not form.is_valid %}
 						<form action="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register" method="post">
 							{% csrf_token %}
@@ -120,8 +120,8 @@
 							<input class="inputButt" type="submit" value="Envoyer" />
 						</form>
 					{% else %}
-						{% comment %}Translators: Access page: request browse status sent{% endcomment %}
-						</br>{% trans 'Your request was sent ! You will soon receive information in your mailbox' %}
+						{% comment %}Translators: Access page: request browse(discover) status sent{% endcomment %}
+						</br>{% trans 'Your request was sent ! You will soon receive information in your mailbox.' %}
 					{% endif %}
 				{% endif %}
 			{% endif %}

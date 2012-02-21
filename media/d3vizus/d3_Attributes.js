@@ -11,7 +11,7 @@ function buildD3_Attributes(thedata,theId) {
 	
 	var totalW = 720;
 	var chartW = 600;
-	var mLeft = 80;
+	var mLeft = 100;
 	var mTop = 40;
 	var chartH = Math.max(250,nSpeakers*10-mTop+5);
 	var chartStep = chartW/attNames.length - 10;
@@ -171,7 +171,7 @@ function buildD3_Attributes(thedata,theId) {
 		showRectsFromSpkArray(classSpks,valid);
 	}
 	var showRectsFromSpkArray = function(classSpks,curvalid) {
-		console.log("showRects,reseting everything");
+		//console.log("showRects,reseting everything");
 		// make array of all spk values
 		var allValus = new Array();
 		for(cs in classSpks) {
@@ -240,7 +240,7 @@ function buildD3_Attributes(thedata,theId) {
 	};
 	//////////////////////////////////////////////// CLICK
 	var refreshSelected = function(){
-		console.log("refreshSelected");
+		//console.log("refreshSelected");
 		// no labels
 		d3.selectAll(unikid+".label").style("display","none");
 		// base color for every rect

@@ -43,7 +43,8 @@
 	<!-- ============================================================================================= -->
 <td>
 	<ul class="vizLaunchList">
-		<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds});return false;'>Graph Speakers-Attributes</a> using 
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes"></a>
+			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds});return false;'>Graph Speakers-Attributes</a> using 
 			<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
 				<select id="attSelectDropDownList" multiple="multiple">
 				{% for c in attributeTypes %}
@@ -53,12 +54,33 @@
 				{% endfor%}
 				</select>
 			<!-- ========================== -->
+			<span class="vizLoadingSpinner Graph_SpeakersAttributes" style="display:none"></span>
 		</li>
-		<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Speakers</a> (solr similarity)</li>
-		<li><a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Words</a> (django ngrams)</li>
-		<li><a href="" onclick='createVisualization({{enquete.id}},"Cloud_SolrSpeakerTagCloud",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Tag cloud</a> (for each text)</li>		
-		<li><a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Interaction dynamics</a> (for each text)</li>
-		<li><a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a></li>
+		
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersSpeakers"></a>
+			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Speakers</a> (solr similarity)
+			<span class="vizLoadingSpinner Graph_SpeakersSpeakers" style="display:none"></span>
+		</li>
+		
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersWords"></a>
+			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Words</a> (django ngrams)
+			<span class="vizLoadingSpinner Graph_SpeakersWords" style="display:none"></span>
+		</li>
+		
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Cloud_SolrSpeakerTagCloud"></a>
+			<a href="" onclick='createVisualization({{enquete.id}},"Cloud_SolrSpeakerTagCloud",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Tag cloud</a> (for each text)
+			<span class="vizLoadingSpinner Cloud_SolrSpeakerTagCloud" style="display:none"></span>
+		</li>	
+			
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_TexteStreamTimeline"></a>
+			<a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Interaction dynamics</a> (for each text)
+			<span class="vizLoadingSpinner TexteStreamTimeline" style="display:none"></span>
+		</li>
+		
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Attributes"></a>
+			<a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a>
+			<span class="vizLoadingSpinner Attributes" style="display:none"></span>
+		</li>
 
 		<!-- experimental 2 steps viz creation to choose nb of ngrams produced -->
 		<!--<li id="Cloud_SolrSpeakerTagCloud"><a href='' id="goCreateTagCloud">Tag Cloud (ngrams from solr)</a></li>
@@ -71,7 +93,8 @@
 		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"WordsBySpeaker");return false;'>(t) Words/Speaker</a></li>-->
 		<!--<li><a href="" onclick='createVisualization({{enquete.id}},"Cloud_TeiSpeakerTagCloud");return false;'>(s) from TEI</a></li>-->
 			
-	</ul>				
+	</ul>
+	You can then <a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}">browse</a> the newly created visualizations, update their description and set them public.
 </td>
 </tr>
 </tbody>

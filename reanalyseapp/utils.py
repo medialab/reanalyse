@@ -81,12 +81,16 @@ def getRelatedViz(textes=[],speakers=[]):
 		if or_query is None:
 			or_query = Q(textes=t)
 		else:
-			or_query = or_query | Q(textes=t)		
+			or_query = or_query | Q(textes=t)
 	
 	if or_query==None:
 		return []
 	else:
-		return Visualization.objects.filter(or_query).distinct().order_by('viztype','id')
+		qset = Visualization.objects.filter(or_query).distinct().order_by('viztype','id')
+		### if texte is given, then we have to only keep one TexteStreamTimeline
+		if len(textes)==1:
+			qset = qset.filter(~Q(viztype='TexteStreamTimeline') | Q(viztype='TexteStreamTimeline',textes__id=textes[0].id))
+		return qset
 ###########################################################################
 
 
@@ -111,6 +115,8 @@ def makeHtmlFromText(instr):
 	instr = re.sub('\n+','\n',instr)
 	instr = '<p>'+instr+'</p>'
 	return re.sub('\n','</p><p>',instr)
+def makeReturnsToHtml(instr):
+	return re.sub('\n','</br>',instr)
 ###########################################################################
 def correctTeiPunctuation(instr):
 	instr = re.sub('</w><incident type="repair" /><w>','/',instr)

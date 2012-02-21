@@ -1,4 +1,4 @@
-/* ============================================ GENERAL DEFAULT */
+/* ============================================ GENERAL BY DEFAULT */
 body {
 	background-color:#333333; 
 	font-family: Tahoma, Geneva, sans-serif;
@@ -35,7 +35,13 @@ a:hover {
 	text-decoration: underline;
 	color: #F40C42;
 }
-/* ============================================ HEADER */
+hr {
+	border:1px solid lightgray;
+	margin-top:7px;
+	margin-bottom:7px;
+}
+
+/* ============================================ HEADER + TOP MENU */
 #header {
 	height: 110px;
 	background-color:#333;
@@ -44,14 +50,10 @@ a:hover {
 	padding:10px;
 	margin-left:15px;
 }
-
 #logo h1 {
 	margin: 0px;
 	padding: 0px;
 	font: normal 46px Georgia, "Times New Roman", Times, serif;
-}
-#logo h1 a {
-	/*color:lightgray;*/
 }
 #logo h2 {
 	letter-spacing: 1px;
@@ -70,8 +72,6 @@ a:hover {
 	text-decoration: none;
 	color: #D9170E;
 }
-
-/* ============================================ GENERAL TOP MENU */
 #menuband {
 	height:30px;
 	background-color:darkgray;
@@ -79,10 +79,10 @@ a:hover {
 	border-bottom:1px solid #585858;
 }
 #menuband.bodyid_e {
-	/*bodyid allows to customize css depending on view (normal=small,enquete=big)*/
+	/* bodyid allows to customize css depending on view (normal=small,enquete=big) */
+	/* then the height is normally small, bigger if looking at an enquete (for title) */
 	height:75px;
 }
-
 #menu {
 	height:7px;
 }
@@ -121,6 +121,61 @@ a:hover {
 	border-bottom:7px solid lightgray;
 }
 
+
+/* ============================================ FULLSCREEN TOGGLE / LOGIN (top right) */
+/* fullscreen toggle on top */
+#fullsContainer:hover {
+	background:#B5B5B5;
+}
+#fullsContainer {
+	position:absolute;
+	background:#F2F1ED;
+	height:15px;
+	/* with text
+	width:90px;
+	left:-106px;*/
+	width:18px;
+	left:-34px;
+	padding:8px;
+}
+/* Login header */
+#loginContainer {
+	background:#707070;
+	color: lightgray;
+	height:15px;
+	padding:8px;
+}
+#loginContainer a {
+	color:lightgray;
+	text-decoration:underline;
+}
+#loginLanguage {
+	float:left;
+	margin-right:10px;
+}
+#loginLanguage select,
+#loginLanguage input {
+	font-size:0.8em;
+}
+#loginLanguage option {
+	font-size:1.2em;
+}
+#loginStatus {
+	float:left;
+	color:white;
+}
+#loginIn {
+	float:right;
+	text-align:right;
+	color:white;
+}
+#loginUsername {
+	font-style:italic;
+}
+#id_username, #id_password {
+	width:80px;
+}
+
 /* ============================================ LEFT MENU */
 #leftmenu {
 	float:left;
@@ -140,6 +195,12 @@ a:hover {
 }
 .leftmenublock h1 {
 	margin-top:0px;
+	margin-bottom:5px;
+	font-size: 10px;
+	border-bottom:1px solid lightgray;
+}
+.leftmenublock h2 {
+	margin-top:7px;
 	margin-bottom:5px;
 	font-size: 10px;
 	border-bottom:1px solid lightgray;
@@ -195,6 +256,28 @@ a:hover {
 	text-decoration: none;
 	color: #F90542;
 }
+
+/* ============================================ IMAGES ! */
+
+/* help blue circle */
+.imHelp { opacity:0.5; background-image: url("../images/helpcircle.png"); display:inline-block; width:15px; height:15px; position:relative; top:3;left:-3;}
+.imHelp:hover { opacity:1; }
+
+/* document list */
+.imExternalLink { background-image: url("../images/link.png"); display:inline-block; width:10px; height:10px; }
+/* select spk/doc and launch viz */
+.imVizBut { background-image: url("../images/viz_but.png"); display:inline-block; width:10px; height:10px; }
+/* main menu*/
+.imDocument { background-image: url("../images/page_copy.png"); display:inline-block; width:16px; height:16px; }
+.imSpeaker { background-image: url("../images/user_red.png"); display:inline-block; width:16px; height:16px; }
+.imVisualisation { background-image: url("../images/rainbow.png"); display:inline-block; width:16px; height:16px; }
+.imSearch { background-image: url("../images/zoom.png"); display:inline-block; width:16px; height:16px; }
+
+.imTei { background-image: url("../images/comment.png"); display:inline-block; width:16px; height:16px; }
+
+.imSpkInvestigator { background-image: url("../images/user_edit.png"); display:inline-block; width:16px; height:16px; }
+.imSpkSpeaker { background-image: url("../images/user_comment.png"); display:inline-block; width:16px; height:16px; }
+.imSpkProtagonist { background-image: url("../images/user_gray.png"); display:inline-block; width:16px; height:16px; }
 
 
 /* =================================================================================== HOME / INTRO / (project/methodology/access/....) HTML CONTENT TEXTS */
@@ -349,91 +432,6 @@ a:hover {
 
 
 
-
-
-
-
-
-/* =================================================================================== GENERAL ALWAYS */
-
-/* IMAGES ! */
-
-/* document list */
-.imExternalLink { background-image: url("../images/link.png"); display:inline-block; width:10px; height:10px; }
-/* select spk/doc and launch viz */
-.imVizBut { background-image: url("../images/viz_but.png"); display:inline-block; width:10px; height:10px; }
-/* main menu*/
-.imDocument { background-image: url("../images/page_copy.png"); display:inline-block; width:16px; height:16px; }
-.imSpeaker { background-image: url("../images/user_red.png"); display:inline-block; width:16px; height:16px; }
-.imVisualisation { background-image: url("../images/rainbow.png"); display:inline-block; width:16px; height:16px; }
-.imSearch { background-image: url("../images/zoom.png"); display:inline-block; width:16px; height:16px; }
-
-.imTei { background-image: url("../images/comment.png"); display:inline-block; width:16px; height:16px; }
-
-.imSpkInvestigator { background-image: url("../images/user_edit.png"); display:inline-block; width:16px; height:16px; }
-.imSpkSpeaker { background-image: url("../images/user_comment.png"); display:inline-block; width:16px; height:16px; }
-.imSpkProtagonist { background-image: url("../images/user_gray.png"); display:inline-block; width:16px; height:16px; }
-
-
-/* Useful */
-hr {
-	border:1px solid lightgray;
-	margin-top:7px;
-	margin-bottom:7px;
-}
-
-/* fullscreen toggle on top */
-#fullsContainer:hover {
-	background:#B5B5B5;
-}
-#fullsContainer {
-	position:absolute;
-	background:#F2F1ED;
-	height:15px;
-	/* with text
-	width:90px;
-	left:-106px;*/
-	width:18px;
-	left:-34px;
-	padding:8px;
-}
-/* Login header */
-#loginContainer {
-	background:#707070;
-	color: lightgray;
-	height:15px;
-	padding:8px;
-}
-#loginContainer a {
-	color:lightgray;
-	text-decoration:underline;
-}
-#loginLanguage {
-	float:left;
-	margin-right:10px;
-}
-#loginLanguage select,
-#loginLanguage input {
-	font-size:0.8em;
-}
-#loginLanguage option {
-	font-size:1.2em;
-}
-#loginStatus {
-	float:left;
-	color:white;
-}
-#loginIn {
-	float:right;
-	text-align:right;
-	color:white;
-}
-#loginUsername {
-	font-style:italic;
-}
-#id_username, #id_password {
-	width:80px;
-}
 /* =================================================================================== LOGIN / REGISTER */
 /* Login table */
 .loginFormTable {
@@ -481,8 +479,7 @@ hr {
 	list-style-type:none;
 }
 
-/* =================================================================================== ENQUETE LIST */
-/* ============================================ */
+/* =================================================================================== ENQUETE BROWSE (LIST) */
 ul#eList {
 	list-style-type:none;
 }
@@ -646,7 +643,7 @@ div.currentPage {
 }
 #relatedVizContainer {
 	background:white;
-	height:210px; /* based on the TextSTreamtimeline (fixed) height */
+	height:210px; /* based on the TextStreamtimeline (fixed) height */
 }
 #relatedVizContainer ul {
 	list-style-type:none;
@@ -724,7 +721,7 @@ ul.selectedList {
 /* LIST action buttons to launch viz */
 ul.vizLaunchList {
 	list-style-type:none;
-	margin-left:15px;
+	margin-left:7px;
 }
 .vizLaunchList li {
 	height:30px; /* large to include dropdownchecklist */
@@ -771,7 +768,7 @@ ul.vizLaunchList {
 	text-decoration: underline;
 }
 
-/* Colors for rows based on doctype TEI,PDF,CSV */
+/* try to put colors on rows based on doctype TEI,PDF,CSV */
 /*
 tr.odd.doctype_TEI td {
 	background-color:#F8F8F8;
@@ -814,7 +811,7 @@ tr.even.doctype_TEI td {
 */
 
 /* ============================================ */
-/* for speaker sets */
+/* for speaker sets (experimental) */
 /* speaker selection table on the bottom, complicated tryout with speaker sets */
 /*
 .speakerSelectionLeftHeader {
@@ -1229,6 +1226,12 @@ vizGlobalActions li {
 	color:red;
 	background:#FFCCCC;
 }
+/* interactive input to update viz description on evBrowse */
+.vizDescrInput {
+	background:#FFFFCC;
+	width:100%;
+	height:100px;
+}
 
 /* ============================================ */
 /* TAG CLOUDS */
@@ -1288,31 +1291,6 @@ vizGlobalActions li {
 
 
 
-/* SIMPLE LIST */
-/*
-.tagCloud {
-	padding:5px;
-	background: white;
-}
-.tagList {
-	margin:0;
-	padding:0;
-}
-.tagList li {
-	list-style-type:none;
-}
-.tagList li a {
-	text-decoration:none;
-	color:black;
-}
-.tagList li a:hover {
-	text-decoration:none;
-	background: #E8E8E8 ;
-}
-.tagCloudCount {
-	margin-right:10px;
-}
-*/
 
 /* ============================================ */
 /* D3 GRAPH */
@@ -1470,22 +1448,15 @@ span.text_speaker_namecount {
 	background: left;
 	cursor: pointer;
 }
-.text_anyparvb:hover {
-	/*opacity:0.7;*/
-}
+
 /* ========================== IN MARGIN */
-.text_comment,
-.text_break,
-.text_time {
+.text_margL, .text_margR {
 	position:absolute;
 	text-decoration: none;
 	width:20px;
 }
-.text_comment,
-.text_break { left:-115px; }
-.text_time { right:-23px; }
-
-
+.text_margL { left:-115px; }
+.text_margR { right:-23px; }
 
 /* ========================== TEXT STYLING */
 .text_sic,
@@ -1506,11 +1477,7 @@ span.text_speaker_namecount {
 	padding-right:4px;
 }
 
-a.text_sic,
-a.text_uncertain,
-a.text_anonym {
-	color:gray;
-}
+a.text_sic, a.text_uncertain, a.text_anonym { color:gray; }
 /*
 .text_sic { 		background:#CCCCFF; }
 .text_uncertain { 	background:#FFFF66; }
@@ -1518,28 +1485,29 @@ a.text_anonym {
 .text_anonym { 		background:#CCFFCC; }
 */
 
-/* ========================== IMAGES */
-.text_incident {		background:url('../images/text_incident.png') no-repeat; }
+/* ========================== VERBATIM IMAGES */
+
+.text_incident {		display:inline-block; height:18px;width:18px; background:url('../images/text_incident.png') no-repeat; }
 
 /* TRANSCRIPTION */
-.text_comment {			background:url('../images/text_comment.png') no-repeat; }
-.text_question {		background:url('../images/text_question.png') no-repeat; }
-.text_inaudible {		background:url('../images/text_inaudible.png') no-repeat; }
-.text_break {			background:url('../images/text_break.png') no-repeat; }
-.text_time {			background:url('../images/text_time.png') no-repeat; }
+.text_comment {			display:inline-block; height:18px;width:18px; background:url('../images/text_comment.png') no-repeat; }
+.text_question {		display:inline-block; height:18px;width:18px; background:url('../images/text_question.png') no-repeat; }
+.text_inaudible {		display:inline-block; height:18px;width:18px; background:url('../images/text_inaudible.png') no-repeat; }
+.text_break {			display:inline-block; height:18px;width:18px; background:url('../images/text_break.png') no-repeat; }
+.text_time {			display:inline-block; height:18px;width:18px; background:url('../images/text_time.png') no-repeat; }
 
 /* VERBATIM */
-.text_laugh {			background:url('../images/text_laugh.png') no-repeat; }
-.text_interruption {	background:url('../images/text_interruption.png') no-repeat; }
-.text_hesitation {		background:url('../images/text_hesitation.png') no-repeat; }
-.text_silence {			background:url('../images/text_silence.png') no-repeat; }
-.text_directed {		background:url('../images/text_directed.png') no-repeat; }
-.text_body {			background:url('../images/text_body.png') no-repeat; }
+.text_laugh {			display:inline-block; height:18px;width:18px; background:url('../images/text_laugh.png') no-repeat; }
+.text_interruption {	display:inline-block; height:18px;width:18px; background:url('../images/text_interruption.png') no-repeat; }
+.text_hesitation {		display:inline-block; height:18px;width:18px; background:url('../images/text_hesitation.png') no-repeat; }
+.text_silence {			display:inline-block; height:18px;width:18px; background:url('../images/text_silence.png') no-repeat; }
+.text_directed {		display:inline-block; height:18px;width:18px; background:url('../images/text_directed.png') no-repeat; }
+.text_body {			display:inline-block; height:18px;width:18px; background:url('../images/text_body.png') no-repeat; }
 
 
 /*
 div.text_silence:before {
-	content:"â€¢";
+	content:"¥";
 }
 div.text_silence:after {
 	content:"&nbsp;";

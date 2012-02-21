@@ -22,13 +22,14 @@ from reanalyse.reanalyseapp.models import *
 ############################################################
 # SIMPLE USER CREATION
 class BrowseUserForm(UserCreationForm):
+	affiliation = forms.CharField(label=("Affiliation"),max_length=40,required=True)
 	def __init__(self, *args, **kwargs):
 		super(BrowseUserForm, self).__init__(*args,**kwargs)
 		self.fields['first_name'].required = True
 		self.fields['last_name'].required = True
 	class Meta:
 		model = User
-		fields = ('username','last_name','first_name','email') 
+		fields = ('username','last_name','first_name','email','affiliation') 
 ############################################################
 # UPDATE USER STATUS FOR ENQUETE
 class ExploreUserForm(forms.Form):
@@ -45,8 +46,13 @@ class ExploreUserForm(forms.Form):
 
 
 
-from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 
+
+
+
+
+
+from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 
 #RADIO_CHOICES = ( ('d','doc'), ('s','speak') )
 CHECKBOX_CHOICES = ( ('i','interventions'), ('w','wordentities'), ('t','textes') )

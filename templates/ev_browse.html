@@ -22,12 +22,13 @@
 	<!-- jquery ui for slider -->
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/jqueryui/css/smoothness/jquery-ui-1.8.16.custom.css" />
-			
-	<!-- seadragon png explorer/zoomer -->
-	<script type="text/javascript" src="{{ MEDIA_URL }}/seadragon/seadragon-min.js"></script>
+	
+	<!-- jquery editable plugin to update viz descriptions -->
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jquery/jquery.editable-1.3.3.min.js"></script>
+		
+	<!-- seadragon png explorer/zoomer (tryout to explore already spatialized graphs)-->
+	<!--<script type="text/javascript" src="{{ MEDIA_URL }}/seadragon/seadragon-min.js"></script>-->
    
-
-
 	<!-- scrollTo jquery plugin, for smooth scrolling -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery.scrollTo.js"></script>
 	
@@ -43,18 +44,20 @@
 {% block enqueteleftmenumore %}
 {% endblock %}
 
-{% comment %}
+
 {% block enqueteleftmenumorescroll %}
 
-	<!-- =============================== VIZ SHOW HIDE (deactivated) -->
+	<!-- =============================== VIZ FACETS to modify display -->
 	<div class="leftmenublock">
 		<h1 onclick='$("#vizShowHide").toggle("fast");return false;'>Toggle / Show</h1>
-		<div id="vizShowHide" style="display:none;">
-			<a href="" id="butAllAll">all</a> | 
-			<a href="" id="butAllHeader">headers</a> | 
-			<a href="" id="butAllDescr">descr</a> | 
-			<a href="" id="butAllViz">viz</a>
-		<h1>Show only viz types</h1>
+		<div id="vizShowHide">
+			<ul>
+				<li><a href="" id="butStory">Tell me a story</a></li>
+				<li><a href="" id="butAllViz">Show only content</a></li>
+				<li><a href="" id="butAllHeader">Show only headers</a></li>
+				<!--<li><a href="" id="butAllDescr">descr</a></li>-->
+			</ul>
+		<h2>Show only Types</h2>
 			<ul>
 			{% for typ in viztypes %}
 				<li><a href="" id="butAllOnly_{{typ}}">{{typ}}</a></li>
@@ -63,6 +66,7 @@
 		</div>
 	</div>
 	
+{% comment %}	
 	<!-- =============================== OVERVIEW VIZ (deactivated) -->
 	<div class="leftmenublock">
 		<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Viz Repartition</h1>
@@ -89,9 +93,10 @@
 			</script>
 		</div>
 	</div>
-		
-{% endblock %}
 {% endcomment %}
+	
+{% endblock %}
+
 
 {% block content %}
 
@@ -144,7 +149,9 @@
 					</table>
 				</div>
 				
-				<h1>{{v.id}} - {{v.viztype}}</h1>
+				<h1>{{v.id}} - {{v.viztype}} 
+					<a style="left:4;" class="imHelp" onclick="event.stopPropagation();" href="/reanalyse/?p=method&q=4#viz_ex_{{v.viztype}}"></a>
+				</h1>
 					
 				<div class="vizActions">
 				{% if perms.reanalyseapp.can_make %}
@@ -196,9 +203,27 @@
 					
 				</div>
 					
-					<div class="descrContainer" id="descrContainer_{{forloop.counter}}" style="display:none;">
-						{% autoescape off %}{{ v.description }}{% endautoescape %}
-					</div>
+					<div class="descrContainer" id="descrContainer_{{forloop.counter}}" style="display:none;">{% autoescape off %}{{ v.description }}{% endautoescape %}</div>
+					<script type="text/javascript">
+						$('#descrContainer_{{forloop.counter}}').editable({
+							'type':'textarea',
+							'editClass':'vizDescrInput',
+							'onSubmit':function(content){
+								var theparams = {};
+								theparams['html']=this.html();
+								$.ajax({
+									type: "POST",
+									data: theparams,
+									url: '{% url reanalyse.reanalyseapp.views.evUpdateDescr enquete.id v.id %}',
+									cache: false,
+									success: function processAnswer(dat) {
+										$('#descrContainer_{{forloop.counter}}').html(dat.html);
+									},
+								});
+							},
+						});
+						
+					</script>
 				
 					<div class="vizContainer" id="vizContainer_{{forloop.counter}}" style="display:none;">
 						{% include "render_v.html" with enquete=enquete v=v nk=forloop.counter %}
@@ -266,8 +291,8 @@
 			});
 			{% endfor %}
 
-			$("#butAllAll").click( function(event) {
-				toggleShow(true,true,true);
+			$("#butStory").click( function(event) {
+				toggleShow(false,true,true);
 				return false;
 			});			
 			$("#butAllHeader").click( function(event) {
@@ -283,11 +308,13 @@
 				return false;
 			});
 			/////////////////////////////////// init all switches for show/hides flags
+/*
 			$(".descrContainer").click( function(event) {
 				var k = this.id.split("_")[1];
 				$("#vizContainer_"+k).toggle("fast");
 				return false;
 			});
+*/
 			$(".butToggleDescription").click( function(event) {
 				var k = this.id.split("_")[1];
 				$("#descrContainer_"+k).toggle("fast");
@@ -313,7 +340,47 @@
 				return false;
 			});
 		});
-
+		
+		
+		
+		/////////////////////////////////////////////////////////////// This piece of code is from django doc, allowing to ajax POST
+		$(document).ajaxSend(function(event, xhr, settings) {
+		    function getCookie(name) {
+		        var cookieValue = null;
+		        if (document.cookie && document.cookie != '') {
+		            var cookies = document.cookie.split(';');
+		            for (var i = 0; i < cookies.length; i++) {
+		                var cookie = jQuery.trim(cookies[i]);
+		                // Does this cookie string begin with the name we want?
+		                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+		                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                    break;
+		                }
+		            }
+		        }
+		        return cookieValue;
+		    }
+		    function sameOrigin(url) {
+		        // url could be relative or scheme relative or absolute
+		        var host = document.location.host; // host + port
+		        var protocol = document.location.protocol;
+		        var sr_origin = '//' + host;
+		        var origin = protocol + sr_origin;
+		        // Allow absolute or scheme relative URLs to same origin
+		        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+		            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+		            // or any other URL that isn't scheme relative or absolute i.e relative.
+		            !(/^(\/\/|http:|https:).*/.test(url));
+		    }
+		    function safeMethod(method) {
+		        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		    }
+		
+		    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+		        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+		    }
+		});
+		
 		
 	</script>
 {% endblock %}

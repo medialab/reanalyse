@@ -406,6 +406,8 @@ function createVisualization(eid,vizType,moreparams) {
 	}
 	////////////////////////////////////////
 	
+	// set spinner rolling
+	$('.vizLoadingSpinner.'+vizType).attr('style','display:inline-block;');
 	// Send AJAX to create visualization
 	$.ajax({
 		type: "GET",
@@ -413,8 +415,10 @@ function createVisualization(eid,vizType,moreparams) {
 		dataType: "html",
 		url: '/reanalyse/e/'+eid+'/v/make',
 		cache: false,
-		success: function updateProcessing(indata) { 
-			console.log("VIZU LAUNCHED");
+		success: function updateProcessing(indata) {
+			// remove spinner when done
+			$('.vizLoadingSpinner.'+vizType).attr('style','display:none;');
+			console.log("VIZU DONE");
 			return false;
 		}
 	});
@@ -719,9 +723,9 @@ function initParaverbalTogglesAndSymbols( mediaUrl, arrTrans, arrVerb ) {
 	pDom.append(" toggle all");
 	
 	// checkboxes for each paraverbal
-	pDom.append($('<h1>').text('-- Transcription')) ;
+	pDom.append($('<h2>').text('-- Transcription')) ;
 	initParaverbalList( pDom, mediaUrl, arrTrans );
-	pDom.append($('<h1>').text('-- Verbatim')) ;
+	pDom.append($('<h2>').text('-- Verbatim')) ;
 	initParaverbalList( pDom, mediaUrl, arrVerb );
 	
 	// click action for toggle all. todo: to improve
@@ -742,7 +746,7 @@ function initParaverbalTogglesAndSymbols( mediaUrl, arrTrans, arrVerb ) {
 }
 function initParaverbalList( pDom, mediaUrl, array ) {
 	array.forEach(function(e){
-		var image = $('<img>').attr( {src:mediaUrl+"/images/text_"+e+".png"} ) ;
+		var image = $('<span>').attr({class:"text_"+e,style:"position:relative;top:6px;"}) ;
 		var checkb = $('<input>').attr( {id:"paraCheck_"+e, type:"checkbox", name:e , checked:"checked"} ) ;
 		// toggle when checkboxed
 		checkb.click(function() {

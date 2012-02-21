@@ -77,6 +77,8 @@ urlpatterns = patterns('reanalyse',
 	(r'^e/(?P<eid>\d+)/v/(?P<vid>\d+)/json$', 'reanalyseapp.views.evGetJson'),				# GET JSON VALUES
 	(r'^e/(?P<eid>\d+)/v/(?P<vid>\d+)/save$', 'reanalyseapp.views.evSaveHtml'),				# SAVE HTML of vizu in model (unused?)
 	
+	(r'^e/(?P<eid>\d+)/v/(?P<vid>\d+)/updatedescr$', 'reanalyseapp.views.evUpdateDescr'),	# AJAX update of the description
+	
 	########## 6.Search
 	(r'^e/(?P<eid>\d+)/search/', 'reanalyseapp.views.eSearch' ),
  	

@@ -65,6 +65,7 @@ def importEnqueteUsingMeta(folderPath):
 	newEnquete = Enquete(name=study_name,ddi_id=study_ddi_id,description=study_descr,status='1')
 	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
 	newEnquete.save()
+	
 	# create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
 	permname = 'EXPLORE e_'+str(newEnquete.id) + ' '+newEnquete.name

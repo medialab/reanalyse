@@ -41,6 +41,9 @@
 				<div class="eBrowseEnqueteMetaContainer">
 					<div class="eBrowseEnqueteMeta">{% if perms.reanalyseapp.can_make %}({{e.0.id}}) {% endif %}
 						<span class="eBrowseEnqueteMetaAuthor">{{e.1.0}}</span> | {{e.1.1}} | {{e.1.2}}
+						{% if perms.reanalyseapp.can_make %}
+						 | uploaded: {{e.0.date}}
+						{% endif %}
 					</div>
 					<div class="eBrowseEnqueteContentStats">
 						{% comment %}Translators: Studies list{% endcomment %}

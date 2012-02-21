@@ -47,7 +47,10 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	# 3) be smart ! eg. create tag cloud of speakers involved when only textes are selected
 	
 	newVizu = None
-	descr = VIZTYPESDESCR[typ]
+	
+	#descr = VIZTYPESDESCR[typ]	# we used to set a different one for each
+	descr = VIZTYPESDESCR		# now just invite user to update it (see globalvars.py)
+	
 	logging.info("makeViz:"+typ)
 	
 	if typ in ['Graph_SpeakersAttributes','Graph_SpeakersWords','Graph_SpeakersSpeakers']:
@@ -99,6 +102,9 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 		d = visMakeAttributes(e,{'where':textes,'who':speakers})
 		for s in speakers:
 			newVizu.speakers.add(s)
+		for t in textes:
+			for s in t.speaker_set.all():
+				newVizu.speakers.add(s)
 		newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
 		newVizu.status = '0'
 		newVizu.save()		
@@ -106,16 +112,17 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	elif typ=='Cloud_SolrSpeakerTagCloud':
 		###### one cloud for each text
 		if speakers==[]:
-			if textes!=[]:
-				for t in textes:
-					spks = t.speaker_set.all()
-					newVizu = makeVisualizationObject(e,typ,descr)
-					d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
-					for spk in spks:
-						newVizu.speakers.add(spk)
-					newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
-					newVizu.status = '0'
-					newVizu.save()
+			if textes==[]:
+				textes = Texte.objects.filter(doctype='TEI')
+			for t in textes:
+				spks = t.speaker_set.all()
+				newVizu = makeVisualizationObject(e,typ,descr)
+				d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
+				for spk in spks:
+					newVizu.speakers.add(spk)
+				newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
+				newVizu.status = '0'
+				newVizu.save()
 		####### one cloud for group of speaker
 		else:
 			newVizu = makeVisualizationObject(e,typ,descr)
@@ -620,14 +627,17 @@ def visMakeAttributes(e,param):
 ###########################################################################
 # streamed timeline with paraverbal
 #
+#		SPEAKERS
 # 		thedata.data is an array [ forSpeaker1, forSpeaker2, forSpeaker3 ] :
 # 		where forSpeaker1 = [ {x:0,y:nSentencesForPeriod0}, {x:1,y:nSentencesForPeriod1}, ... ]
 # 		where forSpeaker2 = ...
+#		PARAVERBAL
+#		par each paraverbal, a simple array with successive values (simple chart, quoi)
 #		
 def visMakeStreamTimeline(e,param):
 	# step = window width in which we count paraverbal/sentences occurences
-	step = 3 						# ie. "step" sentences at a time
-	factorParaverbal = 10*step		# y division factor for paraverbal (outvalue should be normalized in [0,1]
+	step = 3 						# ie. counting spk & paraverbal in a "window" of width "step" (3 sentences at a time)
+	#factorParaverbal = 10*step		# height is managed in d3 (deprecated:y division factor for paraverbal (outvalue should be normalized in [0,1])
 	res={}
 	t = param['where']
 	
@@ -640,54 +650,40 @@ def visMakeStreamTimeline(e,param):
 		maxPeriods = t.sentence_set.all().aggregate(Max('i')).values()[0]
 	except:
 		maxPeriods = 0
-	nPeriods = int(maxPeriods/step)
+	nSteps = 1+int(maxPeriods/step) # one more if nSentences undivisible by step
 	
 	paravList=['silence','laugh','hesitation','interruption','break']
 	par_colors=['#BFBD9F','#D9FF00','#517368','#ED5300','#EC993B']
 	
 	speakers = t.speaker_set.order_by('-ddi_type')
-	maxSentences = t.sentence_set.count()
-	
+		
 	############# init
 	for s in speakers:
-		spk_layers.append([ {'x':k, 'y':0,'info':s.name} for k in range(1+int(maxSentences/step)) ])
+		spk_layers.append([ {'x':k, 'y':0,'info':s.name} for k in range(nSteps) ])
 		spk_ids.append([s.id,s.name])
 	for i,p in enumerate(paravList):
-		par_layers.append([ 0 for k in range(1+int(maxSentences/step)) ])
+		par_layers.append([ 0 for k in range(nSteps) ])
 		par_ids.append([i,p])
-		
-	############# fill it
-	c=0
-	k=0 # k increment in each "window-step" (for ex. here every 3 sentence) 
-	for sent in t.sentence_set.order_by('i','n'):
-		try:
-			#logging.info("encore:"+str(k))
-			# speakers
-			spk = sent.speaker
-			spk_layers[ spk_ids.index([spk.id,spk.name]) ][k]['y'] += 1/float(step)
-			# paraverbal
-			for w in sent.word_set.all(): # assuming there is only paraverbal in words
-				par = w.wordentityspeaker.wordentity.code.name
-				if par in paravList:
-					par_layers[ paravList.index(par) ][k] += 1/float(step)
-		except:
-			logging.info("PB:exception in viz stream")
-		c+=1
-		if c==step:
-			c=0
-			k+=1
 	
-	######## DEPRECATED OLD STYLE
-# 	for npar,par in enumerate(paravList):
-# 		spArray = []
-# 		for k in range(nPeriods):
-# 			nParaverbal = Word.objects.filter(sentence__i__range=[k*step,(k+1)*step],wordentityspeaker__wordentity__code__name=par).count()
-# 			#spArray.append({'x':k, 'y':nParaverbal/float(factorParaverbal), 'info':par})
-# 			spArray.append(nParaverbal/float(factorParaverbal))
-# 			#spArray.append({'x':k,'y':nParaverbal/float(factorParaverbal)})
-# 			#spArray.append([k,5,nParaverbal/float(factorParaverbal)])
-# 		par_layers.append(spArray)
-# 		par_ids.append([npar,par])
+	maxParavbCount = 0
+	############# fill it
+	#c=0
+	#k=0 # k increment in each "window-step" (for ex. here every 3 sentence) 
+	for sent in t.sentence_set.order_by('i'):
+		# which step k ?
+		k = int(sent.i/step)
+		# number of sentences
+		ns = t.sentence_set.filter(i__range=(k*step,(k+1)*step-1)).count()
+		logging.info("FOR_k:"+str(k)+" : "+str(ns))
+		# speakers
+		spk = sent.speaker
+		spk_layers[ spk_ids.index([spk.id,spk.name]) ][k]['y'] += 1.0/float(ns)
+		# paraverbal
+		for w in sent.word_set.all(): # assuming there is only paraverbal in words
+			par = w.wordentityspeaker.wordentity.code.name
+			if par in paravList:
+				par_layers[ paravList.index(par) ][k] += 1/float(step)
+				maxParavbCount = max(maxParavbCount,par_layers[ paravList.index(par) ][k])
 	
 	res['spk_layers']=spk_layers
 	res['spk_ids']=spk_ids
@@ -696,9 +692,12 @@ def visMakeStreamTimeline(e,param):
 	res['par_ids']=par_ids
 	res['par_colors']=par_colors
 	
-	res['period']=step
-	res['nPeriods']=nPeriods
-	res['maxPeriods']=maxPeriods
+	# we can send maximum prvb value(s) or let js do it...
+	res['maxParavbCount']=maxParavbCount	# maximum y-value for parvb
+	
+	res['period']=step				# one value for each 'step' value of i		ex. 3
+	res['maxPeriods']=maxPeriods 	# maximum i for all the i-o of sentences	ex. 15
+	res['nPeriods']=nSteps			# number of values							ex. 5
 	
 	return res
 ###########################################################################
@@ -891,7 +890,7 @@ def visMakeTagCloudFromTermVectors(e,param):
 	speakers = param['who']
 	howmany = int(param['count'])
 	if howmany==0:
-		howmany=170
+		howmany=200
 	#similcount = param['similcount']
 
 	wordsArr=[]

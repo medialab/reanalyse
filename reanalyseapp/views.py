@@ -80,8 +80,10 @@ import pythonsolr
 import logging
 ###########################################################################
 
-
-
+# only shortcuts
+# todo: use built-in django functions
+URL_loginpage = '/reanalyse/?q=login&p=access'
+URL_base = '/reanalyse'
 
 
 ###########################################################################
@@ -164,7 +166,7 @@ if not usersInitDone:
 # adds key depending on current user & enquete
 def updateCtxWithPerm(ctx,request,e):
 	user = request.user
-	permexplorethis = Permission.objects.get(codename='can_explore_'+str(e.id))
+	permexplorethis = 'reanalyseapp.can_explore_'+str(e.id)
 	#permexplore = Permission.objects.get(codename='can_explore')
 	#permmake = Permission.objects.get(codename='can_make')
 	eGroup = Group.objects.get(name='EXPLORE')
@@ -188,7 +190,7 @@ def eDelete(request,eid):
 ###########################################################################
 def logoutuser(request):
 	logout(request)
-	return redirect('/reanalyse')
+	return redirect(URL_base)
 ###########################################################################
 def home(request):
 	# (p)pname 	is the menu section		'project','method','access',...
@@ -233,7 +235,7 @@ def home(request):
 			ctx.update({'form':loginform})
 			if loginform.is_valid():
 				login(request, loginform.get_user())
-				nextpage = request.GET.get('next', '/reanalyse')
+				nextpage = request.GET.get('next', URL_base)
 				return redirect(nextpage)
 	
 		if spname=='register':
@@ -256,11 +258,12 @@ def home(request):
 					group = Group.objects.get(name='BROWSE')
 					new_user.groups.add(group)
 					new_user.save()
-					subject = '[reanalyse] request_browse'
+					subject = '[reanalyse] reqDISCOVER '+form.cleaned_data['email']
 					message = 'username: '+form.cleaned_data['username']
 					message += '\nprenom: '+form.cleaned_data['first_name']
 					message += '\nnom: '+form.cleaned_data['last_name']
 					message += '\nemail: '+form.cleaned_data['email']
+					message += '\naffiliation: '+form.cleaned_data['affiliation']
 					footer = '\n\nPlease go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(new_user.id)+' to activate this user.'
 					message += '\n\n==============================\n'+footer
 					send_mail(subject,message,new_user.email,[settings.STAFF_EMAIL],fail_silently=False)
@@ -280,9 +283,9 @@ def home(request):
 						#curUser.user_permissions.add(curPerm)
 						#curUser.save()
 						# rather send mail to CDSP staff
-						subject = '[reanalyse] request_explore: '+wantedenquete.name
+						subject = '[reanalyse] reqEXPLORE: '+wantedenquete.name
 						message = 'motivation:\n\n'+form.cleaned_data['motivation']
-						footer = 'Please go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(curUser.id)+'  to add permission for this study.'
+						footer = 'Please go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(curUser.id)+'  to add permission for this study (permission: EXPLORE e_'+wantedenquete.id+')/'
 						message += '\n\n==============================\n'+footer
 						send_mail(subject,message,curUser.email,[settings.STAFF_EMAIL],fail_silently=False)
 					ctx.update({'form':form,'wantedenquete':wantedenquete})
@@ -320,6 +323,7 @@ def eAdmin(request):
 		ctx.update({'solrstatus':'was off. wait 5,7s and refresh page to be sure'})
 	else:
 		ctx.update({'solrstatus':'running'})
+	ctx.update({'staffemail':settings.STAFF_EMAIL})
 	return render_to_response('admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 @login_required
@@ -586,7 +590,7 @@ def getStrFromVizList(relViz):
 	return vizStr
 ###########################################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def edBrowse(request,eid):
 	# ENQUETE
 	e = Enquete.objects.get(id=eid)
@@ -721,10 +725,13 @@ def edBrowse(request,eid):
 	
 	ctx.update({'tTable':tTable, 'speakersColors':speakersColors, 'attributeTypes':colarray})
 	updateCtxWithPerm(ctx,request,e)
-	return render_to_response('ed_browse.html', ctx, context_instance=RequestContext(request))
+	if ctx['permexplorethis']:
+		return render_to_response('ed_browse.html', ctx, context_instance=RequestContext(request))
+	else:
+		return redirect(URL_loginpage) 
 ################################################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def esBrowse(request,eid):
 	# ENQUETE
 	e = Enquete.objects.get(id=eid)
@@ -832,10 +839,13 @@ def esBrowse(request,eid):
 	
 	ctx.update({'sTable':sTable,'attributeTypes':colarray})
 	updateCtxWithPerm(ctx,request,e)
-	return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
+	if ctx['permexplorethis']:
+		return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
+	else:
+		return redirect(URL_loginpage) 
 ################################################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def ewShow(request,eid,wid):
 	# WORD
 	we = WordEntity.objects.get(id=wid)
@@ -857,7 +867,7 @@ def ewShow(request,eid,wid):
 	return render_to_response('ew_show.html', ctx, context_instance=RequestContext(request))
 #####################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def dGetHtmlAround(request,eid,sid):
 	sentence = Sentence.objects.get(id=sid)
 	texte = sentence.texte
@@ -876,7 +886,7 @@ def dGetHtmlAround(request,eid,sid):
 # return styled html of a portion of the text, using template
 # todo: another solution: using XSLT from original TEI XML, this would be simpler without need to parse at the beginning!
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def dGetHtmlContent(request,eid,did):
 	texte = Texte.objects.get(id=did)
 	sStart = request.GET.get('from',0)
@@ -891,7 +901,7 @@ def dGetHtmlContent(request,eid,did):
 	return render_to_response('render_d.html', ctx, context_instance=RequestContext(request))
 ###################################################################################################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def edXmlShow(request,eid,did):
 	# return HTML made by XSLT from XML file
 	
@@ -917,7 +927,7 @@ def edXmlShow(request,eid,did):
 # 	return response
 ##########################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def edShow(request,eid,did):
 
 	###### ANY DOCUMENT
@@ -995,10 +1005,13 @@ def edShow(request,eid,did):
 	#########################################
 	
 	updateCtxWithPerm(ctx,request,e)
-	return render_to_response('ed_show.html', ctx , context_instance=RequestContext(request))
+	if ctx['permexplorethis']:
+		return render_to_response('ed_show.html', ctx , context_instance=RequestContext(request))
+	else:
+		return redirect(URL_loginpage) 
 ###################################################################################################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def esShow(request,eid,sid):
 	speaker = Speaker.objects.get(id=sid)
 	e = speaker.enquete
@@ -1026,7 +1039,7 @@ def esShow(request,eid,sid):
 	return render_to_response('es_show.html', ctx , context_instance=RequestContext(request))
 #####################################################
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def ecShow(request,eid,cid):
 	e = Enquete.objects.get(id=eid)
 	
@@ -1158,7 +1171,7 @@ class MyFacetedSearchView(FacetedSearchView):
 ###########################################################################
 # Let's try with haystack
 @login_required
-@permission_required('reanalyseapp.can_explore')
+@permission_required('reanalyseapp.can_browse')
 def eSearch(request,eid):
 	############# To search from the shell you can do ;
 # 	from haystack.query import SearchQuerySet
@@ -1718,6 +1731,15 @@ def evSaveHtml(request,eid,vid):
 	v.contenthtml = thehtml
 	v.save()
 	return HttpResponse("done", mimetype="application/json")
+###########################################################################
+def evUpdateDescr(request,eid,vid):
+	v = Visualization.objects.get(enquete__id=eid,id=vid)
+	plaintext = request.POST['html']
+	plainhtml = makeReturnsToHtml(plaintext)
+	v.description = plainhtml
+	v.save()
+	json = simplejson.dumps({'html':plainhtml},indent=2,ensure_ascii=False)
+	return HttpResponse(json, mimetype="application/json")
 ###########################################################################
 # MAKE VISUALIZATION
 @login_required
