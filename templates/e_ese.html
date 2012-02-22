@@ -93,41 +93,41 @@
 
 
 
-{% block bottom %}
-<script type="text/javascript">
-
-{% if ese %}
-	$(document).ready(function(){
-	{% for chapter in ese.chapters %}
-		var audioPlaylist_{{forloop.counter}} = new Playlist("{{forloop.counter}}", [
-			
-			{% for subchapter in chapter.subchapters %}
-			{
-			name:"{{subchapter.name|escapejs}}",
-			mp3:"{% url reanalyse.reanalyseapp.views.stream enquete.id subchapter.audiopath %}",
-			}
-			{% if not forloop.last %},{% endif %}
-			{% endfor %}
-
-		], {
-			ready: function() {
-				audioPlaylist_{{forloop.counter}}.displayPlaylist();
-				audioPlaylist_{{forloop.counter}}.playlistInit(false); // Parameter is a boolean for autoplay.
-			},
-			ended: function() {
-				audioPlaylist_{{forloop.counter}}.playlistNext();
-			},
-			play: function() {
-				$(this).jPlayer("pauseOthers");
-			},
-			swfPath: "{{ MEDIA_URL }}/jplayer/js",
-			supplied: "mp3",
-			solution:"flash, html"
-		});
-	{% endfor %}		
-	});
-{% endif %}
+{% block enquetebottommore %}
+	<script type="text/javascript">
 	
-</script>
+	{% if ese %}
+		$(document).ready(function(){
+		{% for chapter in ese.chapters %}
+			var audioPlaylist_{{forloop.counter}} = new Playlist("{{forloop.counter}}", [
+				
+				{% for subchapter in chapter.subchapters %}
+				{
+				name:"{{subchapter.name|escapejs}}",
+				mp3:"{% url reanalyse.reanalyseapp.views.stream enquete.id subchapter.audiopath %}",
+				}
+				{% if not forloop.last %},{% endif %}
+				{% endfor %}
+	
+			], {
+				ready: function() {
+					audioPlaylist_{{forloop.counter}}.displayPlaylist();
+					audioPlaylist_{{forloop.counter}}.playlistInit(false); // Parameter is a boolean for autoplay.
+				},
+				ended: function() {
+					audioPlaylist_{{forloop.counter}}.playlistNext();
+				},
+				play: function() {
+					$(this).jPlayer("pauseOthers");
+				},
+				swfPath: "{{ MEDIA_URL }}/jplayer/js",
+				supplied: "mp3",
+				solution:"flash, html"
+			});
+		{% endfor %}		
+		});
+	{% endif %}
+		
+	</script>
 {% endblock %}
 

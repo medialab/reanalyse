@@ -260,7 +260,13 @@ hr {
 /* ============================================ IMAGES ! */
 
 /* help blue circle */
-.imHelp { opacity:0.5; background-image: url("../images/helpcircle.png"); display:inline-block; width:15px; height:15px; position:relative; top:3;left:-3;}
+/*.imHelpLeft { position:relative; top:3;left:-3; }*/
+.imHelp {
+	opacity:0.5; background-image: url("../images/helpcircle.png");
+	display:inline-block; width:15px; height:15px;
+	margin-left:2px; margin-left:2px;
+	position:relative; top:3;
+}
 .imHelp:hover { opacity:1; }
 
 /* document list */
@@ -271,7 +277,7 @@ hr {
 .imDocument { background-image: url("../images/page_copy.png"); display:inline-block; width:16px; height:16px; }
 .imSpeaker { background-image: url("../images/user_red.png"); display:inline-block; width:16px; height:16px; }
 .imVisualisation { background-image: url("../images/rainbow.png"); display:inline-block; width:16px; height:16px; }
-.imSearch { background-image: url("../images/zoom.png"); display:inline-block; width:16px; height:16px; }
+.imSearch { background-image: url("../images/zoom.png"); float:left; margin-left: 9px; width:16px; height:16px; }
 
 .imTei { background-image: url("../images/comment.png"); display:inline-block; width:16px; height:16px; }
 
@@ -282,7 +288,7 @@ hr {
 
 /* =================================================================================== HOME / INTRO / (project/methodology/access/....) HTML CONTENT TEXTS */
 .introDiv {
-	margin-right:10%;
+	margin-right:10%; 
 }
 .inputButt {
 	margin-top:5px;
@@ -643,7 +649,6 @@ div.currentPage {
 }
 #relatedVizContainer {
 	background:white;
-	height:210px; /* based on the TextStreamtimeline (fixed) height */
 }
 #relatedVizContainer ul {
 	list-style-type:none;
@@ -979,16 +984,41 @@ tr.even.doctype_TEI td {
 /* =================================================================================== SEARCH */
 /* ============================================ */
 /* Search Results D3 Graph Textes/Speakers */
+/*
 .svgLinkTextSpeaker {
     fill: none;
     stroke: gray;
     stroke-width: 1.5px;
     opacity:0.5;
 }
+*/
+
 /* ============================================ */
-/* Search Results D3 Graph Textes/Speakers */
-#wordsTfidfTable tr {
-	border-bottom: 1px solid lightgray;
+/* Search Form */
+#searchFormContainer{
+	margin-top:20px;
+	padding: 20px 10px 12px;
+	border-top: 1px solid #ccc;
+}
+#searchFormDiv input[type=text]{
+	height:24px;
+}
+
+
+/* ============================================ */
+/* Search Fields */
+
+#id_inTextes, #id_inSpeakers {
+	width:100%;
+	font-size: 10px;
+}
+#id_q {
+	width:116px;
+	font-size: 10px;
+}
+#id_searchsubmit{
+	margin-top:6px;
+	float:right;
 }
 
 /* ============================================ */
@@ -1016,20 +1046,7 @@ tr.even.doctype_TEI td {
 	width:100%;
 	margin-top: 5px;
 }
-/* ============================================ */
-/* Search Fields */
 
-#id_inTextes, #id_inSpeakers {
-	width:100%;
-	font-size: 10px;
-}
-#id_q {
-	width:110px;
-	font-size: 10px;
-}
-#id_searchsubmit {
-	float:right;
-}
 
 /* ============================================ */
 /* Search Results */
@@ -1127,16 +1144,21 @@ a.res_middle_link {
 
 
 
+/* =================================================================================== VISUALIZATIONS (d3.js created objects) */
+/* TextStreamTimeline */
+/* svg path - color is set in template based on speaker model color */
+.viz_TextStreamTimeline_Graph { stroke:gray; opacity:0.6; }
 
-
-
-
-
-/* =================================================================================== VISUALIZATIONS */
+/* =================================================================================== VISUALIZATIONS (evbrowse) */
 .vizdiv {
 	text-align:left;
 	font-size:10px;
 }
+
+/* ============================================ */
+/* Viz facets */
+#vizFacetLook, #vizFacetType { padding-left:24px;padding-bottom:8px;}
+#vizFacetOverView { margin-left:24px;}
 
 /* ============================================ */
 /* GENERAL LIST OF VIZUS */

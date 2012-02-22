@@ -18,7 +18,7 @@ function buildD3_Overview(data,theId,param) {
 			//console.log("updated weight:"+links[k].spk.label+":"+links[k].spk.weight);
 		}
 		mode=param.mode;
-		//console.log(unik+":param dic received and mode set to:"+mode);
+		console.log(unik+":param dic received and mode set to:"+mode);
 	}
 	else console.log(unik+":no param dic given to update spk weights");
 	
@@ -36,26 +36,39 @@ function buildD3_Overview(data,theId,param) {
 		maxSpkDoc = Math.max(speakers.length,textes.length);
 	}
 */
+	///////////////////////////////////// SETTINGS
+	var basePathColor = "#F0F0F0";
+	var baseSelPathColor = "#6699CC";
+	// font sizes
+	var minFontSize = 10;
+	var maxFontSize = 12;
+	var minSelSize = 10;
+	var maxSelSize = 12;
+	var weightLabelFontSize=11; // used ?
+	
 	var baseOpacity = 1;
 	var selOpacity = 0.9;
 	var overOpacity = 1;
+	var baseWeightOp = 0;
+	var baseSpkLabelOp = 0.5;
 	///////////
 	var leftMargin=0;
 	var topMargin=10;
-	var totalW=150;
-	var weightLabelFontSize=9;
-	var zeroStrokeWidth=4;
-	var selStrokeWidth=4;
-	var spaceForEach=3;
+	var totalW=120;
+	
+	var zeroStrokeWidth=2;
+	var selStrokeWidth=11;
+	var spaceForEach=12;
 	var totalH= maxSpkDoc*spaceForEach + 2*topMargin;
 
 	var bezierDec=25;
-	var bezierMargin=2;
-
+	var bezierMargin=0;//2
+	var labelLeftMargin = 7;
+	
 	////////// SPK WEIGHT
 	var xDoc = leftMargin;
-	var minXSpk = 60;
-	var xSpk = 70;
+	var minXSpk = 3;
+	var xSpk = 17;
 	var maxWeightSpeaker = d3.max(links,function(d,i){return d.spk.weight;});
 	var minWeightSpeaker = d3.min(links,function(d,i){return d.spk.weight==0 ? maxWeightSpeaker:d.spk.weight;});
 	//console.log("maxWeightSpeaker:"+maxWeightSpeaker);
@@ -67,13 +80,14 @@ function buildD3_Overview(data,theId,param) {
 		.range([minXSpk,xSpk]);
 	var labelScale=d3.scale.linear()
 		.domain([0,maxWeightSpeaker])
-		.range([7,9]);
+		.range([minFontSize,maxFontSize]);
 	var labelSelScale=d3.scale.linear()
 		.domain([0,maxWeightSpeaker])
-		.range([10,12]);
+		.range([minSelSize,maxSelSize]);
 	
 	
 	/////////// SORT BUTTONS
+/*
 	var sortdiv = vizdiv.append("div");
 	sortdiv.append("span")
 		.text("sort using: ");
@@ -86,6 +100,7 @@ function buildD3_Overview(data,theId,param) {
 		.style("cursor","pointer")
 		.text("docs")
 		.on("click", function() { mode='document'; sortLinks(); });
+*/
 
 	/////////// GENERAL CHART		
 	var chart = vizdiv.append("svg:svg")
@@ -124,21 +139,21 @@ function buildD3_Overview(data,theId,param) {
 			.data(links)
 			.enter().append("svg:g");
 		
-		// PATH LINK
+		// PATH LINK FOR EACH SPK
 		thelinks.append("svg:path")
-			.attr("class",function(d,i){return "link doc_"+d.doc.id+" spk_"+d.spk.id;})
-			.attr("stroke",function(d,i){return d.spk.weight==0 ? "#B0B0B0"  : "red";})
-			.attr("stroke-width",function(d,i){return d.spk.weight==0 ? zeroStrokeWidth:selStrokeWidth;})
+			.attr("class",function(d,i){return "link spk_"+d.spk.id;})
+			.attr("stroke",function(d,i){return d.spk.weight==0 ? basePathColor : baseSelPathColor ;})
+			.attr("stroke-width",function(d,i){return d.spk.weight==0 ? zeroStrokeWidth : selStrokeWidth;})
 			.attr("fill","none")
 			.style("opacity",getSpkOpacity)
 			.attr("d", function(d,i) {
-				u = getY(d,i);
+				they = getY(d,i);
 				// from
 				var xT = xDoc+bezierMargin;
-				var yT = u[0];
+				var yT = they;
 				// to
 				var xS = spkScaleX(d.spk.weight)-bezierMargin;
-				var yS = u[1];
+				var yS = they;
 				return "M "+xT+" "+yT+" C "+(xT+bezierDec)+" "+yT+" "+(xS-bezierDec)+" "+yS+" "+xS+" "+yS;
 			})
 			.on("mouseover",function(d,i){highlight(d.spk.id,true);})
@@ -147,10 +162,9 @@ function buildD3_Overview(data,theId,param) {
 		// SPK LABEL	
 		thelinks.append("svg:text")
 			.attr("class",function(d,i){return "label spk_"+d.spk.id;})
-			.style("opacity",0)
-			//.attr("x", function(d,i){return 3+xSpk;} )
-			.attr("x", function(d,i){return 5+spkScaleX(d.spk.weight)-bezierMargin;} )
-			.attr("y", function(d,i){return 4+getY(d,i)[1];} )
+			.style("opacity",baseSpkLabelOp)
+			.attr("x", function(d,i){return spkScaleX(d.spk.weight) - bezierMargin + labelLeftMargin;} )
+			.attr("y", function(d,i){return 4+getY(d,i);} )
 			.attr("fill",getSpkLabelFill)
 			.attr("text-anchor", "left")
 			.style("cursor","pointer")
@@ -162,9 +176,9 @@ function buildD3_Overview(data,theId,param) {
 		// WEIGHT LABEL
 		thelinks.append("svg:text")
 			.attr("class",function(d,i){return "weight spk_"+d.spk.id;})
-			.style("opacity",0)
+			.style("opacity",baseWeightOp)
 			.attr("x", function(d,i){return totalW-2;} )
-			.attr("y", function(d,i){return 4+getY(d,i)[1];} )
+			.attr("y", function(d,i){return 4+getY(d,i);} )
 			.attr("fill",getSpkLabelFill)
 			.attr("text-anchor", "end")
 			.style("cursor","pointer")
@@ -206,37 +220,29 @@ function buildD3_Overview(data,theId,param) {
 	var highlight = function(spkid,flag) {
 		d3.selectAll(unik+" .link").style("opacity",function(d,i){return flag ? 0.1 : getSpkOpacity(d,i) ;});
 		d3.select(unik+" .link.spk_"+spkid).style("opacity",function(d,i){return flag ? 1 : getSpkOpacity(d,i) ;});
-		d3.select(unik+" .weight.spk_"+spkid).style("opacity",function(d,i){return flag ? 1 : 0 ;});
-		d3.select(unik+" .label.spk_"+spkid).style("opacity",function(d,i){return flag ? 1 : 0 ;});
+		d3.select(unik+" .weight.spk_"+spkid).style("opacity",function(d,i){return flag ? 1 : baseWeightOp ;});
+		d3.select(unik+" .label.spk_"+spkid).style("opacity",function(d,i){return flag ? 1 : baseSpkLabelOp ;});
 		d3.select(unik+" .label.spk_"+spkid).attr("font-size",function(d,i){return flag ? labelSelScale(d.spk.weight) : labelScale(d.spk.weight) ;})
 	};
 	var sortLinks = function() {
-		//console.log("sorting using:"+mode);
 		if(mode=='weight') {
 			// here we have to bring near speakers sharing a doc in each level, to avoid "diagonal-long" lines
-			links.sort(function(a,b) {
-				return b.spk.weight-a.spk.weight;
-				// DEPRECATED, cause now we just sort and distinguish each spk-doc (simple lines)
-/*				
-				var difw = b.spk.weight-a.spk.weight;
-				var difdid = b.doc.id-a.doc.id;
-				var difndoc = b.ndoc-a.ndoc;
-				if(difw!=0) return difw;
-				else {
-					if(difndoc!=0) return difndoc;
-					else return difdid;
-				}
-*/
-			});
-			buildList();
-		}
-		if(mode=='document') {
-			// if multiple spk per doc, no pb, they will be near to each other
-			links.sort(function(a,b) {return b.doc.id-a.doc.id;});
-			buildList();
+			links.sort(function(a,b) { return b.spk.weight-a.spk.weight; });
 		}
 	};
 	var simplesc = d3.scale.linear().domain([0,links.length-1]).range([topMargin,totalH-topMargin]);
+
+	var getY = function(d,i) {
+		var idSpkScale=d3.scale.linear()
+			.domain([0,nLinks-1])
+			.range([topMargin,totalH-topMargin]);
+		return idSpkScale(i);
+	}
+	
+	sortLinks();
+	buildList();
+	
+/*
 	var getY=function(d,i) {
 		// all links parallell
 		if(mode=='weight') {
@@ -270,9 +276,7 @@ function buildD3_Overview(data,theId,param) {
 			return [idDocScale(iDoc[d.doc.id]),idSpkScale(iSpk[d.spk.id])];
 		}
 	};
-	
-	sortLinks();
-	buildList();
+*/
 };
 ////////////////////////////////////////////////////
 
@@ -296,34 +300,6 @@ function buildD3_Overview(data,theId,param) {
 
 
 
-
-/*
-	///////////////////////////////////////////////////////////////////////////// TEXTES
-	var tLabels = chart.selectAll("tLabel")
-		.data(textes)
-		.enter().append("svg:text")
-			.attr("class",function(d,i){return "doc doc_"+d.id;})
-			.attr("weight",function(d,i){return d.weight;})
-			.attr("x", leftMargin )
-			.attr("y", function(d,i){return 2+yTextes(d,i);} )
-			.attr("text-anchor", "end")
-			.attr("font-size",2)
-			.text( function(d,i){return d.label;} );
-			
-	///////////////////////////////////////////////////////////////////////////// SPEAKERS
-	var sLabels = chart.selectAll("sLabel")
-		.data(speakers)
-		.enter().append("svg:text")
-			.attr("class",function(d,i){return "spk spk_"+d.id;})
-			.attr("weight",function(d,i){return d.weight;})
-			.attr("x",function(d,i){return spkScaleX(d.weight);})
-			.attr("y", function(d,i){return 2+ySpeakers(d,i);} )
-			.attr("text-anchor", "left")
-			.attr("font-size",2)
-			.text( function(d,i){return d.label;} );
-	sLabels.append("svg:circle")
-		.attr("r", 4.5);
-*/
 
 
 

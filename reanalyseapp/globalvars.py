@@ -63,10 +63,10 @@ SENTENCE_UTT_SYMBOLS['interrogative']='? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
 ########## CODES ACTIVATED (every code need to be declared in DEFINITIONS below anyway)
-# ACTIVATED CODES (displayed IN edShow view to toggle show/hide)
+# ACTIVATED CODES (displayed IN edShow view to toggle show/hide) OK to do categories (aka Transcription/Verbatim)
 PARVBCODES={}
-PARVBCODES['transcription'] = 	['break','comment','inaudible','question','time']
-PARVBCODES['verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
+PARVBCODES['Transcription'] = 	['break','comment','inaudible','question','time']
+PARVBCODES['Verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
 
 # THOSE YOU WANT TO PUT SPECIALLY on the margin (will add a css class)
 PARVBMARGL = ['comment','break']

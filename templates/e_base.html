@@ -84,22 +84,57 @@
 {% endif %}
 
 {% if permexplorethis %}
-<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div></a>
-<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div></a>
-<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %}
-	{% if perms.reanalyseapp.can_make %}
-		({{enquete.visualization_set.count}})
-	{% else %}
-		({{enquete|visualizationPublicCount}})
-	{% endif %}
-</div></a>
-<a href="{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}"><div class="allPage {% if pageid == 'search' %}currentPage{% endif %}"><span class="imSearch"></span> {% trans 'Search' %}</div></a>		
+	<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} {% if perms.reanalyseapp.can_make %}({{enquete.visualization_set.count}}){% else %}({{enquete|visualizationPublicCount}}){% endif %}</div></a>
+
+	{% block enqueteleftmenuviz %}
+	{% endblock %}
+
+	<div id="searchFormContainer">
+		<div id="searchFormDiv">
+		<form id="searchForm">
+			{{ form.non_field_errors }}
+			<div class="fieldWrapper">
+				{{ form.q.errors }}
+				{{ form.q }}
+				<input id="id_searchsubmit" type="image" name="_search" value="type to search" src="{{ MEDIA_URL }}/images/zoom.png"/>
+			</div>
+			{% comment %}
+			<!-- ADVANCED OPTIONS -->
+			<a href="#" onclick='$("#toggle_appear").toggle("fast"); return false;'>advanced options</a>
+			<div id="toggle_appear" style="display:none;">
+				
+				(OR,AND,-a,"a b"=a_b)
+				
+				<!-- ///////////////////////// OPTIONS -->
+				{{ form.rawQuery.errors }}
+				{{ form.rawQuery }}Raw Query</br>
+				(a?b,a*,a^4 b,a~0.7,"a b"~10)</br>
+				{{ form.autocomplete }}AutocompleteC</br>
+				{{ form.autocompletew }}AutocompleteW</br>
+				
+				<!-- ///////////////////////// NEW FACETS, by hand -->
+				<a href="#" onclick='resetFacetsAndResearch(); return false;'>> reset facets</a>
+				
+				<br/>Note:
+				<br/>+ please make sure
+				<a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> 
+				is on and already has an index (made of all Interventions)
+				<br/>+ stopwords return all the index (not displaying correctly?)
+				<!-- initially, facets are just the list of Texts/Speakers -->
+				<!-- built by the view and available ein the context as "handfacets.textes & handfacets.speakers" -->
+				<!-- when searching, order and counts are updated (from search_results.html template), using javascript -->
+			</div>
+			{% endcomment %}
+		</form>
+		</div>
+	</div>
 
 {% else %}
-<div class="allPage pageDisabled">{% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div>
-<div class="allPage pageDisabled">{% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div>
-<div class="allPage pageDisabled">{% trans 'Visualizations' %} ({{enquete|visualizationPublicCount}})</div>
-<div class="allPage pageDisabled">{% trans 'Search' %}</div>
+	<div class="allPage pageDisabled">{% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Visualizations' %} ({{enquete|visualizationPublicCount}})</div>
 {% endif %}
 
 {% if not permexplorethis %}
@@ -111,99 +146,35 @@
 
 {% endif %}		
 
+
+	{% block enqueteleftmenusearch %}
+	{% endblock %}
+		
 	</div>
-	
-	
-<!-- ============================ SOLR INDEX ADMIN -->	
-{% if perms.reanalyseapp.can_make %}
-<div class="leftmenublock">
-	<ul>
-		<li><a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr admin</a></li>
-		<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a></li>
-		<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}">update_index</a></li>
-		<li><a href="{% url reanalyse.reanalyseapp.views.resetAllTfidf enquete.id %}">populate ngrams</a></li>
-	</ul>
-</div>
-{% endif %}
+
+	<!-- ============================ MORE LEFTMENU -->	
+	{% block enqueteleftmenumore %}
+	{% endblock %}
+			
+	<!-- ============================ SOLR INDEX ADMIN -->
+	{% comment %}
+	{% if perms.reanalyseapp.can_make %}
+	<div class="leftmenublock">
+		<ul>
+			<li><a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr admin</a></li>
+			<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a></li>
+			<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}">update_index</a></li>
+			<li><a href="{% url reanalyse.reanalyseapp.views.resetAllTfidf enquete.id %}">populate ngrams</a></li>
+		</ul>
+	</div>
+	{% endif %}
+	{% endcomment %}
 		
-		<!-- ============================ IF NEEDED, BEFORE -->
-		{% block enqueteleftmenubefore %}
+	<!-- ============================ MORE, BUT SCROLL TO FIXED -->
+	<div id="leftMenuScrollToFixed">
+		{% block enqueteleftmenumorescroll %}
 		{% endblock %}
-		
-		
-		{% comment %}
-		<!-- ============================ STATISTICS -->
-		<div class="leftmenublock">
-			<h1><a href="#" onclick='$("#leftmenu_stats").toggle("fast");return false;'>All Statistics</a></h1>
-			<div id="leftmenu_stats" style="display:none;">
-				<!-- Texts -->
-				<a rel="generaltooltip" title="{% for d in enquete.texte_set.all %}<a href='{% url reanalyse.reanalyseapp.views.edShow enquete.id d.id %}'>{{d.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
-				<b>{{enquete.texte_set.count}}</b> Texts</br>
-				<!-- Speakers -->
-				<a rel="generaltooltip" title="{% for p in enquete.speaker_set.all %}<a href='{% url reanalyse.reanalyseapp.views.esShow enquete.id p.id %}'>{{p.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
-				<b>{{enquete.speaker_set.count}}</b> Speakers</br>
-				
-
-
-				<!-- CodeTypes -->
-				<a rel="generaltooltip" title="{% for c in enquete.codetype_set.all %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>	
-				<b>{{enquete.codetype_set.count}}</b> Categories</br>
-				<!-- Codes -->
-				<a rel="generaltooltip" title="{% for c in enquete.code_set.all %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>		
-				<b>{{enquete.code_set.count}}</b> Codes</br>
-				<!-- Words -->
-				<b>{{enquete.intervention_set.count}}</b> Interventions</br>
-				<b>{{enquete.wordentity_set.count}}</b> Words</br>
-				<b>{{enquete.word_set.count}}</b> Word-Occurrences
-
-				
-			</div>
-		</div>
-		<!-- ============================ STATISTICS LOCAL-->
-		{% if texte %}
-			<div class="leftmenublock">
-				<h1>Local Statistics</h1>
-				<!-- Texts -->
-				<a rel="generaltooltip" title="{% for d in stats.textes %}<a href='{% url reanalyse.reanalyseapp.views.edShow enquete.id d.id %}'>{{d.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
-				<b>{{stats.textes.count}}</b> Texts</br>
-				<!-- Speakers -->
-				<a rel="generaltooltip" title="{% for p in stats.speakers %}<a href='{% url reanalyse.reanalyseapp.views.esShow enquete.id p.id %}'>{{p.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>
-				<b>{{stats.speakers.count}}</b> Speakers</br>
-				
-
-				<!-- CodeTypes -->
-				<!--<a rel="generaltooltip" title="{% for c in enquete.codetype_set.all %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}}</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>	
-				<b>{{stats.codetype_set.count}}</b> Categories</br>-->
-				<!-- Codes -->
-				<a rel="generaltooltip" title="{% for c in stats.codes %}<a href='{% url reanalyse.reanalyseapp.views.ecShow enquete.id c.id %}'>{{c.name}} ({{c.codetype.name}})</a>, {% endfor %}">
-				<img src="{{ MEDIA_URL }}/images/helpcircle.png" alt="description"/></a>		
-				<b>{{stats.codes.count}}</b> Codes</br>
-				<!-- Words -->
-				<b>{{stats.interventions}}</b> Interventions</br>
-				<b>{{stats.wordentities}}</b> WordEntities</br>
-				<b>{{stats.words}}</b> Words
-				
-			</div>
-		{% endif %}
-		{% endcomment %}
-		
-		
-		<!-- ============================ MORE -->
-		{% block enqueteleftmenumore %}
-		{% endblock %}
-		
-		<!-- ============================ MORE, BUT SCROLL TO FIXED -->
-		<div id="leftMenuScrollToFixed">
-			{% block enqueteleftmenumorescroll %}
-			{% endblock %}
-		</div>
+	</div>
 		
 	</div>
 	<!-- ======================================================= -->
@@ -212,20 +183,24 @@
 
 
 {% block bottom %}
+	
+	{% block enquetebottommore %}
+	{% endblock %}
+	
 	<!-- scroll to fixed for leftmenu -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-scrolltofixed-min.js"></script>
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
-			// scroll to fixed
+			initSearchForm('{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}');
+			
+			// scroll to fixed blocks
 			$('#leftMenuScrollToFixed').scrollToFixed();
 				
 			initGeneralTooltips();
 		});
 	</script>
-	{% block enquetebottommore %}
-	{% endblock %}
 
 {% endblock %}
 

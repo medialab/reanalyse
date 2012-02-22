@@ -999,6 +999,8 @@
     </lst>
   </requestHandler>
   
+  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler" />
+  
   <!-- Solr Replication
 
        The SolrReplicationHandler supports replicating indexes from a

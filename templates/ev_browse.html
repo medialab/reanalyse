@@ -41,62 +41,51 @@
 	
 {% endblock %}
 
-{% block enqueteleftmenumore %}
+
+{% block enqueteleftmenuviz %}
+	{% comment %}
+	<!-- =============================== OVERVIEW VIZ -->
+	<!--<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Viz Repartition</h1>-->
+	<div id="vizFacetOverView">
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>
+		<div id="theViz_over" style="width:100%;"></div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+			$.ajax({
+				url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
+				success: function(data){
+					//console.log("data received for viz:{{nk}}");
+					$("#theViz_over").html("");
+					var statdat = { 'mode':'weight','stats':{ {%for k,v in overviewStats.items%}'{{k}}':{{v}},{%endfor%} } };
+					buildD3_Overview(data,"theViz_over",statdat);
+					},
+				});
+			});
+		</script>
+	</div>
+	{% endcomment %}	
 {% endblock %}
 
 
 {% block enqueteleftmenumorescroll %}
-
-	<!-- =============================== VIZ FACETS to modify display -->
 	<div class="leftmenublock">
-		<h1 onclick='$("#vizShowHide").toggle("fast");return false;'>Toggle / Show</h1>
-		<div id="vizShowHide">
-			<ul>
-				<li><a href="" id="butStory">Tell me a story</a></li>
-				<li><a href="" id="butAllViz">Show only content</a></li>
-				<li><a href="" id="butAllHeader">Show only headers</a></li>
-				<!--<li><a href="" id="butAllDescr">descr</a></li>-->
-			</ul>
-		<h2>Show only Types</h2>
-			<ul>
-			{% for typ in viztypes %}
-				<li><a href="" id="butAllOnly_{{typ}}">{{typ}}</a></li>
-			{% endfor %}
-			</ul>
-		</div>
+		<!-- =============================== VIZ FACETS to modify display -->
+		<!--<h1 onclick='$("#vizShowHide").toggle("fast");return false;'>Toggle / Show</h1>-->
+		<ul id="vizFacetLook">
+			<li><a href="" id="butStory">Description</a></li>
+			<li><a href="" id="butAllViz">Graphics</a></li>
+			<li><a href="" id="butAllHeader">Titles</a></li>
+			<!--<li><a href="" id="butAllDescr">descr</a></li>-->
+		</ul>
+		<!--<h2>Show only Types</h2>-->
+		<ul id="vizFacetType">
+			<li><a href="" id="butAllOnly_Cloud_SolrSpeakerTagCloud" title="">Tagcloud</a></li>
+			<li><a href="" id="butAllOnly_Graph_SpeakersSpeakers">Graph</a></li>
+			<li><a href="" id="butAllOnly_TexteStreamTimeline">Dynamic</a></li>
+			<li><a href="" id="butAllOnly_Attributes">Attributes</a></li>
+		</ul>
 	</div>
-	
-{% comment %}	
-	<!-- =============================== OVERVIEW VIZ (deactivated) -->
-	<div class="leftmenublock">
-		<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Viz Repartition</h1>
-		<div id="vizOverViewContainer" style="display:none;">
-			<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>
-
-			<!-- tryout using template (deprecated) -->
-			<!--{% include "render_v.html" with enquete=enquete v=overviewViz nk="overview" %}-->
-			
-			<!-- rather re-doing it by hand -->
-			<div id="theViz_over" style="width:100%;"></div>
-			<script type="text/javascript">
-				$(document).ready(function() {
-				$.ajax({
-					url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
-					success: function(data){
-						//console.log("data received for viz:{{nk}}");
-						$("#theViz_over").html("");
-						var statdat = { 'mode':'weight','stats':{ {%for k,v in overviewStats.items%}'{{k}}':{{v}},{%endfor%} } };
-						buildD3_Overview(data,"theViz_over",statdat);
-						},
-					});
-				});
-			</script>
-		</div>
-	</div>
-{% endcomment %}
-	
 {% endblock %}
-
 
 {% block content %}
 
@@ -282,7 +271,7 @@
 			$("#butAllOnly_{{typ}}").click( function(event) {
 				toggleShow(false,false,false);
 				
-				$(".viztype_{{typ}} .vizHeader").toggle(false);
+				$(".viztype_{{typ}} .vizHeader").toggle(true);
 				$(".viztype_{{typ}} .descrContainer").toggle(false);
 				$(".viztype_{{typ}} .vizContainer").toggle(true);
 

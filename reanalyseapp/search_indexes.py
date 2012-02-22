@@ -23,10 +23,11 @@ class SentenceIndex(SearchIndex):
 	# to search only in a specific enquete
 	enqueteid = IntegerField(model_attr='enquete__id')
 	
-	# needed to do facets filtering results (id is more efficient)
+	# needed to do facets filtering results
 	texteid = IntegerField(model_attr='texte__id', faceted=True)
 	speakerid = IntegerField(model_attr='speaker__id', faceted=True)
-	# used to sort by name
+	
+	# used to sort by name (texte/speaker)
 	texte = CharField(model_attr='texte__name', faceted=True)
 	speaker = CharField(model_attr='speaker__name', faceted=True)
 	# PROBLEM: CharField should become a field_type="string" in the schema.xml, but.... no > "text"

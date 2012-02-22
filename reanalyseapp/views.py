@@ -174,6 +174,11 @@ def updateCtxWithPerm(ctx,request,e):
 	canexplorethis = user.has_perm(permexplorethis) or eGroup in user.groups.all() or cGroup in user.groups.all()
 	ctx.update({'permexplorethis':canexplorethis})
 ###########################################################################
+def updateCtxWithSearchForm(ctx):
+	form = SentenceSearchForm(load_all=False)
+	ctx.update({'form':form})
+###########################################################################
+
 
 
 
@@ -419,6 +424,9 @@ def eParse(request):
 	e.statuscomplete=0
 	e.save()
 	
+	makeViz(e,'Overview')		# for left-menu-facets
+	makeViz(e,'Attributes')		# with all speakers (since they should be defined in meta_speakers.csv table)
+	
 	####### PARSE TEI and UPDATE INDEX (and save statuscomplete to know loading status)
 	# we look at '5'='Waiting' TEI Documents...
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
@@ -565,6 +573,7 @@ def eShow(request,eid):
 	
 	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metashort':metashort,'description':description}
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	return render_to_response('e_show.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 @login_required
@@ -573,7 +582,8 @@ def eseShow(request,eid):
 	ese = simplejson.loads(e.ese)
 	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese':ese}
 	updateCtxWithPerm(ctx,request,e)
-	return render_to_response('e_eseShow.html',ctx ,context_instance=RequestContext(request))
+	updateCtxWithSearchForm(ctx)
+	return render_to_response('e_ese.html',ctx ,context_instance=RequestContext(request))
 ###########################################################################
 
 	
@@ -725,6 +735,7 @@ def edBrowse(request,eid):
 	
 	ctx.update({'tTable':tTable, 'speakersColors':speakersColors, 'attributeTypes':colarray})
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	if ctx['permexplorethis']:
 		return render_to_response('ed_browse.html', ctx, context_instance=RequestContext(request))
 	else:
@@ -839,6 +850,7 @@ def esBrowse(request,eid):
 	
 	ctx.update({'sTable':sTable,'attributeTypes':colarray})
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	if ctx['permexplorethis']:
 		return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
 	else:
@@ -864,6 +876,7 @@ def ewShow(request,eid,wid):
 	#stat['texts']=0
 	ctx = {'word':we,'stat':stat}
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	return render_to_response('ew_show.html', ctx, context_instance=RequestContext(request))
 #####################################################
 @login_required
@@ -981,7 +994,7 @@ def edShow(request,eid,did):
 		spk = texte.speaker_set.filter(ddi_type="SPK")
 		pro = texte.speaker_set.filter(ddi_type="PRO")
 		ctx.update({'speakers':{'inv':inv,'spk':spk,'pro':pro}})
-	
+		
 	######################################### CSV
 	if texte.doctype=='CSV':
 		columns=[]
@@ -1005,6 +1018,7 @@ def edShow(request,eid,did):
 	#########################################
 	
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	if ctx['permexplorethis']:
 		return render_to_response('ed_show.html', ctx , context_instance=RequestContext(request))
 	else:
@@ -1036,6 +1050,7 @@ def esShow(request,eid,sid):
 	
 	ctx.update({'content':content,'attributes':attributes,'ngrams':ngrams})
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	return render_to_response('es_show.html', ctx , context_instance=RequestContext(request))
 #####################################################
 @login_required
@@ -1053,6 +1068,7 @@ def ecShow(request,eid,cid):
 	
 	ctx = {'code':code,'stats':stats}
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	return render_to_response('ec_show.html',ctx, context_instance=RequestContext(request))
 ################################################################################
 
@@ -1152,7 +1168,6 @@ def servePdf(request,did):
 
 
 
-
 ###########################################################################
 class MyFacetedSearchView(FacetedSearchView):
 	def __name__(self):
@@ -1184,8 +1199,7 @@ def eSearch(request,eid):
 	#sForm = FacetedModelSearchForm()
 	#sForm = DateRangeSearchForm()
 	
-	e = Enquete.objects.get(id=eid)	
-	suggestion = "no"
+	e = Enquete.objects.get(id=eid)
 	
 	###### COLORS FOR SPEAKERS
 	colors = dict()
@@ -1277,151 +1291,43 @@ def eSearch(request,eid):
 # 						if t in dTextes:
 # 							linkT=dTextes.index(t)
 # 							linkS=dSpeakers.index(s)
-# 							dLinks.append([linkT,linkS])
-		
-		##### AFTER JC, RATHER do it using haystack, faceting using .facet('texteid') or .facet('speakerid')
-		# NB: (This is only to get general (xx/xx) counts for each text/speaker)
-		fsqs = SearchQuerySet().models(Sentence).filter(enqueteid=eid).filter(content=que).facet('speakerid').facet('texteid')
-		#fsqs = fsqs.facet('texteid').facet('speakerid')
-		## get textes facet_counts
-		fcounts = fsqs.facet_counts()
-		overviewStats={}
-		if 'fields' in fcounts.keys():
-			fieldCounts = fcounts['fields']
-# 			for tup in fieldCounts['texteid']:
-# 				try: # here we can have textes from other enquete (no! we already filteres by enqueteid !)
-# 					t=Texte.objects.get(id=tup[0])
-# 					nres=tup[1]
-# 					ntotal = t.sentence_set.count()
-# 					tFacets.append([ nres, ntotal , t, tup[0] in inTextesIds.split(',') ])
-# 					if nres>0:
-# 						involvedTextes.append(t)
-# 				except:
-# 					logging.info("PROBLEM: search facets: texte id does not exist (result from other enquete ?)")
-			## get speakers facet_counts
-			for tup in fieldCounts['speakerid']:
-				try:
-					s=Speaker.objects.get(id=tup[0])
-					nres=tup[1]
-					#ntotal = s.sentence_set.count()
-					#sFacets.append([ nres, ntotal , s, tup[0] in inSpeakersIds.split(',') ])
-					overviewStats[s.id]=nres
-					if nres>0:
-						involvedSpeakers.append(s)
-# 						for t in s.textes.all():
-# 							if t in involvedTextes:
-# 								linkT=involvedTextes.index(t)
-# 								linkS=involvedSpeakers.index(s)
-# 								dLinks.append([linkT,linkS])
-				except:
-					logging.info("search facets: speaker id does not exist (result from other enquete ?)")
-		handfacets['textes']=tFacets
-		handfacets['speakers']=sFacets
-		handfacets['maxT']=maxT
-		handfacets['maxS']=maxS
-		
-		ctx['handfacets']=handfacets
-		
-		################################# FACET OVERVIEW VISUALIZATION #################################
-		try:
-			overviewViz=e.visualization_set.filter(viztype='Overview')[0]
-		except:
-			overviewViz=makeViz(e,'Overview')
-		ctx['overviewViz']=overviewViz
-		ctx['overviewStats']=overviewStats
-	
-		ctx['textes']=involvedTextes
-		ctx['speakers']=involvedSpeakers
-		
-		
+# 	 							dLinks.append([linkT,linkS])
+# 		handfacets['textes']=tFacets
+# 		handfacets['speakers']=sFacets
+# 		handfacets['maxT']=maxT
+# 		handfacets['maxS']=maxS
+#		ctx['handfacets']=handfacets
+				
 		sqs = SearchQuerySet().models(Sentence).filter(enqueteid=eid)
 		
-		#################################### FACET-RESULTS by Texte/Speaker
-		# cool with SQ() 'custom' facets, allowing to filter using AND/OR operators)
-		if len(inSpeakersIds)>0:
-			or_query = None
-			for sid in inSpeakersIds.split(','):
-				if or_query is None:
-					or_query = SQ(speakerid=sid)
-				else:
-					or_query = or_query | SQ(speakerid=sid)
-			sqs = sqs.filter(or_query)
-		if len(inTextesIds)>0:
-			or_query = None
-			for tid in inTextesIds.split(','):
-				if or_query is None:
-					or_query = SQ(texteid=tid)
-				else:
-					or_query = or_query | SQ(texteid=tid)
-			sqs = sqs.filter(or_query)
+# 		#################################### FACET-RESULTS by Texte/Speaker
+# 		# cool with SQ() 'custom' facets, allowing to filter using AND/OR operators)
+# 		if len(inSpeakersIds)>0:
+# 			or_query = None
+# 			for sid in inSpeakersIds.split(','):
+# 				if or_query is None:
+# 					or_query = SQ(speakerid=sid)
+# 				else:
+# 					or_query = or_query | SQ(speakerid=sid)
+# 			sqs = sqs.filter(or_query)
+# 		if len(inTextesIds)>0:
+# 			or_query = None
+# 			for tid in inTextesIds.split(','):
+# 				if or_query is None:
+# 					or_query = SQ(texteid=tid)
+# 				else:
+# 					or_query = or_query | SQ(texteid=tid)
+# 			sqs = sqs.filter(or_query)
 		
 		
 		#################################### todo: AUTOCOMPLETE - not tried
 		# todo: AJAX call to get 3/4 examples of results (autocomplete) ?
-		if autocomplete=='on':
-			sqs = sqs.autocomplete(content_c_auto=que)
-		if autocompletew=='on':
-			sqs = sqs.autocomplete(content_w_auto=que)
+# 		if autocomplete=='on':
+# 			sqs = sqs.autocomplete(content_c_auto=que)
+# 		if autocompletew=='on':
+# 			sqs = sqs.autocomplete(content_w_auto=que)
 		# not working?
 		#sqs = sqs.filter(texte__enquete=e)
-
-		
-		#################################### SORT RESULT -  ? order_by() works with field declared in Indexes (?) really ? (yes if filed type is "string" :)
-		if sortby=='text':
-			sqs = sqs.order_by('texte')
-			#ctx['log']='by textes'
-		if sortby=='speaker':
-			sqs = sqs.order_by('speaker')
-		sqs = sqs.highlight()
-	
-	
-	# DEPRECATED TFIDF TABLE
-# 	if len(que)>1:
-# 		############################################################### TFIDF
-# 		# [ same as: getTermVectorsDict() in visualization.py ]
-# 		# For that query, get tfidf for each spaker, using pythonsolr raw_query
-# 		# Then get only shared words and display tfidf for each speaker
-# 		#
-# 		# todo: maybe keeping only the word(s) corresponding to query (not all shared) ?
-# 		#
-# 		tfp = {'fq':'django_ct:(reanalyseapp.speaker)','qt':'tvrh','fl':'text','tv.fl':'text','tv.all':'true'}
-# 		conn = pythonsolr.Solr( settings.HAYSTACK_SOLR_URL )
-# 		tfq = que
-# 		r = conn.search(tfq,**tfp)
-# 		resDict = list2dict(r.result['termVectors'])
-# 		keys = resDict.keys()
-# 		myKeepWords=[]
-# 		myDict={}
-# 		keys.remove('uniqueKeyFieldName')
-# 		for tvs in keys: # each doc
-# 			dd = list2dict(resDict[tvs])
-# 			words = list2dict(dd['text'])					# tfidf dict for that speaker
-# 			sid = int( dd['uniqueKey'].split('.')[-1] ) 	# 'reanalyseapp.speaker.100'
-# 			snam = Speaker.objects.get(id=sid).name
-# 			myDict[snam] = words
-# 			if len(myKeepWords)==0:	# first one
-# 				myKeepWords = words.keys()
-# 			else: # then only keep intersection
-# 				myKeepWords = list(set(myKeepWords) & set(words.keys()))
-# 		
-# 		tfWords = {}
-# 		# words are the keys
-# 		for w in myKeepWords:
-# 			tfWords[w]={}
-# 			for s in myDict.keys(): # for each speaker
-# 				d = list2dict(myDict[s][w])
-# 				d['tfidf']=d['tf-idf']
-# 				#valstr = 'tf.'+str(d['tf'])+' df.'+str(d['df'])+' tfidf.%.3f'%d['tf-idf']
-# 				tfWords[w][s] = d
-# 		ctx['tfidf']=tfWords
-# 		###############################################################
-	
-	
-	
-	
-	
-	####### todo: MORE LIKE THIS... (warning: to activate in solrconfig.xml !)
-	#related = SearchQuerySet().more_like_this(resource)
 		
 	####### SPELLING SUGGESTION - NOT WORKING YET...
 	#suggestion = SearchQuerySet().filter(content_auto=que).spelling_suggestion()
@@ -1455,8 +1361,6 @@ def eSearch(request,eid):
 		#sqs = sqs.highlight()
 	
 	
-	
-	
 	################################# RELATED VISUALIZATIONS #################################
 	# do not create viz here ! (time consuming!)
 	#involvedAttributesViz = makeViz(e,'Attributes',textes=involvedTextes,speakers=involvedSpeakers)
@@ -1475,11 +1379,59 @@ def eSearch(request,eid):
 	# because basic_search seems not to take into account ; extra_context (with facets)
 	results = EmptySearchQuerySet()
 	
+	# MORE LIKE THIS & SUGGESTION (warning: to activate in solrconfig.xml !)
+	# see http://django-haystack.readthedocs.org/en/latest/installing_search_engines.html
+	#morelikethis = sqs.more_like_this([djangoObject])
+	#suggestion = sqs.spelling_suggestion()
+	
+	sqs = sqs.highlight()
+
+	try:
+		overviewViz=e.visualization_set.filter(viztype='Overview')[-1]
+	except:
+		overviewViz=makeViz(e,'Overview')
+	ctx['overviewViz']=overviewViz
+					
 	if request.GET.get('q'):
 		form = SentenceSearchForm(request.GET, searchqueryset=sqs, load_all=False)
 		if form.is_valid():
 			query = form.cleaned_data['q']
 			results = form.search()
+			################################# SORT BY
+			if sortby=='texte':
+				results = results.order_by('texte')
+			if sortby=='speaker':
+				results = results.order_by('speaker')
+			################################# FACET OVERVIEW VISUALIZATION
+			##### AFTER JC, RATHER do it using haystack, faceting using .facet('texteid') or .facet('speakerid')
+			# NB: (This is only to get general (xx/xx) counts for each text/speaker)
+			facets = results.facet('speakerid').facet('texteid')
+			## get textes facet_counts
+			fcounts = facets.facet_counts()
+			overviewStats={}
+			if 'fields' in fcounts.keys():
+				fieldCounts = fcounts['fields']
+				## get textes facet_counts ...
+	 			#for tup in fieldCounts['texteid']:
+				## get speakers facet_counts
+				for tup in fieldCounts['speakerid']:
+					s=Speaker.objects.get(id=tup[0])
+					nres=tup[1]
+					#ntotal = s.sentence_set.count()
+					#sFacets.append([ nres, ntotal , s, tup[0] in inSpeakersIds.split(',') ])
+					overviewStats[s.id]=nres
+					if nres>0:
+						involvedSpeakers.append(s)
+	# 						for t in s.textes.all():
+	# 							if t in involvedTextes:
+	# 								linkT=involvedTextes.index(t)
+	# 								linkS=involvedSpeakers.index(s)
+	# 								dLinks.append([linkT,linkS])
+			
+			ctx['overviewStats']=overviewStats
+			#ctx['textes']=involvedTextes
+			#ctx['speakers']=involvedSpeakers	
+			
 	else:
 		form = SentenceSearchForm(searchqueryset=sqs, load_all=False)
 	
@@ -1495,7 +1447,8 @@ def eSearch(request,eid):
 		'page': page,
 		'paginator': paginator,
 		'query': que,
-		'suggestion':suggestion,
+		#'morelikethis': morelikethis,
+		#'suggestion': suggestion,
 	}
 	
 	########### EXTRA CONTEXT
@@ -1508,15 +1461,12 @@ def eSearch(request,eid):
 # 	else:
 # 		extra_context['facets'] = results.facet_counts()
 	
-	ctx.update(formcontext)
+	ctx.update( formcontext )
 	ctx.update({'bodyid':'e','pageid':'search'})
 	
 	updateCtxWithPerm(ctx,request,e)
-	########### RESPONSE
-	if request.GET.get('q'):
-		return render_to_response('search_results.html', ctx, context_instance=RequestContext(request))
-	else:
-		return render_to_response('search.html', ctx, context_instance=RequestContext(request))
+
+	return render_to_response('e_searchresults.html', ctx, context_instance=RequestContext(request))
 ###########################################################################
 
 
@@ -1525,44 +1475,6 @@ def eSearch(request,eid):
 
 
 
-
-
-
-
-
-###########################################################################
-# Simple search tool : without haystack / deprecated
-# def eDeprecatedSearch(request):
-# 	resultsall=[]
-# 	resultsexcerpts=[]
-# 	resultslinks=[]
-# 	query_string = ''
-# 	found_entries = None
-# 	if ('q' in request.GET) and request.GET['q'].strip():
-# 		query_string = request.GET['q']
-# 		
-# 		# search in textes.content
-# 		#entry_query = get_query(query_string, ['content',])
-# 		
-# 		# search in wordentities.name
-# 		entry_query = get_query(query_string, ['wordentity__content',])
-# 		
-# 		logging.info("SEARCHQUERY:"+query_string)
-# 		found_entries = Texte.objects.filter(entry_query).distinct().order_by('-id')
-# 		resultslinks=[]
-# 		for obj in found_entries:
-# 			# only gives object (Textes) to build link
-# 			resultslinks.append(obj)
-# 			
-# # 		# 1st version - deprecated
-# # 		for obj in found_entries:
-# # 			# gives objects with whole content (too much!)
-# # 			resultsall += giveAllContent(obj, query_string)
-# # 			# gives extracts
-# # 			resultsexcerpts += giveExcerpts(obj,query_string)
-# 
-# 	return render_to_response('e_searchresults.html', { 'query_string':query_string, 'results':resultslinks}, context_instance=RequestContext(request))
-###########################################################################
 
 
 
@@ -1705,6 +1617,7 @@ def evBrowse(request,eid):
 	ctx['overviewStats']=overviewStats
 	
 	updateCtxWithPerm(ctx,request,e)
+	updateCtxWithSearchForm(ctx)
 	return render_to_response('ev_browse.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 # Delete Visualizations

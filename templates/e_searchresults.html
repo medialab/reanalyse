@@ -1,63 +1,256 @@
-{% extends "base.html" %}
+{% extends "e_base.html" %}
+
+{% load tags %}
 
 {% block bodyid %}
 <body id="e">
 {% endblock %}
 
-{% block head %}
+{% block enqueteheadmore %}
+
+	<!-- d3.js -->
+	<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
+	
+	<!-- =============================== CSS FOR SPEAKERS COLORS -->
+	<style type="text/css">
+	{% for k,v in colors.items %} .speaker_{{k}} {background-color:{{v}};}
+	{% endfor %}
+	</style>
+	<!-- ======================================================= -->
+	
 {% endblock %}
 
 
-{% block leftmenu %}
+{% block enqueteleftmenusearch %}
+	<!-- ================================================== FACETS OVERVIEW VIZ (deactivated) -->
+	<!--<h1 onclick='$("#vizOverViewContainer").toggle("fast");return false;'>Overview Facets</h1>-->
+	<div id="vizFacetOverView">
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>
+		<div id="theViz_over"></div>
+	</div>
 {% endblock %}
 
+
+{% block contenttop %}
+
+	{% comment %}
+	<!-- ==================================================  CONTENTTOP = Related Viz -->
+	<div id="divRelatedViz" style="display:none;">
+		<!-- =================================== FIXED TO SCROLL RELATED VIZ -->
+		<div id="contentScrollToFixed">
+			<div id="relatedViz">
+				<div id="relatedVizContainer" style="display:none;">
+					{% for v in visualizations %}
+						<div class="vizContainer" id="vizContainer_{{forloop.counter}}" style="display:none;">
+							<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_{{v.viztype}}.js"></script>
+							{% include "render_v.html" with enquete=enquete v=v nk=forloop.counter %}
+						</div>
+					{% endfor %}
+				</div>
+				<div id="relatedVizToggle" {%if visualizations|length%}onclick='$("#relatedVizContainer").toggle("fast");return false;'{%endif%}>
+					- {{visualizations|length}} related viz - 
+					{% for v in visualizations %}
+		<a href="#" onclick='$("#relatedVizContainer").toggle(true,"fast");$(".vizContainer").toggle(false);$("#vizContainer_{{forloop.counter}}").toggle(true);event.stopPropagation();return false;'>({{v.id}}) {{v.viztype}}</a>
+						{% if not forloop.last %} | {% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- =================================== -->
+	</div>
+	{% endcomment %}
+	
+{% endblock %}
 
 
 {% block content %}
+	
+	<h1><span class="searchedQuery">{{query}}</span> returned {{page.paginator.count}} results</h1>
 
-<h1>You searched for : {{query_string}}</h1>
-<ul>
-	{% for r in results %}
-		<li>{{r.name}}</li>	
-	{% endfor %}
-</ul>
+	{% comment %}
+		{% for queri,count in youcould.items %}
+			<div class="result_suggestion"><em>"{{queri}}"</em> gives <b>{{count}}</b> results</div>
+		{% endfor %}
+			<div class="result_suggestion">Suggestion: {{suggestion}}</div>
+	{% endcomment %}
+	
+	{% comment %}
+		<!-- ////// collapsable D3 GRAPH with Textes/Speakers -->
+		<div class="collapsableoptions">
+			<a href="#" onclick='if(!$("#d3stats").html()) buildD3GraphFromData(theData);$("#d3graphcontainer").toggle("fast"); return false;'>Toggle show d3 graph</a>
+			<div id="d3graphcontainer" style="display:none;">
+				<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_searchresults.js"></script>
+				<div id="d3stats"></div>
+				<script type="text/javascript">
+					var theData = []
+					// Textes
+					theData[0]=[{% for t in d3data.textes %}"{{t.name}}",{% endfor %}];
+					// Speakers
+					theData[1]=[{% for s in d3data.speakers %}"{{s.name}}",{% endfor %}];
+					// Links
+					theData[2]=[{% for s in d3data.links %}[{{s.0}},{{s.1}}],{% endfor %}];
+				</script>
+			</div>
+		</div>
+	{% endcomment %}
+	
+	<!-- //////////////////////////////////////////////////// PAGINATION -->
+	<div id="search_pagination_top" class="search_pagination">
+		{% if page.has_previous %}
+		<a href="#" onclick='launchSearch("{% url reanalyseapp.views.eSearch enquete.id %}","page={{ page.previous_page_number }}");return false;'>&laquo; Previous</a> |
+		{% endif %}
+		<!-- /////////////////////// LOOP IN AVAILABLE PAGES -->
+		{% for kp in page.paginator.page_range %}
+			{% if kp != page.number %}
+				<a href="#" onclick='launchSearch("{% url reanalyseapp.views.eSearch enquete.id %}","page={{ kp }}");return false;'> {{kp}} </a>
+			{% else %}
+				<b>  {{kp}}  </b>
+			{% endif %}
+		{% endfor %}
+		<!-- /////////////////////// -->
+		{% if page.has_next %}
+		| <a href="#" onclick='launchSearch("{% url reanalyseapp.views.eSearch enquete.id %}","page={{ page.next_page_number }}");return false;'>Next &raquo;</a>
+		{% endif %}
+	</div>
 
-
-{% comment %}
-<!-- deprecated: text extracts
-<table>
-	{% for r in results %}
-		<tr>
-			<td>{{r.name}}</td>
-			
-			<td style="text-align:right;">{{r.before}}</td>
-			<td style="text-align:center;padding:1px;"> {% autoescape off %} {{r.excerpt}} {% endautoescape %}</td>
-			<td style="text-align:left;">{{r.after}}</td>
-			
-			
-		</tr>
-	{% endfor %}
-</table>
--->
-<!-- deprecated: whole content was too much!!
-<ul>
-	{% for r in results.0 %}
-		<li class="searchResultDiv">
-			<h1>{{r.name}}</h1>
-			{% autoescape off %}
-			</br>{{r.content}}
-			{% endautoescape %}
+	<!-- //////////////////////////////////////////////////// RESULTS LIST -->
+	<ol id="searchResultList">
+		<!-- /////////////////// SORTING by... -->
+		<li>
+			<div class="searchResult">
+				<div class="res_left">
+					<a href="#" onclick='launchSearch("{% url reanalyseapp.views.eSearch enquete.id %}","sortb=speaker");return false;'>sort by Speaker</a>
+				</div>
+				<div class="res_middle" style="text-align:center">
+					<!--<a href="#" onclick='launchSearch();return false;'>sort by Relevance score</a>-->
+				</div>
+				<div class="res_right">
+					<a href="#" onclick='launchSearch("{% url reanalyseapp.views.eSearch enquete.id %}","sortb=texte");return false;'>sort by Texte</a>
+				</div>
+			</div>
 		</li>
+	{% for r in page.object_list %}
+		<li>
+			<!-- don't display relevance score for now -->
+			<!--
+			<div class="searchResult_relevance">
+				<div class="searchResult_relevance" style=" background:#CC9933; width:{% widthratio r.score 1 70 %}px;"></div>
+				<span style="margin:4px;">{{r.score|floatformat}}</span>
+			</div>
+			-->
+				<!-- ////////////////////////////////////////////////////////// SPEAKER -->
+				<a class="res_left_link" href="{% url reanalyseapp.views.esShow enquete.id r.object.speaker.id %}">
+					<div class="res_left speaker_{{r.object.speaker.id}}">
+						{{ r.object.speaker.name }}
+					</div>
+				</a>
+				<!-- ////////////////////////////////////////////////////////// TEXT EXTRACT -->
+<a class="res_middle_link" href="" onclick='toggleSentenceExtract("{% url reanalyse.reanalyseapp.views.dGetHtmlAround enquete.id r.object.id %}","sentence_{{r.object.id}}","{{query}}");return false;'> 
+					<div class="res_middle" id="sentence_{{r.object.id}}">
+						<div class="res_excerpt_txt" style="display:block;">
+							{% comment %}
+							<!-- ALL CONTENT: {{r.object.content|truncatewords:100}}-->
+							<!-- USING HAYSTACK TEMPLATE TAG: {% highlight r.object.content with query html_tag "div" css_class "result_highlighted" %} -->
+							{% endcomment %}
+							<!--{{r.object.content}}
+							</br></br>-->
+							{% autoescape off %}
+							{{ r.highlighted.text.0|replaceEmByClassedDiv }}
+							{% endautoescape %}
+						</div>
+						<div class="res_excerpt_html" style="display:none;"></div>
+					</div>
+				</a>
+				<!-- ////////////////////////////////////////////////////////// TEXT -->
+				<a class="res_right_link" href="{% url reanalyseapp.views.edShow enquete.id r.object.texte.id %}?around={{r.object.i}}">
+					<div class="res_right">
+						go to {{ r.object.texte.name }}
+					</div>
+				</a>
+				<!--
+				n: {{forloop.counter}}</br>
+				MODEL: {{r.model_name}}</br>
+				SCORE: {{r.score}}</br>
+				NAME: {{r.object.name}}</br>
+				TYPE: {{r.object.code.name}}</br>
+				DESCRIPTION: {{ r.object.description }}</br>
+				int from SPEAKER: </br>
+				int from TEXTE: {{ r.object.texte.name }}</br>
+				-->
+		</li>
+	<!-- //////////////////////////////////////////////////// PAGINATION BOTTOM -->
+	{% empty %}
+		<p>No results found.</p>
 	{% endfor %}
-</ul>
--->
-{% endcomment %}
-
+	</ol>
+	<div id="search_pagination_bottom" class="search_pagination">
+	
+	<div id="ajaxContentSearchResults">Please search for something</div>
+	
 {% endblock %}
 
 
+{% block enquetebottommore %}
+<!-- ======================================================= -->
+<script type="text/javascript">
+	var facetArray=Array();
+	facetArray['texte']=Array();
+	facetArray['speaker']=Array();
+	//////////////////////////////////////////////////////////
+/*
+	function resetFacetsAndResearch() {
+		facetArray['texte']=Array();
+		facetArray['speaker']=Array();
+		$('.facetSelected').each( function(index) {
+			$(this).removeClass('facetSelected');
+		});
+		if ($('#id_q').val() != "") {
+			launchSearch();
+		}
+		else {
+			console.log("Search aborted (nothing was typed)");
+		}
+	};
+*/
+	//////////////////////////////////////////////////////////	
+	function clickOnFacet(facetType,facetId) {
+		console.log("Facet clicked:"+facetType+"_"+facetId);
+		var theFacet=$('#'+facetType+"_"+facetId);
+		// change look of selected
+		if ( theFacet.hasClass('facetSelected') ) {
+			theFacet.removeClass('facetSelected');
+			var idx = facetArray[facetType].indexOf(facetId);
+			if(idx!=-1) facetArray[facetType].splice(idx, 1);
+			console.log(facetArray);
+		} else {
+			facetArray[facetType].push(facetId);
+			theFacet.addClass("facetSelected");
+		}
+	};
 
-
-
-{% block bottom %}
+	////////////////////////////////////////////////////////// LAUNCH SEARCH CLICK HANDLER
+	$(document).ready(function() {
+		// copy pagination top to bottom also
+		$('#search_pagination_bottom').html( $('#search_pagination_top').html() );
+		
+		// fetch overview viz json, used as facets
+		$.ajax({
+			url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
+			success: function(data){
+				//console.log("data received for viz:{{nk}}");
+				$("#theViz_over").html("");
+				var param = { 'mode':'weight','stats':{ {%for k,v in overviewStats.items%}'{{k}}':{{v}},{%endfor%} } };
+				buildD3_Overview(data,"theViz_over",param);
+			},
+		});
+		
+	});
+</script>
+<!-- ======================================================= -->
 {% endblock %}
+

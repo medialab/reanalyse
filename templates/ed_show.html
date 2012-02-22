@@ -50,8 +50,7 @@
 	<!-- =============================== -->
 	<div class="leftmenublock">
 		<a href="#" onclick='$("#speakersShowHide").toggle("fast"); return false;'><h1>Show/Hide Speakers</h1></a>
-		<div id="speakersShowHide" style="display:none;">
-			<h2>Investigator(s)</h2>
+		<div id="speakersShowHide">
 			<div id="speakersShowHide">
 				<ul class="spkcheckboxes">
 				{% for s in speakers.inv %}
@@ -62,7 +61,6 @@
 				{% endfor %}
 				</ul>
 			</div>
-			<h2>Speaker(s)</h2>
 			<div id="speakersShowHide">
 				<ul class="spkcheckboxes">
 				{% for s in speakers.spk %}
@@ -74,7 +72,6 @@
 				</ul>
 			</div>
 			{% if speakers.pro %}
-			<h2>Protagonist(s)</h2>
 			<div id="speakersShowHide">
 				<ul class="spkcheckboxes">
 				{% for s in speakers.pro %}
@@ -91,7 +88,21 @@
 	<!-- =============================== -->
 	<div class="leftmenublock">
 		<a href="#" onclick='$("#paraverbalShowHide").toggle("fast"); return false;'><h1>Show/Hide Paraverbal</h1></a>
-		<div id="paraverbalShowHide" style="display:visible;"></div>
+		<div id="paraverbalShowHide">
+			<input id="paraCheckAll" type="checkbox" checked="checked"/>  toggle all
+			{% for k,parvs in paraverbal.items %}
+				<h2>-- {{k}}</h2>
+				<ul>
+				{% for p in parvs  %}
+					<li>
+						<input class="paraCheck" id="paraCheck_{{p}}" type="checkbox" checked="checked"/>
+						<span class="text_{{p}} text_legend"></span>
+						 {{p}}
+					</li>
+				{% endfor %}
+				</ul>
+			{% endfor %}
+		</div>
 	</div>	
 	<!-- =============================== -->
 {% endif %}
@@ -169,7 +180,7 @@
 	<!-- Form to tune display of words in verbatim. javascript to update css -->
 	<!-- note bug with dropdownchecklist if "display:none;" at the beginning -->
 	<a href="#" onclick='$("#verb_controls").toggle("fast"); return false;'>Experimental: display tuning</a>
-	<div id="verb_controls" style="display:none;">
+	<div id="verb_controls">
 		Here you can tune the display of words/lemmas
 		<input type="checkbox" id="verb_checkfilt_negative" name="negative_mode"/>Negative Mode 
 		<a href="" onclick="resetVerbDisplayFilters();return false;">reset filters</a><br/>
@@ -289,11 +300,8 @@
 			success: function processAnswer(html) {
 				$('#verbatim').html(html);
 				initVerbatimTooltips();
-				
 				//console.log("ntotal:"+ $('span:regex(class,lem_*)').length);
-				
 				updateDictionnarySelect();
-				
 			}
 		});
 	}
@@ -422,25 +430,40 @@
 		var max=$("#teiIntervalSlider").slider("values",1);
 		$("#teiIntervalText").html("from "+min+" to "+max);
 			
-			
 		// init tooltips is made when receiving textparts !
 		
-		/////////// DEPRECATED (NOW ITS FIXED)
-		// adjust div text size base on max speaker name (left column)
-		//initSpeakersDivSizes();
+		// TOGGLE Speakers
+		{% for s in texte.speaker_set.all %}
+		$('#spkCheck_{{s.id}}').click(function() {
+			console.log("toggle spk:{{s.id}}");
+			$('.speaker_{{s.id}}').toggle();
+		});
+		{% endfor %}
 		
-		// LEFTMENU : get all speakers div and build checkboxes to toggle their visibility
-		var spIds = [{% for s in texte.speaker_set.all %}{{s.id}},{% endfor %}] ;
-		initSpeakersTogglesActions( spIds );
+		// TOGGLE All paraverbal
+		$('#paraCheckAll').click(function() {
+			console.log("toggle all");
+			var chk = $('#paraCheckAll').attr("checked");
+			if (chk!='checked') chk=null;
+			{% for k,parvs in paraverbal.items %}
+			{% for p in parvs  %}
+			$('#paraCheck_{{p}}').attr('checked',chk);
+			$('.text_{{p}}:not(.text_legend)').toggle();
+			{% endfor %}
+			{% endfor %}
+		});
 		
-			
-		// todo: FOLLOWING CAN BE DONE USING TEMPLATE ONLY !!!
-		// LEFTMENU : build checkboxes and images for each paraverbal
-		{% autoescape off %}
-		initParaverbalTogglesAndSymbols( "{{MEDIA_URL}}",{{paraverbal.transcription}},{{paraverbal.verbatim}} );
-		{% endautoescape %}	
+		// TOGGLE paraverbals
+		{% for k,parvs in paraverbal.items %}
+		{% for p in parvs  %}
+		$('#paraCheck_{{p}}').click(function() {
+			console.log("toggle par:{{p}}");
+			$('.text_{{p}}:not(.text_legend)').toggle();
+		});
+		{% endfor %}
+		{% endfor %}
+		
 {% endif %}
-	
 	
 	
 	});
@@ -448,6 +471,22 @@
 <!-- ======================================================= -->
 
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

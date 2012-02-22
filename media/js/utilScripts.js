@@ -1,3 +1,55 @@
+//////////////////////////////////////////////////////////////////// LAUNCH SEARCH
+function initSearchForm(searchurl) {
+	var form = $("#searchForm");
+	form.submit(function(e) {
+		if ($('#id_q').val()=="") {
+			console.log("Search aborted (nothing was typed)");
+			return false;
+		}
+		else {
+			$("#id_searchsubmit").attr('disabled', true)
+			launchSearch(searchurl,"");
+			e.preventDefault(); 
+		}
+	});
+}
+function launchSearch(searchurl,extraParam) {
+	var form = $("#searchForm");
+	//console.log("Search launched");
+	$('#ajaxContentSearchResults').html('<span class="vizLoadingSpinner"></span> Loading results ... &nbsp;')
+	// GET parameters from the form, and from facets
+	var paramlist = form.serialize();
+	// facets ?
+/*
+	if(facetArray['texte'].length>0)
+		paramlist += "&inTextes="+facetArray['texte'].toString();
+	if(facetArray['speaker'].length>0)
+		paramlist += "&inSpeakers="+facetArray['speaker'].toString();
+*/
+	// unsaved extra params (sort, paginate, ...)
+	if(extraParam) paramlist += "&"+extraParam ;
+	console.log("Search launched: "+searchurl+"?"+paramlist);
+	
+	//$.scrollTo($("#ajaxContentSearchResults"),500,{offset:-10});
+	
+	window.location.replace(searchurl+"?"+paramlist);
+	
+/*
+	$.ajax({
+		type: "GET",
+		url: '{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?'+paramlist ,
+		cache: false,
+		success: function processAnswer(html) {
+			//console.log('Search results received!');
+			$('#ajaxContentSearchResults').html(html);
+		}
+	});
+*/
+	
+	$("#id_searchsubmit").attr('disabled', false);
+
+};
+
 //////////////////////////////////////////////////////////////////// TO USE REGEXP in jquery selectors
 // see http://james.padolsey.com/javascript/regex-selector-for-jquery/
 jQuery.expr[':'].regex = function(elem, index, match) {
@@ -691,73 +743,8 @@ function initSpeakersDivSizes(speakerIds) {
 		$(this).css("left", 15 + maxW - $(this).width());
 	});
 }
-//////////////////////////////////////////////////////////////////
-// SPEAKERS TOGGLE (DOCUMENT VIEW)
-function initSpeakersTogglesActions(speakerIds) {	
-	// create actions to show/hide speaker parts
-	for(var u=0;u<speakerIds.length;u++) {
-		$('#spkCheck_'+speakerIds[u]).click(function() {
-			//if($(this).is(":checked")) {
-			// retrieve id of speaker we have to show/hide
-			var divId = $(this).attr('id');
-			divId = divId.split("_")[1];
-			console.log("clik "+divId);
-			//$('.'+theSpeakerIds[divId]).toggle("fast");
-			$('.speaker_'+divId).toggle();
-		});
-	}
-}
-//////////////////////////////////////////////////////////////////
-// PARAVERBAL TOGGLE
-function initParaverbalTogglesAndSymbols( mediaUrl, arrTrans, arrVerb ) {
-	
-	// now arrays are fetched from template
-	//arrA = ['comment','laugh','incident','time','question','directed'];
-	//arrB = ['interruption','hesitation','inaudible','silence'];
-	
-	pDom = $('#paraverbalShowHide');
-	
-	// checkbox for toggle all
-	var checkball = $('<input>').attr( {id:"paraCheckAll", type:"checkbox", checked:"checked"} );
-	pDom.append(checkball);
-	pDom.append(" toggle all");
-	
-	// checkboxes for each paraverbal
-	pDom.append($('<h2>').text('-- Transcription')) ;
-	initParaverbalList( pDom, mediaUrl, arrTrans );
-	pDom.append($('<h2>').text('-- Verbatim')) ;
-	initParaverbalList( pDom, mediaUrl, arrVerb );
-	
-	// click action for toggle all. todo: to improve
-	checkball.click(function() {
-		arrTrans.forEach(function(e) {
-			var chk = $('#paraCheckAll').attr("checked");
-			if (chk!='checked') chk=null;
-			$("#paraCheck_"+e).attr("checked",chk);
-			$(".text_"+e).toggle(chk!=null);
-		});
-		arrVerb.forEach(function(e) {
-			var chk = $('#paraCheckAll').attr("checked");
-			if (chk!='checked') chk=null;
-			$("#paraCheck_"+e).attr("checked",chk);
-			$(".text_"+e).toggle(chk!=null);
-		});
-	});
-}
-function initParaverbalList( pDom, mediaUrl, array ) {
-	array.forEach(function(e){
-		var image = $('<span>').attr({class:"text_"+e,style:"position:relative;top:6px;"}) ;
-		var checkb = $('<input>').attr( {id:"paraCheck_"+e, type:"checkbox", name:e , checked:"checked"} ) ;
-		// toggle when checkboxed
-		checkb.click(function() {
-			$('.text_'+e).toggle();
-		});
-		pDom.append(checkb);
-		pDom.append(image);
-		pDom.append(" "+e);
-		pDom.append($('</br>'));
-	});
-}
+
+
 //////////////////////////////////////////////////////////////////
 // INIT TOOLTIPS
 function initGeneralTooltips() {

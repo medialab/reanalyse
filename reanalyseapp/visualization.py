@@ -66,21 +66,9 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	# todo: launch threads, to avoid blocking ?
 	# NB: json update is made in the visMakeGraph...() methods
 	# NB: for graphs, we feed speakers&textes, at least one musn't be empty
-
-	# DEPRECATED
-#	if typ=='Graph_SpeakerWordGraph': # deprecated TEI graph
-#		visMakeSpeakerWordsGraph(e,newVizu) # todo: to update with parameters (attributes!)
-#	elif typ=='SpeakersByText':
-#		d = visGetEnqueteTextsStatDict(e)
-# 	elif typ=='Cloud_TeiSpeakerTagCloud':
-# 		d = visMakeTeiTagCloudFrom(e,{'count':30,'how':'freq','where':'all','who':s.id})
-# 	elif typ=='WordsBySpeaker':
-# 		d = visGetStatDict(t)
-# 	elif typ=='ParaverbalTimeline':
-# 		d = visMakeParaverbalTimeline(e,{'where':t})
 	
 	################################################### General or using all list
-	if typ=='StudyOverview':
+	if typ=='StudyOverview': # todo: timeline with docs ?
 		newVizu = makeVisualizationObject(e,typ,descr)
 		d = visMakeStudyOverview(e)
 		newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
@@ -89,9 +77,6 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	################################################### General or using all list
 	elif typ=='Graph_SpeakersSpeakers':
 		visMakeSpeakersSpeakersGraph(e,newVizu,{'method':'solr'})
-		#makeSimilGraphUsingPattern(e)
-		#makeSimilGraphUsingTfidf(e)
-		#makeSimilGraphUsingSolr(e)
 	elif typ=='Graph_SpeakersAttributes':
 		visMakeSpeakersAttributesGraph(e,newVizu,{'where':textes,'who':speakers,'whoatt':attributetypes})
 	elif typ=='Graph_SpeakersWords':
@@ -99,6 +84,15 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	###################################################
 	elif typ=='Attributes':
 		newVizu = makeVisualizationObject(e,typ,descr)
+		if speakers==[]:
+			if textes==[]:
+				speakers = e.speaker_set.exclude(ddi_type='INV')
+			else:
+				speakers=[]
+				for t in textes:
+					for s in t.speaker_set.all():
+						if s not in speakers:
+							speakers.append(s)
 		d = visMakeAttributes(e,{'where':textes,'who':speakers})
 		for s in speakers:
 			newVizu.speakers.add(s)
@@ -543,18 +537,23 @@ def visMakeOverview(e):
 #	res['edges']=theedges	
 
 	##### TRYOUT B : Simple left/right lists with paths
-	links=[]
-	for t in e.texte_set.filter(doctype='TEI').order_by('-id'):
-		for s in t.speaker_set.exclude(ddi_type='INV'):
-			#w=0
-			#if s.name.endswith('H') and random()>0.2:
-			#	w=50+50*random()
-			tdic={'id':t.id,'label':t.name,'weight':0}
-			sdic={'id':s.id,'label':s.name,'weight':0}
-			ndoc=t.speaker_set.exclude(ddi_type='INV').count()
-			links.append({'doc':tdic,'spk':sdic,'ndoc':ndoc})
-	res['links']=links
+# 	links=[]
+# 	for t in e.texte_set.filter(doctype='TEI').order_by('-id'):
+# 		for s in t.speaker_set.exclude(ddi_type='INV'):
+# 			#w=0
+# 			#if s.name.endswith('H') and random()>0.2:
+# 			#	w=50+50*random()
+# 			tdic={'id':t.id,'label':t.name,'weight':0}
+# 			sdic={'id':s.id,'label':s.name,'weight':0}
+# 			ndoc=t.speaker_set.exclude(ddi_type='INV').count()
+# 			links.append({'doc':tdic,'spk':sdic,'ndoc':ndoc})
+# 	res['links']=links
 	
+	##### TRYOUT C : only speakers
+	links=[]
+	for s in e.speaker_set.exclude(ddi_type='INV'):
+		links.append({'spk':{'id':s.id,'label':s.name,'weight':0}})
+	res['links']=links
 	return res
 ###########################################################################
 
@@ -572,16 +571,6 @@ def visMakeAttributes(e,param):
 	speakers = param['who']
 	textes = param['where']
 	#attributeTypeIds = param['whoatt']
-	
-	if speakers==[]:
-		if textes==[]:
-			speakers = e.speaker_set.all()
-		else:
-			speakers=[]
-			for t in textes:
-				for s in t.speaker_set.all():
-					if s not in speakers:
-						speakers.append(s)
 	
 	res={}
 	

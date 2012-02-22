@@ -4,7 +4,8 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var vizdiv = d3.select(unik).append("div")
 		.attr("class","vizdiv")
 		.style("position","relative"); // relative to allow sub-div "absolute" to be positionned
-			
+		//.on("click", function(d,i) {switchMode();});
+		
 	var textPartsRefreshMode = false;
 	if(typeof(getVerbatimParts)=='function') textPartsRefreshMode=true;
 	
@@ -12,10 +13,30 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	//console.log("width is:"+ww);
 	
 	////////////////////////////////////////////////////////////////////////////////////// FADE AND HIGHLIGHT
-	var fadeMinSpk = 0.1;
+	var fadeMinSpk = 0.5;
 	var fadeMinPar = 0.05;
 	var fadePar = 0.5;
 	
+	var stackedMode = true;
+	
+	function switchMode() {
+		stackedMode = !stackedMode;
+		console.log("changed"+stackedMode);
+		var spk_Area = function(d,nSpk) {
+			var thearea = d3.svg.area()
+				.x(function(d,i) { return decx + scaleX(i); })
+				.y0(function(d,i) { return stackedMode ? 
+					topParvbMargin + (nSpk+1)*dec4spk :
+					topParvbMargin + d.y0 * (totalH-topParvbMargin-graphBottomMargin)/ymax;
+				})
+				.y1(function(d,i) { return stackedMode ?
+					topParvbMargin + (nSpk+1)*dec4spk - d.y*dec4spk/ymax : 
+					topParvbMargin + (d.y + d.y0) * (totalH-topParvbMargin-graphBottomMargin)/ymax;
+				});
+			return thearea(d);
+		}
+		spk_Layers.transition().duration(700).attr("d",function(d,i) {return spk_Area(d,i);});
+	}
 	function highlightSpk(flag) {
 		return function(g, i) {
 			vis.selectAll(unik+" .spk_graph").style("opacity", flag ? 1:fadeMinSpk);
@@ -61,6 +82,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var graphTopMargin = 5; // 5 ? inside graph only
 	var graphBottomMargin = 20;
 	var spaceForSpeakers = Math.max(100,stepLegend*nLayers+65);
+	var dec4spk = spaceForSpeakers/(nLayers+1);
 	var totalH = topParvbMargin + spaceForSpeakers;
 	/////////////////////////////////////
 	var wantedWidth = 720; //'100%'
@@ -112,7 +134,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
         	.domain([0,m])
         	.range([topParvbMargin,graphTopMargin]);
         parYScales.push( scaleParavb );
-        //console.log(unik+"found max value for paraverbal"+i+":"+m);
+        console.log(unik+"found max value for paraverbal"+i+":"+m);
 	}
 
 	
@@ -486,7 +508,8 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			.attr("fill","gray")
 			.text( function(d,i) {return d[1];} )
 			.on("mouseover", highlightSpk(false))
-			.on("mouseout", highlightSpk(true));	
+			.on("mouseout", highlightSpk(true))
+			.on("click", function(d,i) {switchMode();});	
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////// TEXT & LINES
 	/////////// bottom right rect + label
@@ -508,7 +531,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.attr("x",leftMargin+graphW+12)
 		.attr("y",totalH-5)
 		.text("Sentences");
-
+		
 	var scale=1,
 		decx=0;
 
@@ -549,11 +572,12 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var spk_Layers = visGraph.selectAll("spkpath")
 		.data(spk_StackData)
 		.enter().append("svg:path")
-			.attr("class", function(d,i) { return "speakerColor_"+thedata.spk_ids[i][0]+" spk_graph spk_graph_"+i; })
+			.attr("class", function(d,i) {return "viz_TextStreamTimeline_Graph speakerColor_"+thedata.spk_ids[i][0]+" spk_graph spk_graph_"+i;})
 			.attr("title", function(d,i) {return thedata.spk_ids[i][1];}) // speaker name
-			.attr("stroke","gray")
-			.attr("d", spk_Area);					
-
+			.attr("d", spk_Area)
+			.on("mouseover", highlightSpk(false))
+			.on("mouseout", highlightSpk(true))
+			.on("click", function(d,i) {switchMode();});
 
 
 	////////////////////////////////////////////////////////////////////////////// GRAPHS ARRAY MODIF (echantillonage)
@@ -617,7 +641,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			return thearea(d);
 		};
 		par_Layers.data(par_Data);
-		par_Layers.attr("d", function(d,i) {return par_Area(d,i);} );
+		par_Layers.attr("d",function(d,i) {return par_Area(d,i);} );
 		
 		//////////////// UPDATE GRAPH SPEAKERS
 		spk_StackData = d3.layout.stack().offset("zero")(spk_Data);
@@ -625,10 +649,20 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			return d3.max(d, function(d) { return d.y0 + d.y; });
 		});
 		spk_Layers.data(spk_Data);
-		spk_Area.x(function(d,i) { return decx + scaleX(i); })
-				.y0(function(d) { return topParvbMargin + d.y0 * (totalH-topParvbMargin-graphBottomMargin)/ymax; })
-				.y1(function(d) { return topParvbMargin + (d.y + d.y0) * (totalH-topParvbMargin-graphBottomMargin)/ymax; });
-		spk_Layers.attr("d",spk_Area);
+		var spk_Area = function(d,nSpk) {
+			var thearea = d3.svg.area()
+				.x(function(d,i) { return decx + scaleX(i); })
+				.y0(function(d,i) { return stackedMode ? 
+					topParvbMargin + (nSpk+1)*dec4spk :
+					topParvbMargin + d.y0 * (totalH-topParvbMargin-graphBottomMargin)/ymax;
+				})
+				.y1(function(d,i) { return stackedMode ?
+					topParvbMargin + (nSpk+1)*dec4spk - d.y*dec4spk/ymax : 
+					topParvbMargin + (d.y + d.y0) * (totalH-topParvbMargin-graphBottomMargin)/ymax;
+				});
+			return thearea(d);
+		}
+		spk_Layers.attr("d",function(d,i) {return spk_Area(d,i);});
 	}
 	
 	// INIT
@@ -641,6 +675,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	displayParvbBool[0]=true;
 	showHideParaverbal(0,true);
 	
+/*
 	var fx = scx.tickFormat(10);
 	///////// Generate x-ticks
 	var gx = visScaleLegend.selectAll("g.x")
@@ -661,6 +696,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.attr("text-anchor", "middle")
 		.text(fx);
 	gx.exit().remove();
+*/
 
 };
 ////////////////////////////////////////////////////
