@@ -68,7 +68,7 @@ def importEnqueteUsingMeta(folderPath):
 	
 	# create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
-	permname = 'EXPLORE e_'+str(newEnquete.id) + ' '+newEnquete.name
+	permname = 'EXPLORe_'+str(newEnquete.id) + ' '+newEnquete.name
 	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name=permname,content_type=content_type)
 	
 	if os.path.exists(docPath):

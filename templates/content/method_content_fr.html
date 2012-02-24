@@ -24,6 +24,13 @@ NB: Page en cours de rédaction...
 
 
 <div class="content_norm">
+<h2>Go to</h2>
+<ul>
+	<li><a href="#meta_study.csv"><span class="content_norm_file">meta_study.csv</span></a></li>
+	<li><a href="#meta_documents.csv"><span class="content_norm_file">meta_documents.csv</span></a></li>
+	<li><a href="#meta_speakers.csv"><span class="content_norm_file">meta_speakers.csv</span></a></li>
+	<li><a href="#meta_codes.csv"><span class="content_norm_file">meta_codes.csv</span></a></li>
+</ul>
 <h2>Overview</h2>
 <img src="/reanalyse/media/images/content_overview.png" alt="normalisation">
 <h2>Description complète de la normalisation d'une enquête</h2>
@@ -76,7 +83,7 @@ NB: Page en cours de rédaction...
 		</ul>
 
 	<ol>
-	<li><h4>Table des métadonnées de l'enquête <span class="content_norm_file">meta_study.csv</span></h4>
+	<li><a name="meta_study.csv"><h4>Table des métadonnées de l'enquête <span class="content_norm_file">meta_study.csv</span></h4></a>
 		Cette table contient les métadonnées générales concernant une enquête.<br/>
 		Elles seront affichées sur la page Overview de chaque enquête.
 		<table class="content_norm_ex">
@@ -139,7 +146,7 @@ NB: Page en cours de rédaction...
 		</table>
 	</li>
 	
-	<li><h4>Table des documents <span class="content_norm_file">meta_documents.csv</span></h4>
+	<li><a name="meta_documents.csv"><h4>Table des documents <span class="content_norm_file">meta_documents.csv</span></h4></a>
 		Décrit les documents constitutifs d'une enquête.<br/>
 		Notez les deux dernière colonnes permettant de conserver l'historique des modifications liées à l'archivage.<br/>
 		S'il existe une enquête sur enquête (ESE), les documents associés sont également listés.
@@ -194,7 +201,7 @@ NB: Page en cours de rédaction...
 		 </table>
 	</li>
 	
-	<li><h4>Tables des intervenants <span class="content_norm_file">meta_speakers.csv</span></h4>
+	<li><a name="meta_speakers.csv"><h4>Tables des intervenants <span class="content_norm_file">meta_speakers.csv</span></h4></a>
 		Contient les métadonnées relatives aux personnes impliquées dans l'enquête.<br/>
 		Les colonnes dont le nom commence par _ seront masquées dans la liste des intervenants du site-enquête.<br/>
 		La visualisation des <a href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes">attributs</a> ne pourra se faire que sur cette liste, tandis que la création d'un <a href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes">graphe</a> incluera tous les types d'attributs.
@@ -223,7 +230,7 @@ NB: Page en cours de rédaction...
 	
 	</li>
 		
-	<li><h4>Table des codages <span class="content_norm_file">meta_codes.csv</span></h4>
+	<li><a name="meta_codes.csv"><h4>Table des codages <span class="content_norm_file">meta_codes.csv</span></h4></a>
 		Décrit les <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> utilisés dans les verbatims.<br/>
 		Ce fichier permet de tracer les adaptations successives des verbatims (différentes syntaxes pour le codage).<br/>
 		La liste des codes supportés est (pour l'instant) fixée à celle donnée ci-dessous.
@@ -491,7 +498,7 @@ NB: Page en cours de rédaction...
 
 <li><a name="viz_ex_view_sBrowse"><h2>Liste des intervenants</h2></a>
 <img src="/reanalyse/media/images/viz_ex_view_sBrowse.png" width="100%">
-<br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque intervenant (par ex. <a href="#viz_ex_Cloud_SolrSpeakerTagCloud">nuage de mots</a> utilisés). Les types d'attribut affichées sont ceux de la table meta_speakers.csv (voir la page <a href="/reanalyse/?p=method&q=3">Normalisation</a>).
+<br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque intervenant (par ex. <a href="#viz_ex_Cloud_SolrSpeakerTagCloud">nuage de mots</a> utilisés). Les types d'attribut affichées sont ceux de la table <span class="content_norm_file">meta_speakers.csv</span> (voir la page <a href="/reanalyse/?p=method&q=3#meta_speakers.csv">Normalisation</a>).
 </li>
 
 <li><a name="viz_ex_view_dShow"><h2>Exploration d'un entretien</h2></a>
@@ -620,7 +627,7 @@ NB: Page en cours de rédaction...
 			<li><b>outline_content</b>: les codes hors texte; ex. comment:"tout le monde se regarde", break:"changement de cassette", time:"65min"</li>
 			<li><b>inword</b>: code s'appliquant au texte; ex. uncertain:"or|alors", strong:"vraiment"</li>
 		</ul>-->
-		Veuillez vous référer au tableau <span class="content_norm_file">meta_codes.csv</span> de la page <a href="/reanalyse/?p=method&q=3">Normalisation</a> pour consulter la liste des codes actuellement actifs dans les sites-enquêtes.
+		Veuillez vous référer au tableau <span class="content_norm_file">meta_codes.csv</span> de la page <a href="/reanalyse/?p=method&q=3#meta_codes.csv">Normalisation</a> pour consulter la liste des codes actuellement actifs dans les sites-enquêtes.
 	</li>
 	<!-- ================================ -->
 	<li><a name="gloss_ngram"><h2>Indexation et Ngrams</h2></a>
@@ -675,4 +682,8 @@ NB: Page en cours de rédaction...
 </ul>
 </div>
 
-
+<h1>Django Models & Views</h1>
+<div>
+<p>Please switch to fullscreen if your eyes hurt.</p>
+<img src="/reanalyse/media/images/content_models.png" width="100%" alt="models">
+</div>

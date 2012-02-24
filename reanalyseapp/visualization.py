@@ -51,16 +51,21 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	#descr = VIZTYPESDESCR[typ]	# we used to set a different one for each
 	descr = VIZTYPESDESCR		# now just invite user to update it (see globalvars.py)
 	
-	logging.info("makeViz:"+typ)
+	logging.info("making viz: "+typ)
 	
 	if typ in ['Graph_SpeakersAttributes','Graph_SpeakersWords','Graph_SpeakersSpeakers']:
 		newVizu = makeVisualizationObject(e,typ,descr)
-		if speakers!=[]:
-			for s in speakers:
-				newVizu.speakers.add(s)
-		if textes!=[]:
-			for t in textes:
-				newVizu.textes.add(t)
+		if speakers==[]:
+			if textes==[]:
+				speakers = e.speaker_set.all()
+			else:
+				speakers=[]
+				for t in textes:
+					for s in t.speaker_set.all():
+						if s not in speakers:
+							speakers.append(s)
+		for s in speakers:
+			newVizu.speakers.add(s)
 		newVizu.save()
 	
 	# todo: launch threads, to avoid blocking ?
@@ -242,7 +247,7 @@ def visMakeSpeakersSpeakersGraph(e,viz,param):
 	method = param['method']
 	
 	if method=='pattern':
-		#################### USING PATTERN (deprecated ? only english !)
+		#################### USING PATTERN (deprecated ? only english!!)
 		g=networkx.Graph()
 		corpus=Corpus()
 		for s in e.speaker_set.all():
@@ -293,9 +298,6 @@ def visMakeTermVectorGraph(e,viz,param):
 	g=networkx.DiGraph()
 	
 	termVectorDic={}
-
-	if speakers==[]:
-		speakers = e.speaker_set.all()
 	
 	# make spk nodes in any case
 	for s in speakers:
@@ -405,18 +407,7 @@ def visMakeTermVectorGraph(e,viz,param):
 ###########################################################################
 def visMakeSpeakersAttributesGraph(enquete,viz,param):
 	speakers = param['who']
-	textes = param['where']
 	attributetypes = param['whoatt']
-	
-	if speakers==[]:
-		if textes==[]:
-			speakers = enquete.speaker_set.all()
-		else:
-			speakers=[]
-			for t in textes:
-				for s in t.speaker_set.all():
-					if s not in speakers:
-						speakers.append(s)
 
 	if attributetypes==[]:
 		attributetypes = enquete.attributetype_set.all()
@@ -625,7 +616,7 @@ def visMakeAttributes(e,param):
 #		
 def visMakeStreamTimeline(e,param):
 	# step = window width in which we count paraverbal/sentences occurences
-	step = 3 						# ie. counting spk & paraverbal in a "window" of width "step" (3 sentences at a time)
+	step = 2						# ie. counting spk & paraverbal in a "window" of width "step" (x sentences at a time)
 	#factorParaverbal = 10*step		# height is managed in d3 (deprecated:y division factor for paraverbal (outvalue should be normalized in [0,1])
 	res={}
 	t = param['where']
@@ -641,8 +632,16 @@ def visMakeStreamTimeline(e,param):
 		maxPeriods = 0
 	nSteps = 1+int(maxPeriods/step) # one more if nSentences undivisible by step
 	
-	paravList=['silence','laugh','hesitation','interruption','break']
-	par_colors=['#BFBD9F','#D9FF00','#517368','#ED5300','#EC993B']
+	allpar_names = STREAMVIZCODES['codes']
+	allpar_colors= STREAMVIZCODES['colors']
+	
+	# only keep non-null paraverbal from that list
+	par_names = []
+	par_colors = []
+	for i,pname in enumerate(allpar_names):
+		if Sentence.objects.filter(texte=t,word__wordentityspeaker__wordentity__code__name=pname).count()!=0:
+			par_names.append(pname)
+			par_colors.append(allpar_colors[i])
 	
 	speakers = t.speaker_set.order_by('-ddi_type')
 		
@@ -650,7 +649,7 @@ def visMakeStreamTimeline(e,param):
 	for s in speakers:
 		spk_layers.append([ {'x':k, 'y':0,'info':s.name} for k in range(nSteps) ])
 		spk_ids.append([s.id,s.name])
-	for i,p in enumerate(paravList):
+	for i,p in enumerate(par_names):
 		par_layers.append([ 0 for k in range(nSteps) ])
 		par_ids.append([i,p])
 	
@@ -669,19 +668,21 @@ def visMakeStreamTimeline(e,param):
 		# paraverbal
 		for w in sent.word_set.all(): # assuming there is only paraverbal in words
 			par = w.wordentityspeaker.wordentity.code.name
-			if par in paravList:
-				par_layers[ paravList.index(par) ][k] += 1/float(step)
-				maxParavbCount = max(maxParavbCount,par_layers[ paravList.index(par) ][k])
+			if par in par_names:
+				par_layers[ par_names.index(par) ][k] += 1/float(step)
+				maxParavbCount = max(maxParavbCount,par_layers[ par_names.index(par) ][k])
 	
 	res['spk_layers']=spk_layers
 	res['spk_ids']=spk_ids
-
+	
+	# now we filter the parvb to keep only non null values, based on maxParvb
 	res['par_layers']=par_layers
 	res['par_ids']=par_ids
 	res['par_colors']=par_colors
 	
 	# we can send maximum prvb value(s) or let js do it...
 	res['maxParavbCount']=maxParavbCount	# maximum y-value for parvb
+	# nb: we send every prvb values, but js will not display the null ones !
 	
 	res['period']=step				# one value for each 'step' value of i		ex. 3
 	res['maxPeriods']=maxPeriods 	# maximum i for all the i-o of sentences	ex. 15
@@ -769,10 +770,11 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 	
 	q=None
 	for s in speakers:
-		if q==None:
-			q='(speakerid:'+str(s.id)
-		else:
-			q=q+' OR speakerid:'+str(s.id)
+		if s.ngramspeaker_set.count()>1:
+			if q==None:
+				q='(speakerid:'+str(s.id)
+			else:
+				q=q+' OR speakerid:'+str(s.id)
 	q=q+')'
 	
 	conn = pythonsolr.Solr( settings.HAYSTACK_SOLR_URL )
@@ -802,57 +804,57 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 		if t.contenttxt!="":
 			totalDocuments+=1
 	
-	try:
-		totalTerms = len(tv[field])
-		res = list2dict(tv[field])
+	#try:
+	totalTerms = len(tv[field])
+	res = list2dict(tv[field])
+	
+	# first transform all data in dict
+	alldic={}
+	for k,v in res.iteritems():
+		d = list2dict(v)
+		alldic.update({k:d})
+	
+	# then keep words wanted
+	out={}
+	for w,d in alldic.items():
+		keepw = len(w)>2
+		###### RULE 1 : dont keep ngrams which appear only 1 time for that speaker and never else (df=tf=1)
+		keepw = keepw and d['df']+d['tf']!=2
+		###### RULE 1 bis: keep ngrams that appears at least mintn
+		keepw = keepw and d['tf']>=mintn
+		###### RULE 2 : dont keep ngrams included in other-longer-word (if same df/tf)
+		keepw = keepw and not True in [(w in otherw and w!=otherw and d['df']==alldic[otherw]['df'] and d['tf']==alldic[otherw]['tf']) for otherw in alldic.keys()]
 		
-		# first transform all data in dict
-		alldic={}
-		for k,v in res.iteritems():
-			d = list2dict(v)
-			alldic.update({k:d})
-		
-		# then keep words wanted
-		out={}
-		for w,d in alldic.items():
-			keepw = len(w)>2
-			###### RULE 1 : dont keep ngrams which appear only 1 time for that speaker and never else (df=tf=1)
-			keepw = keepw and d['df']+d['tf']!=2
-			###### RULE 1 bis: keep ngrams that appears at least mintn
-			keepw = keepw and d['tf']>=mintn
-			###### RULE 2 : dont keep ngrams included in other-longer-word (if same df/tf)
-			keepw = keepw and not True in [(w in otherw and w!=otherw and d['df']==alldic[otherw]['df'] and d['tf']==alldic[otherw]['tf']) for otherw in alldic.keys()]
-			
-			if keepw:
-				df = d['df']/float(totalDocuments)
-				tf = d['tf']/float(totalTerms)
-				tfidf = 1000*tf/df
-				newd = {'dn':d['df'],'tn':d['tf'], 'df':df, 'tf':tf, 'tfidf':tfidf}
-				out[w] = newd
-		if len(out)==0:
-			return {'nongramsfoundwith_mintn='+str(mintn)+"_spk="+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
-		# todo: only keep 'n' top wanted based on tfidf (can we do it in solr query rather than python ?)
-		# we can do it here, or later when making graph/tagcloud
-		 
-		# 1. get all words with tfidf and sort
-	# 	wtfs = [ [v['tfidf'],k] for k,v in out.items() ]
-	# 	wtfs = sorted(wtfs, key=lambda a: -a[0])
-	# 	
-	# 	# 2.
-	# 	outF={}
-	# 	for w in wtfs[:maxcount]:
-	# 		outF[w[1]]=out[w[1]]
-		
-		return out
-		# 'text': {'df': 24, 'tf': 4, 'tf-idf': 0.16666666666666666 }
-		# 'tout': {'df': 464, 'tf': 1, 'tf-idf': 0.0021551724137931034 }
-	except:
-		return {'nosolrtermvectordict_spk='+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
+		if keepw:
+			df = d['df']/float(totalDocuments)
+			tf = d['tf']/float(totalTerms)
+			tfidf = 1000*tf/df
+			newd = {'dn':d['df'],'tn':d['tf'], 'df':df, 'tf':tf, 'tfidf':tfidf}
+			out[w] = newd
+	if len(out)==0:
+		return {'nongramsfoundwith_mintn='+str(mintn)+"_spk="+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
+	# todo: only keep 'n' top wanted based on tfidf (can we do it in solr query rather than python ?)
+	# we can do it here, or later when making graph/tagcloud
+	 
+	# 1. get all words with tfidf and sort
+# 	wtfs = [ [v['tfidf'],k] for k,v in out.items() ]
+# 	wtfs = sorted(wtfs, key=lambda a: -a[0])
+# 	
+# 	# 2.
+# 	outF={}
+# 	for w in wtfs[:maxcount]:
+# 		outF[w[1]]=out[w[1]]
+	
+	return out
+	# 'text': {'df': 24, 'tf': 4, 'tf-idf': 0.16666666666666666 }
+	# 'tout': {'df': 464, 'tf': 1, 'tf-idf': 0.0021551724137931034 }
+	#except:
+	#	return {'nosolrtermvectordict_spk='+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
 ####################################################################
 # to avoid querying solr everyday, we store ngrams in DB
 def makeAllTfidf(e):
 	for s in e.speaker_set.all():
-		logging.info("now reseting tfidf ngrams for speaker:"+str(s.id))
+		#logging.info("now reseting tfidf ngrams for speaker:"+str(s.id))
 		s.ngramspeaker_set.all().delete()
 		termd = getSolrTermVectorsDict([s],'ngrams',count=0,mintn=3)
 		for w in termd.keys():

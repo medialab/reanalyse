@@ -13,18 +13,16 @@
 {% block content %}
 <! ================================================= -->
 	<div class="introHtml">
-		<h1>Admin & Users</h1>
-		As described (for the public) in the <a href="/reanalyse/?p=access">access</a> page, here is how it works:
+		<h1>Access & Users</h1>
+		As described (for the public) in the <a href="/reanalyse/?p=access">access</a> page, here is how it works on the admin side:
 		<ol>
 			<li>Public users (without login) can only access Overview pages for every study</li>
-			<li>They can ask for a Discover status [using online form]</li>
-			<li>An unactivated user is created, and a mail is sent to: <i>{{staffemail}}</i></li>
+			<li>When they ask for the Discover status [online form], an unactivated user is created, and a mail is sent to the staff team</li>
 			<li>Staff can then activate the user in the <a href="/reanalyse/admin">admin</a> panel (and send a mail to congratulate the guy).</li>
-			<li>With this Discover status, the user can also access to the Research & Research page for every study.</li>
-			<li>She/he can ask (from a study page) for an Explore status [using online form]</li>
-			<li>A mail is also sent to the staff, including the 'motivation' field</li>
-			<li>Staff can then add the permission for this enquete ('EXPLORE e_[id]') to this user on the <a href="/reanalyse/admin">admin</a> panel (and send a mail to the the so happy guy).</li>
+			<li>If she/he asks (on a study page) for an Explore status [online form], another mail is sent to the staff, including the 'motivation' field</li>
+			<li>Staff can then add the permission for this enquete ('EXPLORE e_[id]') to this user on the <a href="/reanalyse/admin">admin</a> panel (and reply regardly to the guy).</li>
 		</ol>
+		<p>Current staff email adress is: <i>{{staffemail}}</i></p>
 		
 		<h1>Add a new study</h1>
 		<div>
@@ -44,7 +42,7 @@
 				<li>if you don't understand a thing, please read the <a href="/reanalyse/?p=method&q=3">normalization</a> page carefully</li>
 			</ul>
 		</div>
-		<h1>If you feel ready, go on</h1>
+		<p>
 		<div id="eBrowseNewEnquete">
 			<div id="file-uploader">
 			<noscript>
@@ -53,7 +51,15 @@
 			</noscript>
 			</div>
 		</div>
+		</p>
+		
+		<h1>Logs</h1>
+		<ul class="logconsole">
+			{% for l in logs %}<li>{{l}}</li>{% endfor %}
+		</ul>
 	</div>
+	
+	
 <! ================================================= -->
 
 <!--

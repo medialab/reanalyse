@@ -116,11 +116,11 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	
 	/////////////// DEFAULT ECHANTILLONNAGE on load
 	// CASE A : default = best resolution ! 
-	//var periodWantedInt = 1; // we take one i over "periodWantedInt"
-	//var periodWantedScaled = 1;
+	var periodWantedInt = 1; // we take one i over "periodWantedInt"
+	var periodWantedScaled = 1;
 	// CASE B : default = ~ 50 steps for the whole window
-	var periodWantedInt = 1 + parseInt(nEchantill/30.0);
-	var periodWantedScaled = periodWantedInt;
+	//var periodWantedInt = 1 + parseInt(nEchantill/30.0);
+	//var periodWantedScaled = periodWantedInt;
 	
 	///////////////////////// PARAVERBAL SCALES
 	// deprecated (same max for every prvbal)
@@ -158,6 +158,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.text(parseInt(periodWantedScaled*periodStep)+" sentences");
 	
 	var scaleEchantill = d3.scale.pow()
+		.exponent(4)
         .domain([0,100])
         .range([1,(nEchantill/2.0)-1]);
 	$("#slider_"+theId).slider({

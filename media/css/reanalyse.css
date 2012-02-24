@@ -5,7 +5,7 @@ body {
 	font-size: 11px;
 	color: #606060;
 }
-h1, h2, h3 {
+h1, h2, h3, h4 {
 	color: #585858;
 
 }
@@ -287,6 +287,12 @@ hr {
 
 
 /* =================================================================================== HOME / INTRO / (project/methodology/access/....) HTML CONTENT TEXTS */
+/* admin / upload page */
+.logconsole {
+	font-size: 0.8em;
+	color:gray;
+}
+
 .introDiv {
 	margin-right:10%; 
 }

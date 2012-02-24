@@ -113,8 +113,9 @@ def init_mylogging():
 	 logging.basicConfig(level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s', filename=settings.REANALYSELOGPATH+'reanalyse.log', filemode='a+')
 logInitDone=False
 if not logInitDone:
-	 logInitDone = True
-	 init_mylogging()
+	logging.info("you'll have to to it another way. (LOG)")
+	logInitDone = True
+	init_mylogging()
 ###########################################################################
 def init_users():
 	nothing=1
@@ -152,7 +153,7 @@ if not usersInitDone:
 	try:
 		init_users()
 	except:
-		logging.info("you'll have to to it another way.")
+		logging.info("you'll have to to it another way. (USERS)")
 ###########################################################################
 
 
@@ -329,6 +330,16 @@ def eAdmin(request):
 	else:
 		ctx.update({'solrstatus':'running'})
 	ctx.update({'staffemail':settings.STAFF_EMAIL})
+	
+	# log file
+	logging.info("Looking at ADMIn page")
+	logLines = int(request.GET.get('log','20'))
+	try:
+		logFile = open(settings.REANALYSELOGPATH+'reanalyse.log','r')
+		ctx.update({'logs':reversed(logFile.readlines()[-logLines:])})
+		logFile.close()
+	except:
+		ctx.update({'logs':['no log file found']})
 	return render_to_response('admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 @login_required
@@ -442,7 +453,7 @@ def eParse(request):
 		e.save()
 		
 		# let's make stream timeline viz for each text
-		logging.info("make streamtimeline viz")
+		#logging.info("make streamtimeline viz")
 		try:
 			makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
@@ -456,6 +467,11 @@ def eParse(request):
 	makeAllTfidf(e)
 	logging.info("tfidf sucessfully updated")
 	
+	makeViz(e,'Cloud_SolrSpeakerTagCloud')
+	makeViz(e,'Graph_SpeakersSpeakers')
+	makeViz(e,'Graph_SpeakersWords')
+	makeViz(e,'Graph_SpeakersAttributes')
+				
 	e.status='0'
 	e.save()
 	logging.info("IMPORT ENQUETE DONE !")

@@ -68,14 +68,17 @@
 		</li>
 		
 		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Cloud_SolrSpeakerTagCloud"></a>
-			<a href="" onclick='createVisualization({{enquete.id}},"Cloud_SolrSpeakerTagCloud",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Tag cloud</a> (for each text)
+			<a href="" onclick='createVisualization({{enquete.id}},"Cloud_SolrSpeakerTagCloud",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Tag cloud</a> 
+			{% if source = 'Documents' %}(fo each text){% endif %}
 			<span class="vizLoadingSpinner Cloud_SolrSpeakerTagCloud" style="display:none"></span>
 		</li>	
-			
+		
+		{% if source = 'Documents' %}
 		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_TexteStreamTimeline"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Interaction dynamics</a> (for each text)
 			<span class="vizLoadingSpinner TexteStreamTimeline" style="display:none"></span>
 		</li>
+		{% endif %}
 		
 		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Attributes"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a>

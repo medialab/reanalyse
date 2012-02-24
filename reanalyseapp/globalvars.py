@@ -67,7 +67,12 @@ SENTENCE_UTT_SYMBOLS['interrogative']='? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
 ########## CODES ACTIVATED (every code need to be declared in DEFINITIONS below anyway)
-# ACTIVATED CODES (displayed IN edShow view to toggle show/hide) OK to do categories (aka Transcription/Verbatim)
+# ACTIVATED CODES = those in TextStreamTimeline viz (in order) - nb: if there is not code in texte, it will not show on viz !
+STREAMVIZCODES={}
+STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible','break','comment','time']
+STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
+
+# ACTIVATED CODES = displayed IN edShow to show/hide
 PARVBCODES={}
 PARVBCODES['Transcription'] = 	['break','comment','inaudible','question','time']
 PARVBCODES['Verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
