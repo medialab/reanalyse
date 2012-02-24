@@ -663,7 +663,6 @@ def visMakeStreamTimeline(e,param):
 		k = int(sent.i/step)
 		# number of sentences
 		ns = t.sentence_set.filter(i__range=(k*step,(k+1)*step-1)).count()
-		logging.info("FOR_k:"+str(k)+" : "+str(ns))
 		# speakers
 		spk = sent.speaker
 		spk_layers[ spk_ids.index([spk.id,spk.name]) ][k]['y'] += 1.0/float(ns)

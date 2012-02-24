@@ -81,14 +81,14 @@ def importEnqueteUsingMeta(folderPath):
 				file_location = 	folderPath+row['*file']
 				file_extension = 	file_location.split(".")[-1].upper()
 				doc_name = 			row['*name']
-				doc_category = 		row['*category']
+				doc_category = 		row['*category'].lower()
 				doc_description = 	row['*description']
 				doc_location = 		row['*location']
 				try:
 					doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
 				except:
 					doc_date = datetime.datetime.today()
-				doc_public = 		doc_category in ['verbatim','analyse','preparatory','publication'] # don't show others in edBrowse
+				doc_public = 		doc_category in DOCUMENT_CATEGORIES
 				logging.info("Document:"+file_location)
 				newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
 				try:

@@ -675,7 +675,6 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	displayParvbBool[0]=true;
 	showHideParaverbal(0,true);
 	
-/*
 	var fx = scx.tickFormat(10);
 	///////// Generate x-ticks
 	var gx = visScaleLegend.selectAll("g.x")
@@ -684,19 +683,19 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	gx.select("text")
 		.text(fx);
 	var gxe = gx.enter().insert("svg:g", "a")
-		.attr("class", "x")
 		.attr("transform", tx);
+/*
 	gxe.append("svg:line")
 		.attr("stroke","lightgray")
 		.attr("y1", 0)
 		.attr("y2", totalH-15);
+*/
 	gxe.append("svg:text")
-		.attr("y", totalH-15)
-		.attr("dy", "1em")
+		.attr("y", totalH-6)
+		.attr("class","viz_TextStreamTimeline_TicksTxt")
 		.attr("text-anchor", "middle")
 		.text(fx);
 	gx.exit().remove();
-*/
 
 };
 ////////////////////////////////////////////////////

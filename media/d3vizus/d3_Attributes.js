@@ -323,13 +323,13 @@ function buildD3_Attributes(thedata,theId) {
 		
 		/////////////// sort array values based on...
 		valuesArray = q;
-		if(attNames[j].name=='Age')
+		if(attNames[j].name=='Age') // as int
 			valuesArray.sort(function(a,b) {
 				var m=parseInt(a.name);
 				var n=parseInt(b.name);
 				return (m>n);
 			});
-		else
+		else // sort by size of spk having this att
 			valuesArray.sort(function(a,b) {
 				var m=a.speakers.length;
 				var n=b.speakers.length;

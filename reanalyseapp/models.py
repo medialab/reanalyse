@@ -101,7 +101,7 @@ class Texte(models.Model):
 	date = models.DateField(default=datetime.datetime.today())	# "2011-01-02"
 	location = models.CharField(max_length=30) 					# "Paris" todo: change to gps specific field ?
 	#
-	public = models.BooleanField(default=False)
+	public = models.BooleanField(default=False)					# visible in edbrowse or not
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
 	statuscomplete = models.BigIntegerField(default=0) 			# 0-100%
 	# for verbatims, we store content in DB

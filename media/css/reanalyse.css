@@ -1148,6 +1148,7 @@ a.res_middle_link {
 /* TextStreamTimeline */
 /* svg path - color is set in template based on speaker model color */
 .viz_TextStreamTimeline_Graph { stroke:gray; opacity:0.6; }
+.viz_TextStreamTimeline_TicksTxt { fill:gray; }
 
 /* =================================================================================== VISUALIZATIONS (evbrowse) */
 .vizdiv {
@@ -1529,7 +1530,7 @@ a.text_sic, a.text_uncertain, a.text_anonym { color:gray; }
 
 /*
 div.text_silence:before {
-	content:"¥";
+	content:"´";
 }
 div.text_silence:after {
 	content:"&nbsp;";

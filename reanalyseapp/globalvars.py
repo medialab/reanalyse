@@ -13,6 +13,10 @@ STATUS_CHOICES = (
 	('4','**Internal use'),
 	('77', '**You won something')
 )
+
+# categories in edbrowse (others won't show up)
+DOCUMENT_CATEGORIES = ['verbatim','analyse','preparatory','publication']
+
 DOCUMENT_TYPE_CHOICES = (
 	('PDF', 'PDF'),
 	('TEI', 'XML TEI'),
