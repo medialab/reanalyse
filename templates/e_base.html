@@ -155,20 +155,7 @@
 	<!-- ============================ MORE LEFTMENU -->	
 	{% block enqueteleftmenumore %}
 	{% endblock %}
-			
-	<!-- ============================ SOLR INDEX ADMIN -->
-	{% comment %}
-	{% if perms.reanalyseapp.can_make %}
-	<div class="leftmenublock">
-		<ul>
-			<li><a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr admin</a></li>
-			<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a></li>
-			<li><a href="{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}">update_index</a></li>
-			<li><a href="{% url reanalyse.reanalyseapp.views.resetAllTfidf enquete.id %}">populate ngrams</a></li>
-		</ul>
-	</div>
-	{% endif %}
-	{% endcomment %}
+	
 		
 	<!-- ============================ MORE, BUT SCROLL TO FIXED -->
 	<div id="leftMenuScrollToFixed">

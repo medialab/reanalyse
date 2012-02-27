@@ -11,16 +11,16 @@ NB: Page en cours de rédaction...
 <!-- XML display & styling of ddi/tei.xml examples -->
 <!-- deprecated way using XMLDisplay -->
 <!--
-<link href="/reanalyse/media/XMLDisplay/XMLDisplay.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="/reanalyse/media/XMLDisplay/XMLDisplay.js"></script>
+<link href="{{MEDIA_URL}}/XMLDisplay/XMLDisplay.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{MEDIA_URL}}/XMLDisplay/XMLDisplay.js"></script>
 <div id="xml_tei_bfm_div"></div>
-<script>LoadXML("xml_tei_bfm_div","/reanalyse/media/samples/tei_bfm.xml");</script>
+<script>LoadXML("xml_tei_bfm_div","{{MEDIA_URL}}/samples/tei_bfm.xml");</script>
 -->
 <!-- new way using jsTree jquery plugin -->
 <!-- + see http://uimonster.com/wiki/index.php?title=JSTree_and_custom_XML -->
-<script type="text/javascript" src="/reanalyse/media/jstree/jquery.jstree.js"></script>
-<script type="text/javascript" src="/reanalyse/media/jstree/xmldisplay.js"></script>
-<script type="text/javascript" src="/reanalyse/media/jstree/UIMTreeProcessor.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}/jstree/jquery.jstree.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}/jstree/xmldisplay.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}/jstree/UIMTreeProcessor.js"></script>
 
 
 <div class="content_norm">
@@ -32,9 +32,9 @@ NB: Page en cours de rédaction...
 	<li><a href="#meta_codes.csv"><span class="content_norm_file">meta_codes.csv</span></a></li>
 </ul>
 <h2>Overview</h2>
-<img src="/reanalyse/media/images/content_overview.png" alt="normalisation">
+<img src="{{MEDIA_URL}}/images/content_overview.png" alt="normalisation">
 <h2>Description complète de la normalisation d'une enquête</h2>
-	<p>Vous pouvez télécharger un exemple d'archive standard: <a href="/reanalyse/media/samples/enquete.zip">enquete.zip</a>, respectant toutes les contraintes décrites ci-après.</p>
+	<p>Vous pouvez télécharger un exemple d'archive standard: <a href="{{MEDIA_URL}}/samples/enquete.zip">enquete.zip</a>, respectant toutes les contraintes décrites ci-après.</p>
 <ol>
 <li><h3>Conversion des documents</h3>
 	Certains fichiers doivent être convertis pour pouvoir être archivés.<br/>
@@ -62,7 +62,7 @@ NB: Page en cours de rédaction...
 
 <li><h3>Enquête sur Enquête: <span class="content_norm_file">dossier _ese/</span></h3>
 	L'enquête sur enquête, pour être présentée dans le site-enquête, doit être structurée dans le dossier <span class="content_norm_file">_ese/</span><br/>
-	Vous pouvez vous référer à l'archive <a href="/reanalyse/media/samples/enquete.zip">enquete.zip</a> qui contient un exemple d'enquête sur enquête (sans les fichiers audio)
+	Vous pouvez vous référer à l'archive <a href="{{MEDIA_URL}}/samples/enquete.zip">enquete.zip</a> qui contient un exemple d'enquête sur enquête (sans les fichiers audio)
 </li>
 
 <li><h3>Normalisation des métadonnées: <span class="content_norm_file">dossier _meta/</span></h3>
@@ -204,7 +204,7 @@ NB: Page en cours de rédaction...
 	<li><a name="meta_speakers.csv"><h4>Tables des intervenants <span class="content_norm_file">meta_speakers.csv</span></h4></a>
 		Contient les métadonnées relatives aux personnes impliquées dans l'enquête.<br/>
 		Les colonnes dont le nom commence par _ seront masquées dans la liste des intervenants du site-enquête.<br/>
-		La visualisation des <a href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes">attributs</a> ne pourra se faire que sur cette liste, tandis que la création d'un <a href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes">graphe</a> incluera tous les types d'attributs.
+		La visualisation des <a href="{{BASE_URL}}?p=method&q=4#viz_ex_Graph_SpeakersAttributes">attributs</a> ne pourra se faire que sur cette liste, tandis que la création d'un <a href="{{BASE_URL}}?p=method&q=4#viz_ex_Graph_SpeakersAttributes">graphe</a> incluera tous les types d'attributs.
 		<table class="content_norm_ex">
 			<tr>
 				<td>*id</td><td>*pseudo</td><td>*type</td><td>description</td><td>_age</td><td>age</td><td>location</td><td>_profession</td><td>profession</td><td>groupe</td><td>...</td>
@@ -231,7 +231,7 @@ NB: Page en cours de rédaction...
 	</li>
 		
 	<li><a name="meta_codes.csv"><h4>Table des codages <span class="content_norm_file">meta_codes.csv</span></h4></a>
-		Décrit les <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> utilisés dans les verbatims.<br/>
+		Décrit les <a href="{{BASE_URL}}?p=method&q=5#gloss_code">codes</a> utilisés dans les verbatims.<br/>
 		Ce fichier permet de tracer les adaptations successives des verbatims (différentes syntaxes pour le codage).<br/>
 		La liste des codes supportés est (pour l'instant) fixée à celle donnée ci-dessous.
 		<table class="content_norm_ex">
@@ -239,7 +239,7 @@ NB: Page en cours de rédaction...
 			<tr class="content_norm_expl">
 				<td>*descr</td>
 				<td></td>
-				<!--<td>/inline /outline /inword (voir <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a>)</td>-->
+				<!--<td>/inline /outline /inword (voir <a href="{{BASE_URL}}?p=method&q=5#gloss_code">codes</a>)</td>-->
 				<td>syntaxe Exmaralda (HIAT)</td>
 				<td>explication de la signification du code</td>
 				<td>syntaxe originelle du chercheur</td>
@@ -356,7 +356,7 @@ NB: Page en cours de rédaction...
 		
 		<div class="content_norm_verb">
 			<div id="xml_tei_exm_div"></div>
-			<script>buildXmlDisplay("xml_tei_exm_div","/reanalyse/media/samples/tei_exm.xml");</script>
+			<script>buildXmlDisplay("xml_tei_exm_div","{{MEDIA_URL}}/samples/tei_exm.xml");</script>
 		</div>
 		<div class="content_norm_vleg">
 			<span class="content_norm_file">entretien_27_tei.xml</span> avec syntaxe TEI (Exmaralda > TEI Drop)<br/>
@@ -365,13 +365,13 @@ NB: Page en cours de rédaction...
 		
 		<div class="content_norm_verb">
 			<div id="xml_tei_txm_div"></div>
-			<script>buildXmlDisplay("xml_tei_txm_div","/reanalyse/media/samples/tei_txm.xml");</script>
+			<script>buildXmlDisplay("xml_tei_txm_div","{{MEDIA_URL}}/samples/tei_txm.xml");</script>
 		</div>
 		<div class="content_norm_vleg"><span class="content_norm_file">entretien_27_tei.xml</span> avec syntaxe TEI-TXM</div>
 		
 		<div class="content_norm_verb">
 			<div id="xml_tei_bfm_div"></div>
-			<script>buildXmlDisplay("xml_tei_bfm_div","/reanalyse/media/samples/tei_bfm.xml");</script>
+			<script>buildXmlDisplay("xml_tei_bfm_div","{{MEDIA_URL}}/samples/tei_bfm.xml");</script>
 		</div>
 		<div class="content_norm_vleg"><span class="content_norm_file">entretien_27_tei.xml</span> avec syntaxe TEI-BFM</div>
 	</li>
@@ -381,7 +381,7 @@ NB: Page en cours de rédaction...
 <li><h3>Encapsulation DDI <span class="content_norm_file">_meta/</span> > <span class="content_norm_file">study_ddi.xml</span></h3>
 	<div class="content_norm_verb">
 		<div id="xml_ddi_div"></div>
-		<script>buildXmlDisplay("xml_ddi_div","/reanalyse/media/samples/ddi.xml");</script>	
+		<script>buildXmlDisplay("xml_ddi_div","{{MEDIA_URL}}/samples/ddi.xml");</script>	
 	</div>
 	<div class="content_norm_vleg"><span class="content_norm_file">study_ddi.xml</span> décrivant tous les fichiers</div>
 </li>
@@ -389,14 +389,14 @@ NB: Page en cours de rédaction...
 <li><h3>Hierarchie du dossier de l'enquête structurée</h3>
 	<div class="content_norm_verb">
 		<div id="xml_studyfiles_div"></div>
-		<script>buildXmlDisplay("xml_studyfiles_div","/reanalyse/media/samples/study_files.xml");</script>
+		<script>buildXmlDisplay("xml_studyfiles_div","{{MEDIA_URL}}/samples/study_files.xml");</script>
 	</div>
 	<div class="content_norm_vleg">Hierarchie des dossiers</div>
 </li>
 
 <li><h3>Upload dans le site réanalyse</h3>
 	<div>
-	Le dossier ci-dessus, compressé dans une archive <a href="/reanalyse/media/samples/enquete.zip">enquete.zip</a> peut ensuite être chargé dans le site.<br/>
+	Le dossier ci-dessus, compressé dans une archive <a href="{{MEDIA_URL}}/samples/enquete.zip">enquete.zip</a> peut ensuite être chargé dans le site.<br/>
 	</div>
 </li>
 
@@ -420,7 +420,7 @@ NB: Page en cours de rédaction...
 			<td><a href="#viz_ex_view_dBrowse">Liste des documents</a></td>
 			<td class="content_norm_orig">tous les documents d'une enquête</td>
 			<td>tableau permettant d'accéder à tous les documents référencés dans une enquête: entretiens, documents préparatoires ou d'analyse, images, etc...</td>
-			<td><a href="#viz_ex_view_dBrowse"><img src="/reanalyse/media/images/viz_ex_view_dBrowse.png" width="160px"></a></td>
+			<td><a href="#viz_ex_view_dBrowse"><img src="{{MEDIA_URL}}/images/viz_ex_view_dBrowse.png" width="160px"></a></td>
 			<td class="content_norm_orig">filtrage par mot clef, tri par colonnes</td>
 			</tr>
 		<tr>
@@ -428,31 +428,31 @@ NB: Page en cours de rédaction...
 			<td><a href="#viz_ex_view_sBrowse">Liste des intervenants</a></td>
 			<td class="content_norm_orig">tous les intervenants d'une enquête</td>
 			<td>tableau référençant l'intégralité des intervenants d'une enquête, ainsi que leurs propriétés sociographiques</td>
-			<td><a href="#viz_ex_view_sBrowse"><img src="/reanalyse/media/images/viz_ex_view_sBrowse.png" width="160px"></a></td>
+			<td><a href="#viz_ex_view_sBrowse"><img src="{{MEDIA_URL}}/images/viz_ex_view_sBrowse.png" width="160px"></a></td>
 			<td class="content_norm_orig">filtrage par mot clef, tri par colonnes</td>
 			</tr>
 		<tr>
 			<!--<td>edShow</td>-->
 			<td><a href="#viz_ex_view_dShow">Exploration d'un entretien</a></td>
 			<td class="content_norm_orig">un entretien</td>
-			<td>affichage de la transcription d'un verbatim. lorsque le document a été enrichi, certains <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> (silences, évènements, notes, commentaires,...) sont affichés sous forme d'icônes</td>
-			<td><a href="#viz_ex_view_dShow"><img src="/reanalyse/media/images/viz_ex_view_dShow.png" width="160px"></a></td>
-			<td class="content_norm_orig">affichage ou masquage d'un intervenant, ou d'un <a href="/reanalyse/?p=method&q=5#gloss_code">code</a> particulier</td>
+			<td>affichage de la transcription d'un verbatim. lorsque le document a été enrichi, certains <a href="{{BASE_URL}}?p=method&q=5#gloss_code">codes</a> (silences, évènements, notes, commentaires,...) sont affichés sous forme d'icônes</td>
+			<td><a href="#viz_ex_view_dShow"><img src="{{MEDIA_URL}}/images/viz_ex_view_dShow.png" width="160px"></a></td>
+			<td class="content_norm_orig">affichage ou masquage d'un intervenant, ou d'un <a href="{{BASE_URL}}?p=method&q=5#gloss_code">code</a> particulier</td>
 			</tr>
 		<tr>
 			<!--<td>TexteStreamTimeline</td>-->
 			<td><a href="#viz_ex_TexteStreamTimeline">Dynamique d'entretien</a></td>
 			<td class="content_norm_orig">un entretien</td>
-			<td>graphique présentant l'évolution de la dynamique d'un entretien (<a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> et tours de parole)</td>
-			<td><a href="#viz_ex_TexteStreamTimeline"><img src="/reanalyse/media/images/viz_ex_TexteStreamTimeline.png" width="160px"></a></td>
+			<td>graphique présentant l'évolution de la dynamique d'un entretien (<a href="{{BASE_URL}}?p=method&q=5#gloss_code">codes</a> et tours de parole)</td>
+			<td><a href="#viz_ex_TexteStreamTimeline"><img src="{{MEDIA_URL}}/images/viz_ex_TexteStreamTimeline.png" width="160px"></a></td>
 			<td class="content_norm_orig">modification de la précision, retour possible au texte source</td>
 			</tr>	
 		<tr>
 			<!--<td>Cloud_SolrSpeakerTagCloud</td>-->
 			<td><a href="#viz_ex_Cloud_SolrSpeakerTagCloud">Nuage de mots</a></td>
 			<td class="content_norm_orig">un ou plusieurs intervenants</td>
-			<td>nuage de mots reflétant les <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> à plus fort <a href="/reanalyse/?p=method&q=5#gloss_tfidf">tfidf</a> utilisés par le ou les intervenants</td>
-			<td><a href="#viz_ex_Cloud_SolrSpeakerTagCloud"><img src="/reanalyse/media/images/viz_ex_Cloud_SolrSpeakerTagCloud.png" width="160px"></a></td>
+			<td>nuage de mots reflétant les <a href="{{BASE_URL}}?p=method&q=5#gloss_ngram">ngrams</a> à plus fort <a href="{{BASE_URL}}?p=method&q=5#gloss_tfidf">tfidf</a> utilisés par le ou les intervenants</td>
+			<td><a href="#viz_ex_Cloud_SolrSpeakerTagCloud"><img src="{{MEDIA_URL}}/images/viz_ex_Cloud_SolrSpeakerTagCloud.png" width="160px"></a></td>
 			<td class="content_norm_orig">tri alphabétique, par fréquence ou par tfidf</td>
 			</tr>
 		<tr>
@@ -460,31 +460,31 @@ NB: Page en cours de rédaction...
 			<td><a href="#viz_ex_Attributes">Attributs sociographiques</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants</td>
 			<td>affichage des attributs sociographiques des intervenants sous forme d'histogramme</td>
-			<td><a href="#viz_ex_Attributes"><img src="/reanalyse/media/images/viz_ex_Attributes.png" width="160px"></a></td>
+			<td><a href="#viz_ex_Attributes"><img src="{{MEDIA_URL}}/images/viz_ex_Attributes.png" width="160px"></a></td>
 			<td class="content_norm_orig">affichage dynamique des attributs par survol de la souris</td>
 			</tr>
 		<tr>
 			<!--<td>Graph_SpeakersAttributes</td>-->
 			<td><a href="#viz_ex_Graph_SpeakersAttributes">Graphe Intervenants-Attributs</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants, et un jeu d'attributs sociographiques</td>
-			<td><a href="/reanalyse/?p=method&q=5#gloss_graph">graphe</a> des intervenants et de leurs attributs sociographiques partagés</td>
-			<td><a href="#viz_ex_Graph_SpeakersAttributes"><img src="/reanalyse/media/images/viz_ex_Graph_SpeakersAttributes.png" width="160px"></a></td>
+			<td><a href="{{BASE_URL}}?p=method&q=5#gloss_graph">graphe</a> des intervenants et de leurs attributs sociographiques partagés</td>
+			<td><a href="#viz_ex_Graph_SpeakersAttributes"><img src="{{MEDIA_URL}}/images/viz_ex_Graph_SpeakersAttributes.png" width="160px"></a></td>
 			<td class="content_norm_orig">exploration avec le logiciel <a href="http://www.gephi.org">Gephi</a></td>
 			</tr>
 		<tr>
 			<!--<td>Graph_SpeakersWords</td>-->
 			<td><a href="#viz_ex_Graph_SpeakersWords">Graphe Intervenants-Ngrams</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants</td>
-			<td><a href="/reanalyse/?p=method&q=5#gloss_graph">graphe</a> des intervenants et des <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> qu'il partagent. le poids des liens est proportionnel aux valeurs de <a href="/reanalyse/?p=method&q=5#gloss_tfidf">tfidf</a> pour chaque ngram</td>
-			<td><a href="#viz_ex_Graph_SpeakersWords"><img src="/reanalyse/media/images/viz_ex_Graph_SpeakersWords.png" width="160px"></a></td>
+			<td><a href="{{BASE_URL}}?p=method&q=5#gloss_graph">graphe</a> des intervenants et des <a href="{{BASE_URL}}?p=method&q=5#gloss_ngram">ngrams</a> qu'il partagent. le poids des liens est proportionnel aux valeurs de <a href="{{BASE_URL}}?p=method&q=5#gloss_tfidf">tfidf</a> pour chaque ngram</td>
+			<td><a href="#viz_ex_Graph_SpeakersWords"><img src="{{MEDIA_URL}}/images/viz_ex_Graph_SpeakersWords.png" width="160px"></a></td>
 			<td class="content_norm_orig">exploration avec le logiciel <a href="http://www.gephi.org">Gephi</a></td>
 			</tr>
 		<tr>
 			<!--<td>Graph_SpeakersSpeakers</td>-->
 			<td><a href="#viz_ex_Graph_SpeakersSpeakers">Graphe des Intervenants</a></td>
 			<td class="content_norm_orig">un ensemble d'intervenants</td>
-			<td><a href="/reanalyse/?p=method&q=5#gloss_graph">graphe</a> des liens entre intervenants. le poids des liens correspond à un indice de similarité comparant la distance entre les différents verbatims. la proximité dans l'espace est donc directement reliée au nombre de mots utilisés en commum</td>
-			<td><a href="#viz_ex_Graph_SpeakersSpeakers"><img src="/reanalyse/media/images/viz_ex_Graph_SpeakersSpeakers.png" width="160px"></a></td>
+			<td><a href="{{BASE_URL}}?p=method&q=5#gloss_graph">graphe</a> des liens entre intervenants. le poids des liens correspond à un indice de similarité comparant la distance entre les différents verbatims. la proximité dans l'espace est donc directement reliée au nombre de mots utilisés en commum</td>
+			<td><a href="#viz_ex_Graph_SpeakersSpeakers"><img src="{{MEDIA_URL}}/images/viz_ex_Graph_SpeakersSpeakers.png" width="160px"></a></td>
 			<td class="content_norm_orig">exploration avec le logiciel <a href="http://www.gephi.org">Gephi</a></td>
 			</tr>
 	</table>
@@ -492,27 +492,27 @@ NB: Page en cours de rédaction...
 
 <ol>
 <li><a name="viz_ex_view_dBrowse"><h2>Liste des documents</h2></a>
-<img src="/reanalyse/media/images/viz_ex_view_dBrowse.png" width="100%">
+<img src="{{MEDIA_URL}}/images/viz_ex_view_dBrowse.png" width="100%">
 <br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque document (par ex. <a href="#viz_ex_TexteStreamTimeline">dynamique d'entretien</a>)
 </li>
 
 <li><a name="viz_ex_view_sBrowse"><h2>Liste des intervenants</h2></a>
-<img src="/reanalyse/media/images/viz_ex_view_sBrowse.png" width="100%">
-<br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque intervenant (par ex. <a href="#viz_ex_Cloud_SolrSpeakerTagCloud">nuage de mots</a> utilisés). Les types d'attribut affichées sont ceux de la table <span class="content_norm_file">meta_speakers.csv</span> (voir la page <a href="/reanalyse/?p=method&q=3#meta_speakers.csv">Normalisation</a>).
+<img src="{{MEDIA_URL}}/images/viz_ex_view_sBrowse.png" width="100%">
+<br/>Les icônes de couleurs permettent d'accéder aux visualisations liés à chaque intervenant (par ex. <a href="#viz_ex_Cloud_SolrSpeakerTagCloud">nuage de mots</a> utilisés). Les types d'attribut affichées sont ceux de la table <span class="content_norm_file">meta_speakers.csv</span> (voir la page <a href="{{BASE_URL}}?p=method&q=3#meta_speakers.csv">Normalisation</a>).
 </li>
 
 <li><a name="viz_ex_view_dShow"><h2>Exploration d'un entretien</h2></a>
-<img src="/reanalyse/media/images/viz_ex_view_dShow.png" width="100%">
+<img src="{{MEDIA_URL}}/images/viz_ex_view_dShow.png" width="100%">
 <br/>Les blocs en couleur font état des tours de parole.
-<br/>Si le texte est enrichi, les <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> sont représentés par des icônes avec infobulles lors du passage de la souris.
+<br/>Si le texte est enrichi, les <a href="{{BASE_URL}}?p=method&q=5#gloss_code">codes</a> sont représentés par des icônes avec infobulles lors du passage de la souris.
 </li>
 
 <li><a name="viz_ex_TexteStreamTimeline"><h2>Dynamique d'entretien</h2></a>
-<img src="/reanalyse/media/images/viz_ex_TexteStreamTimeline.png" width="100%">
+<img src="{{MEDIA_URL}}/images/viz_ex_TexteStreamTimeline.png" width="100%">
 <br/>Cette visualisation permet d'explorer l'évolution d'un entretien de son début à sa fin.
 <br/>L'axe horizontal du graphe correspond à l'avancement dans la transcription (nombre de phrases, ou - s'il a été renseigné - le minutage exact).
 <br/><h4>partie supérieure</h3>
-Elle fait état de la fréquence des <a href="/reanalyse/?p=method&q=5#gloss_code">codes</a> au cours du temps.
+Elle fait état de la fréquence des <a href="{{BASE_URL}}?p=method&q=5#gloss_code">codes</a> au cours du temps.
 L'échelle verticale est différente pour chaque type de paraverbal (c'est logique: chaque code à son propre rythme, fortement dépendant de la procédure de codage) et est ajustée afin que le maximum prennent toute la hauteur du graphe.<br/>
 Il ne faut donc PAS comparer les hauteurs relatives de différents codes ou différents textes !
 <br/><h4>partie inférieure</h3>Elle décrit le nombre de phrases pour chacun des intervenants (enquêteur inclus), c'est-à-dire les quantités relatives de prise de parole.
@@ -525,12 +525,12 @@ Il ne faut donc PAS comparer les hauteurs relatives de différents codes ou diff
 </li>
 
 <li><a name="viz_ex_Cloud_SolrSpeakerTagCloud"><h2>Nuage de mots</h2></a>
-<img src="/reanalyse/media/images/viz_ex_Cloud_SolrSpeakerTagCloud.png" width="100%">
-<br/>Ce nuage de mots présente les 200 <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> de plus grand <a href="/reanalyse/?p=method&q=5#gloss_tfidf">tfidf</a> pour un ensemble donné d'intervenants.
+<img src="{{MEDIA_URL}}/images/viz_ex_Cloud_SolrSpeakerTagCloud.png" width="100%">
+<br/>Ce nuage de mots présente les 200 <a href="{{BASE_URL}}?p=method&q=5#gloss_ngram">ngrams</a> de plus grand <a href="{{BASE_URL}}?p=method&q=5#gloss_tfidf">tfidf</a> pour un ensemble donné d'intervenants.
 </li>
 
 <li><a name="viz_ex_Attributes"><h2>Attributs sociographiques</h2></a>
-<img src="/reanalyse/media/images/viz_ex_Attributes.png" width="100%">
+<img src="{{MEDIA_URL}}/images/viz_ex_Attributes.png" width="100%">
 <br/>Histogramme interactif présentant sous formes de jauges la répartition des attributs sociographiques d'un ensemble donné d'intervenants.
 <br/>Chacune des colonnes correspond à un type d'attribut (sexe, âge, profession, ...)
 <br/>Les stratifications verticales montrent l'éventail des valeurs pour chacun des types d'attribut.
@@ -544,20 +544,20 @@ Il ne faut donc PAS comparer les hauteurs relatives de différents codes ou diff
 </ul>
 
 <li><a name="viz_ex_Graph_SpeakersAttributes"><h2>Graphe Intervenants-Attributs</h2></a>
-<img src="/reanalyse/media/images/viz_ex_Graph_SpeakersAttributes.png" width="100%">
-<br/><a href="/reanalyse/?p=method&q=5#gloss_graph">Graphe</a> bipartite, reliant les intervenants à leurs attributs.
+<img src="{{MEDIA_URL}}/images/viz_ex_Graph_SpeakersAttributes.png" width="100%">
+<br/><a href="{{BASE_URL}}?p=method&q=5#gloss_graph">Graphe</a> bipartite, reliant les intervenants à leurs attributs.
 <br/>Dans cet exemple (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>), les couleurs distinguent les différents types d'attributs.
 </li>
 
 <li><a name="viz_ex_Graph_SpeakersWords"><h2>Graphe Intervenants-Ngrams</h2></a>
-<img src="/reanalyse/media/images/viz_ex_Graph_SpeakersWords.png" width="100%">
-<br/><a href="/reanalyse/?p=method&q=5#gloss_graph">Graphe</a> bipartite des intervenants et des ngrams qu'il partagent
-<br/>Dans cet exemple (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>), les points rouges représentent les <a href="/reanalyse/?p=method&q=5#gloss_ngram">ngrams</a> partagés. Leur valeurs ainsi que les liens ont ici été masqués pour faciliter la lecture.
+<img src="{{MEDIA_URL}}/images/viz_ex_Graph_SpeakersWords.png" width="100%">
+<br/><a href="{{BASE_URL}}?p=method&q=5#gloss_graph">Graphe</a> bipartite des intervenants et des ngrams qu'il partagent
+<br/>Dans cet exemple (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>), les points rouges représentent les <a href="{{BASE_URL}}?p=method&q=5#gloss_ngram">ngrams</a> partagés. Leur valeurs ainsi que les liens ont ici été masqués pour faciliter la lecture.
 </li>
 
 <li><a name="viz_ex_Graph_SpeakersSpeakers"><h2>Graphe des Intervenants</h2></a>
-<img src="/reanalyse/media/images/viz_ex_Graph_SpeakersSpeakers.png" width="100%">
-<br/><a href="/reanalyse/?p=method&q=5#gloss_graph">Graphe</a> monopartite (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>) reliant les intervenants entre eux.
+<img src="{{MEDIA_URL}}/images/viz_ex_Graph_SpeakersSpeakers.png" width="100%">
+<br/><a href="{{BASE_URL}}?p=method&q=5#gloss_graph">Graphe</a> monopartite (spatialisé et coloré à l'aide de <a href="http://www.gephi.org">Gephi</a>) reliant les intervenants entre eux.
 <br/>Ce graphe permet d'évaluer les positions relatives des intervenants (i.e. le vocabulaire partagé) par rapport aux différentes valeurs d'un type d'attributs.
 <br/>Exemple avec les "Types Idéologiques": rouge="divers", bleu="droite libérale", vert="gauche", etc...
 </li>
@@ -627,7 +627,7 @@ NB: Page en cours de rédaction...
 			<li><b>outline_content</b>: les codes hors texte; ex. comment:"tout le monde se regarde", break:"changement de cassette", time:"65min"</li>
 			<li><b>inword</b>: code s'appliquant au texte; ex. uncertain:"or|alors", strong:"vraiment"</li>
 		</ul>-->
-		Veuillez vous référer au tableau <span class="content_norm_file">meta_codes.csv</span> de la page <a href="/reanalyse/?p=method&q=3#meta_codes.csv">Normalisation</a> pour consulter la liste des codes actuellement actifs dans les sites-enquêtes.
+		Veuillez vous référer au tableau <span class="content_norm_file">meta_codes.csv</span> de la page <a href="{{BASE_URL}}?p=method&q=3#meta_codes.csv">Normalisation</a> pour consulter la liste des codes actuellement actifs dans les sites-enquêtes.
 	</li>
 	<!-- ================================ -->
 	<li><a name="gloss_ngram"><h2>Indexation et Ngrams</h2></a>
@@ -685,5 +685,5 @@ NB: Page en cours de rédaction...
 <h1>Django Models & Views</h1>
 <div>
 <p>Please switch to fullscreen if your eyes hurt.</p>
-<img src="/reanalyse/media/images/content_models.png" width="100%" alt="models">
+<img src="{{MEDIA_URL}}/images/content_models.png" width="100%" alt="models">
 </div>

@@ -14,8 +14,7 @@ import md5
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
-from django.template import loader, Context
+from django.template import RequestContext, loader, Context, Template
 
 from django.conf import settings
 
@@ -77,48 +76,54 @@ import re
 # pythonsolr for raw_queries involving termVectors (pysolr does not)
 import pythonsolr
 
+###########################################################################
+# LOGGING
+###########################################################################
 import logging
+logger = logging.getLogger('apps')
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 
-# only shortcuts
-# todo: use built-in django functions
-URL_loginpage = '/reanalyse/?q=login&p=access'
-URL_base = '/reanalyse'
+
+
+
+
+
 
 
 ###########################################################################
 # SOLR simple process manager
 ###########################################################################
+SOLR_JARNAME = "startreanalysesolr.jar"
+###############################
 def checkSolrProcess():
 	tmp = os.popen("ps -Af").read()
-	process_name = "startreanalysesolr.jar"
-	if process_name not in tmp[:]:
-		logging.info("Solr is not running. Let's restart it")
-		newprocess = "cd %s && nohup java -jar startreanalysesolr.jar &" % (settings.REANALYSEPROJECTPATH+"/solr/")
+	if SOLR_JARNAME not in tmp[:]:
+		logger.info("Solr is not running. Let's restart it")
+		newprocess = "cd %s && nohup java -jar %s > %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME,settings.REANALYSELOGSOLR)
 		os.system(newprocess)
 		return True
 	else:
 		return False
+###############################
+@login_required
+def killSolrProcess(request):
+	killcmd = "kill `ps -ef | grep "+SOLR_JARNAME+" | grep -v grep | awk '{print $2}'`"
+	os.system(killcmd)
+	return HttpResponse("solr killed", mimetype="application/json")
 ###########################################################################
 
 
 
 
-    
+
 
 ###########################################################################
-# LOGGING (todo cleaner!)
-###########################################################################
-def init_mylogging():
-	 logging.basicConfig(level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s', filename=settings.REANALYSELOGPATH+'reanalyse.log', filemode='a+')
-logInitDone=False
-if not logInitDone:
-	logging.info("you'll have to to it another way. (LOG)")
-	logInitDone = True
-	init_mylogging()
-###########################################################################
+# done when looking at the admin view
 def init_users():
-	nothing=1
 	######### Groups & Permissions
 	browse = Permission.objects.get(codename='can_browse')
 	explore = Permission.objects.get(codename='can_explore')
@@ -146,14 +151,6 @@ def init_users():
 	cUser.groups.add(cGroup)
 	#cUser.user_permissions.add(eEnquete1)
 	#cUser.user_permissions.add(eEnquete2)
-	
-usersInitDone=False
-if not usersInitDone:
-	usersInitDone = True
-	try:
-		init_users()
-	except:
-		logging.info("you'll have to to it another way. (USERS)")
 ###########################################################################
 
 
@@ -196,7 +193,7 @@ def eDelete(request,eid):
 ###########################################################################
 def logoutuser(request):
 	logout(request)
-	return redirect(URL_base)
+	return redirect(settings.LOGIN_REDIRECT_URL)
 ###########################################################################
 def home(request):
 	# (p)pname 	is the menu section		'project','method','access',...
@@ -229,6 +226,9 @@ def home(request):
 			txtcont = re.split('</h1>',sp)[1]
 			isActive = len(txtcont)>10
 			subpages.append([str(i),txttitl,isActive])
+		t = Template(contenthtml)
+		c = RequestContext(request)
+		contenthtml = t.render(c)
 		ctx.update({'contenthtml':contenthtml,'subpages':subpages})
 	
 	#################################################################################### LOGIN/REGISTER PAGE (ACCESS)
@@ -241,7 +241,7 @@ def home(request):
 			ctx.update({'form':loginform})
 			if loginform.is_valid():
 				login(request, loginform.get_user())
-				nextpage = request.GET.get('next', URL_base)
+				nextpage = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
 				return redirect(nextpage)
 	
 		if spname=='register':
@@ -311,9 +311,17 @@ def home(request):
 
 
 
-
-
-
+################################################################################
+def getTailOfFile(filepath,count):
+	try:
+		logFile = open(filepath,'r')
+		res = logFile.readlines()[-count:]
+		logFile.close()
+	except:
+		res = ['no log file found']
+	res.reverse()
+	return res
+################################################################################
 
 
 
@@ -323,23 +331,36 @@ def home(request):
 ################################################################################
 @login_required
 def eAdmin(request):
+	### unique foldername if some upload is done 
 	sessionFolderName = "up_"+str(time())
 	ctx = {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}
+	
+	### todo: move that somewhere else to do it just when website/database is reset
+	try:
+		init_users()
+	except:
+		donothing=1
+	
+	### check if solr launched, relaunch it if needed
 	if checkSolrProcess():
-		ctx.update({'solrstatus':'was off. wait 5,7s and refresh page to be sure'})
+		ctx.update({'solrstatus':'was off. but refreshing this page has relaunched it. wait 5,7s and refresh again to be sure'})
 	else:
 		ctx.update({'solrstatus':'running'})
 	ctx.update({'staffemail':settings.STAFF_EMAIL})
 	
-	# log file
-	logging.info("Looking at ADMIn page")
-	logLines = int(request.GET.get('log','20'))
-	try:
-		logFile = open(settings.REANALYSELOGPATH+'reanalyse.log','r')
-		ctx.update({'logs':reversed(logFile.readlines()[-logLines:])})
-		logFile.close()
-	except:
-		ctx.update({'logs':['no log file found']})
+	### log file
+	#logger.info("Looking at ADMIN page")
+	wantedCount = int(request.GET.get('log','20'))
+	log_django 	= getTailOfFile(settings.REANALYSELOGDJANGO,wantedCount)
+	log_solr 	= getTailOfFile(settings.REANALYSELOGSOLR,wantedCount)
+	ctx.update({'log_django':log_django,'log_solr':log_solr})
+		
+	### solr path
+	ctx.update({'BASE_URL':settings.BASE_URL,'solr_url':settings.SOLR_URL})
+	
+	### all enquetes
+	ctx.update({'enquetes':Enquete.objects.all()})
+	
 	return render_to_response('admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 @login_required
@@ -405,10 +426,9 @@ def save_upload( uploaded, foldname, filename, raw_data ):
 @login_required
 def eParse(request):
 	d={}
-	folname = request.GET.get('foldname','')
-	logging.info("IMPORT ENQUETE from:"+folname )
-	
+	folname = request.GET.get('foldname','')	
 	upPath = settings.REANALYSEUPLOADPATH+folname+"/"
+	logger.info("parse enquete from uploaded folder: "+upPath )
 	
 	######## (DEPRECATED) uploaded everything at once 
 	if os.path.exists(upPath+"ddi.xml"):
@@ -425,11 +445,11 @@ def eParse(request):
 			########### (GOOD WAY!) there is the _meta folder, containing meta_documents.csv, ...
 			e = importEnqueteUsingMeta(upPath+"extracted/")
 		else:
-			logging.info("no zipped ddi.xml file nor _meta folder found")
+			logger.info("no zipped ddi.xml file nor _meta folder found")
 	else:
-		logging.info("no ddi.xml nor archive.zip found")
+		logger.info("no ddi.xml nor archive.zip found")
 	
-	logging.info("enquete ddi.xml imported:"+e.name )
+	logger.info("enquete imported")
 	
 	e.status='1'
 	e.statuscomplete=0
@@ -443,29 +463,29 @@ def eParse(request):
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
 	docsCur = 0
 	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
-		logging.info("now parsing text:"+t.name )
+		logger.info("now parsing text:"+t.id )
 		t.parseXml()
-		logging.info("texte parsed, now updating solr index:"+t.name )
+		logger.info("texte parsed, now updating solr index:"+t.id )
 		update_index.Command().handle(verbosity=0)
-		logging.info("solr index updated")
+		logger.info("solr index updated")
 		docsCur+=1
 		e.statuscomplete = int(docsCur*100/docsTotal)
 		e.save()
 		
 		# let's make stream timeline viz for each text
-		#logging.info("make streamtimeline viz")
+		#logger.info("make streamtimeline viz")
 		try:
 			makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
-			logging.info("PB: pb making streamtimeline viz for texte id: "+str(t.id))
+			logger.info("PB: pb making streamtimeline viz for texte id: "+str(t.id))
 		
-	logging.info("all texts were sucessfully parsed")
+	logger.info("all texts were sucessfully parsed")
 	
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
-	logging.info("now updating tfidf")
+	logger.info("now updating tfidf")
 	makeAllTfidf(e)
-	logging.info("tfidf sucessfully updated")
+	logger.info("tfidf sucessfully updated")
 	
 	makeViz(e,'Cloud_SolrSpeakerTagCloud')
 	makeViz(e,'Graph_SpeakersSpeakers')
@@ -474,11 +494,8 @@ def eParse(request):
 				
 	e.status='0'
 	e.save()
-	logging.info("IMPORT ENQUETE DONE !")
-#	except:
-		#e.status='-1'
-		#e.save()
-		
+	logger.info("import process done")
+
 	d['status']='enquete imported'
 	json = simplejson.dumps(d,indent=4,ensure_ascii=False)
 	return HttpResponse(json, mimetype="application/json")
@@ -530,11 +547,10 @@ def eBrowse(request):
 
 
 ################################################################################
-# temp all tfidf
-def resetAllTfidf(request,eid):
-	logging.info("now updating tfidf")
+def resetNgrams(request,eid):
+	logger.info("fetching ngrams with tfidf - start")
 	makeAllTfidf(Enquete.objects.get(id=eid))
-	logging.info("tfidf sucessfully updated")
+	logger.info("fetching ngrams with tfidf - done with success")
 	return HttpResponse("tfidf updated", mimetype="application/json")
 ################################################################################
 def eReset(request):
@@ -755,7 +771,7 @@ def edBrowse(request,eid):
 	if ctx['permexplorethis']:
 		return render_to_response('ed_browse.html', ctx, context_instance=RequestContext(request))
 	else:
-		return redirect(URL_loginpage) 
+		return redirect(settings.LOGIN_URL) 
 ################################################################################
 @login_required
 @permission_required('reanalyseapp.can_browse')
@@ -870,7 +886,7 @@ def esBrowse(request,eid):
 	if ctx['permexplorethis']:
 		return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
 	else:
-		return redirect(URL_loginpage) 
+		return redirect(settings.LOGIN_URL) 
 ################################################################################
 @login_required
 @permission_required('reanalyseapp.can_browse')
@@ -1038,7 +1054,7 @@ def edShow(request,eid,did):
 	if ctx['permexplorethis']:
 		return render_to_response('ed_show.html', ctx , context_instance=RequestContext(request))
 	else:
-		return redirect(URL_loginpage) 
+		return redirect(settings.LOGIN_URL) 
 ###################################################################################################################################
 @login_required
 @permission_required('reanalyseapp.can_browse')
@@ -1101,7 +1117,7 @@ def getEseReport(request,eid):
 	e = Enquete.objects.get(id=eid)
 	ese = simplejson.loads(e.ese)
 	filepath = ese['reportpath']
-	logging.info("Downloading ESE report:"+filepath)
+	logger.info("Downloading ESE report:"+filepath)
 	#pdfname = eseid + "_"+ese.report.split('/')[-1]
 	pdfname = 'enquetesurenquete.pdf'
 	response = HttpResponse(mimetype="application/pdf")
@@ -1115,7 +1131,7 @@ def stream(request,eid,path):
 	e = Enquete.objects.get(id=eid)
 	# todo: to improve
 	path='/'+path # (cause sent in the url first / doesnt appear)
-	logging.info("Streaming audio file path:"+path)
+	logger.info("Streaming audio file path:"+path)
 	response = HttpResponse(mimetype="audio/mpeg")
 	#response['Content-Disposition'] = 'filename=%s' % 'blarg.mp3'#smart_str(file_name)
 	#Requires mod_xsendfile
@@ -1264,7 +1280,7 @@ def eSearch(request,eid):
 		#sqs = SearchQuerySet().raw_search(que)
 	##########################################################################################
 	else:
-		logging.info("search query:"+que)
+		logger.info("search query:"+que)
 		
 		#################################### FACETING MENU LIST
 		#
@@ -1773,7 +1789,7 @@ def esGetSolrTermVector(request,eid,sid):
 
 ###########################################################################
 def exportEnquetes(request):
-	logging.info("exporting all Enquetes to XML")
+	logger.info("exporting all Enquetes to XML")
 	exportEnquetesAsXML()
 	return render_to_response('e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
@@ -1848,11 +1864,11 @@ def getJsonData(request,eid,data):
 # 			# create upload folder
 # 			newFolderPath = settings.REANALYSEUPLOADPATH + str(time())
 # 			os.mkdir(newFolderPath)
-# 			#logging.info( "///////therequest :"+request.POST )
-# 			#logging.info( "///////thefiles :"+request.FILES.getlist )
+# 			#logger.info( "///////therequest :"+request.POST )
+# 			#logger.info( "///////thefiles :"+request.FILES.getlist )
 # 			#uform = UploadFileForm(request.POST, request.FILES)
 # 			for f in request.FILES.getlist('thefiles'):
-# 				logging.info( "UPLOADING FILE: "+newFolderPath+"/"+f.name )
+# 				logger.info( "UPLOADING FILE: "+newFolderPath+"/"+f.name )
 # 				# not uploading for real, just get the right file in upload folder
 # 				destination = open(newFolderPath+"/"+f.name, 'wb+')
 # 				for chunk in f.chunks():

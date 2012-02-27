@@ -8,7 +8,6 @@ from reanalyse.reanalyseapp.utils import *
 from django.db import models
 from xml.etree.ElementTree import ElementTree
 from django.conf import settings
-import logging
 
 # for date manip on parsing
 import datetime
@@ -29,7 +28,17 @@ from django.db.models import Avg, Max, Min, Count
 ####################
 import django_tables2 as tables
 from django.utils.safestring import mark_safe
-####################################################################
+
+###########################################################################
+# LOGGING
+###########################################################################
+import logging
+logger = logging.getLogger('apps')
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+nullhandler = logger.addHandler(NullHandler())
+###########################################################################
 
 
 
@@ -350,7 +359,7 @@ def parseXmlDocument(texte):
 	
 	#########################
 	else:
-		logging.info("PB:XML file not parsed cause neither <Trans> or <TEI> tag was found")
+		logger.info("PB:XML file not parsed cause neither <Trans> or <TEI> tag was found")
 ####################################################################
 
 
@@ -664,7 +673,7 @@ def parseTEIWords(sentence,nodes,N):
 				N+=1
 			except:
 				# todo: to solve that thread-not-safe problem with get_or_create, which can produce duplicate entries !!!!
-				logging.info("PROBLEM: get_or_create problem :"+codeName+","+wordContent+","+str(N) )
+				logger.info("PROBLEM: get_or_create problem :"+codeName+","+wordContent+","+str(N) )
 				
 	# end symbol
 	
@@ -1210,7 +1219,7 @@ def getTextContent(texte,fromT,toT):
 # 		else:
 # 			parts += [node.text] + midpart + [node.tail]
 # 		# filter removes possible Nones in texts and tails
-# 	#logging.info("STRINGIFY"+res)
+# 	#logger.info("STRINGIFY"+res)
 # 	return parts
 ####################################################################
 
@@ -1388,9 +1397,9 @@ def getTextContent(texte,fromT,toT):
 # 	nVals = sorted(nVals) # now that its global, sort it
 # 
 # #	for lem in lineLen:
-# #		logging.info("len:"+str(lem))
+# #		logger.info("len:"+str(lem))
 # #	for val in nVals:
-# #		logging.info("tablo:"+str(val[0])+" = "+val[1]+"/"+val[2])
+# #		logger.info("tablo:"+str(val[0])+" = "+val[1]+"/"+val[2])
 # 			
 # 	# stores classes to insert at each global offset
 # 	classArr=range(len(nVals)) # may be smaller
@@ -1486,7 +1495,7 @@ def getTextContent(texte,fromT,toT):
 ##		for p in al:
 ##			u.append([p.partid])
 #		u = sorted(u)
-#		logging.info("premier element de la liste:"+u[0])
+#		logger.info("premier element de la liste:"+u[0])
 #		return u
 ##############
 #class Part(models.Model):
@@ -1547,7 +1556,7 @@ def getTextContent(texte,fromT,toT):
 #			midpart+=stringify_children(cnode)
 #		parts += [node.text] + midpart + [node.tail]
 #		# filter removes possible Nones in texts and tails
-#	#logging.info("STRINGIFY"+res)
+#	#logger.info("STRINGIFY"+res)
 #	return parts
 #####################################################################
 
@@ -1590,8 +1599,8 @@ def getTextContent(texte,fromT,toT):
 #			newtxtpart = TextePart(texte=self,part=thepart,content=allcontent,partid=partid)
 #			newtxtpart.save()
 #			# say hello to the new TEXTEPART
-#			#logging.info("made NEW TEXTEPART:"+partid+"="+newtxtpart.content)
-#		logging.info("made NEW TEXTE:"+self.texteid)
+#			#logger.info("made NEW TEXTEPART:"+partid+"="+newtxtpart.content)
+#		logger.info("made NEW TEXTE:"+self.texteid)
 	##########
 #	def getTextPart(self,partid):
 #		try:
@@ -1654,7 +1663,7 @@ def getTextContent(texte,fromT,toT):
 # first version - deprecated
 #class Enquete(object):
 #	def __init__(self,filepath):
-#		logging.info("ENQUETE OBJECT CREATED with file:"+filepath)
+#		logger.info("ENQUETE OBJECT CREATED with file:"+filepath)
 #		self.tree = ElementTree()
 #		self.tree.parse(filepath)
 #		self.root = self.tree.getroot()

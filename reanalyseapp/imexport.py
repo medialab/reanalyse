@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 ###########################################################################
 import settings
-import logging
 import os,re
 
 # for ese json
@@ -29,8 +28,17 @@ from lxml import etree
 # to launch commandline apps (unrtf)
 from subprocess import PIPE, Popen
 
-
 ###########################################################################
+# LOGGING
+###########################################################################
+import logging
+logger = logging.getLogger('apps')
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+nullhandler = logger.addHandler(NullHandler())
+###########################################################################
+
 
 
 
@@ -42,7 +50,7 @@ def importEnqueteUsingMeta(folderPath):
 	spkPath=folderPath+'_meta/meta_speakers.csv'
 	codPath=folderPath+'_meta/meta_codes.csv'
 	
-	logging.info("parsing:"+stdPath)
+	logger.info("parsing:"+stdPath)
 	###### Parsing Study metadatas (the only file mandatory!)
 	std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
 	headers = std.fieldnames
@@ -73,7 +81,7 @@ def importEnqueteUsingMeta(folderPath):
 	
 	if os.path.exists(docPath):
 		#mandatoryFields = ['*id','*name','*category','*description','*location','*date']
-		logging.info("parsing:"+docPath)
+		logger.info("parsing:"+docPath)
 		###### Parsing Documents
 		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
 		for row in doc:
@@ -89,7 +97,7 @@ def importEnqueteUsingMeta(folderPath):
 				except:
 					doc_date = datetime.datetime.today()
 				doc_public = 		doc_category in DOCUMENT_CATEGORIES
-				logging.info("Document:"+file_location)
+				logger.info("found doc in meta_documents.csv: "+file_location)
 				newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
 				try:
 					newDocument.filesize = int(os.path.getsize(file_location)/1024)
@@ -130,10 +138,10 @@ def importEnqueteUsingMeta(folderPath):
 							newDocument.status='0'
 							newDocument.save()
 	else:
-		logging.info("parsing:no doc meta found")
+		logger.info("parsing:no doc meta found")
 	
 	if os.path.exists(spkPath):
-		logging.info("parsing:"+spkPath)			
+		logger.info("parsing:"+spkPath)			
 		###### Parsing Speakers
 		spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
 		headers = spk.fieldnames
@@ -162,15 +170,15 @@ def importEnqueteUsingMeta(folderPath):
 				newSpeaker.save()
 		setSpeakerColorsFromType(newEnquete)
 	else:
-		logging.info("parsing:no spk meta found")
+		logger.info("parsing:no spk meta found")
 	
 	if os.path.exists(codPath):
-		logging.info("parsing:"+codPath)
+		logger.info("parsing:"+codPath)
 		###### Parsing Codes
 		cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
 		# to do later..
 	else:
-		logging.info("parsing:no cod meta found")
+		logger.info("parsing:no cod meta found")
 		
 	newEnquete.status='0'
 	newEnquete.save()
@@ -183,7 +191,7 @@ def importEnqueteUsingMeta(folderPath):
 ###########################################################################
 # return json with all data from ese
 def getEnqueteSurEnqueteJson(eseXmlPath,e):
-	logging.info("Fetching ese infos from xml:"+eseXmlPath)
+	logger.info("Fetching ese infos from xml: "+eseXmlPath)
 	res={}
 	
 	tree = ElementTree()
@@ -297,7 +305,7 @@ def importEnqueteDDI2(inXmlPath):
 # 		relPubs.append(removeSpacesReturns(title))
 # 	allmeta['relPubl']=relPubs
 	
-	logging.info("creating Enquete:"+name)
+	logger.info("creating Enquete:"+name)
 	
 	# status=1 means object exists but not completely loaded yet
 	newEnquete = Enquete(name=name,ddi_id=study_ddi_id,description=shortdescr,status='1')
@@ -340,7 +348,7 @@ def importEnqueteDDI2(inXmlPath):
 			m_date = datetime.datetime.today()
 		
 		location = enquetePath + '/' + location
-		logging.info("Document: "+name+" "+location)
+		logger.info("Document: "+name+" "+location)
 		# status=1 means object exists but not completely loaded yet
 		newDocument = Texte(enquete=newEnquete,name=name,locationpath=location,date=m_date,location=m_location,status='1')
 		# get file size
@@ -382,7 +390,7 @@ def importEnqueteDDI2(inXmlPath):
 				# store content (no codes) useful for indexing (better than PDF)
 				parseDocumentRTF(newDocument)
 		except:
-			logging.info("error loading document node:"+name+":"+location)
+			logger.info("error loading document node:"+name+":"+location)
 			newDocument.status='-1'
 			newDocument.save()
 	
@@ -430,7 +438,7 @@ def parseDocumentCSV(doc):
 					publicy = '1'
 				newAttType,isnew = AttributeType.objects.get_or_create(enquete=e,publicy=publicy,name=catval)
 				attributetypes.append(newAttType)
-				#logging.info("Attributetype ("+doc.name+"): "+catval)
+				#logger.info("Attributetype ("+doc.name+"): "+catval)
 		
 		for row in reader:
 			####### COLUMN		*id
@@ -457,7 +465,7 @@ def parseDocumentCSV(doc):
 	else:
 		# mandatory columns were not found, so what ?
 		praygod=1
-		#logging.info("csv file without mandatory fields:"+doc.name)
+		#logger.info("csv file without mandatory fields:"+doc.name)
 		
 	doc.status='0'
 	doc.save()
@@ -517,7 +525,7 @@ def parseDocumentTEI(doc):
 # 	fileOut = open(filePath, "w")
 # 	xml_serializer.serialize(Enquete.objects.all(), stream=fileOut)
 # 	fileOut.close()
-# 	logging.info("exporting all Enquetes to XML:"+filePath)
+# 	logger.info("exporting all Enquetes to XML:"+filePath)
 ###########################################################################
 
 
@@ -582,7 +590,7 @@ def parseDocumentTEI(doc):
 # 		theDocContent=""
 # 		dstatus='1'
 # 		#try:
-# 		logging.info("Creating document:"+theDocPath)
+# 		logger.info("Creating document:"+theDocPath)
 # 		if os.path.isfile(theDocPath): # check if exist
 # 			# we fetch content of rtf file and put it in database
 # 			if docLoc.endswith('.rtf'):
@@ -659,7 +667,7 @@ def parseDocumentTEI(doc):
 # 			offe = re.sub(' ','',offe)
 # 			newQuot = Quotation(code=theCode,texte=newDoc,offs=offs,offe=offe)
 # 			newQuot.save()
-# 	logging.info("Importing AtlasTiXML Completed")
+# 	logger.info("Importing AtlasTiXML Completed")
 # 	atlasdoc.status='0'
 # 	atlasdoc.save()
 ###########################################################################

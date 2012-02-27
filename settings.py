@@ -5,26 +5,30 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-
-STAFF_EMAIL = 'pierre.jdlf.medialab@gmail.com'
-EMAIL_HOST = 'smtp.sciences-po.fr'
-EMAIL_PORT = 25
-
-
-#REANALYSEPROJECTPATH = ''
-#REANALYSEESE_FILES = ''
+#REANALYSEURL
+#REANALYSEPROJECTPATH
+#REANALYSEESE_FILES
 #ALLOWED_INCLUDE_ROOTS = (REANALYSEESE_FILES)
-#READB_USER = ''
-#READB_PASS = ''
+#READB_NAME
+#READB_USER
+#READB_PASS
+#STAFF_EMAIL
+#EMAIL_HOST
+#EMAIL_PORT
+
 # .. are defined in :
-from privateconfig import *
+from settings_private import * 
 
+REANALYSELOGPATH 			= REANALYSEPROJECTPATH + 'logs/'
+REANALYSELOGDJANGO				= REANALYSELOGPATH + 'reanalyse_django.log'
+REANALYSELOGSOLR				= REANALYSELOGPATH + 'reanalyse_solr.log'
+REANALYSEUPLOADPATH 		= REANALYSEPROJECTPATH + 'upload/'
+REANALYSEDOWNLOADPATH 		= REANALYSEPROJECTPATH + 'download/'
+REANALYSESITECONTENTPATH 	= REANALYSEPROJECTPATH + 'templates/content/'
 
-#REANALYSELOGPATH='/tmp/'
-REANALYSELOGPATH= REANALYSEPROJECTPATH + 'logs/'
-REANALYSEUPLOADPATH= REANALYSEPROJECTPATH + 'upload/'
-REANALYSEDOWNLOADPATH= REANALYSEPROJECTPATH + 'download/'
-REANALYSESITECONTENTPATH= REANALYSEPROJECTPATH + 'templates/content/'
+BASE_URL = '/reanalyse/'
+LOGIN_REDIRECT_URL = BASE_URL
+LOGIN_URL = '/reanalyse/?p=access&q=login'
 
 ######## HAYSTACK
 # Required and specific to where you place the file.
@@ -33,43 +37,46 @@ HAYSTACK_SITECONF = 'reanalyse.search_sites'
 # Optional Haystack settings.
 # See `docs/settings.rst` for a complete list.
 HAYSTACK_INCLUDE_SPELLING = True
-
 # For Solr:
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 HAYSTACK_SOLR_TIMEOUT = 60 * 5
 
+# For admin page:
+SOLR_URL = REANALYSEURL + ":8983"
+
+
 ADMINS = (
-     ('pierre', 'your_email@example.com'),
+ 	('pierre', STAFF_EMAIL),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', 	# Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'djgo_reanalyse',                      # Or path to database file if using sqlite3.
-        'USER': READB_USER,                      # Not used with sqlite3.
-        'PASSWORD': READB_PASS,                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    },
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'djgo_reanalyse',                      # Or path to database file if using sqlite3.
-#         'USER': '',                      # Not used with sqlite3.
-#         'PASSWORD': '',                  # Not used with sqlite3.
-#         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-#         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-#     },
-#    'enquetes': {
-#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#        'NAME': 'djgo_reanalyse_enquetes',                      # Or path to database file if using sqlite3.
-#        'USER': '',                      # Not used with sqlite3.
-#        'PASSWORD': '',                  # Not used with sqlite3.
-#        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-#    }
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2', 	# Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+		'NAME': READB_NAME,  					# Or path to database file if using sqlite3.
+		'USER': READB_USER,  					# Not used with sqlite3.
+		'PASSWORD': READB_PASS,  				# Not used with sqlite3.
+		'HOST': '',  					# Set to empty string for localhost. Not used with sqlite3.
+		'PORT': '',  					# Set to empty string for default. Not used with sqlite3.
+	},
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+# 		'NAME': '',  					# Or path to database file if using sqlite3.
+# 		'USER': '',  					# Not used with sqlite3.
+# 		'PASSWORD': '',  				# Not used with sqlite3.
+# 		'HOST': '',  					# Set to empty string for localhost. Not used with sqlite3.
+# 		'PORT': '',  					# Set to empty string for default. Not used with sqlite3.
+# 	},
+#	'enquetes': {
+#		'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#		'NAME': '',  					# Or path to database file if using sqlite3.
+#		'USER': '',  					# Not used with sqlite3.
+#		'PASSWORD': '',  				# Not used with sqlite3.
+#		'HOST': '',  					# Set to empty string for localhost. Not used with sqlite3.
+#		'PORT': '',  					# Set to empty string for default. Not used with sqlite3.
+#	}
 }
 
 # Added to allow multiple database routing
@@ -87,14 +94,14 @@ TIME_ZONE = 'Europe/Paris'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGES = (
-    ('en', 'English'),
-    ('fr', 'Français'),
+	('en', 'English'),
+	('fr', 'Français'),
 )
 
 LANGUAGE_CODE = 'en'
 
 LOCALE_PATHS = (
-    REANALYSEPROJECTPATH+'/locale',
+	REANALYSEPROJECTPATH+'/locale',
 )
 
 SITE_ID = 1
@@ -134,76 +141,73 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/reanalyse/media/admin/'
 
-LOGIN_REDIRECT_URL = '/reanalyse/'
-LOGIN_URL = '/reanalyse/?p=access&q=login'
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+	# Put strings here, like "/home/html/static" or "C:/www/django/static".
+	# Always use forward slashes, even on Windows.
+	# Don't forget to use absolute paths, not relative paths.
 )
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+	'django.contrib.staticfiles.finders.FileSystemFinder',
+	'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#	'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+	'django.template.loaders.filesystem.Loader',
+	'django.template.loaders.app_directories.Loader',
+# 	'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'reanalyse.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(REANALYSEPROJECTPATH, 'templates')
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+	os.path.join(REANALYSEPROJECTPATH, 'templates')
+	# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+	# Always use forward slashes, even on Windows.
+	# Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    'reanalyseapp',
-    'django_tables2',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.sites',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	# Uncomment the next line to enable the admin:
+	'django.contrib.admin',
+	'reanalyseapp',
+	'django_tables2',
 	'haystack',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+	# Uncomment the next line to enable admin documentation:
+	# 'django.contrib.admindocs',
 )
 
 # Needed by django-tables2
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
+	"django.contrib.auth.context_processors.auth",
+	"django.core.context_processors.debug",
+	"django.core.context_processors.i18n",
+	"django.core.context_processors.media",
+	"django.core.context_processors.static",
+	"django.contrib.messages.context_processors.messages",
+	"django.core.context_processors.request",
 )
 
 # A sample logging configuration. The only tangible logging
@@ -211,20 +215,70 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # the site admins on every HTTP 500 error.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
+	'version': 1,
+	'disable_existing_loggers': False,
+	'formatters': {
+		'verbose': {
+			#'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+			'format': '%(levelname)s %(asctime)s | %(module)s | %(message)s'
+		},
+		'simple': {
+			'format': '%(levelname)s %(message)s'
+		},
+	},
+	'handlers': {
+		'null': {
+			'level':'DEBUG',
+			'class':'django.utils.log.NullHandler',
+		},
+		'console':{
+			'level': 'DEBUG',
+			'class': 'logging.StreamHandler',
+			'formatter': 'simple'
+		},
+		'log_file':{
+			'level': 'DEBUG',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'filename': REANALYSELOGDJANGO ,
+			'maxBytes': '16777216', # 16megabytes
+			'formatter': 'verbose'
+		},
+		'mail_admins': {
+			'level': 'ERROR',
+			'class': 'django.utils.log.AdminEmailHandler',
+			'include_html': True,
+		}
+	},
+	'loggers': {
+		'django.request': {
+			'handlers': ['mail_admins'],
+			'level': 'ERROR',
+			'propagate': True,
+		},
+		'apps': { # I keep all my apps here, but you can also add them one by one
+			'handlers': ['log_file'],
+			'level': 'INFO',
+			'propagate': True,
+		},
+	}
 }
+
+# LOGGING = {
+# 	'version': 1,
+# 	'disable_existing_loggers': False,
+# 	'handlers': {
+# 		'mail_admins': {
+# 			'level': 'ERROR',
+# 			'class': 'django.utils.log.AdminEmailHandler'
+# 		}
+# 	},
+# 	'loggers': {
+# 		'django.request': {
+# 			'handlers': ['mail_admins'],
+# 			'level': 'ERROR',
+# 			'propagate': True,
+# 		},
+# 	}
+# }

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 ###########################################################################
 import settings
-import logging
 import re
 from reanalyse.reanalyseapp.models import *
 from django.core import serializers
@@ -16,6 +15,16 @@ from django.db.models import Q
 
 # for unzip class made by Doug Tolton (see bottom) - used during upload in the views.py
 import os, zipfile
+
+###########################################################################
+# LOGGING
+###########################################################################
+import logging
+logger = logging.getLogger('apps')
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 
 
@@ -256,7 +265,7 @@ def getIntroHtmlAsArray(templateName):
 	pat = re.compile('(<h1>([^<]*)</h1>)')
 	for u in pat.finditer(alltxt):
 		out.append({'content':'notyet!','title':u.group(1)})
-	logging.info("LENGTH"+str(len(out)))
+	logger.info("LENGTH"+str(len(out)))
 	
 	parts = re.split(pat,alltxt)
 	c=0
@@ -280,7 +289,7 @@ def getContentOfFile(filePath):
 	f.close()
 	#except:
 		#outStr="Problem loading File"
-		#logging.info(outStr)
+		#logger.info(outStr)
 	return outStr	
 ####################################################################
 
@@ -293,7 +302,7 @@ def getContentOfFile(filePath):
 ###########################################################################
 def addFileToEnquete(f,enquete):
 	filePath = settings.REANALYSEUPLOADPATH + f.name
-	logging.info( "HANDLE UPLOADING FILE to",filePath)
+	logger.info( "HANDLE UPLOADING FILE to",filePath)
 	destination = open(filePath, 'wb+')
 	for chunk in f.chunks():
 		destination.write(chunk)
@@ -328,7 +337,7 @@ def exportEnquetesAsXML():
 	fileOut = open(filePath, "w")
 	xml_serializer.serialize(Enquete.objects.all(), stream=fileOut)
 	fileOut.close()
-	logging.info("Exporting all Enquetes to XML :"+filePath)
+	logger.info("Exporting all Enquetes to XML :"+filePath)
 ###########################################################################
 
 
@@ -521,7 +530,7 @@ class unzip:
 # 	for we in WordEntity.objects.all():
 # 		we.df = we.wordentityspeaker_set.count() / float(nSpeakers)
 # 		if a:
-# 			logging.info("Sample DF:" + str(we.df))
+# 			logger.info("Sample DF:" + str(we.df))
 # 		a=False
 # 		we.save()
 # 	############## TF-IDF
@@ -532,10 +541,10 @@ class unzip:
 # 		we = wes.wordentity
 # 		wes.tf = wes.word_set.count() / float(s.word_set.count())
 # 		if a:
-# 			logging.info("Sample TF:" + str(wes.tf))
+# 			logger.info("Sample TF:" + str(wes.tf))
 # 		wes.tfidf = wes.tf * math.log( 1 / float(we.df) )
 # 		if a:
-# 			logging.info("Sample TF-IDF:" + str(wes.tfidf))
+# 			logger.info("Sample TF-IDF:" + str(wes.tfidf))
 # 		a=False
 # 		wes.save()
 # 	############## Storing max(TF-IDF,for each WordEntitySpeaker) in each WordEntity

@@ -31,10 +31,11 @@ urlpatterns = patterns('reanalyse',
 	(r'^e/parse$', 'reanalyseapp.views.eParse'),						# PARSE (once all files uploaded in a specific folder)
 	(r'^e/(?P<eid>\d+)/delete$', 'reanalyseapp.views.eDelete'),			# DELETE
 	
-	(r'^e/(?P<eid>\d+)/makealltfidf$', 'reanalyseapp.views.resetAllTfidf'),		# TFIDF ngrams
-
+	(r'^e/solrkill$', 'reanalyseapp.views.killSolrProcess'),	# kill solr (will be relaunched on admin panel)
 	(r'^e/solrclear$', 'reanalyseapp.views.eSolrIndexClear'),	# clear whole solr index
 	(r'^e/solrupdate$', 'reanalyseapp.views.eSolrIndexUpdate'),	# update whole solr index
+
+	(r'^e/(?P<eid>\d+)/fetchngrams$', 'reanalyseapp.views.resetNgrams'),	# populate ngrams with tfidf from solr index
 	
 	(r'^e/export$', 'reanalyseapp.views.exportEnquetes'),		# unused yet
 	(r'^e/delete$', 'reanalyseapp.views.deleteEnquetes'),

@@ -22,7 +22,15 @@ import networkx
 # for simil
 from pattern.vector import *
 
+###########################################################################
+# LOGGING
+###########################################################################
 import logging
+logger = logging.getLogger('apps')
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 
 
@@ -51,7 +59,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	#descr = VIZTYPESDESCR[typ]	# we used to set a different one for each
 	descr = VIZTYPESDESCR		# now just invite user to update it (see globalvars.py)
 	
-	logging.info("making viz: "+typ)
+	logger.info("making viz: "+typ)
 	
 	if typ in ['Graph_SpeakersAttributes','Graph_SpeakersWords','Graph_SpeakersSpeakers']:
 		newVizu = makeVisualizationObject(e,typ,descr)
@@ -312,7 +320,7 @@ def visMakeTermVectorGraph(e,viz,param):
 
 	############ USAGE A = keeping all ngrams(tf/df/tfidf) from Solr
 # 	for s in speakers:
-# 		logging.info("making speakers-words graph:looking at speaker:"+s.name)
+# 		logger.info("making speakers-words graph:looking at speaker:"+s.name)
 # 		wdic = getSolrTermVectorsDict([s],'ngrams',count=howmany,mintn=3)
 # 		for w in wdic.keys():
 # 			edgedic = wdic[w]
@@ -760,7 +768,7 @@ def getSolrSimilarArray(speaker,maxcount):
 			speaker = Speaker.objects.get(id=sId)
 			array.append( [res['score'],speaker.id,speaker.name] )
 		except:
-			logging.info("epic fail in getSolrSimilarArray (compairing speakers from different enquete!) from speaker:"+str(speaker.id))
+			logger.info("epic fail in getSolrSimilarArray (compairing speakers from different enquete!) from speaker:"+str(speaker.id))
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
 def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams'
@@ -770,11 +778,10 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 	
 	q=None
 	for s in speakers:
-		if s.ngramspeaker_set.count()>1:
-			if q==None:
-				q='(speakerid:'+str(s.id)
-			else:
-				q=q+' OR speakerid:'+str(s.id)
+		if q==None:
+			q='(speakerid:'+str(s.id)
+		else:
+			q=q+' OR speakerid:'+str(s.id)
 	q=q+')'
 	
 	conn = pythonsolr.Solr( settings.HAYSTACK_SOLR_URL )
@@ -804,9 +811,11 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 		if t.contenttxt!="":
 			totalDocuments+=1
 	
-	#try:
-	totalTerms = len(tv[field])
-	res = list2dict(tv[field])
+	try:
+		totalTerms = len(tv[field])
+		res = list2dict(tv[field])
+	except:
+		res = {}
 	
 	# first transform all data in dict
 	alldic={}
@@ -854,7 +863,7 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 # to avoid querying solr everyday, we store ngrams in DB
 def makeAllTfidf(e):
 	for s in e.speaker_set.all():
-		#logging.info("now reseting tfidf ngrams for speaker:"+str(s.id))
+		#logger.info("now reseting tfidf ngrams for speaker:"+str(s.id))
 		s.ngramspeaker_set.all().delete()
 		termd = getSolrTermVectorsDict([s],'ngrams',count=0,mintn=3)
 		for w in termd.keys():
