@@ -89,7 +89,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var vis = vizdiv.append("svg:svg")
 		.attr("width", wantedWidth)
 		.attr("height", totalH);
-	var totalW = wantedWidth; //$(unik).width();
+	var totalW = $(unik).width();
 	//console.log("width:"+totalW);
 	var maxPeriods = thedata.maxPeriods;
 	var graphW = totalW-rightMargin-leftMargin;
@@ -140,18 +140,18 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	
 	////////////////////////////////////////////////////////////////// SLIDER to update precision (jquery!!)
 	var bottomDiv = vizdiv.append("div")
-		.style("width",leftMargin-20)
+		.style("width",leftMargin-20+"px")
 		.style("position","absolute")
 		.style("font-size",10)
-		.style("left",5 )
-		.style("top",totalH-50 );
+		.style("left","5px" )
+		.style("top",totalH-50+"px" );
 	bottomDiv.append("span")
 		.text("set precision to");
 	bottomDiv.append("div")
 		.style("display","inline-block")
-		.style("width",leftMargin-20)
-		.style("margin-top",5)
-		.style("margin-bottom",5)
+		.style("width",leftMargin-20+"px")
+		.style("margin-top","5px")
+		.style("margin-bottom","5px")
 		.attr("id","slider_"+theId);
 	bottomDiv.append("span")
 		.attr("id","sliderlabel_"+theId)

@@ -97,7 +97,7 @@ def importEnqueteUsingMeta(folderPath):
 				except:
 					doc_date = datetime.datetime.today()
 				doc_public = 		doc_category in DOCUMENT_CATEGORIES
-				logger.info("found doc in meta_documents.csv: "+file_location)
+				logger.info("found doc in meta_documents.csv: "+row['*file'])
 				newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
 				try:
 					newDocument.filesize = int(os.path.getsize(file_location)/1024)

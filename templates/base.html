@@ -1,159 +1,64 @@
-<!-- for Internationalization en/fr -->
-{% load i18n %}
+{% extends "boilerplate.html" %}
+{% comment %}
+	base present the basic header / footer structure.
+	Includes jquery and jquery message plugin on the head section.
+	Provide the base grid according to adapt.960 standard.
+{% endcomment %}
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>BEQuali</title>
-	<meta name="keywords" content="" />
-	<meta name="description" content="" />
-	<link rel="stylesheet" href="{{ MEDIA_URL }}/grid960/reset.css" />
-	<link rel="stylesheet" href="{{ MEDIA_URL }}/grid960/960.css" />
-	<link href="{{ MEDIA_URL }}/css/reanalyse.css" rel="stylesheet" type="text/css" />
+
+{% block theme %}
+	<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/themes/quali.less"><!-- main style less theme -->
+	<link rel='stylesheet' type="text/css" href="{{MEDIA_URL}}/css/reanalyse.css"/>
+{% endblock %}
+
 {% block head %}
-{% endblock %}
-</head>
-
-<body>
-<!-- =========================== HEADER =========================== -->
-<div class="container_16">
-	<div class="grid_16">
-		<a href="" id="fullsLink" title="toggle fullscreen mode" onclick="toggleFullScreenMode();return false;">
-			<div id="fullsContainer">
-				<!-- Button : Normal Mode -->
-				<img id="fullsOffImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_off.png" alt="description" style="display:none;"/>
-				<!-- Button : Fullscreen Mode -->
-				<img id="fullsOnImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_on.png" alt="description"/>
-			</div>
-		</a>
-		<div id="loginContainer">
-			<!-- ================================================ -->
-			<div id="loginLanguage">
-				{% get_language_info for LANGUAGE_CODE as lang %}
-				<form action="/reanalyse/i18n/setlang/" method="post" id="langform">
-					{% csrf_token %}
-					<input name="next" type="hidden" value="{{ request.build_absolute_uri }}" />
-					<select name="language" id="langselect">
-						{% get_language_info_list for LANGUAGES as languages %}
-						{% for language in languages %}
-						<option {% if lang.code == language.code %}selected="selected"{% endif %} value="{{ language.code }}">
-						{{ language.name_local }}<!--({{ language.code }})-->
-						</option>
-						{% endfor %}
-					</select>
-					<!--<input type="submit" value="Go" />-->
-					<script type="text/javascript">
-						$("#langselect").change(function(e){ $("#langform").submit();});
-					</script>
-				</form>
-			</div>
-			<!-- ================================================ -->
-			<div id="loginStatus">
-				{% if perms.reanalyseapp.can_make %}
-					{% comment %}Translators: Main page{% endcomment %}
-					{% trans 'ADMIN - You can consult, upload, make viz and phonecalls to god' %}
-				{% else %}
-				{% if perms.reanalyseapp.can_explore %}
-					{% trans 'EXPLORE - You can explore whole study sites' %}
-				{% else %}
-				{% if perms.reanalyseapp.can_browse %}
-					{% trans 'BROWSE - You can browse studies descriptions and studies on studies' %}
-				{% else %}
-					{% trans 'PUBLIC - You can browse the studies list' %}
-				{% endif %}{% endif %}{% endif %}.
-				{% if not perms.reanalyseapp.can_browse %}
-				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register">{% trans 'access' %}</a>
-				{% endif %}
-			</div>
-			<!-- ================================================ -->
-			<div id="loginIn">
-				{% if user.is_authenticated %}
-					{% trans 'you are connected as' %} <span id="loginUsername">{{ user.username }}</span>
-					(<a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>)
-					{% if perms.reanalyseapp.can_make %}
-						(<a href="/reanalyse/admin">admin</a>)
-					{% endif %}
-				{% else %}
-					<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login">login</a>
-				{% endif %}
-			</div>
-		</div>
-	</div>
-	<div id="header">
-		<div class="grid_5">
-			<div id="logo">
-				<h1><a href="{% url reanalyse.reanalyseapp.views.home %}">BEQuali</a></h1>
-				<h2>{% trans 'A Project from' %} <a href="http://cdsp.sciences-po.fr/">CDSP</a> / <a href="http://medialab.sciences-po.fr/">médialab</a> / <a href="http://www.sciences-po.fr/">Sciences-Po</a></a></h2>
-			</div>
-		</div>
-	</div>
-	<div class="clear"></div>
-	<div id="menu" class="grid_16">
-		<div class="prefix_5">
-			<ul>
-				<li id="{%if bodyid == 'project'%}menuCurrent{%endif%}">
-				{% comment %}Translators: Main menu choices{% endcomment %}
-				<a href="{% url reanalyse.reanalyseapp.views.home %}">{% trans 'Project' %}</a></li>
-				<li id="{%if bodyid == 'method'%}menuCurrent{%endif%}">
-				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=method">{% trans 'Methodology' %}</a></li>
-				<li id="{%if bodyid == 'access'%}menuCurrent{%endif%}">
-				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access">{% trans 'Access' %}</a></li>
-				<li id="{%if bodyid == 'e'%}menuCurrent{%endif%}">
-				<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>
-				{% if perms.reanalyseapp.can_make %}
-				<li id="{%if bodyid == 'admin'%}menuCurrent{%endif%}">
-				<a href="{% url reanalyse.reanalyseapp.views.eAdmin %}">{% trans 'Admin' %}</a></li>
-				{% endif %}
-
-			</ul>
-		</div>
-	</div>
-	<div class="clear"></div>
-	<div id="menuband" class="grid_16 bodyid_{{bodyid}}"> <!-- keeping bodyid to customize css depending on view (normal=small,enquete=big) -->
-		<div class="prefix_3">
-			{% block headenquetetitle %}
-			{% endblock %}
-		</div>
-	</div>
-	<div class="clear"></div>
-	<!-- =========================== WRAPPER =========================== -->
-
-	<div id="wrapper">
-		<div class="grid_3" id="leftmenucontainer">
-			<div id="leftmenu">
-				{% block leftmenu %}
-			    {% endblock %}
-		    </div>
-		</div>
-		<div class="grid_13" id="contentcontainer">
-			<div id="contenttop">
-				{% block contenttop %}
-			    {% endblock %}
-		    </div>
-			<div id="content">
-				{% block content %}
-			    {% endblock %}
-		    </div>
-		</div>
-	</div>
-
-
-	<div class="clear"></div>
-	
-	<!-- <div style="text-align:right;padding:10px;"><a href="javascript:history.back()">< Retour</a></div> -->
-
-	<!-- =========================== FOOTER =========================== -->
-	<div id="footer">
-		<p id="legal">This is a copyright</p>
-		<p id="links"><a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p>
-	</div>
-	<!-- end div#footer -->
-</div>
-</body>
-</html>
-
-{% block bottom %}
-<!-- for onload javascripts -->
+	<title>hci, {% block title %}overview{% endblock %} | dime-shs</title>
 {% endblock %}
 
 
+{% block body %}
+	<div class="container_12">
+		<header>
+			<div class="grid_12" id="section-line"><div id="section-line-inner"></div></div><!-- the straight line -->
+		
+			<div class="grid_12"><!-- top menu structure -->
+				<div id="logo-outer" class="grid_3 outer outer_gain_1">
+					<div id="logo"></div><!-- the logo -->
+				</div> 
+				<div id="menu-pages-outer" class="grid_6 outer outer_gain_1"><!-- the page menu -->
+					<div id="menu-pages" class="inner">{% block menupages %}beq studies{% endblock %}</div>
+				</div>
+				<div id="menu-settings-outer" class="grid_3 outer outer_gain_2"><!-- the page menu -->
+					<div id="menu-settings" class="inner">{% block settings %}settings{% endblock %}</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</header>
+        
+		<section>
+			<div id="view" class="grid_12">
+				<div id="sidebar-outer" class="grid_3 outer">
+					<div id="sidebar">{% block sidebar %}sidebar{% endblock %}</div>
+				</div>
+				<div id="page-outer" class="grid_9 outer">
+					<div id="page" class="inner">{% block pagecontent %}pagecontent{% endblock %}</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</section>
+		
+		<footer>
+			<div class="grid_12">
+				<div id="footer-outer" class="">
+					<div id="footer">
+						<div id="footer-border"></div><!-- draw footer left border -->
+						<div id="footer-inner">
+							<p>Copyright (c) 2012</p>
+						</div>
+						
+					</div><!-- the logo -->
+				</div>
+			</div>
+		</footer>
+	</div>
+{% endblock %}

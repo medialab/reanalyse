@@ -25,7 +25,7 @@ urlpatterns = patterns('reanalyse',
 	######################################################################################################
 	########## ENQUETES
 	(r'^e/$', 'reanalyseapp.views.eBrowse'),
-	(r'^e/admin$', 'reanalyseapp.views.eAdmin'),						# ADMIN PAGE : upload !
+	(r'^e/admin/$', 'reanalyseapp.views.eAdmin'),						# ADMIN PAGE : upload !
 	(r'^e/add$', 'reanalyseapp.views.eAddAjax'),						# ajax-ADD (upload one file at a time)
 	(r'^e/reset$', 'reanalyseapp.views.eReset'),						# RESET (erase temp upload folder)
 	(r'^e/parse$', 'reanalyseapp.views.eParse'),						# PARSE (once all files uploaded in a specific folder)

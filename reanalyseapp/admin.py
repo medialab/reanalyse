@@ -4,7 +4,21 @@ from django.contrib import admin
 from reanalyseapp.models import *
 from django.db import models
 import settings
-############################################################
+import codecs
+
+###########################################################################
+# LOGGING
+###########################################################################
+import logging
+logger = logging.getLogger('apps')
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+nullhandler = logger.addHandler(NullHandler())
+###########################################################################
+
+
+
 
 
 
@@ -17,15 +31,26 @@ class CommonMedia:
 		settings.MEDIA_URL+'/js/dojoRichEditor.js',
 	)
 	css = {
-		'all': (settings.MEDIA_URL+'/css/admin.css',),
+		'all': (
+			settings.MEDIA_URL+'/css/admin.css',
+			settings.MEDIA_URL+'/css/reanalyse.css',
+		),
 	}
 #############################################################
-# class SiteContentAdmin(admin.ModelAdmin):
-# 	fieldsets = [
-# 		(None,			 { 'fields': ('name','description','contenthtml')}),
-# 		#('Description', {'fields': [], 'classes': ['collapse']}),
-# 	]
-# 	Media = CommonMedia
+class SiteContentAdmin(admin.ModelAdmin):
+	fieldsets = [
+		(None, { 'fields': ('name','lang','description','contenthtml')}),
+	]
+	Media = CommonMedia
+	# on list
+	list_display = ('name','description','lang')
+	def save_model(self, request, obj, form, change):
+		logger.info("site-content saved on disk: ["+obj.lang+"] "+obj.name)
+		filepath = settings.REANALYSESITECONTENTPATH + obj.name+'_content_'+obj.lang.lower()+'.html'
+		fileOut = codecs.open(filepath,'w','utf-8')
+		fileOut.write(obj.contenthtml)
+		fileOut.close()
+		obj.save()
 #############################################################
 
 
@@ -36,9 +61,9 @@ class CommonMedia:
 #############################################################
 # ENQUETES, TEXTES, ...
 #############################################################
-class TexteAdmin(admin.ModelAdmin):
-	fields = ('name','contenttxt')
-	Media = CommonMedia
+# class TexteAdmin(admin.ModelAdmin):
+# 	fields = ('name','contenttxt')
+# 	Media = CommonMedia
 #############################################################
 
 
@@ -48,9 +73,8 @@ class TexteAdmin(admin.ModelAdmin):
 
 #############################################################
 
-#admin.site.register(SiteContent, SiteContentAdmin) # tryout to edit html contents using admin
+admin.site.register(SiteContent, SiteContentAdmin) # tryout to edit html contents using admin
 admin.site.register(Enquete)
-admin.site.register(Texte,TexteAdmin)
 ############################################################
 
 

@@ -102,7 +102,7 @@ SOLR_JARNAME = "startreanalysesolr.jar"
 def checkSolrProcess():
 	tmp = os.popen("ps -Af").read()
 	if SOLR_JARNAME not in tmp[:]:
-		logger.info("Solr is not running. Let's restart it")
+		logger.info("solr is not running. Let's restart it")
 		newprocess = "cd %s && nohup java -jar %s > %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME,settings.REANALYSELOGSOLR)
 		os.system(newprocess)
 		return True
@@ -189,7 +189,7 @@ def updateCtxWithSearchForm(ctx):
 @login_required
 def eDelete(request,eid):
 	Enquete.objects.get(id=eid).delete()
-	return render_to_response('e_browse.html', context_instance=RequestContext(request))
+	return render_to_response('bq_e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
 def logoutuser(request):
 	logout(request)
@@ -210,16 +210,20 @@ def home(request):
 			spname='1'
 
 		# split html file based on <h1> tags and return parts
-		#sc,isnew = SiteContent.objects.get_or_create(name=pname+'_'+spname)
-		# todo: dont load every time ! store content and then get !
 		lang = request.LANGUAGE_CODE
 		filepath = settings.REANALYSESITECONTENTPATH + pname+'_content_'+lang+'.html'
-		contenthtml = getContentOfFile(filepath)
-		pageparts = re.split('<h1>',contenthtml)[1:]
 		
+		sc,isnew = SiteContent.objects.get_or_create(name=pname,lang=lang.upper(),description=pname)
+		# if no object exists in db, get file from templates folder
+		if isnew:
+			contenthtml = getContentOfFile(filepath)
+			sc.contenthtml = contenthtml
+			sc.save()
+		else:
+			contenthtml = sc.contenthtml
+			
+		pageparts = re.split('<h1>',contenthtml)[1:]
 		contenthtml = '<h1>'+pageparts[int(spname)]
-		#sc.contenthtml = contenthtml 
-		#sc.save()
 		subpages = []
 		for i,sp in enumerate(pageparts):
 			txttitl = re.split('</h1>',sp)[0]
@@ -302,7 +306,7 @@ def home(request):
 	# Translators: home view				
 	ctx.update({'bodyid':pname,'pageid':spname})
 		
-	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
+	return render_to_response('bq_home.html',ctx,context_instance=RequestContext(request))
 ###########################################################################
 
 
@@ -345,15 +349,15 @@ def eAdmin(request):
 	if checkSolrProcess():
 		ctx.update({'solrstatus':'was off. but refreshing this page has relaunched it. wait 5,7s and refresh again to be sure'})
 	else:
-		ctx.update({'solrstatus':'running'})
+		ctx.update({'solrstatus':'is running !'})
 	ctx.update({'staffemail':settings.STAFF_EMAIL})
 	
 	### log file
 	#logger.info("Looking at ADMIN page")
-	wantedCount = int(request.GET.get('log','20'))
+	wantedCount = int(request.GET.get('log','50'))
 	log_django 	= getTailOfFile(settings.REANALYSELOGDJANGO,wantedCount)
-	log_solr 	= getTailOfFile(settings.REANALYSELOGSOLR,wantedCount)
-	ctx.update({'log_django':log_django,'log_solr':log_solr})
+	#log_solr 	= getTailOfFile(settings.REANALYSELOGSOLR,wantedCount)
+	ctx.update({'log_django':log_django})
 		
 	### solr path
 	ctx.update({'BASE_URL':settings.BASE_URL,'solr_url':settings.SOLR_URL})
@@ -361,7 +365,10 @@ def eAdmin(request):
 	### all enquetes
 	ctx.update({'enquetes':Enquete.objects.all()})
 	
-	return render_to_response('admin.html', ctx , context_instance=RequestContext(request))
+	### default page is 'users'
+	ctx.update({'page':request.GET.get('page','users')})
+	
+	return render_to_response('bq_admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 @login_required
 def eAddAjax(request):
@@ -463,9 +470,9 @@ def eParse(request):
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
 	docsCur = 0
 	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
-		logger.info("now parsing text:"+t.id )
+		logger.info("now parsing text: "+str(t.id) )
 		t.parseXml()
-		logger.info("texte parsed, now updating solr index:"+t.id )
+		logger.info("texte parsed, now updating solr index: "+str(t.id) )
 		update_index.Command().handle(verbosity=0)
 		logger.info("solr index updated")
 		docsCur+=1
@@ -525,7 +532,7 @@ def eBrowse(request):
 		except:
 			themetas.append("NC")
 		enquetesandmeta.append([e,themetas])
-	return render_to_response('e_browse.html', {'bodyid':'e' ,'enquetesandmeta':enquetesandmeta}, context_instance=RequestContext(request))
+	return render_to_response('bq_e_browse.html', {'bodyid':'e' ,'enquetesandmeta':enquetesandmeta}, context_instance=RequestContext(request))
 ################################################################################	
 
 
@@ -548,7 +555,7 @@ def eBrowse(request):
 
 ################################################################################
 def resetNgrams(request,eid):
-	logger.info("fetching ngrams with tfidf - start")
+	logger.info("fetching ngrams with tfidf - start...")
 	makeAllTfidf(Enquete.objects.get(id=eid))
 	logger.info("fetching ngrams with tfidf - done with success")
 	return HttpResponse("tfidf updated", mimetype="application/json")
@@ -606,7 +613,7 @@ def eShow(request,eid):
 	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metashort':metashort,'description':description}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
-	return render_to_response('e_show.html',ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_e_show.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 @login_required
 def eseShow(request,eid):
@@ -615,7 +622,7 @@ def eseShow(request,eid):
 	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese':ese}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
-	return render_to_response('e_ese.html',ctx ,context_instance=RequestContext(request))
+	return render_to_response('bq_e_ese.html',ctx ,context_instance=RequestContext(request))
 ###########################################################################
 
 	
@@ -769,7 +776,7 @@ def edBrowse(request,eid):
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	if ctx['permexplorethis']:
-		return render_to_response('ed_browse.html', ctx, context_instance=RequestContext(request))
+		return render_to_response('bq_ed_browse.html', ctx, context_instance=RequestContext(request))
 	else:
 		return redirect(settings.LOGIN_URL) 
 ################################################################################
@@ -884,7 +891,7 @@ def esBrowse(request,eid):
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	if ctx['permexplorethis']:
-		return render_to_response('es_browse.html', ctx , context_instance=RequestContext(request))
+		return render_to_response('bq_es_browse.html', ctx , context_instance=RequestContext(request))
 	else:
 		return redirect(settings.LOGIN_URL) 
 ################################################################################
@@ -909,7 +916,7 @@ def ewShow(request,eid,wid):
 	ctx = {'word':we,'stat':stat}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
-	return render_to_response('ew_show.html', ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_ew_show.html', ctx, context_instance=RequestContext(request))
 #####################################################
 @login_required
 @permission_required('reanalyseapp.can_browse')
@@ -926,7 +933,7 @@ def dGetHtmlAround(request,eid,sid):
 	if request.GET.get('highlight'):
 		ctx.update({'highlight':request.GET.get('highlight')})
 		
-	return render_to_response('render_d.html', ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_render_d.html', ctx, context_instance=RequestContext(request))
 #####################################################
 # return styled html of a portion of the text, using template
 # todo: another solution: using XSLT from original TEI XML, this would be simpler without need to parse at the beginning!
@@ -943,7 +950,7 @@ def dGetHtmlContent(request,eid,did):
 	if request.GET.get('highlight'):
 		ctx.update({'highlight':request.GET.get('highlight')})
 		
-	return render_to_response('render_d.html', ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_render_d.html', ctx, context_instance=RequestContext(request))
 ###################################################################################################################################
 @login_required
 @permission_required('reanalyseapp.can_browse')
@@ -1052,7 +1059,7 @@ def edShow(request,eid,did):
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	if ctx['permexplorethis']:
-		return render_to_response('ed_show.html', ctx , context_instance=RequestContext(request))
+		return render_to_response('bq_ed_show.html', ctx , context_instance=RequestContext(request))
 	else:
 		return redirect(settings.LOGIN_URL) 
 ###################################################################################################################################
@@ -1083,7 +1090,7 @@ def esShow(request,eid,sid):
 	ctx.update({'content':content,'attributes':attributes,'ngrams':ngrams})
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
-	return render_to_response('es_show.html', ctx , context_instance=RequestContext(request))
+	return render_to_response('bq_es_show.html', ctx , context_instance=RequestContext(request))
 #####################################################
 @login_required
 @permission_required('reanalyseapp.can_browse')
@@ -1101,7 +1108,7 @@ def ecShow(request,eid,cid):
 	ctx = {'code':code,'stats':stats}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
-	return render_to_response('ec_show.html',ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_ec_show.html',ctx, context_instance=RequestContext(request))
 ################################################################################
 
 
@@ -1498,7 +1505,7 @@ def eSearch(request,eid):
 	
 	updateCtxWithPerm(ctx,request,e)
 
-	return render_to_response('e_searchresults.html', ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_e_searchresults.html', ctx, context_instance=RequestContext(request))
 ###########################################################################
 
 
@@ -1650,7 +1657,7 @@ def evBrowse(request,eid):
 	
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
-	return render_to_response('ev_browse.html',ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_ev_browse.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 # Delete Visualizations
 def evDelete(request,eid,vid):
@@ -1723,7 +1730,7 @@ def getVizHtml(request,eid):
 	vId = request.GET.get('vizid',0)
 	v = Visualization.objects.get(id=vId)
 	ctx={'enquete':e,'v':v,'nk':vId}
-	return render_to_response('render_v.html',ctx, context_instance=RequestContext(request))
+	return render_to_response('bq_render_v.html',ctx, context_instance=RequestContext(request))
 ###########################################################################
 
 
@@ -1791,11 +1798,11 @@ def esGetSolrTermVector(request,eid,sid):
 def exportEnquetes(request):
 	logger.info("exporting all Enquetes to XML")
 	exportEnquetesAsXML()
-	return render_to_response('e_browse.html', context_instance=RequestContext(request))
+	return render_to_response('bq_e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
 def deleteEnquetes(request):
 	Enquete.objects.all().delete()
-	return render_to_response('e_browse.html', context_instance=RequestContext(request))
+	return render_to_response('bq_e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
 # class ParseThread(threading.Thread):
 # 	texte = None
@@ -1903,7 +1910,7 @@ def getJsonData(request,eid,data):
 # 	filepath = settings.REANALYSESITECONTENTPATH + 'doc' + '_content.html'
 # 	contenthtml = getContentOfFile(filepath)
 # 	sc,isnew = SiteContent.objects.get_or_create(name='doc',contenthtml=contenthtml)
-# 	return render_to_response('home_doc.html', {'contenthtml':sc.contenthtml}, context_instance=RequestContext(request))
+# 	return render_to_response('bq_home_doc.html', {'conten.html':sc.contenthtml}, context_instance=RequestContext(request))
 ################################################################################
 
 

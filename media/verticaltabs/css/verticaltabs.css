@@ -21,12 +21,9 @@
 .verticalslider_tabs a:link, .verticalslider_tabs a:visited {
 	display:block; 
 	width:80px; 
-	//height:7px; 
-	//padding:10px 0px 10px 7px; 
 	padding:5px 0px 5px 5px;
 	background:url(../images/tabBG.jpg) bottom repeat-x;  
 	background-color:#eeeeee;
-	//font-family:Georgia, "Times New Roman", Times, serif; 
 	font-size:12px; 
 	font-weight:bold;
 	color:#333333;
@@ -42,9 +39,6 @@
 }
 
 .verticalslider_tabs>li:first-child a:link, .verticalslider_tabs li:first-child a:visited {
-	
-	//border-top:none; 
-	//height:10px;
 }
 
 .verticalslider_tabs .activeTab a:link, .verticalslider_tabs .activeTab a:visited {
@@ -80,29 +74,19 @@
 .verticalslider_contents>li {
 	margin:0px; 
 	padding:0px;
-	//width:500px;
 	overflow:auto; 
 	display:none;
 	position:absolute;
-	width:650px;
 	list-style-type:none; 
-	//height: 700px !important;
+	font-size: 0.8em;
 }
 
 .verticalslider_contents>li h2 {
-//	font-family: 
-//	Georgia, "Times New Roman", Times, serif, font-size:15px; 
-//	color:#333333;
-//	margin:5px 20px; 
-//	padding:0px;
+
 }
 
 .verticalslider_contents>li p { 
-//	margin:5px 20px; 
-//	padding:0px;
-//	color:#333333;
-//	font-family:Tahoma, Geneva, sans-serif; 
-//	font-size:10px;
+
 }
 
 .verticalslider_contents .activeContent {

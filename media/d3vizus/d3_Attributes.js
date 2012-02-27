@@ -9,9 +9,9 @@ function buildD3_Attributes(thedata,theId) {
 	var attributes=thedata.attributes;
 	var nSpeakers =spkNames.length;
 	
-	var totalW = 720;
-	var chartW = 600;
+	var totalW = $(unikid).width();
 	var mLeft = 100;
+	var chartW = totalW-mLeft;
 	var mTop = 40;
 	var chartH = Math.max(250,nSpeakers*10-mTop+5);
 	var chartStep = chartW/attNames.length - 10;
@@ -44,7 +44,7 @@ function buildD3_Attributes(thedata,theId) {
 		.style("float","none")
 		.style("position","relative")
 		.style("left",0 )
-		.style("top",0 )
+		.style("top",0 );
 	var valuelabels = vizdiv.append("div")
 		.style("float","none")
 		.style("position","relative")
@@ -304,20 +304,18 @@ function buildD3_Attributes(thedata,theId) {
 	////////////////////////////////// for each attributetype				
 	atts.each(function(q,j) {
 		//console.log("oui"+q+"++"+j);
-		var attx = mLeft+xScale(j);		
+		var attx = mLeft+xScale(j);
 		var att = d3.select(this).append("svg:g");
 		
 		//////////////// attributetype label (on top)
 		attlabels.append("div")
-			.style("display","inline-block")
-			//.style("float","none")
-			.style("position","absolute")
-			.style("width",chartStep)
-			.style("left",attx )
-			.style("top",0 )
-			//.style("background","lightgray")
-			.style("color","black")
 			.style("font-size","0.8em")
+			.style("display","inline-block")
+			.style("position","absolute")
+			.style("width",chartStep+"px")
+			.style("top",0 )
+			.style("left",attx+"px")
+			.style("color","black")
 			.style("text-align","center")
 			.text(attNames[j].name);
 		
@@ -416,8 +414,8 @@ function buildD3_Attributes(thedata,theId) {
 				.attr("class","label")
 				.style("display","none")
 				.style("position","absolute")
-				.style("width",chartStep+1)
-				.style("left",attx-1 )
+				.style("width",chartStep+1+"px")
+				.style("left",attx-1+"px" )
 				.style("background",valLabelCol)
 				.style("color","black")
 				.style("font-size","0.8em")
@@ -425,7 +423,7 @@ function buildD3_Attributes(thedata,theId) {
 				.text(g.name);
 			// NB: using jquery 'cause unable to get calculated size with d3 (?)
 			var curH = $(unikid+"#label_val_"+g.id).height();
-			d3.select(unikid+"#label_val_"+g.id).style("top",posy-curH);
+			d3.select(unikid+"#label_val_"+g.id).style("top",posy-curH+"px");
 		});
 
 /*

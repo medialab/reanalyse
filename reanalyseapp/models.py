@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ################################################
 from reanalyse.reanalyseapp.globalvars import *
@@ -41,6 +42,16 @@ nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 
 
+####################################################################
+# SITECONTENT for static html pages, allowing edit in admin pages
+class SiteContent(models.Model):
+	name = models.CharField(max_length=200)
+	description = models.CharField(max_length=400)
+	lang = models.CharField(max_length=2,choices=LANG_CHOICES)
+	contenthtml = models.TextField()
+	def __unicode__(self):
+		return self.name
+####################################################################
 
 
 
@@ -1030,17 +1041,6 @@ def getTextContent(texte,fromT,toT):
 
 
 
-####################################################################
-# DEPRECATED ? html site content
-# SITECONTENT (for fixed html contents - for ex. Sites Enquetes)
-# class SiteContent(models.Model):
-# 	name = models.CharField(max_length=200)
-# 	description = models.CharField(max_length=400)
-# 	lang = models.CharField(max_length=2, choices=LANG_CHOICES)
-# 	contenthtml = models.TextField()
-# 	def __unicode__(self):
-# 		return self.name
-####################################################################
 
 
 
