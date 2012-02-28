@@ -1,0 +1,167 @@
+{% extends "bq_base.html" %}
+
+{% block head %}
+
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/utilScripts.js"></script>
+	
+{% endblock %}
+
+{% block leftmenu %}
+	<div id="leftmenucontent">
+		<div class="leftmenublock">
+		<ul>
+			<li><div class="allPage {% if page == 'users' %}currentPage{% endif %}"><a href="?page=users">Access & Users</a></div></li>
+			<li><div class="allPage {% if page == 'upload' %}currentPage{% endif %}"><a href="?page=upload">Add a new Study</a></div></li>
+			<li><div class="allPage {% if page == 'content' %}currentPage{% endif %}"><a href="?page=content">Static Pages</a></div></li>
+			<li><div class="allPage {% if page == 'advanced' %}currentPage{% endif %}"><a href="?page=advanced">Solr & Logs</a></div></li>
+			<li><div class="allPage pageDisabled">Hidden Stage</div></li>
+		</ul>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content %}
+	
+	<div class="introHtml">
+	
+		{% if page == 'users' %}
+		<! ================================================= -->
+		<h1>Access & Users</h1>
+		As described (for the public) in the <a href="{{BASE_URL}}?p=access">access</a> page, here is how it works on the admin side:
+		<ol>
+			<li><b>Public users</b> (without login) can only access Overview pages for every study</li>
+			<li>When they ask for the <b>Discover status</b> [online form], an unactivated user is created, and a mail is sent to the staff team</li>
+			<li>Staff can then activate the user in the <a href="{{BASE_URL}}/admin/auth/user/">admin user list</a> panel (and send a mail to congratulate the guy).</li>
+			<li>If she/he asks (on a study page) for an <b>Explore status</b> [online form], another mail is sent to the staff, including the 'motivation' field</li>
+			<li>Staff can then add the permission for <b>this</b> enquete ('EXPLORE e_[id]') to this user on the <a href="{{BASE_URL}}/admin/auth/user/">admin user list</a> panel (and reply regardly to the guy).</li>
+		</ol>
+		<p>Current staff email adress is: <i>{{staffemail}}</i></p>
+		
+		{% else %}
+		{% if page == 'upload' %}
+		<! ================================================= -->
+		<h1>Add a new Study</h1>
+		<div>
+			<h3>You must upload an archive.zip file</h3>
+			<ul>
+				<li>with the mandatory <span class="content_norm_file">./_meta/meta_*.csv</span> files describing metadatas</li>	
+				<li>for verbatims, the required format is TEI XML made using Exmaralda & TEI Drop</li>
+				<li>if you don't understand a thing, please read the <a href="{{BASE_URL}}?p=method&q=3">normalization</a> page carefully</li>
+			</ul>
+		</div>
+		<p>
+		<div id="eBrowseNewEnquete">
+			<div id="file-uploader">
+			<noscript>
+				<p>Please enable JavaScript to use file uploader.</p>
+				<!-- or put a simple form for upload here -->
+			</noscript>
+			</div>
+		</div>
+		</p>
+		
+		{% else %}
+		{% if page == 'content' %}
+		<! ================================================= -->
+		<h1>Static Pages</h1>
+			<p>Static pages (project / methodology / access) can be <a href="{{BASE_URL}}/admin/reanalyseapp/sitecontent/">edited</a></p>
+			<ul>
+				<li>Each < h1 > tag splits the content into submenus, and correspond to the name of the left link (eg. here: "Static Pages")</li>
+				<li>if the < h1 > paragraph does not contain anything, it will appear deactivated (eg. here "Hidden Stage")</li>
+				<li>Do NOT change their name or language, or you'll die</li>
+				<li>For the moment, edit is only available in raw html, to allow insertion of js and {django template variables}</li>
+			</ul>
+		
+		{% else %}
+		{% if page == 'advanced' %}
+		<! ================================================= -->
+		<h1>Solr & Logs</h1>
+		<h3>Solr {{solrstatus}}</h3>
+			<ul>
+				<li>make sure <a href="{{solr_url}}/solr/admin/">solr</a> is online if you need documents to be indexed (you could <a href="{% url reanalyse.reanalyseapp.views.killSolrProcess %}">kill the process</a> and refresh this page to relauch it)</li>
+				<li>if you like to discover new things, you can <a href="{{solr_url}}/solr/admin/schema.jsp">browse the index</a></li>
+				<li>you could - for all studies - <a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a>, then <a href="{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}">update_index</a> if you know what that means</li>
+				<li>you could re-fetch ngrams from index for enquête: (could take a while)
+					<ul>
+					{% if enquetes %}
+					{% for e in enquetes %}
+						<li><a href="{% url reanalyse.reanalyseapp.views.resetNgrams e.id %}"> [{{e.id}}] {{e.name}}</a></li>
+					{% endfor %}
+					{% else %}
+						<li><i>- no study available -</i></li>
+					{% endif %}
+					</ul>
+				</li>
+			</ul>
+		<h3>Log Django</h3>
+		<ul class="logconsole">
+			{% for l in log_django %}<li>{{l}}</li>{% endfor %}
+		</ul>
+		{% endif %}
+		{% endif %}
+		{% endif %}
+		{% endif %}
+		
+	</div>
+	
+<! ================================================= -->
+{% endblock %}
+
+{% block bottom %}
+<script src="{{ MEDIA_URL }}/fileuploader/fileuploader.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{{ MEDIA_URL }}/fileuploader/fileuploader.css"/>
+<script type="text/javascript">
+	///////////////////////////////////////////////////////////////////////////////////
+	function createUploader(){            
+        var uploader = new qq.FileUploader({
+            element: $('#file-uploader')[0],
+            action: "{% url reanalyse.reanalyseapp.views.eAddAjax %}",
+            debug: true,
+            multiple: true,
+			params: {
+				'csrf_token': '{{csrf_token}}',
+				'csrf_name': 'csrfmiddlewaretoken',
+				'csrf_xname': 'X-CSRFToken',
+				'foldname': '{{foldname}}',
+			},
+			onSubmit: function(id, fileName){
+				// when clicked
+			},
+			onComplete: function( id, fileName, responseJSON ) {
+				// on each file complete
+			},
+			onAllComplete: function( uploads ) {
+				$("#uploadActions").show();
+				// buttons are already made in template in "fileuploader/fileuploader.js"
+				$("#buttCancel").click( function(event) {
+					// create Enquete from uploaded files					
+					doGetAtUrl("{% url reanalyse.reanalyseapp.views.eReset %}?foldname={{foldname}}");
+					$("#uploadActions").remove();
+					createUploader();
+					//event.stopPropagation();
+					//event.preventDefault();
+					return false;
+				});
+				$("#buttOk").click( function(event) {
+					// create Enquete from uploaded files					
+					doGetAtUrl("{% url reanalyse.reanalyseapp.views.eParse %}?foldname={{foldname}}");
+					//event.stopPropagation();
+					//event.preventDefault();
+					//window.location.href="{% url reanalyse.reanalyseapp.views.eBrowse %}";
+					//window.location.reload();
+					$("#eBrowseNewEnquete").html('Enquete was added. Go <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">look</a> at it');
+					return false;
+					
+				});
+			}
+        });           
+    }
+	///////////////////////////////////////////////////////////////////////////////////
+	$(function () {
+		createUploader(); 
+  	});
+ 
+</script>
+
+{% endblock %}

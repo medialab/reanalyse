@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-01 18:04+0100\n"
+"POT-Creation-Date: 2012-02-28 11:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,126 +16,150 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Translators: Main page
-#: templates/base.html:46
-msgid "ADMIN - You can consult, upload, make viz and phonecalls to god"
+#: templates/bq_base.html:57
+msgid "a project from"
 msgstr ""
 
-#: templates/base.html:49
-msgid "EXPLORE - You can explore whole study sites"
-msgstr ""
-
-#: templates/base.html:52
-msgid "BROWSE - You can browse studies descriptions and studies on studies"
-msgstr ""
-
-#: templates/base.html:54
-msgid "PUBLIC - You can browse the studies list"
-msgstr ""
-
-#: templates/base.html:57
-msgid "access"
-msgstr ""
-
-#: templates/base.html:62
-msgid "you are connected as"
-msgstr ""
-
-#: templates/base.html:77
-msgid "A Project from"
-msgstr ""
-
-#. Translators: Main menu choices
-#: templates/base.html:87
+#. Translators: Main top menu choices
+#: templates/bq_base.html:64
 msgid "Project"
 msgstr ""
 
-#: templates/base.html:89
+#: templates/bq_base.html:67
 msgid "Methodology"
 msgstr ""
 
-#: templates/base.html:91
+#: templates/bq_base.html:70
 msgid "Access"
 msgstr ""
 
-#: templates/base.html:93
+#: templates/bq_base.html:73
 msgid "The Studies"
 msgstr ""
 
-#: templates/base.html:96
-msgid "Upload"
+#: templates/bq_base.html:77
+msgid "Admin"
 msgstr ""
 
-#: templates/e_base.html:69
+#: templates/bq_e_base.html:71
 msgid "Back to the studies list"
 msgstr ""
 
-#: templates/e_base.html:75
+#: templates/bq_e_base.html:77
 msgid "Overview"
 msgstr ""
 
-#: templates/e_base.html:79 templates/e_base.html.py:81
-msgid "Research on the Research"
+#: templates/bq_e_base.html:81 templates/bq_e_base.html.py:83
+msgid "On the Research"
 msgstr ""
 
 #. Translators: Studies list
-#: templates/e_base.html:85 templates/e_base.html.py:91
-#: templates/e_browse.html:48
+#: templates/bq_e_base.html:87 templates/bq_e_base.html.py:136
+#: templates/bq_e_browse.html:51
 msgid "Documents"
 msgstr ""
 
-#: templates/e_base.html:86 templates/e_base.html.py:92
-#: templates/e_browse.html:49
+#: templates/bq_e_base.html:88 templates/bq_e_base.html.py:137
+#: templates/bq_e_browse.html:52
 msgid "Speakers"
 msgstr ""
 
-#: templates/e_base.html:87 templates/e_base.html.py:93
-#: templates/e_browse.html:50
+#: templates/bq_e_base.html:89 templates/bq_e_base.html.py:138
+#: templates/bq_e_browse.html:53
 msgid "Visualizations"
 msgstr ""
 
-#: templates/e_base.html:88 templates/e_base.html.py:94
-msgid "Search"
-msgstr ""
-
 #. Translators: Left menu link to register page
-#: templates/e_base.html:101
+#: templates/bq_e_base.html:145
 msgid "To consult the entire study, please consult the page"
 msgstr ""
 
-#: templates/e_browse.html:21
-msgid "Back home"
+#. Translators: back to home when looking at studies list
+#: templates/bq_e_browse.html:22
+msgid "Back"
 msgstr ""
 
 #. Translators: ESE final report download
-#: templates/e_eseShow.html:89
+#: templates/bq_e_ese.html:73
 msgid "The final report can be downloaded"
 msgstr ""
 
 #. Translators: Documents browse when null
-#: templates/ed_browse.html:94
-msgid "There is no linked documents for in study"
+#: templates/bq_ed_browse.html:107
+msgid "There is no linked documents in this study"
+msgstr ""
+
+#. Translators: edShow: toggle text for streamtimeline viz
+#: templates/bq_ed_show.html:131
+msgid "exploration using viz"
 msgstr ""
 
 #. Translators: Speakers browse when null
-#: templates/es_browse.html:128
+#: templates/bq_es_browse.html:126
 msgid "There is no linked speakers in this study"
 msgstr ""
 
 #. Translators: Visualization browse when null
-#: templates/ev_browse.html:36
+#: templates/bq_ev_browse.html:95
 msgid "There isn\\'t any Visualisation in this study"
 msgstr ""
 
-#. Translators: Login page
-#: templates/home.html:56
+#. Translators: Login page title
+#: templates/bq_home.html:52
 msgid "If you already have an account, please login"
 msgstr ""
 
-#: templates/home.html:57
+#: templates/bq_home.html:53
 msgid "If you don't, please consult the page"
 msgstr ""
 
-#: templates/home.html:66
+#: templates/bq_home.html:62
 msgid "login"
+msgstr ""
+
+#. Translators: Access page: ask for explore status
+#: templates/bq_home.html:70
+msgid "You can explore the whole site"
+msgstr ""
+
+#. Translators: Access page: ask for explore status
+#: templates/bq_home.html:77
+msgid "Ask for an exploration status"
+msgstr ""
+
+#. Translators: Access page: ask for explore status: Study
+#: templates/bq_home.html:84
+msgid "Study:"
+msgstr ""
+
+#. Translators: Access page: request explore status sent
+#: templates/bq_home.html:99
+#, python-format
+msgid ""
+"\n"
+"\t\t\t\t\t\t\t</br>You request concerning study <b>%(enquetename)s</b> was "
+"successfully sent. You will soon receive information in your mailbox.\n"
+"\t\t\t\t\t\t"
+msgstr ""
+
+#. Translators: Access page: Current Status title
+#: templates/bq_home.html:105
+msgid "Current Status"
+msgstr ""
+
+#: templates/bq_home.html:106
+msgid ""
+"You can consult studies on studies. To explore a whole study site, please go "
+"to the study you wish to consult."
+msgstr ""
+
+#. Translators: Access page: ask for browse(discover) status
+#: templates/bq_home.html:113
+msgid "You can ask for a Discover status"
+msgstr ""
+
+#. Translators: Access page: request browse(discover) status sent
+#: templates/bq_home.html:124
+msgid ""
+"Your request was sent ! You will soon receive information in your mailbox."
 msgstr ""

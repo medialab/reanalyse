@@ -1,0 +1,60 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	
+	<link rel='stylesheet' type="text/css" href="{{ STATIC_URL }}css/reset.css"><!-- reset -->
+	
+	<link  rel='stylesheet' type="text/css" href="{{ STATIC_URL }}css/fonts.css"><!-- include stored fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'><!-- include google font open sans -->
+	
+	<noscript><link rel="stylesheet" href="{{ STATIC_URL }}css/adapt/mobile.min.css" /></noscript><!-- noscript grid -->
+	
+	<script type="text/javascript">var ADAPT_CONFIG={path:'{{ STATIC_URL }}css/adapt/',dynamic:true,range:['0px    to 980px  = mobile.min.css','980px  to 1280px = 960.min.css','1280px to 1600px = 1200.min.css','1600px to 1940px = 1560.min.css','1940px to 2540px = 1920.min.css','2540px           = 2520.min.css']};
+	</script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/adapt.min.js"></script><!-- adapt js, cfr. http://adapt.960.gs/ -->
+
+	{% block theme %}
+	<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/styles.less"><!-- main style less theme -->
+	{% endblock %}
+	<script src="{{ STATIC_URL }}/js/less-1.2.1.min.js" type="text/javascript"></script><!-- less script cfr. http://lesscss.org/#about -->
+	
+	<!-- include grid -->
+	{% block head %}{% endblock %}
+</head>
+	
+<body>
+	{% block dimeshs %}<div id="dimi-shs-quali"></div>{% endblock %}
+	
+	<!-- boilerplate basic functions, cfr. http://html5boilerplate.com/ -->
+	<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+	{% block body %}{% endblock %}
+	
+	
+	<script type="text/javascript">
+		var dime = {};
+		dime.updateView = function(){
+			var height = updateSidebarHeight();
+			$('.fullscreen #page:before').css({
+    			"height" : height 
+			});
+			
+		}
+		
+		var updateSidebarHeight = function() {
+			var sideh = Math.max($("#sidebar").height(),$("#page.inner").height());
+			$("#sidebar").height(sideh);
+			return sideh;
+		} 
+		$(window).load(function() {
+			updateSidebarHeight();
+		});
+		
+	</script>
+	
+	{% block bottomscripts %}{% endblock %}
+	
+</body>
+</html>

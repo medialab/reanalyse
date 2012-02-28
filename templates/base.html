@@ -15,7 +15,9 @@
 	<title>hci, {% block title %}overview{% endblock %} | dime-shs</title>
 {% endblock %}
 
-
+{% block dimeshs %}
+<a href="//sciencespo.fr/dime-shs" title="dimi shs - quali" id="dimi-shs-quali"></a> 
+{% endblock %}
 {% block body %}
 	<div class="container_12">
 		<header>
@@ -23,7 +25,7 @@
 		
 			<div class="grid_12"><!-- top menu structure -->
 				<div id="logo-outer" class="grid_3 outer outer_gain_1">
-					<div id="logo"></div><!-- the logo -->
+					<a href="{% block logolink  %}#{% endblock %}" title="{% block logotitle  %}beQuali home{% endblock %}"><div id="logo"></div></a><!-- the logo -->
 				</div> 
 				<div id="menu-pages-outer" class="grid_6 outer outer_gain_1"><!-- the page menu -->
 					<div id="menu-pages" class="inner">{% block menupages %}beq studies{% endblock %}</div>
@@ -38,7 +40,7 @@
 		<section>
 			<div id="view" class="grid_12">
 				<div id="sidebar-outer" class="grid_3 outer">
-					<div id="sidebar">{% block sidebar %}sidebar{% endblock %}</div>
+					<div id="sidebar"><div>{% block logomoto %}a stunning phrase{% endblock %}</div>{% block sidebar %}sidebar{% endblock %}</div>
 				</div>
 				<div id="page-outer" class="grid_9 outer">
 					<div id="page" class="inner">{% block pagecontent %}pagecontent{% endblock %}</div>
@@ -53,7 +55,8 @@
 					<div id="footer">
 						<div id="footer-border"></div><!-- draw footer left border -->
 						<div id="footer-inner">
-							<p>Copyright (c) 2012</p>
+							<div id="sciencespo-logo" class="floating"></div>
+							<div id="dimishs-logo" class="floating"></div>
 						</div>
 						
 					</div><!-- the logo -->

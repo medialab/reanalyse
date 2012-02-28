@@ -1,0 +1,150 @@
+@the-background: #484E5C;
+@header-background: #C9C9C9;
+@header-background-light: #F5F5F5;
+@header-background-medium: #E3E4E5;
+@header-height: 87px;
+
+@header-line-height: 3px;
+@header-line-margin: 12px;
+@header-line-shift: 6px;
+
+@page-background: #F1F1F1;
+
+@footer-background: #669900;
+@footer-height: 142px;
+@footer-margin-bottom: 50px;
+
+@grid-padding: 10px;
+@sidebar-padding:26px;
+
+// colors
+@lime: #99CC00;
+
+@images: "../../img/";
+@images-sprite: "../../img/global-dsquanti.png";
+
+body{
+	background: @the-background;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+}
+h1,h2,h3{
+	font-family: 'MisoRegular', sans-serif;
+}
+
+h1{
+	font-size: 2em;
+	font-family: 'MisoBold', sans-serif;
+}
+h2{
+	font-size: 3em;
+}
+h3{
+	font-size: 2em;
+}
+
+.rounded-corners (@radius: 2px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.outer{
+	margin: 0;
+}
+
+.inner{
+	padding: @grid-padding;
+}
+
+.outer_gain_1{
+	padding-right: @grid-padding;
+}
+
+.outer_gain_2{
+	padding-right: @grid-padding * 2;
+}
+
+header{
+	#logo-outer{
+		background: @header-background-light;
+		overflow:hidden;
+		margin-right:0;
+		padding-right:@grid-padding;
+	}
+	#logo{
+		background: url( "@{images-sprite}" ) no-repeat;
+		background-position: 0px -11px;
+		width: 230px;
+		overflow:hidden;
+		height: @header-height;
+	}
+	#menu-pages-outer{
+		background: @header-background;
+		height: @header-height;
+	}
+	#menu-settings-outer{
+		background: @header-background-medium;
+		height: @header-height;
+	}
+}
+
+footer{
+	#footer-outer{
+		background: @footer-background;
+		overflow:hidden;
+		margin-right:0;
+		margin-bottom: @footer-margin-bottom;
+		
+	}
+	#footer-border{
+		background: url( "@{images-sprite}" ) no-repeat;
+		background-position: 0px -964px;
+		overflow:hidden;
+		height: @footer-height;
+		width: 10px;
+		position:absolute;
+		
+	}
+	#footer{
+		height: @footer-height;
+		
+	}
+	#footer-inner{
+		padding: @grid-padding @grid-padding*2;
+	}
+}
+
+section{
+
+	#view, #page{
+		background: @page-background;
+	}
+
+	#sidebar-outer{
+		background: @header-background-light;
+		overflow:hidden;
+		margin-right:0;
+		padding-right:@grid-padding;
+	}
+	#sidebar{
+		background: url( "@{images-sprite}" ) repeat-y;
+		background-position: -236px 0px;
+		padding: @sidebar-padding;
+		min-height:200px;
+	}
+}
+
+// ids
+#section-line{
+	margin-bottom: @header-line-margin;
+	#section-line-inner{
+		background: @lime;
+		margin-left: @header-line-shift;
+		height:  @header-line-height;
+	}
+}
+
+.test{
+	background: white;
+}

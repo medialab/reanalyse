@@ -1,0 +1,199 @@
+<!-- =========================== ENQUETE CONTAINER -->
+
+{% extends "bq_base.html" %}
+
+{% load i18n %}
+{% load tags %}
+
+{% block head %}
+
+	<!-- ================== DEPRECATED THINGS -->
+	<!-- scriptaculous, for smooth scrolling -->
+	<!-- <script type="text/javascript" src="{{ MEDIA_URL }}/js/prototype.js"></script>-->
+	<!-- <script type="text/javascript" src="{{ MEDIA_URL }}/js/scriptaculous/scriptaculous.js"></script>-->
+	 
+	<!-- Google Web Font -->
+	<!--<link href='http://fonts.googleapis.com/css?family=Patrick+Hand' rel='stylesheet' type='text/css'>-->
+	
+	<!-- for django-tables2 -->
+	<!--<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/paleblue/css/screen.css" />-->
+	
+	<!-- ================== USED EVERYWHERE -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-1.6.2.min.js"></script>
+	
+	<!-- scrollTo jquery plugin, for smooth scrolling -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery.scrollTo.js"></script>
+	
+	<!-- all script function, todo: split in different files -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/utilScripts.js"></script>
+
+	{% block enqueteheadmore %}
+	{% endblock %}
+
+{% endblock %}
+
+
+{% block headenquetetitle %}
+	<!-- general enquete header: title, meta... -->
+	<div class="title_enquete">
+		<h1 id="topanchor">{{enquete.name}}</h1>
+		<div class="meta_enquete">
+			{% if perms.reanalyseapp.can_make %}
+				author: {{enquete|enqueteAuthor}}
+				 | uploaded: {{enquete.date}}
+				 | status: {{enquete.get_status_display}}
+					{% if enquete.status != '0' %}
+					({{enquete.statuscomplete}}%)
+					{% endif %}
+			{% else %}
+				{{enquete|enqueteAuthor}}
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block launchviz %}
+	oui oui oui
+{% endblock %}
+
+
+
+{% block leftmenu %}
+
+	{% comment %}Translators: Study left menu{% endcomment %}
+	
+	<!-- ======================================================= -->
+	<div id="leftmenucontent">
+	
+		<div class="leftmenublock">
+			<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">< {% trans 'Back to the studies list' %}</a>
+		</div>
+		
+		<div class="leftmenublock">
+			<h3>{{enquete.name}}</h3> <span class="emeta-author">{{enquete|enqueteAuthor}}</span>
+		</div>
+		
+		<!-- ============================ BROWSE -->
+		<div class="leftmenublock">
+<a href="{% url reanalyse.reanalyseapp.views.eShow enquete.id %}">
+<div class="allPage {% if pageid == 'overview' %}currentPage{% endif %}">{% trans 'Overview' %}</div></a>
+
+{% if perms.reanalyseapp.can_browse %}
+<a href="{% url reanalyse.reanalyseapp.views.eseShow enquete.id %}">
+<div class="allPage {% if pageid == 'ese' %}currentPage{% endif %}">{% trans 'On the Research' %}</div></a>
+{% else %}
+<div class="allPage pageDisabled">{% trans 'On the Research' %}</div>
+{% endif %}
+
+{% if permexplorethis %}
+	<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} {% if perms.reanalyseapp.can_make %}({{enquete.visualization_set.count}}){% else %}({{enquete|visualizationPublicCount}}){% endif %}</div></a>
+
+	{% block enqueteleftmenuviz %}
+	{% endblock %}
+
+	<div id="searchFormContainer">
+		<div id="searchFormDiv">
+		<form id="searchForm">
+			{{ form.non_field_errors }}
+			<div class="fieldWrapper">
+				{{ form.q.errors }}
+				{{ form.q }}
+				<input id="id_searchsubmit" type="image" name="_search" value="type to search" src="{{ MEDIA_URL }}/images/zoom.png"/>
+			</div>
+			{% comment %}
+			<!-- ADVANCED OPTIONS -->
+			<a href="#" onclick='$("#toggle_appear").toggle("fast"); return false;'>advanced options</a>
+			<div id="toggle_appear" style="display:none;">
+				
+				(OR,AND,-a,"a b"=a_b)
+				
+				<!-- ///////////////////////// OPTIONS -->
+				{{ form.rawQuery.errors }}
+				{{ form.rawQuery }}Raw Query</br>
+				(a?b,a*,a^4 b,a~0.7,"a b"~10)</br>
+				{{ form.autocomplete }}AutocompleteC</br>
+				{{ form.autocompletew }}AutocompleteW</br>
+				
+				<!-- ///////////////////////// NEW FACETS, by hand -->
+				<a href="#" onclick='resetFacetsAndResearch(); return false;'>> reset facets</a>
+				
+				<br/>Note:
+				<br/>+ please make sure
+				<a href="http://jiminy-dev.medialab.sciences-po.fr:8983/solr/admin/">solr</a> 
+				is on and already has an index (made of all Interventions)
+				<br/>+ stopwords return all the index (not displaying correctly?)
+				<!-- initially, facets are just the list of Texts/Speakers -->
+				<!-- built by the view and available ein the context as "handfacets.textes & handfacets.speakers" -->
+				<!-- when searching, order and counts are updated (from search_results.html template), using javascript -->
+			</div>
+			{% endcomment %}
+		</form>
+		</div>
+	</div>
+
+{% else %}
+	<div class="allPage pageDisabled">{% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Visualizations' %} ({{enquete|visualizationPublicCount}})</div>
+{% endif %}
+
+{% if not permexplorethis %}
+
+	</br>
+	{% comment %}Translators: Left menu link to register page{% endcomment %}
+	{% trans 'To consult the entire study, please consult the page' %}
+	<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register&e={{enquete.id}}">access</a>
+
+{% endif %}		
+
+
+	{% block enqueteleftmenusearch %}
+	{% endblock %}
+		
+	</div>
+
+	<!-- ============================ MORE LEFTMENU -->	
+	{% block enqueteleftmenumore %}
+	{% endblock %}
+	
+		
+	<!-- ============================ MORE, BUT SCROLL TO FIXED -->
+	<div id="leftMenuScrollToFixed">
+		{% block enqueteleftmenumorescroll %}
+		{% endblock %}
+	</div>
+		
+	</div>
+	<!-- ======================================================= -->
+{% endblock %}
+
+
+
+{% block bottom %}
+	
+	{% block enquetebottommore %}
+	{% endblock %}
+	
+	<!-- scroll to fixed for leftmenu -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-scrolltofixed-min.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+			initSearchForm('{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}');
+			
+			// scroll to fixed blocks
+			$('#leftMenuScrollToFixed').scrollToFixed();
+				
+			initGeneralTooltips();
+		});
+	</script>
+
+{% endblock %}
+
+
+

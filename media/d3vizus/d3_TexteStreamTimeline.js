@@ -85,12 +85,13 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var dec4spk = spaceForSpeakers/(nLayers+1);
 	var totalH = topParvbMargin + spaceForSpeakers;
 	/////////////////////////////////////
-	var wantedWidth = 720; //'100%'
-	var vis = vizdiv.append("svg:svg")
-		.attr("width", wantedWidth)
-		.attr("height", totalH);
 	var totalW = $(unik).width();
-	//console.log("width:"+totalW);
+	// nb: if totalW is uncoherent small, try with parent divs (aka: in case of display:none for navigation viz)
+	if(totalW<200) totalW = $(unik).parent().parent().parent().width()-12; // 12 for padding
+	console.log("got width:"+totalW);
+	var vis = vizdiv.append("svg:svg")
+		.attr("width", totalW)
+		.attr("height", totalH);
 	var maxPeriods = thedata.maxPeriods;
 	var graphW = totalW-rightMargin-leftMargin;
 
@@ -134,7 +135,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
         	.domain([0,m])
         	.range([topParvbMargin,graphTopMargin]);
         parYScales.push( scaleParavb );
-        console.log(unik+"found max value for paraverbal"+i+":"+m);
+		//console.log(unik+"found max value for paraverbal"+i+":"+m);
 	}
 
 	
@@ -182,9 +183,9 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			
 		var centerSelDiv = vizdiv.append("div")
 			.style("text-align","center")
-			.style("width",110)
+			.style("width","110px")
 			.style("position","absolute")
-			.style("top",totalH-85);
+			.style("top",totalH-85+"px");
 		var centerText = centerSelDiv.append("div")
 			.style("font-size",9)
 			.style("margin",3)
@@ -217,7 +218,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		var decCenter = leftMargin - parseInt(centerSelDiv.style("width"))/2;
 		var updateCenterSelection=function(){
 			var selmid = decCenter + (selRight+selLeft)/2;
-			centerSelDiv.style("left",selmid);
+			centerSelDiv.style("left",selmid+"px");
 			centerText.text("["+selLeftInt+","+selRightInt+"]");
 		};
 		
@@ -523,14 +524,14 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.attr("fill","white");
 */
 	vis.append("svg:line")
-		.attr("x2",graphW+leftMargin)
+		.attr("x2",graphW+leftMargin+"px")
 		.attr("y2",0)
-		.attr("x1",graphW+leftMargin)
-		.attr("y1",totalH)
+		.attr("x1",graphW+leftMargin+"px")
+		.attr("y1",totalH+"px")
 		.attr("stroke","gray");
 	vis.append("svg:text")
-		.attr("x",leftMargin+graphW+12)
-		.attr("y",totalH-5)
+		.attr("x",leftMargin+graphW+10+"px")
+		.attr("y",totalH-5+"px")
 		.text("Sentences");
 		
 	var scale=1,

@@ -23,25 +23,25 @@ nullhandler = logger.addHandler(NullHandler())
 
 
 #############################################################
-# FOR HTML CONTENTS (editable) 'SiteContent' model
+# FOR HTML CONTENTS (editable) 'SiteContent' model (for models.TextField())
 ############################################################
-class CommonMedia:
-	js = (
-		'https://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js',
-		settings.MEDIA_URL+'/js/dojoRichEditor.js',
-	)
-	css = {
-		'all': (
-			settings.MEDIA_URL+'/css/admin.css',
-			settings.MEDIA_URL+'/css/reanalyse.css',
-		),
-	}
+# class CommonMedia:
+# 	js = (
+# 		'https://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js',
+# 		settings.MEDIA_URL+'/js/dojoRichEditor.js',
+# 	)
+# 	css = {
+# 		'all': (
+# 			settings.MEDIA_URL+'/css/admin.css',
+# 			settings.MEDIA_URL+'/css/reanalyse.css',
+# 		),
+# 	}
 #############################################################
 class SiteContentAdmin(admin.ModelAdmin):
 	fieldsets = [
 		(None, { 'fields': ('name','lang','description','contenthtml')}),
 	]
-	Media = CommonMedia
+	#Media = CommonMedia
 	# on list
 	list_display = ('name','description','lang')
 	def save_model(self, request, obj, form, change):

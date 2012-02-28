@@ -82,42 +82,23 @@ function recalculateLeftMenuSize() {
 // fullscreen mode toggle
 var fullscreenMode = false;
 function toggleFullScreenMode() {
-	var dur = 200;
+	var dur = 0;
 	if(!fullscreenMode) {
-		console.log("Switching to fullscreen mode using css...");
-		
-		// adjust menus and content (remember we are using grid960 system)
-		$("#header").toggle(dur);
-		$("#menu").hide();
-		$("#menuband").toggle(dur);
-		$("#contenttop").toggle(dur);
-		$("#leftmenucontent").toggle(dur);
-		$('#leftmenucontainer').toggle(dur);
-		
-		$('#contentcontainer').removeClass("grid_13");
-		$('#contentcontainer').addClass("grid_16");
-		
-		$('#fullsOnImg').hide();
-		$('#fullsOffImg').show();
-		
-		// todo: make it ok when scrolled !
-		//$('#contentScrollToFixed').scrollToFixed();
+		$("#sidebar-outer").toggle(dur);
+		$("#page-outer").removeClass("grid_9");
+		$("#page-outer").addClass("grid_12");
+		$("#page-outer").addClass("fullscreen");
 	}
 	else {
-		$("#header").toggle(dur);
-		$("#menu").toggle(dur);
-		$("#menuband").toggle(dur);
-		$("#contenttop").toggle(dur);
-		$("#leftmenucontent").toggle(dur);
-		$('#leftmenucontainer').toggle(dur);
-		
-		$('#contentcontainer').removeClass("grid_16");
-		$('#contentcontainer').addClass("grid_13");
-
-		$('#fullsOffImg').hide();
-		$('#fullsOnImg').show();		
+		$("#sidebar-outer").toggle(dur);
+		$("#page-outer").removeClass("fullscreen");
+		$("#page-outer").removeClass("grid_12");
+		$("#page-outer").addClass("grid_9");
 	}
 	fullscreenMode=!fullscreenMode;
+
+	$(".setFullscreen.Off").toggle();
+	$(".setFullscreen.On").toggle();
 }
 
 //////////////////////////////////////////////////////////////////
@@ -171,6 +152,14 @@ function changeVerbatimWordsDisplay(wordsStr,css_prefix,showOnly) {
 
 //////////////////////////////////////////////////////////////////
 // viz involved tooltips
+var closemodalvizdialog;
+function overlaymodalclickclose() {
+    if (closemodalvizdialog) {
+        $('.vizmodal').dialog('close');
+    }
+    //set to one because click on dialog (focus) box sets to zero 
+    closemodalvizdialog = 1;
+}
 function initVizInvolvedModals(getvizhtmlurl) {
 	$(".vizinvolved").click( function(event) {
 		var vizId = this.id.split("_")[1];
@@ -179,14 +168,27 @@ function initVizInvolvedModals(getvizhtmlurl) {
 		$.ajax({
 			url: getvizhtmlurl,
 			data: {'vizid':vizId},
-			success: function(html){
+			success: function(dat){
 				var mod=$('<div class="vizmodal">');
-				mod.html(html);
+				mod.html(dat.html);
 				mod.dialog({
+					title: dat.description,
 					width: 750,
 					modal: true,
-					resizable:false,
+					resizable: false,
+					position: ['center',100],
+					open: function() {
+				        closemodalvizdialog = 1;
+				        $(document).bind('click', overlaymodalclickclose);
+				    },
+				    focus: function() {
+				        closemodalvizdialog = 0;
+				    },
+				    close: function() {
+				        $(document).unbind('click');
+				    },
 				});
+				//closemodalvizdialog = 0;
 			},
 		});	
 		//event.stopPropagation();

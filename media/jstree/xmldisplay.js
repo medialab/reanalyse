@@ -18,6 +18,9 @@ function buildXmlDisplay(divid,xmlurl) {
 			
 			// the following is not working
 			//$("#"+divid).jstree("close_all");
+			
+			// global func to update left menu size
+			dime.updateView();
 		},
 		error:function(e){
 			alert("Error: "+e);

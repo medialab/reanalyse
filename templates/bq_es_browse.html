@@ -1,0 +1,394 @@
+{% extends "bq_e_base.html" %}
+
+{% load i18n %}
+
+{% block enqueteheadmore %}
+		
+	<!-- datatables jquery plugin -->
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/datatables/css/demo_table.css" />
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/FixedColumns.min.js"></script>
+	
+	{% comment %}
+	<!-- COLORPICKER tryout, js interactive color updater for each cell on column color -->
+	<!-- /////////// TRY A (deprecated?): jpicker [http://www.digitalmagicpro.com/jPicker/] -->
+	<!--<link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}/jpicker/jPicker.css" />
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jpicker/jpicker-1.1.6.min.js"></script>-->	
+	<!-- /////////// TRY B: colorpicker other [http://www.eyecon.ro/colorpicker/] -->
+	<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}/colorpicker/css/colorpicker.css" />
+	<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}/colorpicker/css/layout.css" />
+	<script type="text/javascript" src="{{ MEDIA_URL }}/colorpicker/js/colorpicker.js"></script>
+	{% endcomment %}
+	
+	<!-- jquery ui for dropdownmenu -->
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/jqueryui/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	
+	<!-- scrolling div by hand (jquery plugin) -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/dragscrollable.js"></script>
+
+	<!-- Dropdownmenu checklist jquery plugin -->
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.reanalyse.css" />
+
+	<!-- d3 vizus -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Cloud_SolrSpeakerTagCloud.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Attributes.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_Overview.js"></script>	
+	
+	<!-- =============================== CSS FOR SPEAKERS COLORS (div background) -->
+	{% comment %}
+	<style type="text/css">
+		{% for k,v in speakersColors.items %}.speakerColor_{{k}} {fill:{{v}};background:{{v}};}
+		{% endfor %}
+	</style>
+	{% endcomment %}
+	<!-- ======================================================= -->
+	
+	<!-- =============================== SELECTION for VISUALIZATIONS -->
+	<script type="text/javascript">
+		// saving array of selected, to produce visualizations
+		var selectedSpeakerIds = new Array();
+		var selectedTexteIds = new Array();
+		var selectedAttributeTypesIds = new Array();
+	</script>
+	<!-- ======================================================= -->
+	
+{% endblock %}
+
+
+{% block enqueteleftmenumore %}
+{% endblock %}
+
+
+{% block content %}
+
+{% if sTable.values %}
+<div id="divToGetWidth" style="width:100%;height:1px;"></div>
+<!-- =============================================================== USING JQUERY DATATABLES -->
+<!-- add class "ex_highlight" if you want highlighting on rollover -->
+<table cellpadding="0" cellspacing="0" border="0" class="display grid_13" id="speakerTable">
+	<thead>
+		<tr>
+			{% for c in sTable.columns %}
+				<th>{% autoescape off %}{{c.label}}{% endautoescape %}</th>
+			{% endfor%}
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in sTable.values %}
+			<!-- NB: BC, we used only id, now class too to select/deselct in both fixed/scrolled tables -->
+			<tr class="gradeA speakerRow speaker_{{row.sid}}" id="speaker_{{row.sid}}">
+				{% for v in row.vals %}
+					{% comment %}
+						{% if forloop.counter0 == 1 %}
+						<!-- todo: manage speakers colors using css class... -->
+						<!-- NB: we put color value invisible to allow sort -->
+						<td style="background-color:{{v}};"><span style="display:none;">{{v}}</span><div></div></td>
+						{% else %}
+					{% endcomment %}
+					
+					<!-- NB: IMPORTANT be careful to put it all in one line, because we use html() to compare contents at the byattributeSelection-->
+					<!-- column 'Count' is labeled in view "<div id..>" accessible for d3 -->
+					<td>{% autoescape off %}{{v}}{% endautoescape %}</td>
+				{% endfor%}
+			</tr>
+		{% endfor%}
+	</tbody>
+</table>
+
+</br>
+
+	{% if perms.reanalyseapp.can_make %}
+	
+	{% comment %}
+		<!-- if you want to set random colors for all spks -->
+		<a href='#' onclick='doGetAtUrlAndRefresh("{% url reanalyse.reanalyseapp.views.resetColors enquete.id %}");return false;'>
+		set random colors on all speakers and refresh...
+		</a>
+	{% endcomment %}
+	
+	<!-- ==================================================================== SELECTION -->
+	{% include "bq_e_selectviz.html" with source='Speakers' attributeTypes=attributeTypes %}
+	<!-- ====================================================================== -->
+	{% endif %}
+
+{% else %}
+	{% comment %}Translators: Speakers browse when null{% endcomment %}
+	{% trans 'There is no linked speakers in this study' %}
+{% endif %}
+
+{% endblock %}
+
+
+
+
+{% block enquetebottommore %}
+	
+<!-- ======================================================= -->
+<script type="text/javascript">
+	
+	var NAMECOLUMNINDEX = 0; // to fetch content when spk selection
+	var NFIXEDCOLUMNS = 1; // set to 3 if you want to try colorpickers column (see view)
+	var NFIXEDWIDTH = 100;
+	
+	//////////////////////////////////////////////////////////////////////
+	function selectFrom(kColumn,theVal) {	
+		console.log("selecting all vals from column:"+kColumn+":"+theVal);
+		var allvalues = sTable.fnGetNodes();
+		var realCol = kColumn-NFIXEDCOLUMNS; // because of FixedColumn decalage
+		$.each(allvalues, function(i, val) {
+			//console.log("val:"+val);
+			var v = $(val).children("td:eq("+realCol+")").text();
+			//console.log("colval:"+v);
+			if(v==theVal) {
+				selectSpeaker( val );
+			}
+		});
+	}
+	//////////////////////////////////////////////////////////////////////
+	function selectAllSpeakers() {
+		// uncheck dropdown list
+		$("#spkSelectDropDownList option:selected").attr('selected',false);
+		$("#spkSelectDropDownList").dropdownchecklist("refresh");
+		// select each line in table
+		var aTrs = sTable.fnGetNodes();
+		for (var i=0 ; i<aTrs.length ; i++) selectSpeaker(aTrs[i]);
+	};
+	function deselectAllSpeakers() {
+		// uncheck dropdown list
+		$("#spkSelectDropDownList option:selected").attr('selected',false);
+		$("#spkSelectDropDownList").dropdownchecklist("refresh");
+		// deselect each line in table
+		$('.row_selected').removeClass('row_selected');
+		selectedSpeakerIds = new Array();
+		$('#speakersSelectedList').html('');
+		$('#speakersSelectedCountDiv').html("0");
+	};
+	//////////////////////////////////////////////////////////////////////
+	function selectSpeaker(elem) {
+		ttt = elem;
+		theTr=$(elem);
+		if ( !theTr.hasClass('row_selected') ) {
+			// elem.id = "speaker_2738"
+			var tid = elem.id.split("_")[1];
+			// both left tr and right tr
+			$('.'+elem.id).addClass('row_selected');
+						
+			// update column 'selected' TAKES LONG !!!!
+			//var rowPos = sTable.fnGetPosition(elem);
+			//sTable.fnUpdate( 'yes', rowPos, 0);
+			// new <li> in selected list
+			$('#speakersSelectedList').find("#nospeaker").remove();
+			var sNameLink = $($(".DTFC_Cloned").find("#speaker_"+tid).children()[NAMECOLUMNINDEX]).html()
+			var newElem = $("<li>").attr({'id':'selected_'+tid}).append(sNameLink);
+			$('#speakersSelectedList').append(newElem);
+			
+			// update array with selected ids
+			selectedSpeakerIds.push(tid);
+			// update total count
+			$('#speakersSelectedCountDiv').html(selectedSpeakerIds.length);
+			//console.log("selected:"+tid);
+		}
+	}
+	function deselectSpeaker(elem) {
+		ttt = elem;
+		theTr=$(elem);
+		if ( theTr.hasClass('row_selected') ) {
+			var tid = elem.id.split("_")[1];
+			$('.'+elem.id).removeClass('row_selected');
+			
+			// update column 'selected' TAKES LONG !!!!
+			//var rowPos = sTable.fnGetPosition(elem);
+			//sTable.fnUpdate( 'no', rowPos, 0);
+			// update selected names
+			$('#speakersSelectedList').find("#selected_"+tid).remove();
+			// update array with selected ids
+			var ind = selectedSpeakerIds.indexOf(tid);
+			if(ind!=-1) selectedSpeakerIds.splice(ind,1);
+			// update total count
+			$('#speakersSelectedCountDiv').html(selectedSpeakerIds.length);
+		}
+	}
+	//////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////
+	$(document).ready(function() {		
+		// Init datatable
+		sTable = $('#speakerTable').dataTable( {
+			//"bFilter": true,
+			//"bSort": false,
+			"sScrollY": "400px", // rather take max width
+			"sScrollX": "550px", // not taken into acount !! set manually below
+ 			"sScrollXInner": "{{sScrollXInner}}",
+ 			//"sScrollXInner": "{{sScrollXInner}}px",
+			"bScrollCollapse": true,
+			"bPaginate": false,
+			//"bJQueryUI": true,				// jQuery UI Theme
+			"aaSorting": [[ NAMECOLUMNINDEX, "desc" ]],
+			//"aoColumnDefs": [ { "sWidth": "10px", "aTargets": [ 4 ] } ],		// column width
+			"oLanguage": {
+				"sSearch": "Filtrer:",
+				"sLengthMenu": "Display _MENU_ records per page",
+				"sZeroRecords": "Nothing found - sorry",
+				"sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+				"sInfoEmpty": "Showing 0 to 0 of 0 records",
+				"sInfoFiltered": "(filtered from _MAX_ total records)"
+				},
+			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+				//get ccontent (color) of column 1 and set background color
+				var ccol = $('td:eq(1)',nRow).html();
+				$('td:eq(1)',nRow).css('background',ccol);
+				//$('td:eq(1)',nRow).html('');
+				return nRow;
+			},
+			"fnDrawCallback": function() {
+				//alert( 'DataTables has redrawn the table' );
+			},
+		});
+		
+		new FixedColumns( sTable, {
+ 			"iLeftColumns": NFIXEDCOLUMNS,
+ 			"sLeftWidth":'fixed',
+ 			"iLeftWidth": NFIXEDWIDTH,
+ 			"fnDrawCallback": function () {		
+ 				///////////// REDO LEFT Things
+ 				// color pickers - deactivated
+ 				//initColorPickers();
+				// click handler for row selection	
+				$('.DTFC_Cloned .speakerRow').click( function() {
+					if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);
+					else selectSpeaker(this);
+				} );
+        	}
+ 		} );
+		
+		// todo: understand why "sScrollXInner" is not taken into account !
+		// we have to set it manually !
+		//$("#speakerTable tr").width({{sScrollXInner}});
+		
+{% if perms.reanalyseapp.can_make %}
+		
+		// NB: we have to dinstinguish LEFT/RIGHT click handlers, baecause at each redraw left-handler disapear ! (?)
+		// RIGHT : click handler for row selection	
+		$('#speakerTable .speakerRow').click( function() {
+			if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);
+			else selectSpeaker(this);
+		} );
+		
+{% else %}
+
+		$('.dataTables_scrollBody').dragscrollable({dragSelector: '#speakerTable:first', acceptPropagatedEvent: true});
+		
+{% endif %}	
+
+
+		///////////////////////////////////////////// viz involved modal dialogs
+		initVizInvolvedModals("{% url reanalyse.reanalyseapp.views.getVizHtml enquete.id %}");
+	});
+</script>
+<!-- ======================================================= -->
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	{% comment %}
+	///////////////////////////////////////////////////////////////////// (deactivated) init color picker
+	function initColorPickers() {
+		$('.colorPicker').each( function(i,elem) {
+			cc = elem;
+			var hexColorVal = $(elem).html();
+			//console.log("init color with value:"+hexColorVal);
+			
+			$(elem).ColorPicker({
+				'color':hexColorVal,
+				onSubmit: function(hsb, hex, rgb, el) {
+					
+					var speakers="";
+					// 2 cases :
+					////////// 1. if selected, update all selected
+					if(selectedSpeakerIds.length>0) {
+						selectedSpeakerIds.forEach(function(e){
+							speakers+=""+e+",";
+							// update local
+							$('tr#speaker_'+e+' .colorPicker').css('background-color','#'+hex);
+						});
+						// remove last ","
+						speakers = speakers.slice(0,-1);
+					}
+					////////// 2. if none selected, update current object
+					else {
+						speakers = $(elem).parent().attr('id').split('_')[1];
+						// update local
+						$(elem).css('background-color','#'+hex);
+					}
+					
+					setSpeakersColorAjax(hex,speakers);
+					$(elem).ColorPickerHide();
+				},
+				onBeforeShow: function () {
+					$(this).ColorPickerSetColor($(elem).css('background-color'));
+				},
+			});
+			 
+			/*
+			$(elem).jPicker(
+				{
+					window: { expandable: true },
+					color: { active: new $.jPicker.Color({hex: hexColorVal}) },
+					images: { clientPath: '{{ MEDIA_URL }}/jpicker/images/' },
+				},
+				function(color, context) {
+					// commit color
+	          		var all = color.val('all');
+	          		console.log("commit color");
+	          		//console.log('Color chosen - hex: ' + (all && '#' + all.hex || 'none') + ' - alpha: ' + (all && all.a + '%' || 'none'));
+				}
+			);
+			*/
+		});
+	}
+	//////////////////////////////////////////////////////////////////////
+	function setSpeakersColorAjax(color,speakerIdsList) { // put all selected speakers to the color
+		console.log("colorchoosed:"+color+" onspeakers:"+speakerIdsList);
+		var dict={};
+		dict['color']=color ;
+		dict['speakers']=speakerIdsList ;
+		// update server side
+		$.ajax({
+			type: "GET",
+			data: dict,
+			url: "{% url reanalyse.reanalyseapp.views.setColor enquete.id %}",
+			success: function(data){
+				console.log("Color was asked to update on server")
+			},
+		});
+	}
+	//////////////////////////////////////////////////////////////////////
+	{% endcomment %}

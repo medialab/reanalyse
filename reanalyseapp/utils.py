@@ -70,7 +70,7 @@ def getSpeakersColorsDict(e,texte):
 
 ###########################################################################
 # involved viz
-def getRelatedViz(textes=[],speakers=[]):
+def getRelatedViz(textes=[],speakers=[],user=None):
 	or_query = None
 	
 	#### query for speakers
@@ -99,6 +99,8 @@ def getRelatedViz(textes=[],speakers=[]):
 		### if texte is given, then we have to only keep one TexteStreamTimeline
 		if len(textes)==1:
 			qset = qset.filter(~Q(viztype='TexteStreamTimeline') | Q(viztype='TexteStreamTimeline',textes__id=textes[0].id))
+		if not user.is_staff:
+			qset = qset.filter(Q(public=True))
 		return qset
 ###########################################################################
 

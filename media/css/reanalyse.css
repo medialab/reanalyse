@@ -1,11 +1,9 @@
 /* ============================================ GENERAL BY DEFAULT */
 body {
 	font-size: 11px;
-	color: #606060;
 }
 h1, h2, h3, h4 {
 	color: #585858;
-
 }
 h1 {
 	margin-top:10px;
@@ -14,6 +12,7 @@ h1 {
 p, blockquote, ul, ol {
 
 }
+
 p {
 	margin-bottom: 5px;
 	text-align:justify;
@@ -38,8 +37,10 @@ hr {
 }
 
 
-/* ============================================ FULLSCREEN TOGGLE / LOGIN (top right) */
+/* ============================================ SETTINGS - TOP RIGHT */
 /* fullscreen toggle on top */
+/* deprecated with images */
+/*
 #fullsContainer:hover {
 	background:#B5B5B5;
 }
@@ -47,43 +48,17 @@ hr {
 	position:absolute;
 	background:#F2F1ED;
 	height:15px;
-	/* with text
-	width:90px;
-	left:-106px;*/
 	width:18px;
 	left:-34px;
 	padding:8px;
 }
-/* Login header */
-#loginContainer {
-}
-#loginContainer a {
-	//color:lightgray;
-	text-decoration:underline;
-}
-#loginLanguage {
-	float:left;
-	margin-right:10px;
-}
-#loginLanguage select,
-#loginLanguage input {
-	font-size:0.8em;
-}
-#loginLanguage option {
-	font-size:1.2em;
-}
-#loginStatus {
-	float:left;
-	color:white;
-}
-#loginIn {
-	float:right;
-	text-align:right;
-	color:white;
-}
-#loginUsername {
-	font-style:italic;
-}
+*/
+
+.menu-fullscreen {}
+.menu-language {}
+.menu-login {}
+.menu-login-username {}
+
 #id_username, #id_password {
 	width:80px;
 }
@@ -100,8 +75,8 @@ hr {
 	/*padding:2px;*/
 }
 .leftmenublock {
-	background:#FFFDFA;
-	border:solid 1px lightgray;
+	/*background:#FFFDFA;
+	border:solid 1px lightgray;*/
 	padding:7px;
 	margin-bottom:5px;
 }
@@ -295,9 +270,6 @@ hr {
 }
 .content_norm_file {
 	color:#4C509B;
-	font-weight:bold;
-	font-size:0.9em;
-	/*font-stretch: extra-condensed;*/
 }
 /* for verbatim extracts */
 .content_norm_verb {
@@ -380,29 +352,29 @@ hr {
 	list-style-type:none;
 }
 
-/* =================================================================================== ENQUETE BROWSE (LIST) */
-ul#eList {
-	list-style-type:none;
-}
+/* ======================== */
+
 .uploadEnqueteList ul {
 	list-style-type: none;
 }
+
+/* =================================================================================== ENQUETE BROWSE (LIST) ebrowse */
+
+ul#eList {
+	list-style-type:none;
+}
+#eList li {
+	border-bottom:1px solid lightgray;
+}
 .eBrowseEnquete {
-	margin:3px;
-	margin-bottom:17px;
+	margin:7px;
 	padding:10px;
-	border:1px solid lightgray;
-	border-top:10px solid lightgray;
-	background:white;
-	width:600px;
-	font-size:0.8em;
 }
 .eBrowseEnquete:hover {
 	background:#F2E6CE;
 	cursor:pointer;
 }
 .eBrowseEnquete h1 {
-	font-size:1.6em;
 	margin-top:0px;
 }
 .eBrowseEnqueteStatus {
@@ -412,27 +384,27 @@ ul#eList {
 }
 .eBrowseEnqueteDescription {
 	margin-left:20px;
-	/*margin-right:20px;*/
 	color:gray;
 	font-size:1em;
 }
-.eBrowseEnqueteMetaAuthor {
-	color:#585858;
-	font-weight:bold;
-}
-.eBrowseEnqueteMetaContainer{
-	height:10px;
-}
-.eBrowseEnqueteMeta, .eBrowseEnqueteContentStats {
-	font-size:0.9em;
-	color:gray;
-}
+
+/* meta list */
 .eBrowseEnqueteMeta {
-	float:left;
+	font-size:0.9em;
 }
+.eMetaList {
+	margin:3px;
+}
+
+/* statistics doc spk viz */
 .eBrowseEnqueteContentStats {
 	float:right;
 }
+.eMetaDoc {}
+.eMetaSpk {}
+.eMetaViz {}
+
+
 
 
 /* =================================================================================== GENERAL ALWAYS PRESENT IN ENQUETE */
@@ -553,8 +525,7 @@ div.currentPage {
 	margin-top:2px;
 }
 
-/* =================================================================================== DOCUMENT / SPEAKER BROWSE */
-/* Little FRISE in Tables */
+/* =================================================================================== DOCUMENT / SPEAKER BROWSE edBrowse esBrowse */
 .vizinvolved {
 	color:black;
 	margin:1px;
@@ -568,6 +539,9 @@ div.currentPage {
 	cursor:pointer;
 	opacity:0.5;	
 }
+/* jquery-UI modal css */
+
+/* deactivated */
 .content_littlefrise {
 	/* also set to 80 in d3 builder (d3_TexteContentLittleFrise.js) */
 	width:80px;
@@ -1108,6 +1082,10 @@ vizGlobalActions li {
 .vizContainer, .descrContainer {
 	padding:7px;
 	border-top:1px solid lightgray;
+}
+.descrContainer {
+	background-color: #BCCCD9; /* same color used in jquery-ui custom css for header (viz-modals) */
+	
 }
 .vizOne h1 {
 	margin:1px;

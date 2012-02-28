@@ -1,0 +1,82 @@
+<!-- =========================== BROWSE ENQUETES LIST -->
+
+{% extends "bq_base.html" %}
+
+{% load i18n %}
+
+{% block bodyid %}
+<body id="e">
+{% endblock %}
+
+{% block head %}
+
+	<script type="text/javascript" src="{{ MEDIA_URL }}/jquery/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/utilScripts.js"></script>
+	
+{% endblock %}
+
+{% block leftmenu %}
+	<div id="leftmenucontent">
+		<div class="leftmenublock">
+			{% comment %}Translators: back to home when looking at studies list{% endcomment %}
+			<a href="{% url reanalyse.reanalyseapp.views.home %}">< {% trans 'Back' %}</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content %}
+
+<! ================================================= -->
+{% if enquetesandmeta %}
+	<ul id="eList">
+	{% for e in enquetesandmeta %}
+		<li id="e_{{e.0.id}}">
+			<div class="eBrowseEnquete" onclick='window.location.href="{% url reanalyse.reanalyseapp.views.eShow e.0.id %}"'>
+			
+				{% if perms.reanalyseapp.can_make %}
+					<span class="eBrowseEnqueteStatus">	
+					[{{ e.0.get_status_display }}{% if e.0.status != '0' %} {{e.0.statuscomplete}}%{% endif %}]
+					<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eDelete e.0.id %}");$("#e_{{e.0.id}}").remove();event.stopPropagation();return false;'>delete</a>
+					</span>
+				{% endif %}
+				
+				<h1>{{e.0.name}}</h1>
+				<div class="eBrowseEnqueteMetaContainer">
+					<div class="eBrowseEnqueteMeta">
+						{% if perms.reanalyseapp.can_make %}
+						<span class="eMetaList">({{e.0.id}})</span>
+						{% endif %}
+						<span class="eMetaList">{{e.1.0}}</span>
+						<span class="eMetaList">{{e.1.1}}</span>
+						<span class="eMetaList">{{e.1.2}}</span>
+						{% if perms.reanalyseapp.can_make %}
+						<span class="eMetaList">uploaded: {{e.0.date}}</span>
+						{% endif %}
+					</div>
+					<div class="eBrowseEnqueteContentStats">
+						<span class="eMetaDoc">{{e.0.texte_set.count}}DOC</span>
+						<span class="eMetaSpk">{{e.0.speaker_set.count}}SPK</span>
+						<span class="eMetaViz">{{e.0.visualization_set.count}}VIZ</span>
+					</div>
+				</div>
+				
+				<div class="eBrowseEnqueteDescription">{% autoescape off %}{{e.0.description}}{% endautoescape %}
+				je ne suis pas deaccord je trouve que cela aurait été mieux de changer directement les fichiers meta de l'enquête en question.
+				oui.  deaccord je trouve que cela aurait été mieux de changer directement les fichiers meta d
+				</div>
+			</div>
+		</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>There is absolutely no study in this site. wtf ?</p>
+{% endif %}
+<! ================================================= -->
+
+{% endblock %}
+
+
+
+{% block bottom %}
+
+{% endblock %}

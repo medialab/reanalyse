@@ -1,0 +1,79 @@
+{% extends "bq_e_base.html" %}
+
+{% block bodyid %}
+<body id="e">
+{% endblock %}
+
+{% block head %}
+
+	<link rel="stylesheet" href="{{ MEDIA_URL }}/css/e.css"/>
+	<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+	<!-- js code to style class="text_comment" as tips -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/js/eScripts.js"></script>
+	
+{% endblock %}
+
+
+{% block leftmenu %}
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<!-- ======================================================= -->
+<a href="{% url reanalyse.reanalyseapp.views.eShow code.enquete.id %}">< Retour Enquête: {{code.enquete.name}}</a></br>
+<!-- ======================================================= -->
+<h1>Code: {{code.codetype.name}} > {{code.name}}</h1>
+<!-- ======================================================= -->
+<h1>Appears in textes:</h1>
+<ul>
+{% for t in code.textes.all %}
+	<li>
+	<a href="{% url reanalyse.reanalyseapp.views.edShow t.id %}">{{t.name}}</a> ({{t.quotation_set.count}} Quotations)
+		<!--
+		{% for q in t.quotation_set.all %}
+			<b>{{q.id}}</b> ({{ q.offs }}/{{ q.offe }})
+		{% endfor %}
+		-->
+	</li>
+{% endfor %}
+</ul>
+<!-- ======================================================= -->
+
+{% comment %}
+<!-- 
+<h1>May correspond to Word/Sentence:</h1>
+<ul>
+{% for wentity in code.wordentity_set.all %}
+	<li>
+	Word: {{ wentity.content }}
+	from Speaker :
+	<a href="{% url reanalyse.reanalyseapp.views.epShow wentity.sentence.intervention.speaker.id %}">{{ wentity.sentence.intervention.speaker.name }}</a> ({{t.quotation_set.count}} times)
+	</li>
+{% endfor %}
+</ul>
+<ul>
+{% for sent in code.sentence_set.all %}
+	<li>
+	Sentence: {{ sent.content }}
+	from Speaker :
+	<a href="{% url reanalyse.reanalyseapp.views.epShow sent.intervention.speaker.id %}">{{sent.intervention.speaker.name}}</a> ({{t.quotation_set.count}} times)
+	</li>
+{% endfor %}
+</ul>
+-->
+{% endcomment %}
+
+<!-- ======================================================= -->
+
+{% endblock %}
+
+
+
+
+
+{% block bottom %}
+{% endblock %}

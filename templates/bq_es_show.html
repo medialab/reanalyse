@@ -1,0 +1,102 @@
+{% extends "bq_e_base.html" %}
+
+{% block bodyid %}
+<body id="e">
+{% endblock %}
+
+{% block enqueteheadmore %}
+
+	<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+	
+	<!-- datatables jquery plugin css -->
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/datatables/css/demo_table.css" />
+	
+{% endblock %}
+
+
+{% block leftmenumore %}
+{% endblock %}
+
+
+{% block content %}
+<div class="introHtml">
+	<!-- ======================================================= -->
+	<h1>{{ speaker.name }}</h1>
+	<div class="attTableContainer" style="width:100%;overflow:auto;">
+
+		<table class="display">
+			<thead>
+				<tr>
+					{% for a in attributes.columns %}
+					<th>
+						{{a}}
+					</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="gradeA odd">
+					{% for v in attributes.values %}
+					<td>
+						{{v}}
+					</td>
+					{% endfor %}
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	
+	{% comment %}
+	<!-- ======================================================= -->
+	<h2>{{ngrams.count}} ngrams made by solr</h2>
+		<table class="display">
+			<thead>
+			<tr>
+				<td>ngram</td>
+				<td>tfidf</td>
+				<td>nocc</td>
+				<td>used by speakers (freq)</td>
+			</tr>
+			</thead>
+			<tbody>
+			{% for ngs in ngrams %}
+			<tr class="gradeA {% cycle 'odd' 'even' %}">
+				<td>{{ngs.ngram.content}}</td>
+				<td>{{ngs.tfidf|floatformat:3}}</td>
+				<td>{{ngs.tn}}</td>
+				<td>{{ngs.ngram.df|floatformat:2}}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	{% endcomment %}
+	<!-- ======================================================= -->
+	<h2>Raw content used for solr index</h2>
+	
+		{% autoescape off %}
+		{{content}}
+		{% endautoescape %}
+	
+	<!-- ======================================================= -->
+
+	
+</div>
+{% endblock %}
+
+
+{% block enquetebottommore %}
+
+<!-- scrolling div by hand (jquery plugin) -->
+<script type="text/javascript" src="{{ MEDIA_URL }}/js/dragscrollable.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {		
+		$('.attTableContainer').dragscrollable({acceptPropagatedEvent:true});
+	});
+	
+		
+</script>	
+
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+<!-- for Internationalization en/fr -->
+{% load i18n %}
+
+	<!-- ============================================== -->
+	
+	{% block logolink %}{% url reanalyse.reanalyseapp.views.home %}{% endblock logolink %}
+	
+	{% block logomoto %}{% trans 'a project from' %} <a href="http://cdsp.sciences-po.fr/">CDSP</a> / <a href="http://medialab.sciences-po.fr/">médialab</a> / <a href="http://www.sciences-po.fr/">Sciences-Po</a>{% endblock logomoto %}
+
+	{% block menupages %}
+		<ul>
+			<li class="menu-project {%if bodyid == 'project'%}menuCurrent{%endif%}">
+				<div class="icon-outer"><div class="icon"></div></div>
+				{% comment %}Translators: Main top menu choices{% endcomment %}
+				<a href="{% url reanalyse.reanalyseapp.views.home %}">{% trans 'Project' %}</a></li>
+			<li class="menu-methodology {%if bodyid == 'method'%}menuCurrent{%endif%}">
+				<div class="icon-outer"><div class="icon"></div></div>
+				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=method">{% trans 'Methodology' %}</a></li>
+			<li class="menu-access {%if bodyid == 'access'%}menuCurrent{%endif%}">
+				<div class="icon-outer"><div class="icon"></div></div>
+				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access">{% trans 'Access' %}</a></li>
+			<li class="menu-studies {%if bodyid == 'e'%}menuCurrent{%endif%}">
+				<div class="icon-outer"><div class="icon"></div></div>
+				<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>	
+			{% if perms.reanalyseapp.can_make %}
+			<li class="menu-admin {%if bodyid == 'admin'%}menuCurrent{%endif%}">
+				<div class="icon-outer"><div class="icon"></div></div>
+				<a href="{% url reanalyse.reanalyseapp.views.eAdmin %}">{% trans 'Admin' %}</a></li>
+			{% endif %}
+		</ul>
+	{% endblock %}
+	
+	<!-- ============================================== -->
+	
+	{% block settings %}
+
+		<div id="menu-fullscreen">
+			<span class="setFullscreen On"><a href="" onclick="toggleFullScreenMode();return false;">fullcreenon</a></span>
+			<span class="setFullscreen Off" style="display:none";><a href="" onclick="toggleFullScreenMode();return false;">fullcreenoff</a></span>
+<!--
+			<div id="fullsContainer">
+				<img id="fullsOffImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_off.png" alt="description" style="display:none;"/>
+				<img id="fullsOnImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_on.png" alt="description"/>
+			</div>
+-->
+		</a>
+		<!-- ======================== -->
+		<div id="menu-language">
+			{% get_language_info for LANGUAGE_CODE as lang %}
+			{% get_language_info_list for LANGUAGES as languages %}
+			{% for language in languages %}
+				<span class="setLan"><a href="" id="setLan_{{language.code}}">{{language.name_local}}</a></span>
+				<script type="text/javascript">
+					$("#setLan_{{language.code}}").click(function(e){
+						$.post('/reanalyse/i18n/setlang/',{ next:'{{request.path}}', language:'{{language.code}}'});
+					});
+				</script>
+			{% endfor %}
+			
+			{% comment %}
+			<!--<form action="/reanalyse/i18n/setlang/" method="post" id="langform">
+				{% csrf_token %}
+				<input name="next" type="hidden" value="{{ request.build_absolute_uri }}" />
+				<select name="language" id="langselect">
+					{% get_language_info_list for LANGUAGES as languages %}
+					{% for language in languages %}
+					<option {% if lang.code == language.code %}selected="selected"{% endif %} value="{{ language.code }}">
+					{{ language.name_local }}
+					</option>
+					{% endfor %}
+				</select>
+				<script type="text/javascript">
+					$("#langselect").change(function(e){ $("#langform").submit();});
+				</script>
+			</form>-->
+			{% endcomment %}
+			
+		</div>
+		<!-- ======================== -->
+		<div id="menu-login">
+			{% if user.is_authenticated %}
+				<span id="menu-login-username">{{ user.username }}</span>
+				<a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>
+				{% comment %}<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login">login</a>{% endcomment %}
+			{% endif %}
+		</div>
+	{% endblock %}
+
+	<!-- ============================================== -->
+	
+	{% block sidebar %}
+		{% block leftmenu %}
+		{% endblock %}
+	{% endblock %}
+
+	{% block pagecontent %}
+		{% block contenttop %}
+			<!-- top scrollfixed for involved viz -->
+		{% endblock %}
+		{% block content %}
+			<!-- main page content -->
+		{% endblock %}
+	{% endblock %}
+
+	
+	{% block headenquetetitle %}
+	{% endblock %}
+	
+	
+	<!-- ============================================== -->
+	
+	{% block bottomscripts %}
+	<script type="text/javascript">
+	$(document).ready(function() {
+	
+		//////////////////////////////////////////// This piece of code is from django doc, allowing to ajax POST
+		
+		$(document).ajaxSend(function(event, xhr, settings) {
+		    function getCookie(name) {
+		        var cookieValue = null;
+		        if (document.cookie && document.cookie != '') {
+		            var cookies = document.cookie.split(';');
+		            for (var i = 0; i < cookies.length; i++) {
+		                var cookie = jQuery.trim(cookies[i]);
+		                // Does this cookie string begin with the name we want?
+		                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+		                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                    break;
+		                }
+		            }
+		        }
+		        return cookieValue;
+		    }
+		    function sameOrigin(url) {
+		        // url could be relative or scheme relative or absolute
+		        var host = document.location.host; // host + port
+		        var protocol = document.location.protocol;
+		        var sr_origin = '//' + host;
+		        var origin = protocol + sr_origin;
+		        // Allow absolute or scheme relative URLs to same origin
+		        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+		            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+		            // or any other URL that isn't scheme relative or absolute i.e relative.
+		            !(/^(\/\/|http:|https:).*/.test(url));
+		    }
+		    function safeMethod(method) {
+		        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		    }
+		
+		    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+		        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+		    }
+		});
+	});
+	</script>
+	
+	{% block bottom %}
+		<!-- for more onload javascripts -->
+	{% endblock bottom %}
+	
+	{% endblock bottomscripts %}
+		
+
+
+

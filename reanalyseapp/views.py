@@ -111,9 +111,13 @@ def checkSolrProcess():
 ###############################
 @login_required
 def killSolrProcess(request):
-	killcmd = "kill `ps -ef | grep "+SOLR_JARNAME+" | grep -v grep | awk '{print $2}'`"
-	os.system(killcmd)
-	return HttpResponse("solr killed", mimetype="application/json")
+	if request.user.is_staff:
+		killcmd = "kill `ps -ef | grep "+SOLR_JARNAME+" | grep -v grep | awk '{print $2}'`"
+		os.system(killcmd)
+		res = {'status':"solr killed"}
+	else:
+		res = {'status':"nothing done. you need rights to do it"}
+	return HttpResponse(simplejson.dumps(res,indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
 
 
@@ -195,6 +199,24 @@ def logoutuser(request):
 	logout(request)
 	return redirect(settings.LOGIN_REDIRECT_URL)
 ###########################################################################
+
+
+
+
+###########################################################################
+# fetching html pages stored in template, or stored html content in db
+def getStaticHtmlContent(name,lang):
+	filepath = settings.REANALYSESITECONTENTPATH + name+'_content_'+lang+'.html'
+	sc,isnew = SiteContent.objects.get_or_create(name=name,lang=lang.upper(),description=name)
+	# if no object exists in db, get file from templates folder
+	if isnew:
+		contenthtml = getContentOfFile(filepath)
+		sc.contenthtml = contenthtml
+		sc.save()
+	else:
+		contenthtml = sc.contenthtml
+	return contenthtml
+###########################################################################
 def home(request):
 	# (p)pname 	is the menu section		'project','method','access',...
 	# (q)spname	is the subpage			'0','1' for subsections		OR	'login','register' for login
@@ -203,25 +225,18 @@ def home(request):
 	spname = request.GET.get('q','0')
 	ctx={}
 	
+	curLang = request.LANGUAGE_CODE
+	curUser = request.user
+
 	################################################################################### STATIC PAGE (PROJECT/METHOD)
 	if pname in ['project','method']:
 		# temp (remove once all pages activated)
 		if pname=='method' and spname=='0':
 			spname='1'
-
-		# split html file based on <h1> tags and return parts
-		lang = request.LANGUAGE_CODE
-		filepath = settings.REANALYSESITECONTENTPATH + pname+'_content_'+lang+'.html'
 		
-		sc,isnew = SiteContent.objects.get_or_create(name=pname,lang=lang.upper(),description=pname)
-		# if no object exists in db, get file from templates folder
-		if isnew:
-			contenthtml = getContentOfFile(filepath)
-			sc.contenthtml = contenthtml
-			sc.save()
-		else:
-			contenthtml = sc.contenthtml
-			
+		contenthtml = getStaticHtmlContent(pname,curLang)
+		
+		# split html file based on <h1> tags and return parts
 		pageparts = re.split('<h1>',contenthtml)[1:]
 		contenthtml = '<h1>'+pageparts[int(spname)]
 		subpages = []
@@ -237,24 +252,23 @@ def home(request):
 	
 	#################################################################################### LOGIN/REGISTER PAGE (ACCESS)
 	if pname=='access':
-		if spname=='0':
+ 		if spname=='0':
+ 			spname='login'
+ 		if curUser.is_authenticated():
+ 			# get htmlcontent
+			ctx.update({'contenthtml':getStaticHtmlContent('access',curLang)})
 			spname='register'
-		if spname=='login':
+ 		if spname=='login':
+ 			# get htmlcontent
+			ctx.update({'contenthtml':getStaticHtmlContent('access',curLang)})
 			################################################ Login form
 			loginform = AuthenticationForm(None, request.POST or None)
-			ctx.update({'form':loginform})
+			ctx.update({'form_login':loginform})
 			if loginform.is_valid():
 				login(request, loginform.get_user())
 				nextpage = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
 				return redirect(nextpage)
-	
-		if spname=='register':
-			curUser = request.user
-			# get table with status
-			lang = request.LANGUAGE_CODE
-			filepath = settings.REANALYSESITECONTENTPATH + 'access_content_'+lang+'.html'
-			contenthtml = getContentOfFile(filepath)
-			ctx.update({'contenthtml':contenthtml})
+ 		if spname=='register':
 			################################################ In case of user creation
 			if not curUser.has_perm('reanalyseapp.can_browse'):
 				if request.method == 'POST':
@@ -277,7 +291,7 @@ def home(request):
 					footer = '\n\nPlease go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(new_user.id)+' to activate this user.'
 					message += '\n\n==============================\n'+footer
 					send_mail(subject,message,new_user.email,[settings.STAFF_EMAIL],fail_silently=False)
-				ctx.update({'form':form})
+				ctx.update({'form_request':form})
 			################################################
 			else: # can_browse, asking for can_explore	
 				eid = int(request.GET.get('e',-1))
@@ -295,10 +309,10 @@ def home(request):
 						# rather send mail to CDSP staff
 						subject = '[reanalyse] reqEXPLORE: '+wantedenquete.name
 						message = 'motivation:\n\n'+form.cleaned_data['motivation']
-						footer = 'Please go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(curUser.id)+'  to add permission for this study (permission: EXPLORE e_'+wantedenquete.id+')/'
+						footer = 'Please go to '+settings.REANALYSEURL+'/reanalyse/admin/auth/user/'+str(curUser.id)+'  to add permission for this study (permission: EXPLORE e_'+str(wantedenquete.id)+')/'
 						message += '\n\n==============================\n'+footer
 						send_mail(subject,message,curUser.email,[settings.STAFF_EMAIL],fail_silently=False)
-					ctx.update({'form':form,'wantedenquete':wantedenquete})
+					ctx.update({'form_request':form,'wantedenquete':wantedenquete})
 				else:
 					# no enqueteid was specified
 					donothing=1
@@ -337,7 +351,7 @@ def getTailOfFile(filepath,count):
 def eAdmin(request):
 	### unique foldername if some upload is done 
 	sessionFolderName = "up_"+str(time())
-	ctx = {'bodyid':'upload','pid':'upload','foldname':sessionFolderName}
+	ctx = {'bodyid':'admin','foldname':sessionFolderName}
 	
 	### todo: move that somewhere else to do it just when website/database is reset
 	try:
@@ -633,6 +647,7 @@ def eseShow(request,eid):
 
 ###########################################################################
 def getStrFromVizList(relViz):
+	# css class vizinvloved is then made popup-able using js
 	vizStr='<div style="display:none;">'+str(len(relViz))+'</div>'
 	for v in relViz:
 		vizStr+='<div title="'+v.name+'" class="vizinvolved viztype_'+v.viztype+'" id="viz_'+str(v.id)+'">'+str(v.id)+'</div>'
@@ -715,7 +730,7 @@ def edBrowse(request,eid):
 		#	statusStr += ' <a href="'+linkDl+'">xhtml</a>'
 		
 		# VIZ
-		vizStr = getStrFromVizList(getRelatedViz(textes=[t]))
+		vizStr = getStrFromVizList(getRelatedViz(textes=[t],user=request.user))
 		
 		# SPEAKERS
 		if t.doctype=='TEI':
@@ -811,9 +826,9 @@ def esBrowse(request,eid):
 	# nb: color cells {'label':''} managed by javascript were commented
 	if request.user.has_perm('reanalyseapp.can_make'):
 		#colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'},{'label':'django_ngrams '+str(Ngram.objects.count())}]
-		colarray=[{'label':'Id'},{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'},{'label':'Ngrams'}]
+		colarray=[{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'},{'label':'Ngrams'},{'label':'Id'}]
 	else:
-		colarray=[{'label':'Id'},{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'}]
+		colarray=[{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'}]
 		
 	for att in attributeTypes:
 		coldict={'id':att.id, 'label':att.name}
@@ -843,7 +858,7 @@ def esBrowse(request,eid):
 			'<span style="display:none;">'+s.get_ddi_type_display()+'</span>'+\
 			'<span class="imSpk'+s.get_ddi_type_display()+'"></span>'
 
-		vizStr = getStrFromVizList(getRelatedViz(speakers=[s]))
+		vizStr = getStrFromVizList(getRelatedViz(speakers=[s],user=request.user))
 		
 		
 		ngramcount = str(s.ngramspeaker_set.count())
@@ -862,9 +877,9 @@ def esBrowse(request,eid):
 		########################## VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
 			#vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr,ngramsStr]
-			vals = [s.id,nameLinkStr,nameStr,vizStr,countStr,ngramsStr]
+			vals = [nameLinkStr,nameStr,vizStr,countStr,ngramsStr,s.id]
 		else:
-			vals = [s.id,nameLinkStr,nameStr,vizStr,countStr]
+			vals = [nameLinkStr,nameStr,vizStr,countStr]
 						
 		## one column for each attribute
 		for k,attype in enumerate(attributeTypes):
@@ -885,7 +900,7 @@ def esBrowse(request,eid):
 	
 	# sScrollXInner for datatables (because difficult to estimate width needed to put attributes
 	# lets give 100px for each column
-	ctx.update({'sScrollXInner':len(colarray)*400})
+	ctx.update({'sScrollXInner':200+len(colarray)*100})
 	
 	ctx.update({'sTable':sTable,'attributeTypes':colarray})
 	updateCtxWithPerm(ctx,request,e)
@@ -1729,8 +1744,12 @@ def getVizHtml(request,eid):
 	e = Enquete.objects.get(id=eid)
 	vId = request.GET.get('vizid',0)
 	v = Visualization.objects.get(id=vId)
-	ctx={'enquete':e,'v':v,'nk':vId}
-	return render_to_response('bq_render_v.html',ctx, context_instance=RequestContext(request))
+	ctx = {'enquete':e,'v':v,'nk':vId}
+	t = loader.get_template('bq_render_v.html')
+	d={}
+	d['html'] 			= t.render(Context(ctx))
+	d['description'] 	= v.description
+	return HttpResponse(simplejson.dumps(d,indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
 
 
