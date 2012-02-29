@@ -92,7 +92,7 @@ class Enquete(models.Model):
 ##############################################################################
 class Visualization(models.Model):
 	enquete = models.ForeignKey(Enquete)
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=200)
 	locationpath = models.CharField(max_length=250) # mainly for gexf graphs
 	description = models.TextField()
 	viztype = models.CharField(max_length=50)

@@ -89,7 +89,7 @@
 		<li id="menu-login">
 			{% if user.is_authenticated %}
 				<span id="menu-login-username">{{ user.username }}</span>
-				<a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>
+				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a></div></div>
 				{% comment %}<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login">login</a>{% endcomment %}
 			{% else %}
 				<div class="icon-outer"><div class="icon"></div></div>

@@ -123,13 +123,16 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 				textes = Texte.objects.filter(doctype='TEI')
 			for t in textes:
 				spks = t.speaker_set.all()
-				newVizu = makeVisualizationObject(e,typ,descr)
-				d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
-				for spk in spks:
-					newVizu.speakers.add(spk)
-				newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
-				newVizu.status = '0'
-				newVizu.save()
+				if len(spks)>0:
+					newVizu = makeVisualizationObject(e,typ,descr)
+					d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
+					for spk in spks:
+						newVizu.speakers.add(spk)
+					newVizu.json = simplejson.dumps(d,indent=2,ensure_ascii=False)
+					newVizu.status = '0'
+					newVizu.save()
+				else:
+					logger.info("["+str(e.id)+"] No speaker for TagCloud in text: "+str(t.id))
 		####### one cloud for group of speaker
 		else:
 			newVizu = makeVisualizationObject(e,typ,descr)
@@ -903,7 +906,6 @@ def visMakeTagCloudFromTermVectors(e,param):
 	wordsArr=[]
   	
   	############################################# SOLR QUERY !
-  	#if len(speakers)>1:
 	d = getSolrTermVectorsDict(speakers,'ngrams',count=howmany,mintn=3)
 	for w in d.keys():
 		dic = {'word':w,'count':d[w]['tfidf']}

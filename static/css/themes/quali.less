@@ -2,6 +2,7 @@
 @header-background: #C9C9C9;
 @header-background-light: #f7f7f7;
 @header-background-medium: #E3E4E5;
+@header-background-lighter: #f4f4f4;
 @header-height: 87px;
 
 @header-line-height: 3px;
@@ -20,6 +21,8 @@
 
 // colors
 @base-color: #0099CC;
+@line-color: #dcdcdc;
+@dark: #505050;
 
 @images: "../../img/";
 @images-sprite: "../../img/global-reanalyse.png";
@@ -52,7 +55,7 @@ body{
 	background: @the-background;
 	font-family: 'Open sans', serif;
 	font-size: 13px;
-	line-height: 19px;
+	line-height: 1.617em;
 }
 
 a{
@@ -71,6 +74,7 @@ h1,h2,h3{
 
 h1{
 	font-size: 2em;
+	line-height: 1.2em;
 }
 h2{
 	font-size: 3em;
@@ -161,6 +165,8 @@ header{
 		overflow:hidden;
 		height: @header-height;
 	}
+	
+	
 	#menu-pages-outer{
 		background: @header-background;
 		
@@ -352,6 +358,27 @@ header{
 			}
 			
 		}
+		#menu-login-username{
+			visibility: hidden
+		}
+		#logout-outer{
+			position:relative;
+			#logout-inner{
+				position:absolute;
+				left:50%;	
+				margin-left: -25px;
+				width: 50px;
+				background: #303030;
+				text-align: center;
+			}
+			margin-top: -@header-height - @grid-padding;
+			height: auto	;
+			
+			a{
+				padding-top: 0;
+				color: @base-color;	
+			}
+		}
 		
 	}
 	
@@ -401,7 +428,15 @@ footer{
 }
 
 section{
-
+	#logomoto{
+		text-transform: uppercase;	
+		border-top: 1px solid @line-color;
+		padding-top: @grid-padding;
+		text-align: center;
+	}
+	
+	
+	
 	#view, #page{
 		background: @page-background;
 	}
@@ -423,14 +458,59 @@ section{
 	#sidebar{
 		background: url( "@{images-sprite}" ) repeat-y;
 		background-position: -236px 0px;
-		padding: @sidebar-padding;
+		padding: 0 @grid-padding @sidebar-padding @sidebar-padding ;
 		min-height:200px;
 		font-family: 'MisoRegular', sans-serif;
 	}
 	.allPage{
 		text-transform: uppercase;
-		font-size: 1.2em;	
+		font-size: 1.2em;
+		height: auto;
+		padding: @grid-padding 0;
+		border-left:0px solid transparent;
+		a{
+			padding-left:@grid-padding / 2;	
+		}
+		&:hover{
+			border-left:0px solid transparent;
+			a{
+				color: black;	
+				background: @header-background-lighter;
+			}
+		}
 	}
+	.currentPage{
+		background: transparent;
+		a{
+			color: @base-color;
+		}
+		border-left:0px solid transparent;
+		
+		&:before{
+			content:" ";
+			position:absolute;
+			.sprited(100px, 260px);
+			width:37px;
+			height:36px;
+			margin-left:-43px;
+			margin-top:-5px
+		}
+	}
+	
+	.contentHtml{
+		h1{
+			padding-bottom: @grid-padding *2;
+			margin-bottom: @grid-padding * 2;
+			color:@dark;
+			text-transform: uppercase;
+			border-bottom: 1px solid @line-color;
+		}
+		p{
+			text-indent: 0px;margin:0;
+			margin-bottom: @grid-padding;
+		}	
+	}
+	
 }
 
 // ids

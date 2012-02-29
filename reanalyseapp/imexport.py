@@ -11,6 +11,7 @@ import csv
 
 from reanalyse.reanalyseapp.models import *
 from reanalyse.reanalyseapp.utils import *
+from reanalyse.reanalyseapp.visualization import *
 
 # for enquete permission
 from django.contrib.auth.models import Group,Permission
@@ -28,6 +29,9 @@ from lxml import etree
 # to launch commandline apps (unrtf)
 from subprocess import PIPE, Popen
 
+from haystack.management.commands import update_index
+
+
 ###########################################################################
 # LOGGING
 ###########################################################################
@@ -42,6 +46,57 @@ nullhandler = logger.addHandler(NullHandler())
 
 
 
+###########################################################################
+def doFiestaToEnquete(e):
+	logger.info("["+str(e.id)+"] enquete object made. now parsing docs, making viz, etc...")
+	
+	e.status='1'
+	e.statuscomplete=0
+	e.save()
+	
+	makeViz(e,'Overview')		# for left-menu-facets
+	makeViz(e,'Attributes')		# with all speakers (since they should be defined in meta_speakers.csv table)
+	
+	####### PARSE TEI and UPDATE INDEX (and save statuscomplete to know loading status)
+	# we look at '5'='Waiting' TEI Documents...
+	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
+	docsCur = 0
+	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
+		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id) )
+		t.parseXml()
+		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: "+str(t.id) )
+		update_index.Command().handle(verbosity=0)
+		logger.info("["+str(e.id)+"] solr index updated")
+		docsCur+=1
+		e.statuscomplete = int(docsCur*100/docsTotal)
+		e.save()
+		
+		# let's make stream timeline viz for each text
+		#logger.info("make streamtimeline viz")
+		try:
+			makeViz(e,"TexteStreamTimeline",textes=[t])
+		except:
+			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz for texte id: "+str(t.id))
+		
+	logger.info("["+str(e.id)+"] all texts were sucessfully parsed")
+	
+	####### UPDATE ALL TFIDF
+	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
+	logger.info("["+str(e.id)+"] now updating tfidf")
+	makeAllTfidf(e)
+	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
+	
+	if e.speaker_set.count()>0:
+		makeViz(e,'Cloud_SolrSpeakerTagCloud')
+		makeViz(e,'Graph_SpeakersSpeakers')
+		makeViz(e,'Graph_SpeakersWords')
+		makeViz(e,'Graph_SpeakersAttributes')
+				
+	e.status='0'
+	e.save()
+	logger.info("["+str(e.id)+"] import process done")
+###########################################################################
+
 
 ###########################################################################
 def importEnqueteUsingMeta(folderPath):
@@ -50,15 +105,23 @@ def importEnqueteUsingMeta(folderPath):
 	spkPath=folderPath+'_meta/meta_speakers.csv'
 	codPath=folderPath+'_meta/meta_codes.csv'
 	
-	logger.info("PARSING: "+stdPath)
+	logger.info("PARSING STUDY: "+stdPath)
 	###### Parsing Study metadatas (the only file mandatory!)
 	std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
 	headers = std.fieldnames
 	allmeta={}
+	study_ddi_id 	= 'no idno value found in csv'
+	study_name		= 'no titl value found in csv'
 	for row in std:
 		if row['*field']!='*descr':
-			field = row['*field'][1:] #removing *
-			label = row['*name']
+			field = row['*field'].lower()
+			field = field.replace(" ","")
+			if field.startswith("*"):
+				field = field[1:] #removing *
+			try:
+				label = DDINAMES[field]
+			except:
+				label = "KEYERROR:"+field
 			value = row['*value']
 			if field not in allmeta.keys():
 				allmeta[field] = {}
@@ -66,7 +129,7 @@ def importEnqueteUsingMeta(folderPath):
 			else:
 				allmeta[field]['value'] += [value]
 			allmeta[field]['label'] = label
-			if field=='IDNo':
+			if field=='idno':
 				study_ddi_id = value
 			if field=='titl':
 				study_name = value
@@ -80,7 +143,7 @@ def importEnqueteUsingMeta(folderPath):
 	
 	# create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
-	permname = 'EXPLORe_'+str(newEnquete.id) + ' '+newEnquete.name
+	permname = 'EXPLORe_'+str(newEnquete.id)
 	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name=permname,content_type=content_type)
 	
 	if os.path.exists(docPath):
@@ -89,66 +152,69 @@ def importEnqueteUsingMeta(folderPath):
 		###### Parsing Documents
 		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
 		for row in doc:
-			if row['*id']!='*descr':
-				file_location = 	folderPath+row['*file']
-				file_extension = 	file_location.split(".")[-1].upper()
-				doc_name = 			row['*name']
-				doc_category = 		row['*category'].lower()
-				doc_description = 	row['*description']
-				doc_location = 		row['*location']
-				try:
-					doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
-				except:
-					doc_date = datetime.datetime.today()
-				doc_public = 		doc_category in DOCUMENT_CATEGORIES
-				logger.info(eidstr+"found doc in meta_documents.csv: "+row['*file'])
-				newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
-				try:
-					newDocument.filesize = int(os.path.getsize(file_location)/1024)
-				except:
-					newDocument.filesize = 0
-				newDocument.doctype = file_extension[:3]
-				newDocument.doccat = doc_category
-				newDocument.description = doc_description
-				newDocument.save()
-				if not os.path.exists(file_location):
-					# means that it may be an external link
-					newDocument.doctype='LNK'
-					newDocument.locationpath = row['*file']
-					newDocument.status='0'
-					newDocument.save()	
-				else:
-					if file_extension in ['XML','PDF','HTM','CSV']:
-						if file_extension=='XML':
-							if doc_category=='verbatim':
-								newDocument.status='5'
-								newDocument.doctype='TEI'
+			try:
+				if row['*id']!='*descr':
+					file_location = 	folderPath+row['*file']
+					file_extension = 	file_location.split(".")[-1].upper()
+					doc_name = 			row['*name']
+					doc_category = 		row['*category'].lower()
+					doc_description = 	row['*description']
+					doc_location = 		row['*location']
+					try:
+						doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
+					except:
+						doc_date = datetime.datetime.today()
+					doc_public = 		doc_category in DOCUMENT_CATEGORIES
+					logger.info(eidstr+"found doc in meta_documents.csv: "+row['*file'])
+					newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
+					try:
+						newDocument.filesize = int(os.path.getsize(file_location)/1024)
+					except:
+						newDocument.filesize = 0
+					newDocument.doctype = file_extension[:3]
+					newDocument.doccat = doc_category
+					newDocument.description = doc_description
+					newDocument.save()
+					if not os.path.exists(file_location):
+						# means that it may be an external link
+						newDocument.doctype='LNK'
+						newDocument.locationpath = row['*file']
+						newDocument.status='0'
+						newDocument.save()	
+					else:
+						if file_extension in ['XML','PDF','HTM','CSV']:
+							if file_extension=='XML':
+								if doc_category=='verbatim':
+									newDocument.status='5'
+									newDocument.doctype='TEI'
+									newDocument.save()
+								elif doc_category=='ese':
+									esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+									newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+									newEnquete.save()
+							elif file_extension=='PDF':
+								newDocument.status='0'
 								newDocument.save()
-							elif doc_category=='ese':
-								esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
-								newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
-								newEnquete.save()
-						elif file_extension=='PDF':
-							newDocument.status='0'
-							newDocument.save()
-						elif file_extension=='HTM':
-							f = open(file_location,'r')
-							wholecontent=f.read()
-							newDocument.contenthtml=wholecontent
-							f.close()
-							newDocument.status='0'
-							newDocument.save()
-						elif file_extension=='CSV':
-							newDocument.status='0'
-							newDocument.save()
-# 						elif file_extension=='RTF':
-# 						 	try:
-# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
-# 								doc.contenthtml = theDocContentHtml
-# 								doc.contenttxt = convertUnrtfHtmlToTxt(theDocContentHtml)
-# 								doc.status="0"
-# 							except:
-# 								blabla
+							elif file_extension=='HTM':
+								f = open(file_location,'r')
+								wholecontent=f.read()
+								newDocument.contenthtml=wholecontent
+								f.close()
+								newDocument.status='0'
+								newDocument.save()
+							elif file_extension=='CSV':
+								newDocument.status='0'
+								newDocument.save()
+	# 						elif file_extension=='RTF':
+	# 						 	try:
+	# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
+	# 								doc.contenthtml = theDocContentHtml
+	# 								doc.contenttxt = convertUnrtfHtmlToTxt(theDocContentHtml)
+	# 								doc.status="0"
+	# 							except:
+	# 								blabla
+			except:
+				logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:
 		logger.info(eidstr+"PARSING: no doc meta found")
 	
@@ -168,18 +234,21 @@ def importEnqueteUsingMeta(folderPath):
 				newAttType,isnew = AttributeType.objects.get_or_create(enquete=newEnquete,publicy=publicy,name=catval)
 				attributetypes.append(newAttType)
 		for row in spk:
-			if row['*id']!='*descr':
-				spk_id = 	row['*id']
-				spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
-				spk_name = 	row['*pseudo']
-				newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
-				for attype in attributetypes:
-					attval=row[attype.name]
-					if attval=='':
-						attval='[NC]'
-					newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
-					newSpeaker.attributes.add(newAttribute)
-				newSpeaker.save()
+			try:
+				if row['*id']!='*descr':
+					spk_id = 	row['*id']
+					spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
+					spk_name = 	row['*pseudo']
+					newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
+					for attype in attributetypes:
+						attval=row[attype.name]
+						if attval=='':
+							attval='[NC]'
+						newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
+						newSpeaker.attributes.add(newAttribute)
+					newSpeaker.save()
+			except:
+				logger.info(eidstr+" EXCEPT on meta_speakers.csv line: "+row['*id'])
 		setSpeakerColorsFromType(newEnquete)
 	else:
 		logger.info(eidstr+"PARSING: no spk meta found")

@@ -234,6 +234,53 @@ VIZTYPESDESCR = 'Please clic me to update (html) description. If you need genera
 ########################################################################################################################
 
 
+DDILABELS={}
+DDICATEGORIES={}
+DDILABELS["idno"]		="Identifiant unique"
+DDILABELS["titl"]		="Titre"
+DDILABELS["abstract"]	="Résumé"
 
+DDILABELS["description"]		="Description"
+DDILABELS["relpubl"]			="Publications"
 
+DDILABELS["discipline"]	="Discipline"
+DDILABELS["keywords"]	="Mots clefs"
+DDILABELS["topicclassification"]	="Classification"
+DDILABELS["timeperiodcovered"]	="Période couverte"
+DDILABELS["country"]		="Pays couverts"
+
+DDILABELS["authenty"]	="Auteur"
+DDILABELS["fundag"]		="Agence de financement"
+DDILABELS["grantno"]		="Bourses"
+DDILABELS["distrbtr"]	="Distributeur des données"
+DDILABELS["depositr"]	="Déposant"
+DDILABELS["locationofunitsofobservation"]	="Niveau de comparatisme"
+DDILABELS["geogcover"]		="Couverture géographique"
+DDILABELS["spatialunits"]	="Unités spatialisées"
+DDILABELS["observunits"]		="Unités d'observation"
+DDILABELS["targetgroups"]	="Groupes de population ciblés"
+DDILABELS["studydates"]		="Dates de l'enquête"
+DDILABELS["colldate"]		="Dates de récolte des données"
+DDILABELS["timedimension"]	="Périodicité"
+DDILABELS["modedatacollection"]	="Accès aux observations"
+DDILABELS["sampprocedure"]	="Echantillonnage "
+DDILABELS["weighting"]		="Segmentation"
+DDILABELS["methodofdatacollection"]	="Technique de collection"
+DDILABELS["numberoffiles"]	="Nombre de documents"
+DDILABELS["datakind"]		="Types de documents"
+DDILABELS["numberofunits"]	="Nombre d'observations"
+DDILABELS["collsitu"]		="Durée des observations"
+DDILABELS["transcription"]	="Transcription"
+DDILABELS["anonymization"]	="Anonymisation"
+DDILABELS["analysis"]		="Analyse"
+DDILABELS["langdata"]		="Language données"
+DDILABELS["langdoc"]			="Langage documentation"
+DDILABELS["accessconditions"]	="Conditions d'accès"
+DDILABELS["locarch"]				="Localisation archives"
+DDILABELS["contact"]				="Contact"
+DDILABELS["firstedition"]	="Première version"
+DDILABELS["latestedition"]	="Dernière version"
+DDILABELS["copyright"]	="copyright"
+DDILABELS["software"]	="Logiciel"
+DDILABELS["authEnty"]	="Edition"
 

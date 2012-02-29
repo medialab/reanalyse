@@ -42,6 +42,12 @@
 		<h1>Description</h1>
 		<!-- already html styled ! -->
 		{% autoescape off %}{{contenthtml}}{% endautoescape %}
+		<h1>Publications</h1>
+		<ul>
+		{% for p in publications %}
+			<li>{{p}}</li>
+		{% endfor %}
+		</ul>
 	</div>
 	<!-- ============================================================================= -->
 		

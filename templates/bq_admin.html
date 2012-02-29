@@ -32,9 +32,9 @@
 		<ol>
 			<li><b>Public users</b> (without login) can only access Overview pages for every study</li>
 			<li>When they ask for the <b>Discover status</b> [online form], an unactivated user is created, and a mail is sent to the staff team</li>
-			<li>Staff can then activate the user in the <a href="{{BASE_URL}}/admin/auth/user/">admin user list</a> panel (and send a mail to congratulate the guy).</li>
+			<li>Staff can then activate the user listed below by clicking on the username (and send a mail to congratulate the guy).</li>
 			<li>If she/he asks (on a study page) for an <b>Explore status</b> [online form], another mail is sent to the staff, including the 'motivation' field</li>
-			<li>Staff can then add the permission for <b>this</b> enquete ('EXPLORE e_[id]') to this user on the <a href="{{BASE_URL}}/admin/auth/user/">admin user list</a> panel (and reply regardly to the guy).</li>
+			<li>Staff can then add the permission for the enquete asked ('EXPLORe_[id]') to this user (and reply regardly to the guy).</li>
 		</ol>
 		<p>Current staff email adress is: <i>{{staffemail}}</i></p>
 		<table class="content_norm">
@@ -103,7 +103,7 @@
 					<ul>
 					{% if enquetes %}
 					{% for e in enquetes %}
-						<li><a href="{% url reanalyse.reanalyseapp.views.resetNgrams e.id %}"> [{{e.id}}] {{e.name}}</a></li>
+						<li><a href="{% url reanalyse.reanalyseapp.views.resetNgrams e.id %}">refetch ngrams</a> [{{e.id}}] {{e.name}}</li>
 					{% endfor %}
 					{% else %}
 						<li><i>- no study available -</i></li>
@@ -131,6 +131,7 @@
 <script src="{{ MEDIA_URL }}/fileuploader/fileuploader.js" type="text/javascript"></script>
 <link rel="stylesheet" href="{{ MEDIA_URL }}/fileuploader/fileuploader.css"/>
 <script type="text/javascript">
+	{% if page == 'upload' %}
 	///////////////////////////////////////////////////////////////////////////////////
 	function createUploader(){            
         var uploader = new qq.FileUploader({
@@ -180,6 +181,8 @@
 	$(function () {
 		createUploader(); 
   	});
+  	///////////////////////////////////////////////////////////////////////////////////
+  	{% endif %}
  
 </script>
 

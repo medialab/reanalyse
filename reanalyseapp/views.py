@@ -197,7 +197,7 @@ def eDelete(request,eid):
 		# remove uploaded/decompressed files
 		eqPath = e.locationpath
 		if eqPath.endswith('/extracted/'):
-			eqPath = '/'+'/'.join(eqPath.split('/')[:-1])
+			eqPath = '/'+'/'.join(eqPath.split('/')[:-2])
 		os.system("rm -R "+eqPath)
 		logger.info("["+str(eid)+"] removing study: "+eqPath)
 		# remove graph files if there is
@@ -490,6 +490,8 @@ def save_upload( uploaded, foldname, filename, raw_data ):
 		# could not open the file most likely
 		pass
 	return False
+#################################################
+
 ################################################################################
 @login_required
 def eParse(request):
@@ -498,74 +500,39 @@ def eParse(request):
 	upPath = settings.REANALYSEUPLOADPATH+folname+"/"
 	logger.info("PARSING UPLOADED STUDY: "+upPath )
 	
-	######## (DEPRECATED) uploaded everything at once 
-	if os.path.exists(upPath+"ddi.xml"):
-		e = importEnqueteDDI2(upPath+"ddi.xml")
-	######## archive folder
-	elif os.path.exists(upPath+"archive.zip"):
-		os.mkdir(upPath+"extracted")
-		unzipper = unzip()
-		unzipper.extract(upPath+"archive.zip",upPath+"extracted/")
-		if os.path.exists(upPath+"extracted/ddi.xml"):
-			########### (DEPRECATED) there is a ddi.xml file pointing at every other file of the study
-			e = importEnqueteDDI2(upPath+"extracted/ddi.xml")
-		elif os.path.exists(upPath+"extracted/_meta/"):
-			########### (GOOD WAY!) there is the _meta folder, containing meta_documents.csv, ...
-			e = importEnqueteUsingMeta(upPath+"extracted/")
-		else:
-			logger.info("no zipped ddi.xml file nor _meta folder found")
-	else:
-		logger.info("no ddi.xml nor archive.zip found")
-	
-	logger.info("["+str(e.id)+"] enquete imported")
-	
-	e.status='1'
-	e.statuscomplete=0
-	e.save()
-	
-	makeViz(e,'Overview')		# for left-menu-facets
-	makeViz(e,'Attributes')		# with all speakers (since they should be defined in meta_speakers.csv table)
-	
-	####### PARSE TEI and UPDATE INDEX (and save statuscomplete to know loading status)
-	# we look at '5'='Waiting' TEI Documents...
-	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
-	docsCur = 0
-	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
-		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id) )
-		t.parseXml()
-		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: "+str(t.id) )
-		update_index.Command().handle(verbosity=0)
-		logger.info("["+str(e.id)+"] solr index updated")
-		docsCur+=1
-		e.statuscomplete = int(docsCur*100/docsTotal)
-		e.save()
-		
-		# let's make stream timeline viz for each text
-		#logger.info("make streamtimeline viz")
+	######## look for an .zip file
+	thezip=""
+	for f in os.listdir(upPath):
+		if f.endswith('.zip'):
+			thezip=f
+			
+	######## unzip and parse
+	if thezip!="" and os.path.exists(upPath+thezip):
 		try:
-			makeViz(e,"TexteStreamTimeline",textes=[t])
+			os.mkdir(upPath+"extracted")
+			unzipper = unzip()
+			unzipper.extract(upPath+thezip,upPath+"extracted/")
 		except:
-			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz for texte id: "+str(t.id))
-		
-	logger.info("["+str(e.id)+"] all texts were sucessfully parsed")
+			logger.info("EXCEPT de-zip-ing archive. wtf ?")
+			
+		enqueterootpath = ""
+		if os.path.exists(upPath+"extracted/_meta/"):
+			enqueterootpath = upPath+"extracted/"
+		else:
+			firstlevelfolder=""
+			for f in os.listdir(upPath+"extracted/"):
+				if os.path.exists(upPath+"extracted/"+f+"/_meta/"):
+					enqueterootpath = upPath+"extracted/"+f+"/"
+		if enqueterootpath!="":
+			# make object and fetch _meta.csv files 
+			e = importEnqueteUsingMeta(enqueterootpath)
+			# parse docs, make viz, blabla...
+			doFiestaToEnquete(e)
+		else:
+			logger.info("EXCEPT no _meta folder found in zip")
+	else:
+		logger.info("EXCEPT no zip file was uploaded")
 	
-	####### UPDATE ALL TFIDF
-	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
-	logger.info("["+str(e.id)+"] now updating tfidf")
-	makeAllTfidf(e)
-	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
-	
-	if e.speaker_set.count()>0:
-		makeViz(e,'Cloud_SolrSpeakerTagCloud')
-		makeViz(e,'Graph_SpeakersSpeakers')
-		makeViz(e,'Graph_SpeakersWords')
-		makeViz(e,'Graph_SpeakersAttributes')
-				
-	e.status='0'
-	e.save()
-	logger.info("["+str(e.id)+"] import process done")
-
-	d['status']='enquete imported'
 	json = simplejson.dumps(d,indent=4,ensure_ascii=False)
 	return HttpResponse(json, mimetype="application/json")
 ################################################################################
@@ -650,15 +617,20 @@ def eShow(request,eid):
 	meta = e.meta()
 	metas=[]
 	for m in meta.keys():
-		if m!='description':
+		if m!='description' and m!='relpubl':
 			metas.append([ meta[m]['label'] , meta[m]['value'][0] ])
 
 	try:
 		contenthtml	= meta['description']['value'][0]
 	except:
-		contenthtml = "There wasn't any *description field in the meta_study.csv, sorry."
-	
-	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metas':metas,'contenthtml':contenthtml}
+		contenthtml = "There wasn't any description field in the meta_study.csv, sorry."
+
+	try:
+		publications = meta['relpubl']['value']
+	except:
+		publications = ["There wasn't any *description field in the meta_study.csv, sorry."]
+			
+	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metas':metas,'contenthtml':contenthtml,'publications':publications}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	return render_to_response('bq_e_show.html',ctx, context_instance=RequestContext(request))
