@@ -309,14 +309,10 @@ function buildD3_Attributes(thedata,theId) {
 		
 		//////////////// attributetype label (on top)
 		attlabels.append("div")
-			.style("font-size","0.8em")
-			.style("display","inline-block")
-			.style("position","absolute")
+			.attr("class","viz_Attributes_Types")
 			.style("width",chartStep+"px")
 			.style("top",0 )
 			.style("left",attx+"px")
-			.style("color","black")
-			.style("text-align","center")
 			.text(attNames[j].name);
 		
 		/////////////// sort array values based on...
@@ -411,15 +407,11 @@ function buildD3_Attributes(thedata,theId) {
 			var posy = totalH-yScale(cury);
 			var valLab = valuelabels.append("div")
 				.attr("id",function(dd,ii){return "label_val_"+g.id;} )
-				.attr("class","label")
+				.attr("class","label viz_Attributes_Val")
 				.style("display","none")
-				.style("position","absolute")
 				.style("width",chartStep+1+"px")
 				.style("left",attx-1+"px" )
 				.style("background",valLabelCol)
-				.style("color","black")
-				.style("font-size","0.8em")
-				.style("text-align","center")
 				.text(g.name);
 			// NB: using jquery 'cause unable to get calculated size with d3 (?)
 			var curH = $(unikid+"#label_val_"+g.id).height();

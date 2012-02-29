@@ -145,29 +145,25 @@ hr {
 .imSpkProtagonist { background-image: url("../images/user_gray.png"); display:inline-block; width:16px; height:16px; }
 
 
-/* =================================================================================== HOME / INTRO / (project/methodology/access/....) HTML CONTENT TEXTS */
+/* =================================================================================== HOME / INTRO / (project/methodology/access/admin....) HTML CONTENT TEXTS */
 /* admin / upload page */
 .logconsole {
 	font-size: 0.75em;
 	line-height: 1em;
 	color:gray;
 }
-
-.introDiv {
-
-}
 .inputButt {
 	margin-top:5px;
 	margin-left:5px;
 }
-.introHtml h1, .introDiv h1 {
+.contentHtml h1 {
 	margin-top:10px;
 	margin-bottom:7px;
 	padding-top:10px;
 	padding-bottom:5px;
 	border-bottom:1px solid lightgray;
 }
-.introHtml h2, .introDiv h2 {
+.contentHtml h2{
 	margin-top:10px;
 	margin-bottom:7px;
 	font-size: 1.3em;
@@ -175,17 +171,17 @@ hr {
 	padding-bottom:5px;
 	border-bottom:1px solid lightgray;
 }
-.introHtml p {
+.contentHtml p {
 	margin:10px;
 	text-align:justify;
 	text-indent:30px;
 }
-.introHtml ul, .introHtml ol {
+.contentHtml ul, .contentHtml ol {
 	margin:5px;
 	margin-left:20px;
 	list-style-type:none;
 }
-.introHtml li {
+.contentHtml li {
 	background-image: url('../images/text_bullet.png');
 	background-repeat: no-repeat;
 	background-position: 0 0.4em;
@@ -223,7 +219,7 @@ hr {
 	border-left:#4C509B solid 3px;
 }
 .content_norm h2 {
-	/* h2 is managed by .introhtml */
+	/* h2 is managed by .contentHtml */
 }
 .content_norm h3 {
 	font-size:1.4em;
@@ -377,6 +373,9 @@ ul#eList {
 	float:right;
 	color:gray;
 	margin-left:4px;
+}
+.eProblem {
+	color:red;
 }
 .eBrowseEnqueteDescription {
 	margin-left:20px;
@@ -1013,10 +1012,58 @@ a.res_middle_link {
 
 
 /* =================================================================================== VISUALIZATIONS (d3.js created objects) */
+/* color is set in template based on speaker model color */
+
 /* TextStreamTimeline */
-/* svg path - color is set in template based on speaker model color */
 .viz_TextStreamTimeline_Graph { stroke:gray; opacity:0.6; }
 .viz_TextStreamTimeline_TicksTxt { fill:gray; }
+
+.viz_colparvb_question 		{ fill:#66CCFF ; }
+.viz_colparvb_silence 		{ fill:#BFBD9F ; }
+.viz_colparvb_hesitation 	{ fill:#EC993B ; }
+.viz_colparvb_laugh 		{ fill:#D9FF00 ; }
+.viz_colparvb_inaudible 	{ fill:#ED5300 ; }
+.viz_colparvb_break 		{ fill:#ED5300 ; }
+.viz_colparvb_comment 		{ fill:#517368 ; }
+.viz_colparvb_time 			{ fill:#66CCFF ; }
+
+
+/* Attributes */
+.viz_Attributes_Types {
+	font-size:1em;
+	display:inline-block;
+	position:absolute;
+	color:black;
+	text-align:center;
+ }
+.viz_Attributes_Val {
+	position:absolute;
+	color:black;
+	font-size:0.8em;
+	text-align:center;
+	line-height:1.1em;
+}
+
+/* Cloud */
+.viz_Cloud li {
+	list-style-type:none;
+	display:inline-block;
+}
+.viz_Cloud li a {
+	text-decoration:none;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	/*background: lightgray;*/
+	/*border:1px solid lightgray;*/
+	padding:2px;
+	margin:2px;
+	cursor:pointer;
+}
+.viz_Cloud li a:hover {
+	text-decoration:none;
+	background: #E8E8E8 ;
+	/*border:1px solid gray;*/
+}
 
 /* =================================================================================== VISUALIZATIONS (evbrowse) */
 .vizdiv {
@@ -1031,10 +1078,7 @@ a.res_middle_link {
 
 /* ============================================ */
 /* GENERAL LIST OF VIZUS */
-.vizAll {
-	/*width:100%;*/
-}
-.vizList {
+.vizAll li {
 	list-style-type:none;
 }
 /* left border color based on type */
@@ -1131,6 +1175,7 @@ vizGlobalActions li {
 /* ============================================ */
 /* TAG CLOUDS */
 
+/*
 #tagCloudBox {
 	margin:0 auto;
 	padding:3px;
@@ -1146,43 +1191,9 @@ vizGlobalActions li {
 	font-size: 10px;
 	width:90px;
 }
-
-/* BUBBLE WAY */
-
-/*
-.tagCloud {
-	text-align:center;
-	vertical-align:center;
-	padding:5px;
-	background: white;
-}
-.tagList {
-	margin:0;
-	padding:0;
-}
 */
 
-.tagCloudList li {
-	list-style-type:none;
-	display:inline-block;
-	/*margin:0 5px;*/
-	/*height:30px;*/
-}
-.tagCloudList li a {
-	text-decoration:none;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	/*background: lightgray;*/
-	/*border:1px solid lightgray;*/
-	padding:2px;
-	margin:2px;
-	cursor:pointer;
-}
-.tagCloudList li a:hover {
-	text-decoration:none;
-	background: #E8E8E8 ;
-	/*border:1px solid gray;*/
-}
+
 
 
 
@@ -1228,7 +1239,6 @@ ul.d3buttons {
 	/*visibility:visible;*/
 	fill:black;
 }
-
 
 
 

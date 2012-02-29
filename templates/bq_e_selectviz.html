@@ -44,7 +44,7 @@
 <td>
 	<ul class="vizLaunchList">
 		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes"></a>
-			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds});return false;'>Graph Speakers-Attributes</a> using 
+			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds,"attributetypes":selectedAttributeTypesIds});return false;'>Graph Speakers-Attributes</a> using 
 			<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
 				<select id="attSelectDropDownList_graph" multiple="multiple">
 				{% for c in attributeTypes %}
@@ -81,7 +81,7 @@
 		{% endif %}
 		
 		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Attributes"></a>
-			<a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Attributes</a> matrix using 
+			<a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds,"attributetypes":selectedAttributeTypesIds});return false;'>Attributes</a> matrix using 
 			<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
 				<select id="attSelectDropDownList_attr" multiple="multiple">
 				{% for c in attributeTypes %}
@@ -176,7 +176,7 @@
 			'maxDropHeight':200,
 			//'positionHow':'absolute',//'relative'
 		});
-		//////////////////////////////////////////////// attribute selection for graph viz
+		//////////////////////////////////////////////// attribute selection for attr viz
 		$("#attSelectDropDownList_attr").dropdownchecklist({
 			'emptyText':'all attributeTypes',
 			'onComplete': function(selector) {

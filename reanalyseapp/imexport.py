@@ -56,16 +56,20 @@ def importEnqueteUsingMeta(folderPath):
 	headers = std.fieldnames
 	allmeta={}
 	for row in std:
-		field = row['*field'][1:] #removing *
-		value = row['*value']
-		if field not in allmeta.keys():
-			allmeta[field] = [value]
-		else:
-			allmeta[field] += [value]
-		if field=='IDNo':
-			study_ddi_id = value
-		if field=='titl':
-			study_name = value
+		if row['*field']!='*descr':
+			field = row['*field'][1:] #removing *
+			label = row['*name']
+			value = row['*value']
+			if field not in allmeta.keys():
+				allmeta[field] = {}
+				allmeta[field]['value'] = [value]
+			else:
+				allmeta[field]['value'] += [value]
+			allmeta[field]['label'] = label
+			if field=='IDNo':
+				study_ddi_id = value
+			if field=='titl':
+				study_name = value
 
 	# create enquete object
 	newEnquete = Enquete(name=study_name,locationpath=folderPath,ddi_id=study_ddi_id,status='1')

@@ -70,7 +70,8 @@ SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 # ACTIVATED CODES = those in TextStreamTimeline viz (in order) - nb: if there is not code in texte, it will not show on viz !
 STREAMVIZCODES={}
 STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible','break','comment','time']
-STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
+# deprecated colors, now set in reanalyse.css
+#STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
 
 # ACTIVATED CODES = displayed IN edShow to show/hide
 PARVBCODES={}

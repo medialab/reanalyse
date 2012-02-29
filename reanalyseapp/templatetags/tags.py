@@ -52,15 +52,18 @@ def speakerMeta(s):
 @register.filter
 def enqueteMeta(e,typ):
 	try:
-		return e.meta()[typ][0]
+		return e.meta()[typ]['value'][0]
 	except:
-		return "error fetching e meta:" +typ
+		return "[no-emeta]"
 ###########################################################################
 
 
 
-
-
+###########################################################################
+@register.filter
+def canExploreEnquete(user,eid):
+	return user.has_perm('reanalyseapp.can_explore_'+str(eid))
+###########################################################################
 
 
 ###########################################################################

@@ -29,9 +29,13 @@
 @menu-shift-x: -74px;
 @menu-shift-y: -44px;
 
+@menu-pages-x: 24px;
+@menu-pages-y: 368px;
+@menu-pages-shift-x: 74px;
+@menu-pages-shift-y: 44px;
 
-@menu-settings-x : 23px;
-@menu-settings-y : 1156px;
+@menu-settings-x : 32px;
+@menu-settings-y : 1169px;
 @menu-settings-shift-x : 74px;
 @menu-settings-shift-y : 44px;
 
@@ -124,7 +128,7 @@ h3{
 	.sprited( @menu-settings-x + @menu-settings-shift-x, @menu-settings-y + @menu-settings-shift-y * @order )
 }
 .settings-status ( up, @order) {
-	.sprited( 0, 0 )
+	.sprited( @menu-settings-x, @menu-settings-y + @menu-settings-shift-y * @order )
 }
 
 header{
@@ -136,6 +140,12 @@ header{
 		position: relative;
 		display:block;
 		pointer-events:none;
+	}
+	
+	.icon{
+		pointer-events:none;
+		position: absolute;
+		left: 50%;
 	}
 	
 	#logo-outer{
@@ -153,17 +163,18 @@ header{
 	}
 	#menu-pages-outer{
 		background: @header-background;
-		height: @header-height;
+		
 	}
 	#menu-settings-outer{
 		background: @header-background-medium;
-		height: @header-height;
+		
 	}
-	#menu-pages{
+	#menu-pages, #menu-settings{
 		height: @header-height;
-		padding-top:0px;
+		padding:0px @grid-padding;
 	}
 	#menu-pages ul{
+		white-space: nowrap;
 		padding-left:@grid-padding;
 		li{
 			display:inline-block;
@@ -185,11 +196,8 @@ header{
 		}
 		
 		.icon{
-			pointer-events:none;
-			position: absolute;
 			width: 42px;
 			height: 42px;
-			left: 50%;
 			margin-left: -21px;
 		}
 		
@@ -251,9 +259,50 @@ header{
 	}
 	
 	#menu-settings ul{
+		white-space: nowrap;
+		#menu-language{
+			padding-top: @grid-padding;	
+		}
+		#menu-fullscreen a, #menu-login a{
+			height: 100%;
+			display: block;
+			padding-top: @header-height - 40px;	
+		}
+		#menu-fullscreen.selected .icon{
+			.sprited( @menu-pages-x + @menu-settings-shift-x *2 , @menu-settings-y + @menu-settings-shift-y * 2 );
+		}
+
+		#menu-fullscreen:hover .icon {
+			.sprited( @menu-pages-x + @menu-settings-shift-x , @menu-settings-y + @menu-settings-shift-y * 2 );
+		}
+		
+		#menu-fullscreen .icon{
+			.sprited( @menu-pages-x, @menu-settings-y + @menu-settings-shift-y * 2 );
+			width: 40px;
+			height: 40px;
+			margin-left: -20px;			
+		}
+		
+		
+		#menu-login.selected .icon{
+			.sprited( @menu-pages-x + @menu-settings-shift-x *2 , @menu-settings-y + @menu-settings-shift-y * 3 );
+		}
+
+		#menu-login:hover .icon {
+			.sprited( @menu-pages-x + @menu-settings-shift-x , @menu-settings-y + @menu-settings-shift-y * 3 );
+		}
+		
+		#menu-login .icon{
+			.sprited( @menu-pages-x, @menu-settings-y + @menu-settings-shift-y * 3 );
+			width: 40px;
+			height: 40px;
+			margin-left: -20px;			
+		}	
 		li{
 			display: inline-block;	
 			text-align:center;
+			font-size:0.8em;
+			margin: 0 @grid-padding; 
 			a{
 				display: block;
 				color: black;
@@ -263,23 +312,43 @@ header{
 				}
 			}
 			
-			.icon{
-				pointer-events:none;
-				position: absolute;
-				width: 42px;
-				height: 21px;
-				left: 50%;
-				margin-left: -21px;
-			}
+			
+			
 			.setLan{
-				height: @header-height / 3;	
+				height: 24px;
+				margin-bottom: 2px;
 				a{
 					visibility: hidden;
 					
 				}
+				.icon{
+					width: 24px;
+					height: 24px;
+					margin-left: -12px;
+				}
 			}
-			.en .icon{
-				.setting-status( @status-up, 0 );
+			
+			
+			.en.selected {
+				.icon{
+					.sprited( @menu-settings-x + @menu-settings-shift-x * 2, @menu-settings-y);
+				}
+			}
+			.en {
+				.icon{
+					.sprited( @menu-settings-x, @menu-settings-y);
+				}
+				&:hover .icon{
+					.sprited( @menu-settings-x + @menu-settings-shift-x, @menu-settings-y);
+				}
+			}
+			.fr {
+				.icon{
+					.sprited( @menu-settings-x, @menu-settings-y + @menu-settings-shift-y);
+				}
+				&:hover .icon{
+					.sprited( @menu-settings-x + @menu-settings-shift-x, @menu-settings-y + @menu-settings-shift-y);
+				}
 			}
 			
 		}
@@ -338,6 +407,7 @@ section{
 	}
 	#page{
 		padding:@grid-padding @grid-padding*2;
+		
 	}
 	.fullscreen #page{
 		border-left: 7px solid @page-border;

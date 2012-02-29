@@ -145,14 +145,14 @@ def init_users():
 	#eEnquete1,isnew = Permission.objects.get_or_create(codename='can_explore_1',name='EXPLORE enquete 1',content_type=content_type)
 	#eEnquete2,isnew = Permission.objects.get_or_create(codename='can_explore_2',name='EXPLORE enquete 2',content_type=content_type)
 		
-	######## Users
-	bUser,isnew = User.objects.get_or_create(username='browse',password='-',is_active=True)
-	bUser.groups.add(bGroup)
-	eUser,isnew = User.objects.get_or_create(username='explore',password='-',is_active=True)
-	eUser.groups.add(eGroup)
+	######## DEPRECATED test Users
+	#bUser,isnew = User.objects.get_or_create(username='browse',password='-',is_active=True)
+	#bUser.groups.add(bGroup)
+	#eUser,isnew = User.objects.get_or_create(username='explore',password='-',is_active=True)
+	#eUser.groups.add(eGroup)
 	#eUser.user_permissions.add(eEnquete2)
-	cUser,isnew = User.objects.get_or_create(username='create',password='-',is_active=True)
-	cUser.groups.add(cGroup)
+	#cUser,isnew = User.objects.get_or_create(username='create',password='-',is_active=True)
+	#cUser.groups.add(cGroup)
 	#cUser.user_permissions.add(eEnquete1)
 	#cUser.user_permissions.add(eEnquete2)
 ###########################################################################
@@ -195,10 +195,15 @@ def eDelete(request,eid):
 	if request.user.is_staff:
 		e = Enquete.objects.get(id=eid)
 		# remove uploaded/decompressed files
-		os.system("rm -R "+e.locationpath)
+		eqPath = e.locationpath
+		if eqPath.endswith('/extracted/'):
+			eqPath = '/'+'/'.join(eqPath.split('/')[:-1])
+		os.system("rm -R "+eqPath)
+		logger.info("["+str(eid)+"] removing study: "+eqPath)
 		# remove graph files if there is
 		for vtyp in GRAPHTYPES:
 			for v in e.visualization_set.filter(viztype=vtyp):
+				logger.info("["+str(eid)+"] removing graph file: "+v.locationpath)
 				os.system("rm -R "+v.locationpath)
 		e.delete()
 	return render_to_response('bq_e_browse.html', context_instance=RequestContext(request))
@@ -391,6 +396,38 @@ def eAdmin(request):
 	
 	### default page is 'users'
 	ctx.update({'page':request.GET.get('page','users')})
+	
+	### users
+	users={}
+	users['header']=['username','email','status','group','full study access','joined','last login']
+	users['rows']=[]
+	for u in User.objects.order_by('id'):
+		uTab=[]
+		uTab.append('<a href="'+settings.BASE_URL+'admin/auth/user/'+str(u.id)+'">'+u.username+'</a>')
+		uTab.append(u.email)
+		# STATUS (activated?)
+		sstr="pending..."
+		if u.is_active:
+			sstr="activated"
+		uTab.append(sstr)
+		# GROUPS
+		gstr=""
+		if u.is_staff:
+			gstr="STAFF "
+		for g in u.groups.all():
+			gstr+=g.name+" "
+		uTab.append(gstr)
+		# PERMISSIONS
+		pstr=""
+		for e in Enquete.objects.order_by('id'):
+			if u.has_perm('reanalyseapp.can_explore_'+str(e.id)):
+				pstr+="["+str(e.id)+"] "+e.name+"<br/>"		
+		uTab.append(pstr)
+		# DATES JOINED LASTLOGIN
+		uTab.append(u.date_joined.strftime("%a %x"))
+		uTab.append(u.last_login.strftime("%a %d at %Hh%M"))
+		users['rows'].append(uTab)
+	ctx.update({'users':users})
 	
 	return render_to_response('bq_admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
@@ -609,25 +646,19 @@ def eReset(request):
 ###########################################################################
 def eShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	meta = e.meta()
 	
-	metashort=[]
-# 	metashort.append(['Study Author', meta['AuthEnty'][0]])
-# 	metashort.append(['Funding Agency', meta['fundAg'][0]])
-# 	metashort.append(['Country', meta['nation'][0]])
-# 	metashort.append(['Geographic Coverage', meta['geogCover'][0]])
-# 	metashort.append(['Data Distribution', meta['distrbtr'][0]])
-# 	metashort.append(['Metadata', meta['AuthEnty'][0]+", Copyright  "+meta['copyright'][0]])
-
-	for k in meta.keys():
-		metashort.append([k,meta[k][0]])
+	meta = e.meta()
+	metas=[]
+	for m in meta.keys():
+		if m!='description':
+			metas.append([ meta[m]['label'] , meta[m]['value'][0] ])
 
 	try:
-		description	= meta['description'][0]
+		contenthtml	= meta['description']['value'][0]
 	except:
-		description = "There wasn't any *description field in the meta_study.csv, sorry."
+		contenthtml = "There wasn't any *description field in the meta_study.csv, sorry."
 	
-	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metashort':metashort,'description':description}
+	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metas':metas,'contenthtml':contenthtml}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	return render_to_response('bq_e_show.html',ctx, context_instance=RequestContext(request))

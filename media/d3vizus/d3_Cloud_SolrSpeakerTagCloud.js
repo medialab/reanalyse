@@ -153,7 +153,7 @@ function buildD3_Cloud_SolrSpeakerTagCloud(data,theId) {
 		vizdiv.select(".viztable").remove();
 		curMode='vizlist';
 
-		var list = vizdiv.append("ul").attr("class","vizlist tagCloudList");
+		var list = vizdiv.append("ul").attr("class","vizlist viz_Cloud");
 	
 		thewordlist = list.selectAll("li")
 			.data(data.words)

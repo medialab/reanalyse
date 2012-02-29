@@ -29,6 +29,34 @@
 	border-left: 7px solid #393D49;	
 }
 
-#sidebar{
-	position:absolute;	
+section #sidebar{
+	position:fixed;	
+	left: -30px;
+	z-index: 0;
+	color: white;
+	background:none;
+	width:100px;
+	overflow:hidden;
+	margin:0;
+	padding:0;
+}
+section #sidebar ul{
+	width:114px;	
+}
+section #page{
+	border-left: 7px solid #393D49;	
+	
+}
+section #sidebar .allPage{
+	height: auto;	
+}
+#sidebar li{
+	background: #e1e1e1;	
+}
+#sidebar li .currentPage{
+	background: #f1f1f1;	
+	border-left: none;
+}
+#logomoto{
+	display:none;	
 }

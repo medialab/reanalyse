@@ -23,7 +23,7 @@
 
 {% block content %}
 	
-	<div class="introHtml">
+	<div class="contentHtml">
 	
 		{% if page == 'users' %}
 		<! ================================================= -->
@@ -37,6 +37,20 @@
 			<li>Staff can then add the permission for <b>this</b> enquete ('EXPLORE e_[id]') to this user on the <a href="{{BASE_URL}}/admin/auth/user/">admin user list</a> panel (and reply regardly to the guy).</li>
 		</ol>
 		<p>Current staff email adress is: <i>{{staffemail}}</i></p>
+		<table class="content_norm">
+		<head>
+			{% for h in users.header %}
+			<th>{{h}}</th>
+			{% endfor %}
+		</th>		
+		{% for u in users.rows %}
+		<tr>
+			{% for v in u %}
+			<td>{% autoescape off %}{{v}}{% endautoescape %}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+		</table>
 		
 		{% else %}
 		{% if page == 'upload' %}
@@ -102,7 +116,7 @@
 		<ul class="logconsole">
 			{% for l in log_django %}<li>{{l}}</li>{% endfor %}
 		</ul>
-		<a href="?page=advanced&log=700">i want more, i like it ...</a>
+		<a href="?page=advanced&log=700">i want more, 'cause i like it ...</a>
 		{% endif %}
 		{% endif %}
 		{% endif %}

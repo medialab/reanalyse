@@ -106,7 +106,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 					for s in t.speaker_set.all():
 						if s not in speakers:
 							speakers.append(s)
-		d = visMakeAttributes(e,{'where':textes,'who':speakers})
+		d = visMakeAttributes(e,{'where':textes,'who':speakers,'what':attributetypes})
 		for s in speakers:
 			newVizu.speakers.add(s)
 		for t in textes:
@@ -569,12 +569,13 @@ def visMakeOverview(e):
 def visMakeAttributes(e,param):
 	speakers = param['who']
 	textes = param['where']
-	#attributeTypeIds = param['whoatt']
+	attributetypes = param['what']
 	
 	res={}
 	
-	attributetypes = e.attributetype_set.exclude(name__startswith='_')
-	
+	if attributetypes==[]:
+		attributetypes = e.attributetype_set.exclude(name__startswith='_')
+		
 	attnames=[{'id':a.id,'name':a.name} for a in attributetypes]
 	spknames=[]
 	for s in speakers:

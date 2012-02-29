@@ -35,7 +35,7 @@
 
 {% block content %}
 
-<div class="introDiv">
+<div class="contentHtml">
 
 {% if bodyid == 'access' %}
 	{% if pageid == 'login' %}
@@ -60,15 +60,13 @@
 
 <!-- if contenthtml display it -->
 {% if contenthtml %}
-<div class="introHtml">
 	{% autoescape off %}
 	{{contenthtml}}
 	{% endautoescape %}
-</div>
 {% endif %}
 
 {% if pageid == 'login' %}
-{% comment %}Translators: Below login form{% endcomment %}
+{% comment %}Translators: Below login form, link to register form page{% endcomment %}
 {% trans 'To ask for an account, please go to the page' %} <a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register">register</a>
 {% endif %}
 
@@ -88,7 +86,7 @@
 							<td>{% trans 'Study:' %}</td><td>({{wantedenquete.id}}) {{wantedenquete.name}} [{{wantedenquete|enqueteMeta:'AuthEnty'}}]</td>
 						</tr>
 						<tr>
-							<td>Motivation</td>
+							<td>Motivation:</td>
 							<td>{{ form_request.motivation.errors }}{{ form_request.motivation }}</td>
 						</tr>
 						<tr>
@@ -113,7 +111,7 @@
 	{% else %}
 	<!-- =============================== -->
 		{% if form_request %}
-			{% comment %}Translators: Access page: ask for browse(discover) status{% endcomment %}
+			{% comment %}Translators: register form page title: ask for browse(discover) status{% endcomment %}
 			<h2>{% trans 'You can ask for a Discover status' %}</h2>
 			{% if not form_request.is_valid %}
 				<form action="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register" method="post">

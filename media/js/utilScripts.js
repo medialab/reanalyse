@@ -82,7 +82,21 @@ function recalculateLeftMenuSize() {
 // fullscreen mode toggle
 var fullscreenMode = false;
 function toggleFullScreenMode() {
-	var dur = 0;
+	if(!fullscreenMode) {
+		$("#menu-fullscreen").addClass("selected");
+		$("#sidebar-outer").toggle();
+		$("#page-outer").removeClass("grid_9");
+		$("#page-outer").addClass("grid_12");
+		$("#page-outer").addClass("fullscreen");
+	} else {
+		$("#menu-fullscreen").removeClass("selected");
+		$("#sidebar-outer").toggle();
+		$("#page-outer").removeClass("fullscreen");
+		$("#page-outer").removeClass("grid_12");
+		$("#page-outer").addClass("grid_9");
+	}
+	fullscreenMode=!fullscreenMode;
+	/*
 	if(!fullscreenMode) {
 		$("#sidebar-outer").toggle(dur);
 		$("#page-outer").removeClass("grid_9");
@@ -99,6 +113,7 @@ function toggleFullScreenMode() {
 
 	$(".setFullscreen.Off").toggle();
 	$(".setFullscreen.On").toggle();
+	*/
 }
 
 //////////////////////////////////////////////////////////////////
@@ -404,20 +419,7 @@ function createVisualization(eid,vizType,moreparams) {
 	else var selectedSpeakerIds = new Array();
 	if(moreparams['textes']) var selectedTexteIds = moreparams['textes'];
 	else var selectedTexteIds = new Array();
-	
-	// check in case of selection is needed
-/*
-	var leastSpeaker = ['Cloud_SolrSpeakerTagCloud'];
-	var leastText = ['StreamedTimeline'];
-	
-	if (leastText.indexOf(vizType)!=-1 && selectedTexteIds.length==0) {
-		alert('That viz needs at least a selected Text');
-	}
-	else if (leastSpeaker.indexOf(vizType)!=-1 && selectedSpeakerIds.length==0) {
-		alert('That viz needs at least a selected Speaker');
-	}
-*/
-	
+		
 	var dict={};
 	dict['type']=vizType;
 	var attributetypes="";

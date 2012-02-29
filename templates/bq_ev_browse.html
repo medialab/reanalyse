@@ -98,7 +98,7 @@
 		<ul>
 		{% for v in visualizations %}
 		{% if perms.reanalyseapp.can_make or v.public %}
-			<li class="vizList">
+			<li>
 			<div class="vizOne viztype_{{v.viztype}}" id="vizOne_{{forloop.counter}}">			
 				
 				<div class="vizTop butToggleHeader" id="vizTop_{{forloop.counter}}"></div>
@@ -193,6 +193,7 @@
 				</div>
 					
 					<div class="descrContainer" id="descrContainer_{{forloop.counter}}" style="display:none;">{% autoescape off %}{{ v.description }}{% endautoescape %}</div>
+					{% if perms.can_make %}
 					<script type="text/javascript">
 						$('#descrContainer_{{forloop.counter}}').editable({
 							'type':'textarea',
@@ -211,9 +212,8 @@
 								});
 							},
 						});
-						
 					</script>
-				
+					{% endif %}
 					<div class="vizContainer" id="vizContainer_{{forloop.counter}}" style="display:none;">
 						{% include "bq_render_v.html" with enquete=enquete v=v nk=forloop.counter %}
 					</div>
