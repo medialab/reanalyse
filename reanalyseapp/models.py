@@ -59,13 +59,13 @@ class SiteContent(models.Model):
 # ENQUETE
 ##############################################################################
 class Enquete(models.Model):
-	#connection_name="enquetes"
+	#connection_name="enquetes"				# todo: one db for each enquete ?
 	name = models.CharField(max_length=200)
-	description = models.TextField()
-	metadata = models.TextField(default='{}') # store all metadata as json dict
-	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
-	statuscomplete = models.BigIntegerField(default=0) # 0-100%
-	date = models.DateField(auto_now_add=True)
+	locationpath = models.CharField(max_length=250)						# path of the uploaded folder
+	metadata = models.TextField(default='{}') 							# store all metadata as json dict
+	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars
+	statuscomplete = models.BigIntegerField(default=0) 					# loading 0-100%
+	date = models.DateField(auto_now_add=True)							# date uploaded
 	ddi_id = models.CharField(max_length=100)
 	# since ese is not yet included (structured) in enquete, let's put all infos from ese.xml into a json dict
 	ese = models.TextField()
@@ -93,7 +93,7 @@ class Enquete(models.Model):
 class Visualization(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	name = models.CharField(max_length=100)
-	locationpath = models.CharField(max_length=150) # mainly for gexf graphs
+	locationpath = models.CharField(max_length=250) # mainly for gexf graphs
 	description = models.TextField()
 	viztype = models.CharField(max_length=50)
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
@@ -154,7 +154,7 @@ class Texte(models.Model):
 # age,sex,profession,...
 class AttributeType(models.Model):
 	enquete = models.ForeignKey(Enquete)
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=120)
 	publicy = models.CharField(max_length=1, choices=ATTRIBUTE_PUBLICY_CHOICES)
 	def __unicode__(self):
 		return self.name
@@ -163,7 +163,7 @@ class AttributeType(models.Model):
 class Attribute(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	attributetype = models.ForeignKey(AttributeType)
-	name = models.CharField(max_length=150)
+	name = models.CharField(max_length=300)
 	description = models.TextField() # could be long text to describe a group
 	def __unicode__(self):
 		return self.name

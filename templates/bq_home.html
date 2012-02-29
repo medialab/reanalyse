@@ -85,7 +85,7 @@
 					<table class="registerFormTable">
 						<tr>
 							{% comment %}Translators: Access page: ask for explore status: Study{% endcomment %}
-							<td>{% trans 'Study:' %}</td><td>({{wantedenquete.id}}) {{wantedenquete.name}} [{{wantedenquete|enqueteAuthor}}]</td>
+							<td>{% trans 'Study:' %}</td><td>({{wantedenquete.id}}) {{wantedenquete.name}} [{{wantedenquete|enqueteMeta:'AuthEnty'}}]</td>
 						</tr>
 						<tr>
 							<td>Motivation</td>

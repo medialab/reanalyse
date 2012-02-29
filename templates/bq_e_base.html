@@ -39,14 +39,14 @@
 		<h1 id="topanchor">{{enquete.name}}</h1>
 		<div class="meta_enquete">
 			{% if perms.reanalyseapp.can_make %}
-				author: {{enquete|enqueteAuthor}}
+				author: {{enquete|enqueteMeta:'AuthEnty'}}
 				 | uploaded: {{enquete.date}}
 				 | status: {{enquete.get_status_display}}
 					{% if enquete.status != '0' %}
 					({{enquete.statuscomplete}}%)
 					{% endif %}
 			{% else %}
-				{{enquete|enqueteAuthor}}
+				{{enquete|enqueteMeta:'AuthEnty'}}
 			{% endif %}
 		</div>
 	</div>
@@ -72,7 +72,7 @@
 		</div>
 		
 		<div class="leftmenublock">
-			<h3>{{enquete.name}}</h3> <span class="emeta-author">{{enquete|enqueteAuthor}}</span>
+			<h3>{{enquete.name}}</h3> <span class="emeta-author">{{enquete|enqueteMeta:'AuthEnty'}}</span>
 		</div>
 		
 		<!-- ============================ BROWSE -->
@@ -88,9 +88,9 @@
 {% endif %}
 
 {% if permexplorethis %}
-	<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div></a>
-	<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div></a>
-	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} {% if perms.reanalyseapp.can_make %}({{enquete.visualization_set.count}}){% else %}({{enquete|visualizationPublicCount}}){% endif %}</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|docPublicCount}})</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|spkPublicCount}})</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} {% if perms.reanalyseapp.can_make %}({{enquete.visualization_set.count}}){% else %}({{enquete|vizPublicCount}}){% endif %}</div></a>
 
 	{% block enqueteleftmenuviz %}
 	{% endblock %}
@@ -136,9 +136,9 @@
 	</div>
 
 {% else %}
-	<div class="allPage pageDisabled">{% trans 'Documents' %} ({{enquete|texteVisibleCount}})</div>
-	<div class="allPage pageDisabled">{% trans 'Speakers' %} ({{enquete|speakerVisibleCount}})</div>
-	<div class="allPage pageDisabled">{% trans 'Visualizations' %} ({{enquete|visualizationPublicCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Documents' %} ({{enquete|docPublicCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Speakers' %} ({{enquete|spkPublicCount}})</div>
+	<div class="allPage pageDisabled">{% trans 'Visualizations' %} ({{enquete|vizPublicCount}})</div>
 {% endif %}
 
 {% if not permexplorethis %}

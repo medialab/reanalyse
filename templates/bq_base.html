@@ -35,8 +35,8 @@
 	<!-- ============================================== -->
 	
 	{% block settings %}
-
-		<div id="menu-fullscreen">
+	<ul>
+		<li id="menu-fullscreen">
 			<span class="setFullscreen On"><a href="" onclick="toggleFullScreenMode();return false;">fullcreenon</a></span>
 			<span class="setFullscreen Off" style="display:none";><a href="" onclick="toggleFullScreenMode();return false;">fullcreenoff</a></span>
 <!--
@@ -45,20 +45,22 @@
 				<img id="fullsOnImg" src="{{ MEDIA_URL }}/images/toggle_fullscreen_on.png" alt="description"/>
 			</div>
 -->
-		</a>
+		</li>
 		<!-- ======================== -->
-		<div id="menu-language">
+		<li id="menu-language">
 			{% get_language_info for LANGUAGE_CODE as lang %}
 			{% get_language_info_list for LANGUAGES as languages %}
 			{% for language in languages %}
-				<span class="setLan"><a href="" id="setLan_{{language.code}}">{{language.name_local}}</a></span>
+				<div class="setLan {{language.code}}">
+					<div class="icon-outer"><div class="icon"></div></div>
+					<a href="" id="setLan_{{language.code}}">{{language.name_local}}</a></div>
 				<script type="text/javascript">
 					$("#setLan_{{language.code}}").click(function(e){
 						$.post('/reanalyse/i18n/setlang/',{ next:'{{request.path}}', language:'{{language.code}}'});
 					});
 				</script>
 			{% endfor %}
-			
+			LANGUAGE
 			{% comment %}
 			<!--<form action="/reanalyse/i18n/setlang/" method="post" id="langform">
 				{% csrf_token %}
@@ -77,15 +79,16 @@
 			</form>-->
 			{% endcomment %}
 			
-		</div>
+		</li>
 		<!-- ======================== -->
-		<div id="menu-login">
+		<li id="menu-login">
 			{% if user.is_authenticated %}
 				<span id="menu-login-username">{{ user.username }}</span>
 				<a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>
 				{% comment %}<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login">login</a>{% endcomment %}
 			{% endif %}
-		</div>
+		</li>
+	</ul>
 	{% endblock %}
 
 	<!-- ============================================== -->

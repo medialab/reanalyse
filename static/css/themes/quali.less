@@ -29,14 +29,26 @@
 @menu-shift-x: -74px;
 @menu-shift-y: -44px;
 
+
+@menu-settings-x : 23px;
+@menu-settings-y : 1156px;
+@menu-settings-shift-x : 74px;
+@menu-settings-shift-y : 44px;
+
+@status-up: up;
+
+
+
+
 html,body{
 	height:100%;	
 }
 
 body{
 	background: @the-background;
-	font-family: 'Open Sans', sans-serif;
-	font-size: 12px;
+	font-family: 'Open sans', serif;
+	font-size: 13px;
+	line-height: 19px;
 }
 
 a{
@@ -105,7 +117,27 @@ h3{
 
 
 
+.settings-status ( active, @order) {
+	.sprited( @menu-settings-x + @menu-settings-shift-x * 2, @menu-settings-y + @menu-settings-shift-y * @order )
+}
+.settings-status ( hover, @order) {
+	.sprited( @menu-settings-x + @menu-settings-shift-x, @menu-settings-y + @menu-settings-shift-y * @order )
+}
+.settings-status ( up, @order) {
+	.sprited( 0, 0 )
+}
+
 header{
+	font-family: 'MisoRegular', sans-serif;
+	font-size:1.25em;
+	text-transform: uppercase;
+	
+	.icon-outer{
+		position: relative;
+		display:block;
+		pointer-events:none;
+	}
+	
 	#logo-outer{
 		background: @header-background-light;
 		overflow:hidden;
@@ -131,7 +163,7 @@ header{
 		height: @header-height;
 		padding-top:0px;
 	}
-	ul{
+	#menu-pages ul{
 		padding-left:@grid-padding;
 		li{
 			display:inline-block;
@@ -139,25 +171,19 @@ header{
 			text-align:center;
 			padding:@grid-padding/2 @grid-padding;
 			height: @header-height - @grid-padding;
-			text-transform: uppercase;
-		
+			
 			a{
 				height: 100%;
 				display: block;
 				padding-top: @header-height - 40px;
 				color: black;
-				font-family: 'MisoRegular', sans-serif;
-				font-size:1.25em;
+				
 				&:hover{
 					color:black;
 				}
 			}
 		}
-		.icon-outer{
-			position: relative;
-			display:block;
-			pointer-events:none;
-		}
+		
 		.icon{
 			pointer-events:none;
 			position: absolute;
@@ -223,10 +249,50 @@ header{
 			background-position: @menu-project-x + @menu-shift-x*2 @menu-project-y  + @menu-shift-y*3;
 		}
 	}
+	
+	#menu-settings ul{
+		li{
+			display: inline-block;	
+			text-align:center;
+			a{
+				display: block;
+				color: black;
+				padding-top: 21px;
+				&:hover{
+					color:black;
+				}
+			}
+			
+			.icon{
+				pointer-events:none;
+				position: absolute;
+				width: 42px;
+				height: 21px;
+				left: 50%;
+				margin-left: -21px;
+			}
+			.setLan{
+				height: @header-height / 3;	
+				a{
+					visibility: hidden;
+					
+				}
+			}
+			.en .icon{
+				.setting-status( @status-up, 0 );
+			}
+			
+		}
+		
+	}
+	
 	#menuCurrent{
 		background: @page-background;
 	}
 }
+
+
+
 
 
 
@@ -270,6 +336,9 @@ section{
 	#view, #page{
 		background: @page-background;
 	}
+	#page{
+		padding:@grid-padding @grid-padding*2;
+	}
 	.fullscreen #page{
 		border-left: 7px solid @page-border;
 		
@@ -286,6 +355,11 @@ section{
 		background-position: -236px 0px;
 		padding: @sidebar-padding;
 		min-height:200px;
+		font-family: 'MisoRegular', sans-serif;
+	}
+	.allPage{
+		text-transform: uppercase;
+		font-size: 1.2em;	
 	}
 }
 

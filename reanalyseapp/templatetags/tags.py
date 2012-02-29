@@ -15,13 +15,13 @@ register = template.Library()
 ###########################################################################    
 # simple counts (for left main menu)
 @register.filter
-def visualizationPublicCount(e):
+def vizPublicCount(e):
 	return e.visualization_set.filter(public=True).count()
 @register.filter
-def texteVisibleCount(e):
+def docPublicCount(e):
 	return e.texte_set.filter(Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')).count()
 @register.filter
-def speakerVisibleCount(e):
+def spkPublicCount(e):
 	return e.speaker_set.filter(ddi_type='SPK').count()
 ###########################################################################    
 # to get speaker description ON THE LEFT
@@ -48,13 +48,13 @@ def speakerMeta(s):
 	except:
 		return 'error fetching meta for speaker'
 ###########################################################################
-# to get enquete author
+# to get enquete author (ebrowse,e_base)
 @register.filter
-def enqueteAuthor(e):
+def enqueteMeta(e,typ):
 	try:
-		return e.meta()['AuthEnty'][0]
+		return e.meta()[typ][0]
 	except:
-		return "error fetching e meta author"
+		return "error fetching e meta:" +typ
 ###########################################################################
 
 

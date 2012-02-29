@@ -192,7 +192,15 @@ def updateCtxWithSearchForm(ctx):
 ###########################################################################
 @login_required
 def eDelete(request,eid):
-	Enquete.objects.get(id=eid).delete()
+	if request.user.is_staff:
+		e = Enquete.objects.get(id=eid)
+		# remove uploaded/decompressed files
+		os.system("rm -R "+e.locationpath)
+		# remove graph files if there is
+		for vtyp in GRAPHTYPES:
+			for v in e.visualization_set.filter(viztype=vtyp):
+				os.system("rm -R "+v.locationpath)
+		e.delete()
 	return render_to_response('bq_e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
 def logoutuser(request):
@@ -327,19 +335,21 @@ def home(request):
 
 
 
-
-
 ################################################################################
-def getTailOfFile(filepath,count):
+@login_required
+def clearLogFile(request):
 	try:
-		logFile = open(filepath,'r')
-		res = logFile.readlines()[-count:]
+		logFile = open(settings.REANALYSELOGDJANGO,'w')
+		logFile.write("log cleared\n")
 		logFile.close()
+		res='log file cleared'
 	except:
-		res = ['no log file found']
-	res.reverse()
-	return res
+		res='problem clearing logfile'	
+	d={}
+	d['status']=res
+	return HttpResponse( simplejson.dumps(d,indent=4,ensure_ascii=False), mimetype="application/json")
 ################################################################################
+
 
 
 
@@ -449,7 +459,7 @@ def eParse(request):
 	d={}
 	folname = request.GET.get('foldname','')	
 	upPath = settings.REANALYSEUPLOADPATH+folname+"/"
-	logger.info("parse enquete from uploaded folder: "+upPath )
+	logger.info("PARSING UPLOADED STUDY: "+upPath )
 	
 	######## (DEPRECATED) uploaded everything at once 
 	if os.path.exists(upPath+"ddi.xml"):
@@ -470,7 +480,7 @@ def eParse(request):
 	else:
 		logger.info("no ddi.xml nor archive.zip found")
 	
-	logger.info("enquete imported")
+	logger.info("["+str(e.id)+"] enquete imported")
 	
 	e.status='1'
 	e.statuscomplete=0
@@ -484,11 +494,11 @@ def eParse(request):
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
 	docsCur = 0
 	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
-		logger.info("now parsing text: "+str(t.id) )
+		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id) )
 		t.parseXml()
-		logger.info("texte parsed, now updating solr index: "+str(t.id) )
+		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: "+str(t.id) )
 		update_index.Command().handle(verbosity=0)
-		logger.info("solr index updated")
+		logger.info("["+str(e.id)+"] solr index updated")
 		docsCur+=1
 		e.statuscomplete = int(docsCur*100/docsTotal)
 		e.save()
@@ -498,24 +508,25 @@ def eParse(request):
 		try:
 			makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
-			logger.info("PB: pb making streamtimeline viz for texte id: "+str(t.id))
+			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz for texte id: "+str(t.id))
 		
-	logger.info("all texts were sucessfully parsed")
+	logger.info("["+str(e.id)+"] all texts were sucessfully parsed")
 	
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
-	logger.info("now updating tfidf")
+	logger.info("["+str(e.id)+"] now updating tfidf")
 	makeAllTfidf(e)
-	logger.info("tfidf sucessfully updated")
+	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
 	
-	makeViz(e,'Cloud_SolrSpeakerTagCloud')
-	makeViz(e,'Graph_SpeakersSpeakers')
-	makeViz(e,'Graph_SpeakersWords')
-	makeViz(e,'Graph_SpeakersAttributes')
+	if e.speaker_set.count()>0:
+		makeViz(e,'Cloud_SolrSpeakerTagCloud')
+		makeViz(e,'Graph_SpeakersSpeakers')
+		makeViz(e,'Graph_SpeakersWords')
+		makeViz(e,'Graph_SpeakersAttributes')
 				
 	e.status='0'
 	e.save()
-	logger.info("import process done")
+	logger.info("["+str(e.id)+"] import process done")
 
 	d['status']='enquete imported'
 	json = simplejson.dumps(d,indent=4,ensure_ascii=False)
@@ -536,17 +547,8 @@ def eParse(request):
 ################################################################################
 def eBrowse(request):
 	enquetesandmeta=[]
-	for e in Enquete.objects.all().order_by('id'):
-		themetas=[]
-		m = e.meta()
-		try: # Author | Country | Distributeur
-			themetas.append(m['AuthEnty'][0])
-			themetas.append(m['nation'][0])
-			themetas.append(m['distrbtr'][0])
-		except:
-			themetas.append("NC")
-		enquetesandmeta.append([e,themetas])
-	return render_to_response('bq_e_browse.html', {'bodyid':'e' ,'enquetesandmeta':enquetesandmeta}, context_instance=RequestContext(request))
+	enquetes = Enquete.objects.all().order_by('-id')
+	return render_to_response('bq_e_browse.html', {'bodyid':'e' ,'enquetes':enquetes}, context_instance=RequestContext(request))
 ################################################################################	
 
 
@@ -569,9 +571,10 @@ def eBrowse(request):
 
 ################################################################################
 def resetNgrams(request,eid):
-	logger.info("fetching ngrams with tfidf - start...")
-	makeAllTfidf(Enquete.objects.get(id=eid))
-	logger.info("fetching ngrams with tfidf - done with success")
+	e = Enquete.objects.get(id=eid)
+	logger.info("["+str(e.id)+"] fetching ngrams with tfidf - start...")
+	makeAllTfidf(e)
+	logger.info("["+str(e.id)+"] fetching ngrams with tfidf - done with success")
 	return HttpResponse("tfidf updated", mimetype="application/json")
 ################################################################################
 def eReset(request):

@@ -24,3 +24,11 @@
 .align_right {
   text-align: left;
 }
+
+#menu-pages, #menu-settings-outer{
+	border-left: 7px solid #393D49;	
+}
+
+#sidebar{
+	position:absolute;	
+}

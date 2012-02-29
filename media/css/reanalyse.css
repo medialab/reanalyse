@@ -54,13 +54,8 @@ hr {
 }
 */
 
-.menu-fullscreen {}
-.menu-language {}
-.menu-login {}
-.menu-login-username {}
-
 #id_username, #id_password {
-	width:80px;
+	/*width:80px;*/
 }
 
 /* ============================================ LEFT MENU */
@@ -154,6 +149,7 @@ hr {
 /* admin / upload page */
 .logconsole {
 	font-size: 0.75em;
+	line-height: 1em;
 	color:gray;
 }
 
@@ -533,7 +529,8 @@ div.currentPage {
 	padding:1px;
 	background:lightgray;
 	/*background:url('../images/viz_involved.png') no-repeat;*/
-	font-size:7px;	
+	font-size:7px;
+	line-height:1.5em;
 }
 .vizinvolved:hover {
 	cursor:pointer;

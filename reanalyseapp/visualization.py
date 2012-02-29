@@ -59,9 +59,9 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	#descr = VIZTYPESDESCR[typ]	# we used to set a different one for each
 	descr = VIZTYPESDESCR		# now just invite user to update it (see globalvars.py)
 	
-	logger.info("making viz: "+typ)
+	logger.info("["+str(e.id)+"] making viz: "+typ)
 	
-	if typ in ['Graph_SpeakersAttributes','Graph_SpeakersWords','Graph_SpeakersSpeakers']:
+	if typ in GRAPHTYPES:
 		newVizu = makeVisualizationObject(e,typ,descr)
 		if speakers==[]:
 			if textes==[]:
@@ -762,13 +762,20 @@ def getSolrSimilarArray(speaker,maxcount):
 	r = conn.search(q,**p)
 	array=[]
 	speakerkey = r.result['moreLikeThis'].keys()[0]
+
+	eid=str(speaker.enquete.id)
+	sid=str(speaker.id)
 	for res in r.result['moreLikeThis'][speakerkey]['docs']:
 		try:
-			sId = int(res['speakerid'])
-			speaker = Speaker.objects.get(id=sId)
-			array.append( [res['score'],speaker.id,speaker.name] )
+			try:
+				sId = int(res['speakerid'])
+			except:
+				logger.info("["+eid+"] EXCEPT getSolrSimilarArray (no solr result for spk: "+sid+")")
+			similSpk = Speaker.objects.get(id=sId)
+			array.append( [res['score'],similSpk.id,similSpk.name] )
 		except:
-			logger.info("epic fail in getSolrSimilarArray (compairing speakers from different enquete!) from speaker:"+str(speaker.id))
+			eidc=res['speakerid']
+			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+sid+"), unknown spk: "+eidc)
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
 def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams'

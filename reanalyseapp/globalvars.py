@@ -202,7 +202,8 @@ XMLTXM = '{http://textometrie.org/1.0}'
 
 ############################################################################################################## VISUALIZATIONS
 ########## ACTIVATED VIZ TYPES (show/hide in evBrowse)
-VIZTYPES=['Cloud_SolrSpeakerTagCloud','Graph_SpeakersSpeakers','Graph_SpeakersWords','Graph_SpeakersAttributes','TexteStreamTimeline','Attributes']
+GRAPHTYPES 	= ['Graph_SpeakersSpeakers','Graph_SpeakersWords','Graph_SpeakersAttributes']
+VIZTYPES	= GRAPHTYPES + ['Cloud_SolrSpeakerTagCloud','TexteStreamTimeline','Attributes']
 
 ########## VIZ DESCRIPTION
 # nb: viz description is used to document the viz, not to explain them technically

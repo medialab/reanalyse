@@ -59,6 +59,9 @@
 			</noscript>
 			</div>
 		</div>
+		<div id="eBrowseNewEnqueteConfirmed" style="display:none">
+			Enquete was added. Go <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">look</a> at it. Or refresh this page to have fun.
+		</div>
 		</p>
 		
 		{% else %}
@@ -93,11 +96,13 @@
 					{% endif %}
 					</ul>
 				</li>
+				<li>you could <a href="{% url reanalyse.reanalyseapp.views.clearLogFile %}">clear log file</a></li>
 			</ul>
 		<h3>Log Django</h3>
 		<ul class="logconsole">
 			{% for l in log_django %}<li>{{l}}</li>{% endfor %}
 		</ul>
+		<a href="?page=advanced&log=700">i want more, i like it ...</a>
 		{% endif %}
 		{% endif %}
 		{% endif %}
@@ -150,7 +155,7 @@
 					//event.preventDefault();
 					//window.location.href="{% url reanalyse.reanalyseapp.views.eBrowse %}";
 					//window.location.reload();
-					$("#eBrowseNewEnquete").html('Enquete was added. Go <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">look</a> at it');
+					$("#eBrowseNewEnquete").html($('#eBrowseNewEnqueteConfirmed').html());
 					return false;
 					
 				});

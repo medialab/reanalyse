@@ -36,9 +36,10 @@ urlpatterns = patterns('reanalyse',
 	(r'^e/solrupdate$', 'reanalyseapp.views.eSolrIndexUpdate'),	# update whole solr index
 
 	(r'^e/(?P<eid>\d+)/fetchngrams$', 'reanalyseapp.views.resetNgrams'),	# populate ngrams with tfidf from solr index
+	(r'^e/clearlogfile$', 'reanalyseapp.views.clearLogFile'),				# clear log file
 	
-	(r'^e/export$', 'reanalyseapp.views.exportEnquetes'),		# unused yet
-	(r'^e/delete$', 'reanalyseapp.views.deleteEnquetes'),
+	#(r'^e/export$', 'reanalyseapp.views.exportEnquetes'),		# unused yet
+	#(r'^e/delete$', 'reanalyseapp.views.deleteEnquetes'),		# unused yet
 	
 	########## 1.Overview
 	(r'^e/(?P<eid>\d+)/$', 'reanalyseapp.views.eShow'),					# SHOW ENQUETE MAIN OVERVIEW

@@ -151,6 +151,25 @@ def intToSortableStr(number):
 
 
 
+
+###########################################################################
+def getTailOfFile(filepath,count):
+	try:
+		logFile = open(filepath,'r')
+		res = logFile.readlines()[-count:]
+		logFile.close()
+	except:
+		res = ['no log file found']
+	res.reverse()
+	return res
+###########################################################################
+
+
+
+
+
+
+
 ###########################################################################
 # will be deprecated, since we can use csv.DictReader instead...
 def parseCsvFile(inPath):

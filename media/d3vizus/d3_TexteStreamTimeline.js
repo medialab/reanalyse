@@ -87,7 +87,10 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	/////////////////////////////////////
 	var totalW = $(unik).width();
 	// nb: if totalW is uncoherent small, try with parent divs (aka: in case of display:none for navigation viz)
-	if(totalW<200) totalW = $(unik).parent().parent().parent().width()-12; // 12 for padding
+	if(totalW<200) {
+		console.log("width is "+totalW+", too small!");
+		totalW = $(unik).parent().parent().parent().width()-12; // 12 for padding
+	}
 	console.log("got width:"+totalW);
 	var vis = vizdiv.append("svg:svg")
 		.attr("width", totalW)
@@ -144,6 +147,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.style("width",leftMargin-20+"px")
 		.style("position","absolute")
 		.style("font-size",10)
+		.style("line-height","1em")
 		.style("left","5px" )
 		.style("top",totalH-50+"px" );
 	bottomDiv.append("span")
@@ -530,7 +534,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.attr("y1",totalH+"px")
 		.attr("stroke","gray");
 	vis.append("svg:text")
-		.attr("x",leftMargin+graphW+10+"px")
+		.attr("x",leftMargin+graphW+9+"px")
 		.attr("y",totalH-5+"px")
 		.text("Sentences");
 		
