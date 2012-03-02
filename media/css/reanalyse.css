@@ -422,8 +422,8 @@ div#enqueteMetaShow {
 }
 .enqueteMetaShowTable td {
 	padding:3px;
-	padding-right:15px;
-	padding-left:10px;
+	padding-right:8px;
+	padding-left:8px;
 }
 .enqueteMetaShowTable tr.odd{
 	background:#F0F0F0;
@@ -431,10 +431,17 @@ div#enqueteMetaShow {
 .enqueteMetaShowTable tr.even {
 	background:white;
 }
-.enqueteMetaShowTableKey {
+.enqueteMetaShowTable tr.newcat {
+	border-top:1px solid gray;
+}
+.enqueteMetaShowTableKeyField {
 	font-style:italic;
-	width:120px;
-	/*border-right:1px gray solid;*/
+	font-size: 0.9em;
+	text-align:right;
+	color:gray;
+}
+.enqueteMetaShowTableKeyVal {
+	width:70%;
 }
 
 /* Enquete title and meta on the top */

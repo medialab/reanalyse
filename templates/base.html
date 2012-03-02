@@ -8,11 +8,12 @@
 
 {% block theme %}
 	<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/themes/quali.less"><!-- main style less theme -->
-	<link rel='stylesheet' type="text/css" href="{{MEDIA_URL}}/css/reanalyse.css"/>
+	<link rel='stylesheet' type="text/css" href="{{MEDIA_URL}}css/reanalyse.css"/>
 {% endblock %}
 
 {% block head %}
 	<title>hci, {% block title %}overview{% endblock %} | dime-shs</title>
+	
 {% endblock %}
 
 {% block dimeshs %}
@@ -23,7 +24,7 @@
 		<header>
 			<div class="grid_12" id="section-line"><div id="section-line-inner"></div></div><!-- the straight line -->
 		
-			<div class="grid_12"><!-- top menu structure -->
+			<div class="grid_12" id="header-inner"><!-- top menu structure -->
 				<div id="logo-outer" class="grid_3 outer outer_gain_1">
 					<a href="{% block logolink  %}#{% endblock %}" title="{% block logotitle  %}beQuali home{% endblock %}"><div id="logo"></div></a><!-- the logo -->
 				</div> 
@@ -65,3 +66,6 @@
 		</footer>
 	</div>
 {% endblock %}
+
+
+

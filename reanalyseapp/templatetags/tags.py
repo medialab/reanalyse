@@ -52,9 +52,14 @@ def speakerMeta(s):
 @register.filter
 def enqueteMeta(e,typ):
 	try:
-		return e.meta()[typ]['value'][0]
+		fieldcat = typ.split('/')[0]
+		field = typ.split('/')[1]
 	except:
-		return "[no-emeta]"
+		return "[meta-need-fieldcat/field]"
+	try:
+		return e.meta()['values'][fieldcat][field]['value'][0]
+	except:
+		return "[meta-"+fieldcat+"/"+field+"]"
 ###########################################################################
 
 

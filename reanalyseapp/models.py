@@ -113,7 +113,7 @@ class Texte(models.Model):
 	locationpath = models.CharField(max_length=500)
 	filesize = models.BigIntegerField(default=0)
 	# meta
-	doctype = models.CharField(max_length=3, choices=DOCUMENT_TYPE_CHOICES)
+	doctype = models.CharField(max_length=4, choices=DOCUMENT_TYPE_CHOICES)
 	doccat = models.CharField(max_length=25)
 	name = models.CharField(max_length=100)
 	description = models.TextField()

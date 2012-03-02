@@ -44,9 +44,9 @@
 				<h1>{% if perms.reanalyseapp.can_make %}[{{e.id}}] {% endif %}{{e.name}}</h1>
 				<div class="eBrowseEnqueteMetaContainer">
 					<div class="eBrowseEnqueteMeta">
-						<span class="eMetaList">{{ e|enqueteMeta:'AuthEnty' }}</span>
-						<span class="eMetaList">{{ e|enqueteMeta:'nation' }}</span>
-						<span class="eMetaList">{{ e|enqueteMeta:'distrbtr'}}</span>
+						<span class="eMetaList">{{ e|enqueteMeta:'actor/authenty' }}</span>
+						<span class="eMetaList">{{ e|enqueteMeta:'actor/nation' }}</span>
+						<span class="eMetaList">{{ e|enqueteMeta:'actor/distrbtr'}}</span>
 					</div>
 					<div class="eBrowseEnqueteContentStats">
 						<span class="eMetaDoc">{{e|docPublicCount}}DOC</span>
@@ -55,7 +55,7 @@
 					</div>
 				</div>
 				
-				<div class="eBrowseEnqueteDescription">{% autoescape off %}{{ e|enqueteMeta:'abstract'}}{% endautoescape %}</div>
+				<div class="eBrowseEnqueteDescription">{% autoescape off %}{{ e|enqueteMeta:'general/abstract'}}{% endautoescape %}</div>
 				<div>{% if request.user|canExploreEnquete:e.id %}Vous avez accès à l'intégralité de cette enquête{% endif %}</div>
 			</div>
 		</li>

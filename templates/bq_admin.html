@@ -74,7 +74,11 @@
 			</div>
 		</div>
 		<div id="eBrowseNewEnqueteConfirmed" style="display:none">
-			Enquete was added. Go <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">look</a> at it. Or refresh this page to have fun.
+			Enquete was added ! You can
+			<ul>
+			<li>watch <a href="?page=advanced">logs</a> if you fear something wrong</li>
+			<li>go look at it on the <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">studies list</a></li>
+			<li>or refresh this page to have fun with another study</li>
 		</div>
 		</p>
 		

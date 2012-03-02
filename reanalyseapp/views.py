@@ -219,7 +219,7 @@ def logoutuser(request):
 ###########################################################################
 # fetching html pages stored in template, or stored html content in db
 def getStaticHtmlContent(name,lang):
-	filepath = settings.REANALYSESITECONTENTPATH + name+'_content_'+lang+'.html'
+	filepath = settings.REANALYSESITECONTENTPATH + name+'_content_'+lang.lower()+'.html'
 	sc,isnew = SiteContent.objects.get_or_create(name=name,lang=lang.upper(),description=name)
 	# if no object exists in db, get file from templates folder
 	if isnew:
@@ -396,6 +396,11 @@ def eAdmin(request):
 	
 	### default page is 'users'
 	ctx.update({'page':request.GET.get('page','users')})
+	
+	### static pages : (they are also loaded one at at time on the home page) load them all now
+	for name in ['project','method','access']:
+		for lan in ['en','fr']:
+			nothing = getStaticHtmlContent(name,lan)
 	
 	### users
 	users={}
@@ -614,23 +619,45 @@ def eReset(request):
 def eShow(request,eid):
 	e = Enquete.objects.get(id=eid)
 	
+	### fetch metas
 	meta = e.meta()
-	metas=[]
-	for m in meta.keys():
-		if m!='description' and m!='relpubl':
-			metas.append([ meta[m]['label'] , meta[m]['value'][0] ])
-
+	METALABEL 	= meta['labels']
+	metavals	= meta['values']
+	displayedmetas=[]
+	
+	### metavlas is a dict, so we need to use index to sort keys, to display in same order than csv original file
+	sortedfcats = [[k,metavals[k]['i']] for k in metavals.keys()]
+	sortedfcats = [arr[0] for arr in sorted(sortedfcats, key=lambda a: a[1])]
+	for fcat in sortedfcats: # each fieldcat
+		vals 	= metavals[fcat]
+		vkeys 	= vals.keys()
+		vkeys.remove('i')
+		sortedf = [[k,vals[k]['i']] for k in vkeys]
+		sortedf = [arr[0] for arr in sorted(sortedf, key=lambda a: a[1])]
+		catmetas=[]
+		for f in sortedf:
+			if f!='description' and f!='relpubl' and f!='i':
+				valstr 	= ", ".join(vals[f]['value'])
+				index 	= vals[f]['i']
+				catmetas.append({'label':METALABEL[f],'values':valstr,'i':index})
+		displayedmetas.append({'label':METALABEL[fcat],'values':catmetas,'i':vals['i']})
+	
+	### contenthtml is made base on description field
 	try:
-		contenthtml	= meta['description']['value'][0]
+		contenthtml	= metavals['general']['description']['value'][0]
 	except:
 		contenthtml = "There wasn't any description field in the meta_study.csv, sorry."
-
-	try:
-		publications = meta['relpubl']['value']
-	except:
-		publications = ["There wasn't any *description field in the meta_study.csv, sorry."]
+	
+	### publications are fetched from documents
+	publications=[]
+	for t in e.texte_set.filter(doccat='publication'):
+		linkstr=""
+		if t.doctype=="LINK":
+			linkDoc = t.locationpath
+			linkstr = '<a target="_new" href="'+linkDoc+'" onclick="event.stopPropagation();"><span class="imExternalLink"> </span></a> '
+		publications.append(linkstr + t.name+" | "+t.description)
 			
-	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metas':metas,'contenthtml':contenthtml,'publications':publications}
+	ctx = {'bodyid':'e','pageid':'overview','enquete':e,'metas':displayedmetas,'contenthtml':contenthtml,'publications':publications}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	return render_to_response('bq_e_show.html',ctx, context_instance=RequestContext(request))
@@ -701,10 +728,12 @@ def edBrowse(request,eid):
 	
 		eiddid = [e.id,t.id]
 		# DOC NAME
-		if t.doctype=='LNK':
+		if t.doctype=='LINK':
 			# external link
 			linkDoc = t.locationpath
 			nameStr = t.name + ' <a target="_new" href="'+linkDoc+'" onclick="event.stopPropagation();"><span class="imExternalLink"> </span></a>'
+		elif t.doctype=='REF':
+			nameStr = t.name
 		else:
 			# display link using edShow
 			linkDoc = reverse(edShow,args=eiddid)
@@ -1795,11 +1824,15 @@ def getLittleFriseJson(request,eid,tid):
 def eSolrIndexClear(request):
 	arg = {'interactive':False,'verbosity':0}
 	clear_index.Command().handle(**arg)
-	return HttpResponse('solr index cleared', mimetype="application/json")
+	logger.info("SOLR INDEX CLEARED")
+	d={'status':'solr index cleared'}
+	return HttpResponse(simplejson.dumps(d,indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
 def eSolrIndexUpdate(request):
 	update_index.Command().handle(verbosity=0)
-	return HttpResponse('solr index updated', mimetype="application/json")
+	logger.info("SOLR INDEX UPDATED")
+	d={'status':'solr index updated'}
+	return HttpResponse(simplejson.dumps(d,indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
 
 

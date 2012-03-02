@@ -98,6 +98,10 @@ def doFiestaToEnquete(e):
 ###########################################################################
 
 
+
+
+
+
 ###########################################################################
 def importEnqueteUsingMeta(folderPath):
 	stdPath=folderPath+'_meta/meta_study.csv'
@@ -105,121 +109,145 @@ def importEnqueteUsingMeta(folderPath):
 	spkPath=folderPath+'_meta/meta_speakers.csv'
 	codPath=folderPath+'_meta/meta_codes.csv'
 	
-	logger.info("PARSING STUDY: "+stdPath)
-	###### Parsing Study metadatas (the only file mandatory!)
+	logger.info("=========== PARSING STUDY: "+stdPath)
+	### Parsing Study metadatas (the only file mandatory!)
 	std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
 	headers = std.fieldnames
 	allmeta={}
-	study_ddi_id 	= 'no idno value found in csv'
-	study_name		= 'no titl value found in csv'
+	allmeta['values']={}	# store metadata
+	allmeta['labels']={}	# store labels (should become static.. for now (changing a lot), included in meta_study.csv)
+	study_ddi_id 	= 'no idno value found in meta_study.csv'
+	study_name		= 'no titl value found in meta_study.csv'
+	# we keep index 'i' to remember the order
+	catcount=0
+	count=0
 	for row in std:
 		if row['*field']!='*descr':
-			field = row['*field'].lower()
-			field = field.replace(" ","")
-			if field.startswith("*"):
-				field = field[1:] #removing *
 			try:
-				label = DDINAMES[field]
+				field 		= row['*field'].lower().replace(" ","").replace("*","")
+				fieldcat 	= row['*fieldcat'].lower().replace(" ","").replace("*","")
+				logger.info("found field: "+fieldcat+" / "+field)
 			except:
-				label = "KEYERROR:"+field
+				logger.info("EXCEPT no *field or *fieldcat column in meta_study.csv")
+			try:
+				allmeta['labels'][field] 	= row['*fieldlabel']
+				allmeta['labels'][fieldcat] = row['*fieldcatlabel']
+			except:
+				logger.info("EXCEPT no *fieldlabel or *fieldcatlabel column in meta_study.csv")
 			value = row['*value']
-			if field not in allmeta.keys():
-				allmeta[field] = {}
-				allmeta[field]['value'] = [value]
+			
+			#### storing value for this line under fieldcat, keeping the order
+			if fieldcat not in allmeta['values'].keys():
+				allmeta['values'][fieldcat]={}
+				allmeta['values'][fieldcat]['i'] = catcount
+				catcount+=1
+				count=0
+			if field not in allmeta['values'][fieldcat].keys():
+				allmeta['values'][fieldcat][field] = {}
+				allmeta['values'][fieldcat][field]['i'] = count
+				allmeta['values'][fieldcat][field]['value'] = [value]
+				count+=1
 			else:
-				allmeta[field]['value'] += [value]
-			allmeta[field]['label'] = label
+				allmeta['values'][fieldcat][field]['value'] += [value]				
+			
 			if field=='idno':
 				study_ddi_id = value
 			if field=='titl':
 				study_name = value
 
-	# create enquete object
+	### create enquete object
 	newEnquete = Enquete(name=study_name,locationpath=folderPath,ddi_id=study_ddi_id,status='1')
 	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
 	newEnquete.save()
 	
 	eidstr = "["+str(newEnquete.id)+"] " # for logger prefix
 	
-	# create permission for this enquete
+	### create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
 	permname = 'EXPLORe_'+str(newEnquete.id)
 	p,isnew = Permission.objects.get_or_create(codename='can_explore_'+str(newEnquete.id),name=permname,content_type=content_type)
 	
 	if os.path.exists(docPath):
 		#mandatoryFields = ['*id','*name','*category','*description','*location','*date']
-		logger.info(eidstr+"PARSING: "+docPath)
+		logger.info(eidstr+"=========== PARSING: "+docPath)
 		###### Parsing Documents
 		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
 		for row in doc:
 			try:
 				if row['*id']!='*descr':
-					file_location = 	folderPath+row['*file']
-					file_extension = 	file_location.split(".")[-1].upper()
-					doc_name = 			row['*name']
-					doc_category = 		row['*category'].lower()
-					doc_description = 	row['*description']
-					doc_location = 		row['*location']
+					try:
+						file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
+						file_extension = 	file_location.split(".")[-1].upper()
+						doc_name = 			row['*name']
+						doc_mimetype = 		row['*mimetype'].lower().replace(" ","")
+						doc_category = 		row['*category'].lower().replace(" ","")
+						doc_public = 		doc_category in DOCUMENT_CATEGORIES.keys()
+						doc_description = 	row['*description']
+						doc_location = 		row['*location']
+						logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
+					except:
+						logger.info("EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
 					try:
 						doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
 					except:
 						doc_date = datetime.datetime.today()
-					doc_public = 		doc_category in DOCUMENT_CATEGORIES
-					logger.info(eidstr+"found doc in meta_documents.csv: "+row['*file'])
-					newDocument = Texte(enquete=newEnquete,name=doc_name,locationpath=file_location,date=doc_date,location=doc_location,status='1',public=doc_public)
-					try:
-						newDocument.filesize = int(os.path.getsize(file_location)/1024)
-					except:
-						newDocument.filesize = 0
-					newDocument.doctype = file_extension[:3]
-					newDocument.doccat = doc_category
-					newDocument.description = doc_description
-					newDocument.save()
-					if not os.path.exists(file_location):
-						# means that it may be an external link
-						newDocument.doctype='LNK'
-						newDocument.locationpath = row['*file']
-						newDocument.status='0'
-						newDocument.save()	
-					else:
-						if file_extension in ['XML','PDF','HTM','CSV']:
-							if file_extension=='XML':
-								if doc_category=='verbatim':
-									newDocument.status='5'
-									newDocument.doctype='TEI'
+
+					### special for ese
+					if doc_category=='ese':
+						esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+						newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+						newEnquete.save()
+					### if normal cat create doc
+					elif doc_category in DOCUMENT_CATEGORIES.keys():
+						if doc_mimetype in DOCUMENT_MIMETYPES:
+							newDocument = Texte(enquete=newEnquete, name=doc_name, doccat=doc_category, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
+							
+							newDocument.doctype = doc_mimetype.upper()
+							if doc_mimetype in ['link','ref']:
+								newDocument.locationpath 	= row['*file']
+								newDocument.filesize 		= 0
+								newDocument.status			= '0'
+								newDocument.save()
+							else:
+								try:
+									newDocument.filesize = int(os.path.getsize(file_location)/1024)
+								except:
+									logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category+" | "+file_location)
+								if doc_mimetype=='xml' and doc_category=='verbatim':
+									newDocument.doctype	= 'TEI'
+									newDocument.status	= '5'
 									newDocument.save()
-								elif doc_category=='ese':
-									esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
-									newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
-									newEnquete.save()
-							elif file_extension=='PDF':
-								newDocument.status='0'
-								newDocument.save()
-							elif file_extension=='HTM':
-								f = open(file_location,'r')
-								wholecontent=f.read()
-								newDocument.contenthtml=wholecontent
-								f.close()
-								newDocument.status='0'
-								newDocument.save()
-							elif file_extension=='CSV':
-								newDocument.status='0'
-								newDocument.save()
-	# 						elif file_extension=='RTF':
-	# 						 	try:
-	# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
-	# 								doc.contenthtml = theDocContentHtml
-	# 								doc.contenttxt = convertUnrtfHtmlToTxt(theDocContentHtml)
-	# 								doc.status="0"
-	# 							except:
-	# 								blabla
+								elif doc_mimetype=='pdf' or doc_mimetype=='csv':
+									newDocument.status	= '0'
+									newDocument.save()
+								elif doc_mimetype=='htm':
+									f = open(file_location,'r')
+									newDocument.contenthtml = f.read()
+									f.close()
+									newDocument.status='0'
+									newDocument.save()
+								else:
+									logger.info(eidstr+"EXCEPT unconsidered document: "+doc_mimetype+" | "+doc_category)
+		# 						elif file_extension=='RTF':
+		# 						 	try:
+		# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
+		# 								doc.contenthtml = theDocContentHtml
+		# 								doc.contenttxt = convertUnrtfHtmlToTxt(theDocContentHtml)
+		# 								doc.status="0"
+		# 							except:
+		# 								blabla
+						else:
+							logger.info(eidstr+"EXCEPT unconsidered *mimetype: "+doc_mimetype)
+					### unknown cat
+					else:
+						logger.info(eidstr+"EXCEPT unconsidered *category: "+doc_category)
 			except:
 				logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:
-		logger.info(eidstr+"PARSING: no doc meta found")
+		logger.info(eidstr+"=========== PARSING: no doc meta found")
 	
 	if os.path.exists(spkPath):
-		logger.info(eidstr+"PARSING: "+spkPath)			
+		logger.info(eidstr+"=========== PARSING: "+spkPath)			
 		###### Parsing Speakers
 		spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
 		headers = spk.fieldnames
@@ -251,15 +279,15 @@ def importEnqueteUsingMeta(folderPath):
 				logger.info(eidstr+" EXCEPT on meta_speakers.csv line: "+row['*id'])
 		setSpeakerColorsFromType(newEnquete)
 	else:
-		logger.info(eidstr+"PARSING: no spk meta found")
+		logger.info(eidstr+"=========== PARSING: no spk meta found")
 	
 	if os.path.exists(codPath):
-		logger.info(eidstr+"PARSING: "+codPath)
+		logger.info(eidstr+"=========== PARSING: "+codPath)
 		###### Parsing Codes
 		cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
 		# to do later..
 	else:
-		logger.info(eidstr+"PARSING: no cod meta found")
+		logger.info(eidstr+"=========== PARSING: no cod meta found")
 		
 	newEnquete.status='0'
 	newEnquete.save()

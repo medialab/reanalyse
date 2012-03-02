@@ -645,15 +645,12 @@ def visMakeStreamTimeline(e,param):
 	nSteps = 1+int(maxPeriods/step) # one more if nSentences undivisible by step
 	
 	allpar_names = STREAMVIZCODES['codes']
-	allpar_colors= STREAMVIZCODES['colors']
 	
 	# only keep non-null paraverbal from that list
 	par_names = []
-	par_colors = []
 	for i,pname in enumerate(allpar_names):
 		if Sentence.objects.filter(texte=t,word__wordentityspeaker__wordentity__code__name=pname).count()!=0:
 			par_names.append(pname)
-			par_colors.append(allpar_colors[i])
 	
 	speakers = t.speaker_set.order_by('-ddi_type')
 		
@@ -690,7 +687,7 @@ def visMakeStreamTimeline(e,param):
 	# now we filter the parvb to keep only non null values, based on maxParvb
 	res['par_layers']=par_layers
 	res['par_ids']=par_ids
-	res['par_colors']=par_colors
+	#res['par_colors']=par_colors # deprecated (set in reanalyse.css)
 	
 	# we can send maximum prvb value(s) or let js do it...
 	res['maxParavbCount']=maxParavbCount	# maximum y-value for parvb

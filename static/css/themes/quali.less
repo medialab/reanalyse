@@ -1,3 +1,6 @@
+@import "boilerplate";
+
+
 @the-background: #484E5C;
 @header-background: #C9C9C9;
 @header-background-light: #f7f7f7;
@@ -139,7 +142,9 @@ header{
 	font-family: 'MisoRegular', sans-serif;
 	font-size:1.25em;
 	text-transform: uppercase;
-	
+	#header-inner{
+		background: @page-background;	
+	}
 	.icon-outer{
 		position: relative;
 		display:block;
@@ -176,20 +181,15 @@ header{
 		
 	}
 	#menu-pages, #menu-settings{
-		height: @header-height;
 		padding:0px @grid-padding;
 	}
-	#menu-pages ul{
-		white-space: nowrap;
-		padding-left:@grid-padding;
-		li{
-			display:inline-block;
-			min-width:48px;
-			text-align:center;
-			padding:@grid-padding/2 @grid-padding;
-			height: @header-height - @grid-padding;
-			
-			a{
+	
+	ul li{
+		display:inline-block;
+		text-align:center;
+		padding:@grid-padding/2 @grid-padding;
+		height: @header-height - @grid-padding;	
+		a{
 				height: 100%;
 				display: block;
 				padding-top: @header-height - 40px;
@@ -198,22 +198,26 @@ header{
 				&:hover{
 					color:black;
 				}
-			}
-		}
-		
+			}	
+	}
+	
+	#menu-pages ul{
+		white-space: nowrap;
+		padding-left:@grid-padding;
+				
 		.icon{
-			width: 42px;
-			height: 42px;
-			margin-left: -21px;
+			width: 40px;
+			height: 40px;
+			margin-left: -20px;
 		}
 		
 		.menuCurrent{
 			background: @page-background;
 		}
-		li:hover{
+		li:not(.menuCurrent):hover{
 			background-color: #DDDDDD;
 		}
-		.menu-project:hover .icon, .menuCurrent.menu-project:hover .icon{
+		:not(.menuCurrent).menu-project:hover .icon{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x @menu-project-y;
 		}
@@ -225,7 +229,7 @@ header{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x*2 @menu-project-y;
 		}
-		.menu-methodology:hover .icon, .menuCurrent.menu-methodology:hover .icon{
+		:not(.menuCurrent).menu-methodology:hover .icon{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x @menu-project-y + @menu-shift-y;
 		}
@@ -237,7 +241,7 @@ header{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x*2 @menu-project-y  + @menu-shift-y;
 		}
-		.menu-access:hover .icon, .menuCurrent.menu-access:hover .icon{
+		:not(.menuCurrent).menu-access:hover .icon{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x @menu-project-y + @menu-shift-y*2;
 		}
@@ -250,7 +254,7 @@ header{
 			background-position: @menu-project-x + @menu-shift-x*2 @menu-project-y  + @menu-shift-y*2;
 		}
 		
-		.menu-studies:hover .icon, .menuCurrent.menu-studies:hover .icon{
+		:not(.menuCurrent).menu-studies:hover .icon{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x @menu-project-y + @menu-shift-y*3;
 		}
@@ -262,17 +266,23 @@ header{
 			background: url( "@{images-sprite}" ) no-repeat;
 			background-position: @menu-project-x + @menu-shift-x*2 @menu-project-y  + @menu-shift-y*3;
 		}
+		
+		.menu-admin .icon{
+			.sprited( @menu-pages-x, 1368px );
+		}
+		:not(.menuCurrent).menu-admin:hover .icon {
+			.sprited( @menu-pages-x +  @menu-pages-shift-x, 1368px );
+		}
+		.menuCurrent.menu-admin .icon{
+			.sprited( @menu-pages-x +  @menu-pages-shift-x * 2, 1368px );
+		}
 	}
 	
 	#menu-settings ul{
 		white-space: nowrap;
-		#menu-language{
-			padding-top: @grid-padding;	
-		}
+		
 		#menu-fullscreen a, #menu-login a{
-			height: 100%;
-			display: block;
-			padding-top: @header-height - 40px;	
+			
 		}
 		#menu-fullscreen.selected .icon{
 			.sprited( @menu-pages-x + @menu-settings-shift-x *2 , @menu-settings-y + @menu-settings-shift-y * 2 );
@@ -298,21 +308,23 @@ header{
 			.sprited( @menu-pages-x + @menu-settings-shift-x , @menu-settings-y + @menu-settings-shift-y * 3 );
 		}
 		
-		#menu-login .icon{
-			.sprited( @menu-pages-x, @menu-settings-y + @menu-settings-shift-y * 3 );
-			width: 40px;
-			height: 40px;
-			margin-left: -20px;			
-		}	
+		#menu-login{
+			.icon{
+				.sprited( @menu-pages-x, @menu-settings-y + @menu-settings-shift-y * 3 );
+				width: 40px;
+				height: 40px;
+				margin-left: -20px;			
+			}
+		
+			#logout{
+				color: @base-color;	
+			}	
+		}
+		
 		li{
-			display: inline-block;	
-			text-align:center;
 			font-size:0.8em;
-			margin: 0 @grid-padding; 
+			
 			a{
-				display: block;
-				color: black;
-				padding-top: 21px;
 				&:hover{
 					color:black;
 				}
@@ -416,14 +428,14 @@ footer{
 		padding: @grid-padding @grid-padding*2;
 	}
 	#sciencespo-logo{
-		.sprited( 7px, 576px);
-		height:68px;
-		width:224px;
+		.sprited( 9px, 577px);
+		height:66px;
+		width:220px;
 	}
 	#dimishs-logo{
-		.sprited( 7px, 649px);
-		height:68px;
-		width:224px;
+		.sprited( 9px, 650px);
+		height:66px;
+		width:220px;
 	}
 }
 
@@ -435,7 +447,9 @@ section{
 		text-align: center;
 	}
 	
-	
+	#view{
+		
+	}
 	
 	#view, #page{
 		background: @page-background;
@@ -459,7 +473,6 @@ section{
 		background: url( "@{images-sprite}" ) repeat-y;
 		background-position: -236px 0px;
 		padding: 0 @grid-padding @sidebar-padding @sidebar-padding ;
-		min-height:200px;
 		font-family: 'MisoRegular', sans-serif;
 	}
 	.allPage{

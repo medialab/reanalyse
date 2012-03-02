@@ -25,11 +25,14 @@
 		<div id="enqueteMetaShow" style="display:visible;">
 			{% if metas %}
 				<table class="enqueteMetaShowTable">
-				{% for v in metas %}
-				<tr class="{% cycle 'odd' 'even' %}">
-					<td class="enqueteMetaShowTableKey">{{v.0}}</td>
-					<td>{{v.1}}</td>
-				</tr>
+				{% for metacat in metas %}
+					{% for meta in metacat.values %}
+					<tr class="{% cycle 'odd' 'even' %} {% if forloop.counter = 1 %}newcat{% endif %}">
+						<td class="enqueteMetaShowTableKeyCat">{% if forloop.counter = 1 %}{{metacat.label}}{% endif %}</td>
+						<td class="enqueteMetaShowTableKeyField">{{meta.label}}</td>
+						<td class="enqueteMetaShowTableKeyVal">{{meta.values}}</td>
+					</tr>
+					{% endfor %}
 				{% endfor %}
 				</table>
 			{% else %}
@@ -45,7 +48,7 @@
 		<h1>Publications</h1>
 		<ul>
 		{% for p in publications %}
-			<li>{{p}}</li>
+			<li>{% autoescape off %}{{p}}{% endautoescape %}</li>
 		{% endfor %}
 		</ul>
 	</div>

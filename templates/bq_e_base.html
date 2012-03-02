@@ -39,14 +39,14 @@
 		<h1 id="topanchor">{{enquete.name}}</h1>
 		<div class="meta_enquete">
 			{% if perms.reanalyseapp.can_make %}
-				author: {{enquete|enqueteMeta:'AuthEnty'}}
+				author: {{enquete|enqueteMeta:'actor/authenty'}}
 				 | uploaded: {{enquete.date}}
 				 | status: {{enquete.get_status_display}}
 					{% if enquete.status != '0' %}
 					({{enquete.statuscomplete}}%)
 					{% endif %}
 			{% else %}
-				{{enquete|enqueteMeta:'AuthEnty'}}
+				{{enquete|enqueteMeta:'actor/authenty'}}
 			{% endif %}
 		</div>
 	</div>
@@ -72,7 +72,7 @@
 		</div>
 		
 		<div class="leftmenublock">
-			<h3>{{enquete.name}}</h3> <span class="emeta-author">{{enquete|enqueteMeta:'AuthEnty'}}</span>
+			<h3>{{enquete.name}}</h3> <span class="emeta-author">{{enquete|enqueteMeta:'actor/authenty'}}</span>
 		</div>
 		
 		<!-- ============================ BROWSE -->

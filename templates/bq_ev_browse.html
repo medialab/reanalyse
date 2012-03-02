@@ -192,7 +192,7 @@
 					
 				</div>
 					
-					<div class="descrContainer" id="descrContainer_{{forloop.counter}}" style="display:none;">{% autoescape off %}{{ v.description }}{% endautoescape %}</div>
+					<div class="descrContainer" id="descrContainer_{{forloop.counter}}">{% autoescape off %}{{ v.description }}{% endautoescape %}</div>
 					{% if perms.can_make %}
 					<script type="text/javascript">
 						$('#descrContainer_{{forloop.counter}}').editable({
@@ -225,7 +225,7 @@
 				{% else %}
 					<!-- =============================== -->
 					<span class="vizLoadingSpinner"></span> 
-					<span style="color:blue;">Viz is loading, it could take long, please be patient... and refresh page</span>
+					<span style="color:blue;">Viz loading... or buggy ?</span>
 					</div>
 				{% endif %}
 				

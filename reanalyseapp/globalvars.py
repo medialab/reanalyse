@@ -14,19 +14,31 @@ STATUS_CHOICES = (
 	('77', '**You won something')
 )
 
-# categories in edbrowse (others won't show up)
-DOCUMENT_CATEGORIES = ['verbatim','analyse','preparatory','publication']
+# categories made public when parsin meta_documents.csv (others won't show up in edbrowse)
+# 'ese' is hidden but parsed
+DOCUMENT_CATEGORIES = {}
+DOCUMENT_CATEGORIES['verbatim']		= 'Entretien'
+DOCUMENT_CATEGORIES['analyse']		= 'Analyse'
+DOCUMENT_CATEGORIES['preparatory']	= 'Preparatory'
+DOCUMENT_CATEGORIES['publication'] 	= 'Publication'
+DOCUMENT_CATEGORIES['misc'] 		= 'Divers'
+DOCUMENT_CATEGORIES['joker']		= 'SpaceDoc'
 
+# mimetypes considered on upload/parsing
+DOCUMENT_MIMETYPES=['xml','pdf','htm','csv','link','ref']
+
+# types of document from the django model point of view
 DOCUMENT_TYPE_CHOICES = (
-	('PDF', 'PDF'),
 	('TEI', 'XML TEI'),
-	('TXT', 'Text File'),
+	('PDF', 'PDF'),
 	('HTM', 'HTML File'),
-	('RTF', 'RTF'),
 	('CSV', 'CSV Table'),
-	('ATL', 'XML Atlas.Ti'),
-	('CTX', 'CAQDAS RTF'),
-	('LNK', 'External link'),
+	#('TXT', 'Text File'),
+	#('RTF', 'RTF'),
+	#('ATL', 'XML Atlas.Ti'),
+	#('CTX', 'CAQDAS RTF'),
+	('LINK', 'External link'),
+	('REF', 'Only reference'),
 )
 # To know if we show/hide speaker attributes
 ATTRIBUTE_PUBLICY_CHOICES = (
@@ -60,7 +72,7 @@ LANG_CHOICES = (
 
 ################################################################################ VERBATIM
 ########## PONCTUATION
-SENTENCE_UTT_SYMBOLS = dict()
+SENTENCE_UTT_SYMBOLS = {}
 SENTENCE_UTT_SYMBOLS['exclamative']='! '
 SENTENCE_UTT_SYMBOLS['declarative']='. '
 SENTENCE_UTT_SYMBOLS['interrogative']='? '
@@ -70,7 +82,7 @@ SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 # ACTIVATED CODES = those in TextStreamTimeline viz (in order) - nb: if there is not code in texte, it will not show on viz !
 STREAMVIZCODES={}
 STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible','break','comment','time']
-# deprecated colors, now set in reanalyse.css
+# deprecated colors, now all set in reanalyse.css
 #STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
 
 # ACTIVATED CODES = displayed IN edShow to show/hide
@@ -234,53 +246,4 @@ VIZTYPESDESCR = 'Please clic me to update (html) description. If you need genera
 ########################################################################################################################
 
 
-DDILABELS={}
-DDICATEGORIES={}
-DDILABELS["idno"]		="Identifiant unique"
-DDILABELS["titl"]		="Titre"
-DDILABELS["abstract"]	="Résumé"
-
-DDILABELS["description"]		="Description"
-DDILABELS["relpubl"]			="Publications"
-
-DDILABELS["discipline"]	="Discipline"
-DDILABELS["keywords"]	="Mots clefs"
-DDILABELS["topicclassification"]	="Classification"
-DDILABELS["timeperiodcovered"]	="Période couverte"
-DDILABELS["country"]		="Pays couverts"
-
-DDILABELS["authenty"]	="Auteur"
-DDILABELS["fundag"]		="Agence de financement"
-DDILABELS["grantno"]		="Bourses"
-DDILABELS["distrbtr"]	="Distributeur des données"
-DDILABELS["depositr"]	="Déposant"
-DDILABELS["locationofunitsofobservation"]	="Niveau de comparatisme"
-DDILABELS["geogcover"]		="Couverture géographique"
-DDILABELS["spatialunits"]	="Unités spatialisées"
-DDILABELS["observunits"]		="Unités d'observation"
-DDILABELS["targetgroups"]	="Groupes de population ciblés"
-DDILABELS["studydates"]		="Dates de l'enquête"
-DDILABELS["colldate"]		="Dates de récolte des données"
-DDILABELS["timedimension"]	="Périodicité"
-DDILABELS["modedatacollection"]	="Accès aux observations"
-DDILABELS["sampprocedure"]	="Echantillonnage "
-DDILABELS["weighting"]		="Segmentation"
-DDILABELS["methodofdatacollection"]	="Technique de collection"
-DDILABELS["numberoffiles"]	="Nombre de documents"
-DDILABELS["datakind"]		="Types de documents"
-DDILABELS["numberofunits"]	="Nombre d'observations"
-DDILABELS["collsitu"]		="Durée des observations"
-DDILABELS["transcription"]	="Transcription"
-DDILABELS["anonymization"]	="Anonymisation"
-DDILABELS["analysis"]		="Analyse"
-DDILABELS["langdata"]		="Language données"
-DDILABELS["langdoc"]			="Langage documentation"
-DDILABELS["accessconditions"]	="Conditions d'accès"
-DDILABELS["locarch"]				="Localisation archives"
-DDILABELS["contact"]				="Contact"
-DDILABELS["firstedition"]	="Première version"
-DDILABELS["latestedition"]	="Dernière version"
-DDILABELS["copyright"]	="copyright"
-DDILABELS["software"]	="Logiciel"
-DDILABELS["authEnty"]	="Edition"
 

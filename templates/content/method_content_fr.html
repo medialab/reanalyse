@@ -87,74 +87,81 @@ NB: Page en cours de rédaction...
 		Cette table contient les métadonnées générales concernant une enquête.<br/>
 		Elles seront affichées sur la page Overview de chaque enquête.
 		<table class="content_norm_ex">
-			<tr><td>*field</td><td>*value</td><td>*description</td><td>DDI XML</td></tr>
-			<tr><td>*idno</td><td>cdsp.bequali.enqupilot.ddi</td>
-				<td class="content_norm_orig">[DDI id] global unique de l'enquête</td>	
-				<td>/stdyDscr/citation/titlStmt/IDNo</td></tr>
-			<tr><td>*titl</td><td>Enquête Pilote</td>
-				<td class="content_norm_orig">[Intitulé] de l'enquête</td>	
-				<td>/stdyDscr/citation/titlStmt/titl</td></tr>
-			<tr><td>*AuthEnty</td><td>John Smith</td>
-				<td class="content_norm_orig">[Auteur(s)] de l'enquête</td>	
-				<td>/stdyDscr/citation/AuthEnty</td></tr>
-			<tr><td>*AuthEnty</td><td>Julia Trevise</td>
-				<td class="content_norm_orig">-</td>	
-				<td>/stdyDscr/citation/AuthEnty</td></tr>
-			<tr><td>*fundAg</td><td>Laboratoire ABCD</td>
-				<td class="content_norm_orig">[Financeur]</td>	
-				<td>/stdyDscr/citation/prodStmt/fundAg</td></tr>
-			<tr><td>*fundAg</td><td>Entreprise ABCD</td>
-				<td class="content_norm_orig">-</td>	
-				<td>/stdyDscr/citation/prodStmt/fundAg</td></tr>	
-			<tr><td>*grantNo</td><td>Bourse ABCD</td>
-				<td class="content_norm_orig">-</td>	
-				<td>/stdyDscr/citation/prodStmt/grantNo</td></tr>
-			<tr><td>*distrbtr</td><td>Centre de données socio-politiques</td>
-				<td class="content_norm_orig">[Distributeur]</td>	
-				<td>/stdyDscr/citation/distStmt/distrbtr</td></tr>
-			<tr><td>*depositr</td><td>Sophie Duchesne</td>
-				<td class="content_norm_orig">[Dépositaire]</td>	
-				<td>/stdyDscr/citation/distStmt/depositr</td></tr>
-			<tr><td>*abstract</td><td>Enquête créee en 2010 permettant d'exhiber l'archivage et la structuration de données qualitatives [...]</td>
-				<td class="content_norm_orig">[Description] de l'enquête (une ou deux phrases)</td>	
-				<td>/stdyDscr/stdyInfo/abstract</td></tr>
-			<tr><td>*description</td><td>< h1 >Contexte< /h1>< p > Cette enquête ... < /p ></td>
-				<td class="content_norm_orig">[Description] plus longue, apparaîtra en html à la page Overview</td>	
-				<td>! champs non DDI</td></tr>
-			<tr><td>*nation</td><td>France</td>
-				<td class="content_norm_orig">[Pays] impliqués</td>	
-				<td>/stdyDscr/sumDscr/nation</td></tr>
-			<tr><td>*nation</td><td>Belgium</td>
-				<td class="content_norm_orig">-</td>	
-				<td>/stdyDscr/sumDscr/nation</td></tr>
-			<tr><td>*AuthEnty</td><td>John Larchiveur</td>
-				<td class="content_norm_orig">[Responsable] de l'archive</td>	
-				<td>/docDscr/citation/rspStmt/AuthEnty</td></tr>
-			<tr><td>*copyright</td><td>CDSP 2011</td>
-				<td class="content_norm_orig">[Copyright] de production de l'archive</td>
-				<td>/docDscr/citation/prodStmt/copyright</td></tr>
+			<tr><td>*field</td><td>*fieldlabel</td><td>*fieldcat</td><td>*fieldcatlabel</td><td>*value</td><td>*description</td></tr>
 
-			<tr><td>*anlyUnit</td><td>?</td>
-				<td class="content_norm_orig">? [] </td>
-				<td>?</td></tr>
-			<tr><td>*timeMeth</td><td>?</td>
-				<td class="content_norm_orig">? [Méthode de Collection] ?</td>
-				<td>?</td></tr>
-			<tr><td>*sampProc</td><td>échantillon INSEE</td>
-				<td class="content_norm_orig">? [Échantillon] ? procédure de recrutement ?</td>
-				<td>?</td></tr>
+			<tr class="content_norm_expl">
+				<td>*descr</td>
+				<td>nom du champ dans le site enquête</td>
+				<td>catégorie</td>
+				<td>nom de la catégorie dans le site enquête</td>
+				<td>valeur pour cette enquête</td>
+				<td class="content_norm_orig">explications</td>	
+				</tr>
+							
+			<tr><td>*idno</td><td>[NP]</td><td>[NP]</td><td>[NP]</td>
+				<td>cdsp.bequali.enqupilot.ddi</td>
+				<td class="content_norm_orig">DDI id global unique de l'enquête</td>	
+				</tr>
+			
+			<tr><td>*titl</td><td>[NP]</td><td>[NP]</td><td>[NP]</td>
+				<td>Enquête Pilote</td>
+				<td class="content_norm_orig">Nom de l'enquête</td>	
+				</tr>
+			
+			<tr><td>*description</td><td>[NP]</td><td>[NP]</td><td>[NP]</td>
+				<td>< h1 >Contexte< /h1 > < p > texte < /p> </td>
+				<td class="content_norm_orig">Description plus longue de l'enquête en html</td>	
+				</tr>
+			
+			<tr><td>*abstract</td><td>[NP]</td><td>[NP]</td><td>[NP]</td>
+				<td>Europe et veille politique chez les jeunes militants</td>
+				<td class="content_norm_orig">courte description qui apparaitra dans la liste des enquêtes</td>	
+				</tr>
+
+			<tr><td>authenty</td><td>Auteur(s)</td><td>actor</td><td>Acteur(s)</td>
+				<td>Julia Trevise</td>
+				<td class="content_norm_orig">-</td>	
+				</tr>
+				
+			<tr><td>authenty</td><td>Auteur(s)</td><td>actor</td><td>Acteur(s)</td>
+				<td>Bernard Bohn</td>
+				<td class="content_norm_orig">-</td>	
+				</tr>
+							
+			<tr><td>nation</td><td>Pays</td><td>actor</td><td>Acteur(s)</td>
+				<td>France</td>
+				<td class="content_norm_orig">-</td>	
+				</tr>
+			
+			<tr><td>grantno</td><td>Bourse</td><td>funding</td><td>Financement</td>
+			<td>Entreprise ABCD</td>
+				<td class="content_norm_orig">-</td>	
+				</tr>
+			
+			<tr><td>distrbtr</td><td>Distributeur</td><td>funding</td><td>Financement</td>
+				<td>Centre de données socio-politiques</td>
+				<td class="content_norm_orig">-</td>	
+				</tr>
+
+			<tr><td>...</td><td>...</td><td>...</td><td>...</td>
+				<td>...</td>
+				<td class="content_norm_orig">...</td>	
+				</tr>
+							
 		</table>
 	</li>
 	
 	<li><a name="meta_documents.csv"><h4>Table des documents <span class="content_norm_file">meta_documents.csv</span></h4></a>
 		Décrit les documents constitutifs d'une enquête.<br/>
 		Notez les deux dernière colonnes permettant de conserver l'historique des modifications liées à l'archivage.<br/>
-		S'il existe une enquête sur enquête (ESE), les documents associés sont également listés.
+		L'enquête sur enquête est décrite dans le fichier ese.xml, et référencée par la *category "ese".<br/>
+		Les documents de la *category "publication" seront accessibles sur la page Overview du site-enquête.<br/>
 		<table class="content_norm_ex">
-			<tr><td>*id</td><td>*file</td><td>*name</td><td>*category</td><td>*description</td><td>*date</td><td>*location</td><td>*source</td><td>*source_info</td></tr>
+			<tr><td>*id</td><td>*file</td><td>*mimetype</td><td>*name</td><td>*category</td><td>*description</td><td>*date</td><td>*location</td><td>*source</td><td>*source_info</td></tr>
 			<tr class="content_norm_expl">
 				<td>*descr</td>
 				<td>emplacement du fichier dans le dossier enquête, ou lien externe</td>
+				<td>/xml /htm /csv /pdf /link /ref</td>
 				<td>nom dans le site enquête</td>
 				<td>/preparatory /analyse /verbatim /publication /ese</td>
 				<td>apparaît en infobulle à coté de chaque document</td>
@@ -163,41 +170,54 @@ NB: Page en cours de rédaction...
 				<td>fichier original s'il y a eu conversion lors de l'archivage</td>
 				<td>opération(s) appliquées lor de la conversion</td>
 			</tr>
-		 	<tr><td>d000</td><td class="content_norm_file">_data/ types_ideologiques.csv</td><td>Tableau idéologique</td><td>preparatory</td>
+			
+		 	<tr><td>d000</td><td class="content_norm_file">_data/ types_ideo.csv</td><td>csv</td>
+		 		<td>Tableau idéologique</td><td>preparatory</td>
 		 		<td>Descriptions des différents types idéologiques analysés</td><td>20/10/86</td><td></td>
-		 		<td class="content_norm_file content_norm_orig">Tableau4 types.doc</td><td class="content_norm_orig">ordonné par abétique avec normalisation des dates</td></tr>
-		 	<tr><td>d001</td><td class="content_norm_file">_data/ guide_entretiens.html</td><td>Guide des entretiens</td><td>preparatory</td>
+		 		<td class="content_norm_file content_norm_orig">Tableau4 types.doc</td>
+		 		<td class="content_norm_orig">ordonné par abétique avec normalisation des dates</td></tr>
+		 		
+		 	<tr><td>d001</td><td class="content_norm_file">_data/ guide_entr.html</td><td>htm</td>
+		 		<td>Guide des entretiens</td><td>preparatory</td>
 		 		<td>Guide d'entretiens et syntaxe de transcription</td><td>00/10/86</td><td></td>
-		 		<td class="content_norm_file content_norm_orig">guide d'entretiens.docx</td><td class="content_norm_orig">export html (balises h1/h2/div/p)</td></tr>
-		 	<tr><td>d002</td><td class="content_norm_file">_verbatim/ entretien_27.txt</td><td>Entretien 27</td><td>verbatim</td>
+		 		<td class="content_norm_file content_norm_orig">guide d'entretiens.docx</td>
+		 		<td class="content_norm_orig">export html (balises h1/h2/div/p)</td></tr>
+		 		
+		 	<tr><td>d002</td><td class="content_norm_file">_verbatim/ entretien_27.txt</td><td>txt</td>
+		 		<td>Entretien 27</td><td>[non public]</td>
 		 		<td>Focus Group n°27 au format TXT</td><td>00/05/98</td><td>Paris, France</td>
-		 		<td class="content_norm_file content_norm_orig">entr n°27 reludéfinitif.rtf</td><td class="content_norm_orig">extraction du texte (UTF-8) et adaptation du codage</td></tr>
-		 	<tr><td>d003</td><td class="content_norm_file">_verbatim/ entretien_27.xml</td><td>Entretien 27</td><td>verbatim</td>
+		 		<td class="content_norm_file content_norm_orig">entr n°27 reludéfinitif.rtf</td>
+		 		<td class="content_norm_orig">extraction du texte (UTF-8) et adaptation du codage</td></tr>
+				
+			<tr><td>d003</td><td class="content_norm_file">_verbatim/ entretien_27.xml</td><td>xml</td>
+				<td>Entretien 27</td><td>verbatim</td>
 		 		<td>Focus Group n°27 au format XML TEI</td><td>00/05/95</td><td>Paris, France</td>
-		 		<td class="content_norm_file content_norm_orig">_verbatim/ entretien_27.txt</td><td class="content_norm_orig">Exmaralda > TEI Drop</td></tr>
-			<tr><td>d004</td><td class="content_norm_file">_data/ rapport.pdf</td><td>Rapport d'enquête</td><td>analyse</td>
+		 		<td class="content_norm_file content_norm_orig">_verbatim/ entretien_27.txt</td>
+		 		<td class="content_norm_orig">Exmaralda > TEI Drop</td></tr>
+
+			<tr><td>d004</td><td class="content_norm_file">_data/ rapport.pdf</td><td>pdf</td>
+				<td>Rapport d'enquête</td><td>analyse</td>
 				<td>Article publié suite à l'enquête</td><td>00/10/12</td><td></td>
-				<td class="content_norm_file content_norm_orig">Rapport d'enquête.doc</td><td class="content_norm_orig">export pdf</td></tr>
-			<tr><td>d005</td><td class="content_norm_file">http:// publi.fr/article.pdf</td><td>Publication</td><td>publication</td>
+				<td class="content_norm_file content_norm_orig">Rapport d'enquête.doc</td>
+				<td class="content_norm_orig">export pdf</td></tr>
+
+			<tr><td>d034</td><td class="content_norm_file">[NP]</td><td>ref</td>
+				<td>Publication journal TEI</td><td>publication</td>
+				<td>Article publié p.34-35 du journal TEI</td><td>15/10/12</td><td></td>
+				<td class="content_norm_file content_norm_orig"></td>
+				<td class="content_norm_orig"></td></tr>
+										 		
+			<tr><td>d005</td><td class="content_norm_file">http:// publi.fr/page.htm</td><td>link</td>
+				<td>Publication</td><td>publication</td>
 				<td>Intervention dans le rapport du ministère ...</td><td>11/10/12</td><td></td>
-				<td class="content_norm_file content_norm_orig">Rapport d'enquête.doc</td><td class="content_norm_orig">export pdf</td></tr>
-			<tr class="content_norm_ese"><td>d006</td><td class="content_norm_file">_ese/ ese.xml</td><td>Enquête sur Enquête</td><td>ese</td>
-				<td>ce fichier xml décrit l'ensemble des fichiers de l'ESE (html, audio) se trouvant dans le dossier _ese</td><td></td><td></td>
-				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
-<!--
-			<tr class="content_norm_ese"><td>d005</td><td class="content_norm_file">ese_1_researcher.html</td><td>ESE 1.Researcher</td><td>ese</td>
-				<td></td><td></td><td></td>
-				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
-			<tr class="content_norm_ese"><td>d006</td><td class="content_norm_file">ese_2_theory.html</td><td>ESE 2.Theory</td><td>ese</td>
-				<td></td><td></td><td></td>
-				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
-			<tr class="content_norm_ese"><td>d007</td><td class="content_norm_file">ese_1_researcher.a.mp3</td><td>ESE 1.a Trajectoire recherche</td><td>ese</td>
-				<td></td><td></td><td></td>
-				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
-			<tr class="content_norm_ese"><td>d008</td><td class="content_norm_file">ese_1_researcher.b.mp3</td><td>ESE 1.b Posture personnelle</td><td>ese</td>
-				<td></td><td></td><td></td>
-				<td class="content_norm_file content_norm_orig"></td><td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
--->
+				<td class="content_norm_file content_norm_orig"></td>
+				<td class="content_norm_orig"></td></tr>
+				
+			<tr class="content_norm_ese"><td>d006</td><td class="content_norm_file">_ese/ ese.xml</td><td>xml</td>
+				<td>[NP]</td><td>ese</td>
+				<td>ce fichier xml décrit l'ensemble des fichiers de l'ESE (html, audio) se trouvant dans le dossier _ese</td><td>[NP]</td><td>[NP]</td>
+				<td class="content_norm_file content_norm_orig"></td>
+				<td class="content_norm_orig">produit par enquêteur secondaire</td></tr>
 		 </table>
 	</li>
 	

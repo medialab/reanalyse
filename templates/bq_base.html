@@ -38,8 +38,9 @@
 	<ul>
 		<li id="menu-fullscreen">
 			<div class="icon-outer"><div class="icon"></div></div>
-				<a href="#" onclick="toggleFullScreenMode();return false;" >FULL SCREEN</a></li>	
-		</li>
+				<a href="#" onclick="toggleFullScreenMode();return false;" >fullscreen</a></li>	
+		
+		
 		<!-- <li id="menu-fullscreen">
 			<span class="setFullscreen On"><a href="" onclick="toggleFullScreenMode();return false;">fullcreenon</a></span>
 			<span class="setFullscreen Off" style="display:none";><a href="" onclick="toggleFullScreenMode();return false;">fullcreenoff</a></span>
@@ -50,47 +51,21 @@
 			</div>
 
 		-->
-		</li>
+		
 		<!-- ======================== -->
+		
 		<li id="menu-language">
-			{% get_language_info for LANGUAGE_CODE as lang %}
-			{% get_language_info_list for LANGUAGES as languages %}
-			{% for language in languages %}
-				<div id="setLan_{{language.code}}" class="setLan {{language.code}} {{language.code}} {% if LANGUAGE_CODE = language.code %}selected{% endif %}">
-					<div class="icon-outer"><div class="icon"></div></div>
-					<a href="" >{{language.name_local}}</a></div>
-				<script type="text/javascript">
-					$("#setLan_{{language.code}}").click(function(e){
-						$.post('/reanalyse/i18n/setlang/',{ next:'{{request.path}}', language:'{{language.code}}'});
-					});
-				</script>
-			{% endfor %}
-			LANGUAGE
-			{% comment %}
-			<!--<form action="/reanalyse/i18n/setlang/" method="post" id="langform">
-				{% csrf_token %}
-				<input name="next" type="hidden" value="{{ request.build_absolute_uri }}" />
-				<select name="language" id="langselect">
-					{% get_language_info_list for LANGUAGES as languages %}
-					{% for language in languages %}
-					<option {% if lang.code == language.code %}selected="selected"{% endif %} value="{{ language.code }}">
-					{{ language.name_local }}
-					</option>
-					{% endfor %}
-				</select>
-				<script type="text/javascript">
-					$("#langselect").change(function(e){ $("#langform").submit();});
-				</script>
-			</form>-->
-			{% endcomment %}
-			
-		</li>
-		<!-- ======================== -->
+			<div class="icon-outer"><div class="icon"></div></div>
+				<a href="#" onclick="return false;" >language</a></li>	
+		
 		<li id="menu-login">
 			{% if user.is_authenticated %}
+				<a id="logout" href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>
+				<!--
 				<span id="menu-login-username">{{ user.username }}</span>
 				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a></div></div>
-				{% comment %}<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login">login</a>{% endcomment %}
+				-->
+				
 			{% else %}
 				<div class="icon-outer"><div class="icon"></div></div>
 				<a  href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login" title="login" >login</a></li>	
@@ -173,6 +148,37 @@
 	
 	{% endblock bottomscripts %}
 		
-
+{% comment %}
+<li id="menu-language">
+			{% get_language_info for LANGUAGE_CODE as lang %}
+			{% get_language_info_list for LANGUAGES as languages %}
+			{% for language in languages %}
+				<div id="setLan_{{language.code}}" class="setLan {{language.code}} {{language.code}} {% if LANGUAGE_CODE = language.code %}selected{% endif %}">
+					<div class="icon-outer"><div class="icon"></div></div>
+					<a href="" >{{language.name_local}}</a></div>
+				<script type="text/javascript">
+					$("#setLan_{{language.code}}").click(function(e){
+						$.post('/reanalyse/i18n/setlang/',{ next:'{{request.path}}', language:'{{language.code}}'});
+					});
+				</script>
+			{% endfor %}
+			LANGUAGE
+			
+			
+		</li>
+		<!-- ======================== -->
+		<li id="menu-login">
+			{% if user.is_authenticated %}
+				<!--
+				<span id="menu-login-username">{{ user.username }}</span>
+				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a></div></div>
+				-->
+				
+			{% else %}
+				<div class="icon-outer"><div class="icon"></div></div>
+				<a  href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login" title="login" >login</a></li>	
+			{% endif %}
+		</li>
+{% endcomment %}
 
 
