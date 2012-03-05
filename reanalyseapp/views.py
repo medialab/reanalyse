@@ -514,12 +514,12 @@ def eParse(request):
 			
 	######## unzip and parse
 	if thezip!="" and os.path.exists(upPath+thezip):
-		#try:
-		os.mkdir(upPath+"extracted")
-		unzipper = unzip()
-		unzipper.extract(upPath+thezip,upPath+"extracted/")
-		#except:
-		#logger.info("EXCEPT de-zip-ing archive. wtf ?")
+		try:
+			os.mkdir(upPath+"extracted")
+			unzipper = unzip()
+			unzipper.extract(upPath+thezip,upPath+"extracted/")
+		except:
+			logger.info("EXCEPT de-zip-ing archive. weird zip ?")
 			
 		enqueterootpath = ""
 		if os.path.exists(upPath+"extracted/_meta/"):

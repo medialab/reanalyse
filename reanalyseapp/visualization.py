@@ -122,7 +122,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 			if textes==[]:
 				textes = Texte.objects.filter(doctype='TEI')
 			for t in textes:
-				spks = t.speaker_set.all()
+				spks = t.speaker_set.exclude(ddi_type='INV')
 				if len(spks)>0:
 					newVizu = makeVisualizationObject(e,typ,descr)
 					d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
@@ -319,7 +319,7 @@ def visMakeTermVectorGraph(e,viz,param):
 				di.update({'att_'+atype.name:att.name})
 		g.add_node('Speaker_'+str(s.id),di)
 		# deprecated : before we stored all the values, to be able to filter ngrams...
-		#termVectorDic[s.id] = getSolrTermVectorsDict([s],'ngrams',count=howmany,mintn=3)
+		#termVectorDic[s.id] = getSolrTermVectorsDict([s],'ngrams',mintn=3)
 
 	############ USAGE A = keeping all ngrams(tf/df/tfidf) from Solr
 # 	for s in speakers:
@@ -779,7 +779,7 @@ def getSolrSimilarArray(speaker,maxcount):
 			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+sid+"), unknown spk: "+eidc)
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
-def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams'
+def getSolrTermVectorsDict(speakers,field,mintn): # field = 'text'/'ngrams'
 	# USING PYSOLR or PYTHONSOLR : same syntax
 	# http://jiminy-dev.medialab.sciences-po.fr:8983/solr/select?q=speakerid:36&fq=django_ct:(reanalyseapp.speaker)&qt=tvrh&fl=text&tv.fl=ngrams&tv.all=true
 	p = {'fq':'django_ct:(reanalyseapp.speaker)','qt':'tvrh','fl':'text','tv.fl':field,'tv.all':'true','wt':'json'}
@@ -840,7 +840,7 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 		###### RULE 1 bis: keep ngrams that appears at least mintn
 		keepw = keepw and d['tf']>=mintn
 		###### RULE 2 : dont keep ngrams included in other-longer-word (if same df/tf)
-		keepw = keepw and not True in [(w in otherw and w!=otherw and d['df']==alldic[otherw]['df'] and d['tf']==alldic[otherw]['tf']) for otherw in alldic.keys()]
+		#keepw = keepw and not True in [(w in otherw and w!=otherw and d['df']==alldic[otherw]['df'] and d['tf']==alldic[otherw]['tf']) for otherw in alldic.keys()]
 		
 		if keepw:
 			df = d['df']/float(totalDocuments)
@@ -850,19 +850,9 @@ def getSolrTermVectorsDict(speakers,field,count,mintn): # field = 'text'/'ngrams
 			out[w] = newd
 	if len(out)==0:
 		return {'nongramsfoundwith_mintn='+str(mintn)+"_spk="+"_".join([str(s.id) for s in speakers]):{'df':0,'tf':0,'dn':0,'tn':0,'tfidf':0}}
-	# todo: only keep 'n' top wanted based on tfidf (can we do it in solr query rather than python ?)
-	# we can do it here, or later when making graph/tagcloud
-	 
-	# 1. get all words with tfidf and sort
-# 	wtfs = [ [v['tfidf'],k] for k,v in out.items() ]
-# 	wtfs = sorted(wtfs, key=lambda a: -a[0])
-# 	
-# 	# 2.
-# 	outF={}
-# 	for w in wtfs[:maxcount]:
-# 		outF[w[1]]=out[w[1]]
 	
 	return out
+	
 	# 'text': {'df': 24, 'tf': 4, 'tf-idf': 0.16666666666666666 }
 	# 'tout': {'df': 464, 'tf': 1, 'tf-idf': 0.0021551724137931034 }
 	#except:
@@ -873,7 +863,7 @@ def makeAllTfidf(e):
 	for s in e.speaker_set.all():
 		#logger.info("now reseting tfidf ngrams for speaker:"+str(s.id))
 		s.ngramspeaker_set.all().delete()
-		termd = getSolrTermVectorsDict([s],'ngrams',count=0,mintn=3)
+		termd = getSolrTermVectorsDict([s],'ngrams',mintn=2)
 		for w in termd.keys():
 			d=termd[w]
 			newNgram,isnew = Ngram.objects.get_or_create(enquete=e,content=w,df=d['df'])	
@@ -898,12 +888,11 @@ def visMakeTagCloudFromTermVectors(e,param):
 	howmany = int(param['count'])
 	if howmany==0:
 		howmany=200
-	#similcount = param['similcount']
 
 	wordsArr=[]
   	
-  	############################################# SOLR QUERY !
-	d = getSolrTermVectorsDict(speakers,'ngrams',count=howmany,mintn=3)
+  	############################################# WE COULD : SOLR QUERY !
+	d = getSolrTermVectorsDict(speakers,'ngrams',mintn=2)
 	for w in d.keys():
 		dic = {'word':w,'count':d[w]['tfidf']}
 		dic.update(d[w])
@@ -911,39 +900,20 @@ def visMakeTagCloudFromTermVectors(e,param):
 	wordsArr = sorted(wordsArr, key=lambda k: -k['count'])
 	wordsArr = wordsArr[:howmany]
 	
-  	############################################# Old (NEW) WAY: look at stored model (works only for only ONE speaker)
-# 	else:
-# 		s=speakers[0]
-# 		if howmany==0:
-# 			thengs = s.ngramspeaker_set.order_by("-tfidf")
+  	############################################# WE COULD : look at stored model (works only for only ONE speaker)
+  	# only ok for 1 speaker
+  	#thengs = s.ngramspeaker_set.order_by("-tfidf")[:howmany]
+	#qs = e.ngram_set.all()
+# 	qspk = None
+# 	for s in speakers:
+# 		if qspk==None:
+# 			qspk = Q(ngramspeaker_set.speaker=s)
 # 		else:
-# 			thengs = s.ngramspeaker_set.order_by("-tfidf")[:howmany]
-# 			
-# 		for ngs in thengs:
-# 	  		ng = ngs.ngram
-# 	  		spkArray=[]
-	  		
-	  	##################################################### deprecated ? FETCH SIMILAR SPEAKERS
-	#		similSpeakersArray = getSolrSimilarArray(s,similcount) # return sorted array of [score,sId,sName]
-	  		####### OLD WAY : fetching all speakers
-	#   		for ongs in ng.ngramspeaker_set.all():
-	#   			if ongs!=ngs: # only OTHER speakers !
-	# 	  			os = ongs.speaker
-	# 	  			similspeakers[os.id] = os.name
-	# 	  			spkArray.append({'id':os.id,'tfidf':ongs.tfidf,'tf':ongs.tf,'tn':ongs.tn})
-	
-	  		####### NEW WAY : fetch spkers based on solr-similarity
-	#   		for similIdName in similSpeakersArray:
-	#   			try:
-	#   				ongs = NgramSpeaker.objects.get(speaker__id=int(similIdName[1]),ngram=ng)
-	#   				spkArray.append({'id':similIdName[1],'tfidf':ongs.tfidf,'tf':ongs.tf,'tn':ongs.tn})
-	#   			except:
-	#   				donothing=1
-	#   				#spkArray.append({'id':0,'tfidf':0,'tf':0,'tn':0})
-	  			
-	  			
-# 	  		wordsArr.append({'word':ng.content,'speakers':spkArray,'count':ngs.tfidf,'tfidf':ngs.tfidf,'df':ng.df,'dn':ng.ngramspeaker_set.count(),'tf':ngs.tf,'tn':ngs.tn})
-  		#############################################
+# 			qspk = qspk | Q(ngramspeaker_set.speaker=s)
+# 	for ng in e.ngram_set.filter(qspk):
+# 		dic = {'word':w,'count':d[w]['tfidf']}
+# 		dic.update(d[w])
+# 		wordsArr.append(dic)
   	
   	res={}
 	res['words']=wordsArr

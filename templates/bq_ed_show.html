@@ -161,19 +161,20 @@
 
 <div class="introHtml">
 	<!-- ========================================================================= -->
-	<b>Investigator: </b>
-		{% if speakers.inv %}
-		<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.inv.0.id %}">{{speakers.inv.0.name}}</a>, 
-		{{speakers.inv.0|speakerMeta}}
-		{% endif %}
-		<br/>
-	<b>Speaker: </b>
-		{% if speakers.spk %}
-		<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.spk.0.id %}">{{speakers.spk.0.name}}</a>, 
-		{{speakers.spk.0|speakerMeta}}
-		{% endif %}
-	<h2>Transcription</h2>
-	
+	<p>
+	<ul>
+		<li><b>Investigator: </b>
+			{% if speakers.inv %}
+			<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.inv.0.id %}">{{speakers.inv.0.name}}</a>, {{speakers.inv.0|speakerMeta}}
+			{% endif %}
+		</li>
+		<li><b>Speaker: </b>
+			{% if speakers.spk %}
+			<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.spk.0.id %}">{{speakers.spk.0.name}}</a>, {{speakers.spk.0|speakerMeta}}
+			{% endif %}
+		</li>
+	</ul>
+	</p>	
 	
 	{% comment %}
 	<!-- ========================================================================= -->
@@ -302,6 +303,8 @@
 				initVerbatimTooltips();
 				//console.log("ntotal:"+ $('span:regex(class,lem_*)').length);
 				updateDictionnarySelect();
+				// sidebar height
+				dime.updateView();
 			}
 		});
 	}
