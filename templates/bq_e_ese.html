@@ -97,7 +97,7 @@
 				{% for subchapter in chapter.subchapters %}
 				{
 				name:"{{subchapter.name|escapejs}}",
-				mp3:"{% url reanalyse.reanalyseapp.views.stream enquete.id subchapter.audiopath %}",
+				mp3:"{% url reanalyse.reanalyseapp.views.stream enquete.id subchapter.audioid %}",
 				}
 				{% if not forloop.last %},{% endif %}
 				{% endfor %}

@@ -44,7 +44,8 @@ DOCUMENT_TYPE_CHOICES = (
 ATTRIBUTE_PUBLICY_CHOICES = (
 	('0', 'Private'),
 	('1', 'Public'),
-	('2', '**Unused'),	
+	('2', '**Unused'),
+	('7', 'for Spok'),
 )
 # Speaker type translator for CSV
 SPEAKER_TYPE_CSV_DICT = {

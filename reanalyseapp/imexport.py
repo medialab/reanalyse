@@ -64,7 +64,7 @@ def doFiestaToEnquete(e):
 	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
 		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id) )
 		t.parseXml()
-		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: "+str(t.id) )
+		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: texteid="+str(t.id) )
 		update_index.Command().handle(verbosity=0)
 		logger.info("["+str(e.id)+"] solr index updated")
 		docsCur+=1
@@ -76,7 +76,7 @@ def doFiestaToEnquete(e):
 		try:
 			makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
-			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz for texte id: "+str(t.id))
+			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz: texteid="+str(t.id))
 		
 	logger.info("["+str(e.id)+"] all texts were sucessfully parsed")
 	
@@ -94,7 +94,7 @@ def doFiestaToEnquete(e):
 				
 	e.status='0'
 	e.save()
-	logger.info("["+str(e.id)+"] import process done")
+	logger.info("["+str(e.id)+"] IMPORT PROCESS DONE !")
 ###########################################################################
 
 
@@ -173,76 +173,83 @@ def importEnqueteUsingMeta(folderPath):
 		###### Parsing Documents
 		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
 		for row in doc:
-			try:
-				if row['*id']!='*descr':
-					try:
-						file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
-						file_extension = 	file_location.split(".")[-1].upper()
-						doc_name = 			row['*name']
-						doc_mimetype = 		row['*mimetype'].lower().replace(" ","")
-						doc_category = 		row['*category'].lower().replace(" ","")
-						doc_public = 		doc_category in DOCUMENT_CATEGORIES.keys()
-						doc_description = 	row['*description']
-						doc_location = 		row['*location']
-						logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
-					except:
-						logger.info("EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
-					try:
-						doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
-					except:
-						doc_date = datetime.datetime.today()
+			#try:
+			if row['*id']!='*descr':
+				try:
+					file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
+					file_extension = 	file_location.split(".")[-1].upper()
+					doc_name = 			row['*name']
+					doc_mimetype = 		row['*mimetype'].lower().replace(" ","")
+					doc_category = 		row['*category'].lower().replace(" ","")
+					doc_public = 		doc_category in DOCUMENT_CATEGORIES.keys()
+					doc_description = 	row['*description']
+					doc_location = 		row['*location']
+					logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
+				except:
+					logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
+				try:
+					doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
+				except:
+					doc_date = datetime.datetime.today()
 
-					### special for ese
-					if doc_category=='ese':
-						esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
-						newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
-						newEnquete.save()
-					### if normal cat create doc
-					elif doc_category in DOCUMENT_CATEGORIES.keys():
-						if doc_mimetype in DOCUMENT_MIMETYPES:
-							newDocument = Texte(enquete=newEnquete, name=doc_name, doccat=doc_category, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
-							
-							newDocument.doctype = doc_mimetype.upper()
-							if doc_mimetype in ['link','ref']:
-								newDocument.locationpath 	= row['*file']
-								newDocument.filesize 		= 0
-								newDocument.status			= '0'
+				### special for ese
+				if doc_category=='ese':
+					esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+					newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+					newEnquete.save()
+				### if normal cat create doc
+				elif doc_category in DOCUMENT_CATEGORIES.keys():
+					if doc_mimetype in DOCUMENT_MIMETYPES:
+						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat=doc_category, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
+						
+						newDocument.doctype = doc_mimetype.upper()
+						if doc_mimetype in ['link','ref']:
+							newDocument.locationpath 	= row['*file']
+							newDocument.filesize 		= 0
+							newDocument.status			= '0'
+							newDocument.save()
+						else:
+							try:
+								newDocument.filesize = int(os.path.getsize(file_location)/1024)
+							except:
+								newDocument.filesize = -1
+								logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category+" | "+file_location)
+							if doc_mimetype=='xml' and doc_category=='verbatim':
+								newDocument.doctype	= 'TEI'
+								newDocument.status	= '5'
+								newDocument.save()
+							elif doc_mimetype=='pdf' or doc_mimetype=='csv':
+								newDocument.status	= '0'
+								newDocument.save()
+							elif doc_mimetype=='htm':
+								try:
+									f = open(file_location,'r')
+									v = f.read()
+									f.close()
+									enc = guess_encoding(v)
+									newDocument.contenthtml = unicode(v,enc,"strict")
+								except:
+									newDocument.contenthtml = 'error reading file'
+									logger.info(eidstr+"EXCEPT error reading file: "+file_location)
+								newDocument.status='0'
 								newDocument.save()
 							else:
-								try:
-									newDocument.filesize = int(os.path.getsize(file_location)/1024)
-								except:
-									logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category+" | "+file_location)
-								if doc_mimetype=='xml' and doc_category=='verbatim':
-									newDocument.doctype	= 'TEI'
-									newDocument.status	= '5'
-									newDocument.save()
-								elif doc_mimetype=='pdf' or doc_mimetype=='csv':
-									newDocument.status	= '0'
-									newDocument.save()
-								elif doc_mimetype=='htm':
-									f = open(file_location,'r')
-									newDocument.contenthtml = f.read()
-									f.close()
-									newDocument.status='0'
-									newDocument.save()
-								else:
-									logger.info(eidstr+"EXCEPT unconsidered document: "+doc_mimetype+" | "+doc_category)
-		# 						elif file_extension=='RTF':
-		# 						 	try:
-		# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
-		# 								doc.contenthtml = theDocContentHtml
-		# 								doc.contenttxt = convertUnrtfHtmlToTxt(theDocContentHtml)
-		# 								doc.status="0"
-		# 							except:
-		# 								blabla
-						else:
-							logger.info(eidstr+"EXCEPT unconsidered *mimetype: "+doc_mimetype)
-					### unknown cat
+								logger.info(eidstr+"EXCEPT unconsidered document: "+doc_mimetype+" | "+doc_category)
+	# 						elif file_extension=='RTF':
+	# 						 	try:
+	# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
+	# 								doc.contenthtml = theDocContentHtml
+	# 								doc.contenttxt = convertUnrtfHtmlToTxt(theDocContentHtml)
+	# 								doc.status="0"
+	# 							except:
+	# 								blabla
 					else:
-						logger.info(eidstr+"EXCEPT unconsidered *category: "+doc_category)
-			except:
-				logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
+						logger.info(eidstr+"EXCEPT unconsidered *mimetype: "+doc_mimetype)
+				### unknown cat
+				else:
+					logger.info(eidstr+"EXCEPT unconsidered *category: "+doc_category)
+			#except:
+				#logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:
 		logger.info(eidstr+"=========== PARSING: no doc meta found")
 	
@@ -313,6 +320,8 @@ def getEnqueteSurEnqueteJson(eseXmlPath,e):
 	summary = root.findall('StudyUnit/Summary')[0]
 	res['reportpath'] = baseEseXmlFolder + summary.attrib['report']
 	res['html'] = summary.text
+	res['audiopaths'] = {}
+	apacount = 0
 	
 	# Fetching chapters
 	thechapters = []
@@ -333,6 +342,10 @@ def getEnqueteSurEnqueteJson(eseXmlPath,e):
 				subchapt['audiopath'] = baseEseXmlFolder + subchapt['audiopath']
 			else:
 				subchapt['audiopath'] = settings.REANALYSEESE_FILES+'/'+e.ddi_id+'/'+ subchapt['audiopath']
+			# rather store an id referencing real path in res['audiopaths']
+			res['audiopaths'][str(apacount)] = subchapt['audiopath']
+			subchapt['audioid'] = str(apacount)
+			apacount+=1
 			thesubchapters.append(subchapt)
 		chapt['subchapters'] = thesubchapters
 		thechapters.append(chapt)

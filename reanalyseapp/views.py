@@ -404,14 +404,15 @@ def eAdmin(request):
 	
 	### users
 	users={}
-	users['header']=['username','email','status','group','full study access','joined','last login']
+	users['header']=['username','name','email','status','group','full study access','joined','last login']
 	users['rows']=[]
 	for u in User.objects.order_by('id'):
 		uTab=[]
 		uTab.append('<a href="'+settings.BASE_URL+'admin/auth/user/'+str(u.id)+'">'+u.username+'</a>')
+		uTab.append(u.last_name +" "+ u.first_name)
 		uTab.append(u.email)
 		# STATUS (activated?)
-		sstr="pending..."
+		sstr="need to be activated..."
 		if u.is_active:
 			sstr="activated"
 		uTab.append(sstr)
@@ -513,12 +514,12 @@ def eParse(request):
 			
 	######## unzip and parse
 	if thezip!="" and os.path.exists(upPath+thezip):
-		try:
-			os.mkdir(upPath+"extracted")
-			unzipper = unzip()
-			unzipper.extract(upPath+thezip,upPath+"extracted/")
-		except:
-			logger.info("EXCEPT de-zip-ing archive. wtf ?")
+		#try:
+		os.mkdir(upPath+"extracted")
+		unzipper = unzip()
+		unzipper.extract(upPath+thezip,upPath+"extracted/")
+		#except:
+		#logger.info("EXCEPT de-zip-ing archive. wtf ?")
 			
 		enqueterootpath = ""
 		if os.path.exists(upPath+"extracted/_meta/"):
@@ -1174,7 +1175,7 @@ def getEseReport(request,eid):
 	e = Enquete.objects.get(id=eid)
 	ese = simplejson.loads(e.ese)
 	filepath = ese['reportpath']
-	logger.info("Downloading ESE report:"+filepath)
+	logger.info("["+str(eid)+"] Downloading ESE report:"+filepath)
 	#pdfname = eseid + "_"+ese.report.split('/')[-1]
 	pdfname = 'enquetesurenquete.pdf'
 	response = HttpResponse(mimetype="application/pdf")
@@ -1184,10 +1185,10 @@ def getEseReport(request,eid):
 ###########################################################################
 #The following view uses mod_xsendfile which lets apache do the file audio streaming for ESE
 @login_required
-def stream(request,eid,path):
+def stream(request,eid,aid):
 	e = Enquete.objects.get(id=eid)
-	# todo: to improve
-	path='/'+path # (cause sent in the url first / doesnt appear)
+	ese = simplejson.loads(e.ese)
+	path = ese['audiopaths'][str(aid)]
 	logger.info("Streaming audio file path:"+path)
 	response = HttpResponse(mimetype="audio/mpeg")
 	#response['Content-Disposition'] = 'filename=%s' % 'blarg.mp3'#smart_str(file_name)

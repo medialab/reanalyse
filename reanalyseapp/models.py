@@ -45,7 +45,7 @@ nullhandler = logger.addHandler(NullHandler())
 ####################################################################
 # SITECONTENT for static html pages, allowing edit in admin pages
 class SiteContent(models.Model):
-	name = models.CharField(max_length=200)
+	name = models.CharField(max_length=100)
 	description = models.CharField(max_length=400)
 	lang = models.CharField(max_length=2,choices=LANG_CHOICES)
 	contenthtml = models.TextField()
@@ -60,13 +60,13 @@ class SiteContent(models.Model):
 ##############################################################################
 class Enquete(models.Model):
 	#connection_name="enquetes"				# todo: one db for each enquete ?
-	name = models.CharField(max_length=200)
+	name = models.CharField(max_length=250)
 	locationpath = models.CharField(max_length=250)						# path of the uploaded folder
 	metadata = models.TextField(default='{}') 							# store all metadata as json dict
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars
 	statuscomplete = models.BigIntegerField(default=0) 					# loading 0-100%
 	date = models.DateField(auto_now_add=True)							# date uploaded
-	ddi_id = models.CharField(max_length=100)
+	ddi_id = models.CharField(max_length=170)
 	# since ese is not yet included (structured) in enquete, let's put all infos from ese.xml into a json dict
 	ese = models.TextField()
 	#permission = models.ForeignKey(Permission)
@@ -154,7 +154,7 @@ class Texte(models.Model):
 # age,sex,profession,...
 class AttributeType(models.Model):
 	enquete = models.ForeignKey(Enquete)
-	name = models.CharField(max_length=120)
+	name = models.CharField(max_length=200)
 	publicy = models.CharField(max_length=1, choices=ATTRIBUTE_PUBLICY_CHOICES)
 	def __unicode__(self):
 		return self.name
@@ -163,18 +163,18 @@ class AttributeType(models.Model):
 class Attribute(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	attributetype = models.ForeignKey(AttributeType)
-	name = models.CharField(max_length=300)
-	description = models.TextField() # could be long text to describe a group
+	name = models.TextField()	# was/should be .CharField(max_length=300) - but avoid problem of VERY long cells in studies
+	#description = models.TextField() # deprecatedcould be long text to describe a group
 	def __unicode__(self):
 		return self.name
 ##############################################################################
 class Speaker(models.Model):
 	enquete = models.ForeignKey(Enquete)
-	name = models.CharField(max_length=50)
+	name = models.CharField(max_length=70)
 	textes = models.ManyToManyField(Texte)
 	#################
 	## USED IN TEI XML and CSV list of spk
-	ddi_id = models.CharField(max_length=100)
+	ddi_id = models.CharField(max_length=170)
 	## USED TO KNOW (investigator/speaker/protagonist)
 	ddi_type = models.CharField(max_length=3, choices=SPEAKER_TYPE_CHOICES)
 	#################
@@ -498,7 +498,10 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 			unode = node.findall(XMLTEINMS+'u')[0]
 			ddiid = unode.attrib['who']
 			if ddiid.startswith('#'): # means that the real ddi_id is in the header
-				ddiid = speakersDDIDict[ddiid]
+				try:
+					ddiid = speakersDDIDict[ddiid]
+				except:
+					logger.info("["+str(texte.enquete.id)+"] EXCEPT pb parsing TEI xml ids: texteid="+str(texte.id))
 			# DEPRECATED: theCodeType,isnew = CodeType.objects.get_or_create(enquete=texte.enquete,name='speaker')
 			theSpeaker,isnew = Speaker.objects.get_or_create(enquete=texte.enquete,ddi_id=ddiid)
 			theSpeaker.textes.add(texte)

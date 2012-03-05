@@ -150,6 +150,22 @@ def intToSortableStr(number):
 
 
 
+###########################################################################
+def guess_encoding(text):
+	guess_list=['utf-8','us-ascii','iso-8859-1','iso-8859-2','windows-1250','windows-1252','?']
+	for best_enc in guess_list:
+		try:
+			unicode(text,best_enc,"strict")
+		except:
+			pass
+		else:
+			break
+	if best_enc=='?':
+		return 'utf-8'
+	return best_enc
+###########################################################################	
+	
+
 
 
 ###########################################################################
