@@ -109,7 +109,7 @@ def importEnqueteUsingMeta(folderPath):
 	spkPath=folderPath+'_meta/meta_speakers.csv'
 	codPath=folderPath+'_meta/meta_codes.csv'
 	
-	logger.info("=========== PARSING STUDY: "+stdPath)
+	logger.info("=========== PARSING META_STUDY.CSV")
 	### Parsing Study metadatas (the only file mandatory!)
 	std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
 	headers = std.fieldnames
@@ -169,7 +169,7 @@ def importEnqueteUsingMeta(folderPath):
 	
 	if os.path.exists(docPath):
 		#mandatoryFields = ['*id','*name','*category','*description','*location','*date']
-		logger.info(eidstr+"=========== PARSING: "+docPath)
+		logger.info(eidstr+"=========== PARSING META_DOCUMENTS.CSV")
 		###### Parsing Documents
 		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
 		for row in doc:
@@ -195,9 +195,12 @@ def importEnqueteUsingMeta(folderPath):
 
 				### special for ese
 				if doc_category1=='ese':
+					#try:
 					esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
 					newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
 					newEnquete.save()
+					#except:
+					#	logger.info(eidstr+"EXCEPT with ese.xml")
 				### if normal cat create doc
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
@@ -255,7 +258,7 @@ def importEnqueteUsingMeta(folderPath):
 		logger.info(eidstr+"=========== PARSING: no doc meta found")
 	
 	if os.path.exists(spkPath):
-		logger.info(eidstr+"=========== PARSING: "+spkPath)			
+		logger.info(eidstr+"=========== PARSING META_SPEAKERS.CSV")			
 		###### Parsing Speakers
 		spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
 		headers = spk.fieldnames
@@ -290,7 +293,7 @@ def importEnqueteUsingMeta(folderPath):
 		logger.info(eidstr+"=========== PARSING: no spk meta found")
 	
 	if os.path.exists(codPath):
-		logger.info(eidstr+"=========== PARSING: "+codPath)
+		logger.info(eidstr+"=========== PARSING META_CODES.CSV")
 		###### Parsing Codes
 		cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
 		# to do later..

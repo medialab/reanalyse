@@ -20,7 +20,7 @@ import pythonsolr
 import networkx
 
 # for simil
-from pattern.vector import *
+#from pattern.vector import *
 
 ###########################################################################
 # LOGGING
@@ -260,16 +260,16 @@ def visMakeSpeakersSpeakersGraph(e,viz,param):
 	if method=='pattern':
 		#################### USING PATTERN (deprecated ? only english!!)
 		g=networkx.Graph()
-		corpus=Corpus()
-		for s in e.speaker_set.all():
-			spker = Document(s.contenttxt,threshold=0,name=str(s.id)+":"+s.name)
-			corpus.append(spker)
-		for spk in corpus:
-			g.add_node(spk.name)
-		for spk in corpus:
-			rels=corpus.related(spk)
-			for r in rels:	
-				g.add_edge(spk.name,r[1].name,{'weight':r[0]})
+# 		corpus=Corpus()
+# 		for s in e.speaker_set.all():
+# 			spker = Document(s.contenttxt,threshold=0,name=str(s.id)+":"+s.name)
+# 			corpus.append(spker)
+# 		for spk in corpus:
+# 			g.add_node(spk.name)
+# 		for spk in corpus:
+# 			rels=corpus.related(spk)
+# 			for r in rels:	
+# 				g.add_edge(spk.name,r[1].name,{'weight':r[0]})
 	
 	else:
 		##################### USING SOLR SIMILARITY BETWEEN DOCS (ie SPEAKERS)

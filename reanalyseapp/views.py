@@ -437,6 +437,22 @@ def eAdmin(request):
 	
 	return render_to_response('bq_admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
+
+
+
+
+	
+################################################################################
+# 		first looking at: http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html
+# not working well (CSRF pb)..
+# someone already merged all tryouts in a simple example
+# using...
+# 		http://valums.com/ajax-upload/
+# 		https://github.com/alexkuhl/file-uploader/ (patched?)
+# ... Steven Skoczen made:
+# 		https://github.com/GoodCloud/django-ajax-uploader
+# That's what it's used here + template, thanks!
+################################################################################
 @login_required
 def eAddAjax(request):
 	d={}

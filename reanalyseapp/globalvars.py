@@ -22,7 +22,7 @@ STATUS_CHOICES = (
 )
 
 ############################################################ DOCUMENTS meta_documents.csv
-# meta_documents.csv : COLUMN *category1
+# A) meta_documents.csv : COLUMN *category1
 DOC_CAT_1={}
 DOC_CAT_1['preparatory'] = 'preparatory'
 DOC_CAT_1['terrain'] = 'terrain'
@@ -32,7 +32,7 @@ DOC_CAT_1['result'] = 'result'
 DOC_CAT_1['ese'] = 'ese'
 DOC_CAT_1['misc'] = 'misc'
 
-# meta_documents.csv : COLUMN *category2
+# B) meta_documents.csv : COLUMN *category2
 DOC_CAT_2={}
 DOC_CAT_2['pv'] = 'pv'
 DOC_CAT_2['note'] = 'note'
@@ -49,8 +49,10 @@ DOC_CAT_2['recrut'] = 'recrut'
 DOC_CAT_2['guide'] = 'guide'
 DOC_CAT_2['misc'] = 'misc'
 
-# meta_documents.csv : COLUMN *mimetype
+# C) meta_documents.csv : COLUMN *mimetype
 DOCUMENT_MIMETYPES=['xml','pdf','htm','csv','link','ref']
+
+# documents are parsed only if they are in A) & B) & C)
 
 # types of document from the django model point of view
 DOCUMENT_TYPE_CHOICES = (
@@ -58,12 +60,12 @@ DOCUMENT_TYPE_CHOICES = (
 	('PDF', 'PDF'),
 	('HTM', 'HTML File'),
 	('CSV', 'CSV Table'),
-	#('TXT', 'Text File'),
-	#('RTF', 'RTF'),
-	#('ATL', 'XML Atlas.Ti'),
-	#('CTX', 'CAQDAS RTF'),
 	('LINK', 'External link'),
 	('REF', 'Only reference'),
+	#('TXT', 'Text File'),
+	#('RTF', 'RTF'),			# rather use htm for the moment, it's simpler
+	#('ATL', 'XML Atlas.Ti'),	# ...forget about it for the moment (data too much unstructured)
+	#('CTX', 'CAQDAS RTF'),		# ...forget about it for the moment (data too much unstructured)
 )
 
 ############################################################ SPEAKERS meta_speakers.csv
