@@ -114,7 +114,8 @@ class Texte(models.Model):
 	filesize = models.BigIntegerField(default=0)
 	# meta
 	doctype = models.CharField(max_length=4, choices=DOCUMENT_TYPE_CHOICES)
-	doccat = models.CharField(max_length=25)
+	doccat1 = models.CharField(max_length=25)	# see globalvars.py
+	doccat2 = models.CharField(max_length=25)	# see globalvars.py
 	name = models.CharField(max_length=100)
 	description = models.TextField()
 	# todo

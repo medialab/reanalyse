@@ -651,7 +651,7 @@ def eShow(request,eid):
 	
 	### publications are fetched from documents
 	publications=[]
-	for t in e.texte_set.filter(doccat='publication'):
+	for t in e.texte_set.filter(doccat2='publi'):
 		linkstr=""
 		if t.doctype=="LINK":
 			linkDoc = t.locationpath
@@ -692,9 +692,7 @@ def getStrFromVizList(relViz):
 def edBrowse(request,eid):
 	# ENQUETE
 	e = Enquete.objects.get(id=eid)
-	only = Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')
-	only = only|Q(doccat='Analyse')|Q(doccat='Preparatory')|Q(doccat='Verbatim')|Q(doccat='Publication')
-	textes = e.texte_set.filter(only)
+	textes = e.texte_set.all()
 	
 	ctx = {'bodyid':'e','pageid':'documents','enquete':e}
 	
@@ -707,9 +705,9 @@ def edBrowse(request,eid):
 	
 	######################################### COLUMNS
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colArr=['Category','Name','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
+		colArr=['CatTemp','CatAnaly','Name','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
 	else:
-		colArr=['Category','Name','Size','Viz','Investigator','Speakers']
+		colArr=['CatTemp','CatAnaly','Name','Size','Viz','Investigator','Speakers']
 	
 	
 	######################################### VALUES
@@ -798,9 +796,9 @@ def edBrowse(request,eid):
 		
 		################# VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
-			tArr=[t.doccat,nameStr,sizeStr,statusStr,vizStr,investStr,speakersStr] #+ [contentStr]
+			tArr=[t.doccat1,t.doccat2,nameStr,sizeStr,statusStr,vizStr,investStr,speakersStr] #+ [contentStr]
 		else:
-			tArr=[t.doccat,nameStr,sizeStr,vizStr,investStr,speakersStr]
+			tArr=[t.doccat1,t.doccat2,nameStr,sizeStr,vizStr,investStr,speakersStr]
 			
 		docDict['texte']=t
 		docDict['vals']=tArr
@@ -1087,22 +1085,18 @@ def edShow(request,eid,did):
 		
 	######################################### CSV
 	if texte.doctype=='CSV':
-		columns=[]
 		values=[]
 		# Parse cvs and build table
-		p = parseCsvFile(texte.locationpath)
-		header = p['header']
-		content = p['content']
-		for h in header:
-			columns.append(h)
-		for lign in content:
+		reader = csv.DictReader(open(texte.locationpath),delimiter='\t')
+		columns = reader.fieldnames
+		for row in reader:
 			thevals=[]
-			for att in header:
-				if att.startswith("_"):
+			for k in columns:
+				if k.startswith("_"):
 					cssClass="show"
 				else:
 					cssClass=""
-				thevals.append([cssClass,lign[att]])
+				thevals.append([cssClass,row[k]])
 			values.append(thevals)
 		ctx.update({'csvTable':{'columns':columns,'values':values}})
 	#########################################

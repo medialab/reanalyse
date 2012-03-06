@@ -175,32 +175,33 @@ def importEnqueteUsingMeta(folderPath):
 		for row in doc:
 			#try:
 			if row['*id']!='*descr':
-				try:
-					file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
-					file_extension = 	file_location.split(".")[-1].upper()
-					doc_name = 			row['*name']
-					doc_mimetype = 		row['*mimetype'].lower().replace(" ","")
-					doc_category = 		row['*category'].lower().replace(" ","")
-					doc_public = 		doc_category in DOCUMENT_CATEGORIES.keys()
-					doc_description = 	row['*description']
-					doc_location = 		row['*location']
-					logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
-				except:
-					logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
+				#try:
+				file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
+				file_extension = 	file_location.split(".")[-1].upper()
+				doc_name = 			row['*name']
+				doc_mimetype = 		row['*mimetype'].lower().replace(" ","")
+				doc_category1 = 	row['*category1'].lower().replace(" ","")
+				doc_category2 = 	row['*category2'].lower().replace(" ","")
+				doc_public = 		True # ...could be based on categories...
+				doc_description = 	row['*description']
+				doc_location = 		row['*location']
+				logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
+				#except:
+				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
 				try:
 					doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
 				except:
 					doc_date = datetime.datetime.today()
 
 				### special for ese
-				if doc_category=='ese':
+				if doc_category1=='ese':
 					esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
 					newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
 					newEnquete.save()
 				### if normal cat create doc
-				elif doc_category in DOCUMENT_CATEGORIES.keys():
+				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
-						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat=doc_category, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
+						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
 						
 						newDocument.doctype = doc_mimetype.upper()
 						if doc_mimetype in ['link','ref']:
@@ -213,8 +214,8 @@ def importEnqueteUsingMeta(folderPath):
 								newDocument.filesize = int(os.path.getsize(file_location)/1024)
 							except:
 								newDocument.filesize = -1
-								logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category+" | "+file_location)
-							if doc_mimetype=='xml' and doc_category=='verbatim':
+								logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category1+" | "+doc_category2+" | "+file_location)
+							if doc_mimetype=='xml' and doc_category1=='verbatim' and doc_category2=='transcr':
 								newDocument.doctype	= 'TEI'
 								newDocument.status	= '5'
 								newDocument.save()
@@ -234,7 +235,7 @@ def importEnqueteUsingMeta(folderPath):
 								newDocument.status='0'
 								newDocument.save()
 							else:
-								logger.info(eidstr+"EXCEPT unconsidered document: "+doc_mimetype+" | "+doc_category)
+								logger.info(eidstr+"EXCEPT unconsidered document: "+doc_mimetype+" | "+doc_category1+" | "+doc_category2)
 	# 						elif file_extension=='RTF':
 	# 						 	try:
 	# 								theDocContentHtml = Popen(['unrtf', doc.locationpath], stdout=PIPE).communicate()[0]
@@ -247,7 +248,7 @@ def importEnqueteUsingMeta(folderPath):
 						logger.info(eidstr+"EXCEPT unconsidered *mimetype: "+doc_mimetype)
 				### unknown cat
 				else:
-					logger.info(eidstr+"EXCEPT unconsidered *category: "+doc_category)
+					logger.info(eidstr+"EXCEPT unconsidered *category: "+doc_category1+" | "+doc_category2)
 			#except:
 				#logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:

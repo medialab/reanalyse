@@ -505,7 +505,7 @@ def visMakeStudyOverview(e):
 		dic['id']=t.id
 		dic['name']=t.name
 		dic['type']=t.doctype
-		dic['cat']=t.doccat
+		dic['cat']=t.doccat1
 		dic['date']=t.date.strftime("%d/%m/%y")
 		dic['size']=t.filesize
 		dic['nspeakers']=t.speaker_set.count()

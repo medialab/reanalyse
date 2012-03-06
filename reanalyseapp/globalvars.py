@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 ############################################################
+
 # in edBrowse / esBrowse (height is set in css
 LITTLEFRISEMAXWIDTH = 100
-############################################################
+
+LANG_CHOICES = (
+	('FR', 'Français'),
+	('EN', 'English'),
+)
+
+# internal status for models
 STATUS_CHOICES = (
 	('0', 'OK'),
 	('-1', 'Failed'),
@@ -14,17 +21,35 @@ STATUS_CHOICES = (
 	('77', '**You won something')
 )
 
-# categories made public when parsin meta_documents.csv (others won't show up in edbrowse)
-# 'ese' is hidden but parsed
-DOCUMENT_CATEGORIES = {}
-DOCUMENT_CATEGORIES['verbatim']		= 'Entretien'
-DOCUMENT_CATEGORIES['analyse']		= 'Analyse'
-DOCUMENT_CATEGORIES['preparatory']	= 'Preparatory'
-DOCUMENT_CATEGORIES['publication'] 	= 'Publication'
-DOCUMENT_CATEGORIES['misc'] 		= 'Divers'
-DOCUMENT_CATEGORIES['joker']		= 'SpaceDoc'
+############################################################ DOCUMENTS meta_documents.csv
+# meta_documents.csv : COLUMN *category1
+DOC_CAT_1={}
+DOC_CAT_1['preparatory'] = 'preparatory'
+DOC_CAT_1['terrain'] = 'terrain'
+DOC_CAT_1['data'] = 'data'
+DOC_CAT_1['verbatim'] = 'verbatim'
+DOC_CAT_1['result'] = 'result'
+DOC_CAT_1['ese'] = 'ese'
+DOC_CAT_1['misc'] = 'misc'
 
-# mimetypes considered on upload/parsing
+# meta_documents.csv : COLUMN *category2
+DOC_CAT_2={}
+DOC_CAT_2['pv'] = 'pv'
+DOC_CAT_2['note'] = 'note'
+DOC_CAT_2['transcr'] = 'transcr'
+DOC_CAT_2['video'] = 'video'
+DOC_CAT_2['audio'] = 'audio'
+DOC_CAT_2['resum'] = 'resum'
+DOC_CAT_2['analyse'] = 'analyse'
+DOC_CAT_2['quest'] = 'quest'
+DOC_CAT_2['publi'] = 'publi'
+DOC_CAT_2['com'] = 'com'
+DOC_CAT_2['rap'] = 'rap'
+DOC_CAT_2['recrut'] = 'recrut'
+DOC_CAT_2['guide'] = 'guide'
+DOC_CAT_2['misc'] = 'misc'
+
+# meta_documents.csv : COLUMN *mimetype
 DOCUMENT_MIMETYPES=['xml','pdf','htm','csv','link','ref']
 
 # types of document from the django model point of view
@@ -40,6 +65,8 @@ DOCUMENT_TYPE_CHOICES = (
 	('LINK', 'External link'),
 	('REF', 'Only reference'),
 )
+
+############################################################ SPEAKERS meta_speakers.csv
 # To know if we show/hide speaker attributes
 ATTRIBUTE_PUBLICY_CHOICES = (
 	('0', 'Private'),
@@ -66,10 +93,6 @@ SPK_COLORS['SPK']='#E3FBE9'
 SPK_COLORS['PRO']='#FFDC98'
 SPK_COLORS['OTH']='#FFFFFF'
 
-LANG_CHOICES = (
-	('FR', 'Français'),
-	('EN', 'English'),
-)
 
 ################################################################################ VERBATIM
 ########## PONCTUATION
@@ -222,7 +245,6 @@ VIZTYPES	= GRAPHTYPES + ['Cloud_SolrSpeakerTagCloud','TexteStreamTimeline','Attr
 ########## VIZ DESCRIPTION
 # nb: viz description is used to document the viz, not to explain them technically
 # to have informations about viz types, see Normalization page
-
 
 VIZTYPESDESCR = 'Please clic me to update (html) description. If you need general technical information about that viz type, please clic the blue bubble above.'
 

@@ -15,9 +15,9 @@ TEMPLATE_DEBUG = DEBUG
 #STAFF_EMAIL
 #EMAIL_HOST
 #EMAIL_PORT
-
 # .. are defined in :
-from settings_private import * 
+from settingsprivate import * 
+
 
 REANALYSELOGPATH 			= REANALYSEPROJECTPATH + 'logs/' 					# needs to be accessible by www-data
 REANALYSELOGDJANGO				= REANALYSELOGPATH + 'reanalyse_django.log'

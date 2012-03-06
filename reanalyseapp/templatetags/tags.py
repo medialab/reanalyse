@@ -19,7 +19,8 @@ def vizPublicCount(e):
 	return e.visualization_set.filter(public=True).count()
 @register.filter
 def docPublicCount(e):
-	return e.texte_set.filter(Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')).count()
+	#return e.texte_set.filter(Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')).count()
+	return e.texte_set.count()
 @register.filter
 def spkPublicCount(e):
 	return e.speaker_set.filter(ddi_type='SPK').count()
