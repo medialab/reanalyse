@@ -62,7 +62,7 @@ def doFiestaToEnquete(e):
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
 	docsCur = 0
 	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
-		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id) )
+		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id)+" ...")
 		t.parseXml()
 		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: texteid="+str(t.id) )
 		update_index.Command().handle(verbosity=0)
@@ -82,7 +82,7 @@ def doFiestaToEnquete(e):
 	
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
-	logger.info("["+str(e.id)+"] now updating tfidf")
+	logger.info("["+str(e.id)+"] now updating tfidf ...")
 	makeAllTfidf(e)
 	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
 	
@@ -126,7 +126,7 @@ def importEnqueteUsingMeta(folderPath):
 			try:
 				field 		= row['*field'].lower().replace(" ","").replace("*","")
 				fieldcat 	= row['*fieldcat'].lower().replace(" ","").replace("*","")
-				logger.info("found field: "+fieldcat+" / "+field)
+				#logger.info("found field: "+fieldcat+" / "+field)
 			except:
 				logger.info("EXCEPT no *field or *fieldcat column in meta_study.csv")
 			try:
@@ -195,12 +195,12 @@ def importEnqueteUsingMeta(folderPath):
 
 				### special for ese
 				if doc_category1=='ese':
-					#try:
-					esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
-					newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
-					newEnquete.save()
-					#except:
-					#	logger.info(eidstr+"EXCEPT with ese.xml")
+					try:
+						esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+						newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+						newEnquete.save()
+					except:
+						logger.info(eidstr+"EXCEPT with ESE")
 				### if normal cat create doc
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:

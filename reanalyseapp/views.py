@@ -682,7 +682,10 @@ def eShow(request,eid):
 @login_required
 def eseShow(request,eid):
 	e = Enquete.objects.get(id=eid)
-	ese = simplejson.loads(e.ese)
+	if len(e.ese)>1:
+		ese = simplejson.loads(e.ese)
+	else:
+		ese = None
 	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese':ese}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)

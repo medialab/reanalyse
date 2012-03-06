@@ -7,7 +7,7 @@ Reanalyse
 * ./solrdataindex/
 * ./upload/
 
-## Django Internationalization how-to
+## django Internationalization how-to
 ### within template
 {% load i18n %}
 
@@ -18,12 +18,13 @@ Reanalyse
 from django.utils.translation import ugettext as _
 
 mystring = _('congratulations')
+
 ### translation
 * > sudo django-admin.py makemessages --ignore ./upload/ -a
 * translate file /locale/fr/LC_MESSAGES/django.po
 * > django-admin.py compilemessages
 
-## Solr default conf, except for
+## solr is based on the default conf (from example), except for
 * ./solr/solr/conf/schema.xml defining how models are indexed
 * ./solr/solr/conf/solrconfig.xml
  * datadir = ./../solrdataindex/ (temp files)
@@ -31,8 +32,8 @@ mystring = _('congratulations')
 * ./solr/etc/jetty.xml : if you want to change webserver port
 * ./solr/solr/conf/*_fr.txt : stopwords, synonyms, protwords, etc...
 
-## Normalisation
+## normalisation
 ![Alt text](http://jiminy.medialab.sciences-po.fr/reanalyse/media/images/content_overview.png "Normalisation")
 
-## Django Models
+## django models & views
 ![Alt text](http://jiminy.medialab.sciences-po.fr/reanalyse/media/images/content_models.png "Django Models")

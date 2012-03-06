@@ -59,7 +59,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 	#descr = VIZTYPESDESCR[typ]	# we used to set a different one for each
 	descr = VIZTYPESDESCR		# now just invite user to update it (see globalvars.py)
 	
-	logger.info("["+str(e.id)+"] making viz: "+typ)
+	logger.info("["+str(e.id)+"] making viz: "+typ+" ...")
 	
 	if typ in GRAPHTYPES:
 		newVizu = makeVisualizationObject(e,typ,descr)

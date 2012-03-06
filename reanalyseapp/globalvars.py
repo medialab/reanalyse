@@ -24,30 +24,30 @@ STATUS_CHOICES = (
 ############################################################ DOCUMENTS meta_documents.csv
 # A) meta_documents.csv : COLUMN *category1
 DOC_CAT_1={}
-DOC_CAT_1['preparatory'] = 'preparatory'
-DOC_CAT_1['terrain'] = 'terrain'
-DOC_CAT_1['data'] = 'data'
-DOC_CAT_1['verbatim'] = 'verbatim'
-DOC_CAT_1['result'] = 'result'
+DOC_CAT_1['preparatory'] = 'Preparatory'
+DOC_CAT_1['terrain'] = 'Fieldwork'
+DOC_CAT_1['data'] = 'Data'
+DOC_CAT_1['verbatim'] = 'Verbatim'
+DOC_CAT_1['result'] = 'Result'
 DOC_CAT_1['ese'] = 'ese'
-DOC_CAT_1['misc'] = 'misc'
+DOC_CAT_1['misc'] = 'Misc'
 
 # B) meta_documents.csv : COLUMN *category2
 DOC_CAT_2={}
-DOC_CAT_2['pv'] = 'pv'
-DOC_CAT_2['note'] = 'note'
-DOC_CAT_2['transcr'] = 'transcr'
-DOC_CAT_2['video'] = 'video'
-DOC_CAT_2['audio'] = 'audio'
-DOC_CAT_2['resum'] = 'resum'
-DOC_CAT_2['analyse'] = 'analyse'
-DOC_CAT_2['quest'] = 'quest'
-DOC_CAT_2['publi'] = 'publi'
-DOC_CAT_2['com'] = 'com'
-DOC_CAT_2['rap'] = 'rap'
-DOC_CAT_2['recrut'] = 'recrut'
-DOC_CAT_2['guide'] = 'guide'
-DOC_CAT_2['misc'] = 'misc'
+DOC_CAT_2['pv'] = 'Minutes'
+DOC_CAT_2['note'] = 'Notes'
+DOC_CAT_2['transcr'] = 'Transcr'
+DOC_CAT_2['video'] = 'Video'
+DOC_CAT_2['audio'] = 'Audio'
+DOC_CAT_2['resum'] = 'Summary'
+DOC_CAT_2['analyse'] = 'Analysis'
+DOC_CAT_2['quest'] = 'Quest'
+DOC_CAT_2['publi'] = 'Publ'
+DOC_CAT_2['com'] = 'Com'
+DOC_CAT_2['rap'] = 'Rep'
+DOC_CAT_2['recrut'] = 'Recr'
+DOC_CAT_2['guide'] = 'Guide'
+DOC_CAT_2['misc'] = 'Misc'
 
 # C) meta_documents.csv : COLUMN *mimetype
 DOCUMENT_MIMETYPES=['xml','pdf','htm','csv','link','ref']
