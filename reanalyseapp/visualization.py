@@ -776,7 +776,7 @@ def getSolrSimilarArray(speaker,maxcount):
 			array.append( [res['score'],similSpk.id,similSpk.name] )
 		except:
 			eidc=res['speakerid']
-			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+sid+"), unknown spk: "+eidc)
+			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+str(sid)+"), unknown spk: "+str(eidc))
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
 def getSolrTermVectorsDict(speakers,field,mintn): # field = 'text'/'ngrams'

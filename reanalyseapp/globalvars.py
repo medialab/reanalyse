@@ -4,6 +4,7 @@
 # in edBrowse / esBrowse (height is set in css
 LITTLEFRISEMAXWIDTH = 100
 
+# see settings.py
 LANG_CHOICES = (
 	('FR', 'Français'),
 	('EN', 'English'),
@@ -12,17 +13,17 @@ LANG_CHOICES = (
 # internal status for models
 STATUS_CHOICES = (
 	('0', 'OK'),
-	('-1', 'Failed'),
-	('5', 'Waiting'),	
-	('1', 'Loading'),
-	('2','Parsing'),
-	('3','Styling'),
+	('-1', 'Failed'),		# problem
+	('5', 'Waiting'),		# tei waiting to be processed
+	('1', 'Loading'),	
+	('2','Parsing'),		# tei processed
+	('3','Styling'),		# deprecated ?
 	('4','**Internal use'),
 	('77', '**You won something')
 )
 
 ############################################################ DOCUMENTS meta_documents.csv
-# A) meta_documents.csv : COLUMN *category1
+# A) meta_documents.csv : COLUMN *category1 that are accepted, and their translation in the view
 DOC_CAT_1={}
 DOC_CAT_1['preparatory'] = 'Preparatory'
 DOC_CAT_1['terrain'] = 'Fieldwork'
@@ -32,7 +33,7 @@ DOC_CAT_1['result'] = 'Result'
 DOC_CAT_1['ese'] = 'ese'
 DOC_CAT_1['misc'] = 'Misc'
 
-# B) meta_documents.csv : COLUMN *category2
+# B) meta_documents.csv : COLUMN *category2 that are accepted, and their translation in the view
 DOC_CAT_2={}
 DOC_CAT_2['pv'] = 'Minutes'
 DOC_CAT_2['note'] = 'Notes'
@@ -53,8 +54,9 @@ DOC_CAT_2['misc'] = 'Misc'
 DOCUMENT_MIMETYPES=['xml','pdf','htm','csv','link','ref']
 
 # documents are parsed only if they are in A) & B) & C)
+# note that ese is also processed, but in a different way. see importexport.py
 
-# types of document from the django model point of view
+# types of document from the django models point of view
 DOCUMENT_TYPE_CHOICES = (
 	('TEI', 'XML TEI'),
 	('PDF', 'PDF'),
@@ -69,25 +71,21 @@ DOCUMENT_TYPE_CHOICES = (
 )
 
 ############################################################ SPEAKERS meta_speakers.csv
-# To know if we show/hide speaker attributes
-ATTRIBUTE_PUBLICY_CHOICES = (
-	('0', 'Private'),
-	('1', 'Public'),
-	('2', '**Unused'),
-	('7', 'for Spok'),
-)
-# Speaker type translator for CSV
+# Speaker type translator from meta_speakers.csv
 SPEAKER_TYPE_CSV_DICT = {
 	'speaker':'SPK',
 	'investigator':'INV',
 	'protagonist':'PRO',
 }
+
+# Speaker types for django model
 SPEAKER_TYPE_CHOICES = (
 	('INV', 'Investigator'),
 	('SPK', 'Speaker'),
 	('PRO', 'Protagonist'),
 	('OTH', 'Unknown'),
 )
+
 # COLORS for TYPES
 SPK_COLORS={}
 SPK_COLORS['INV']='#EFEDFC'
@@ -95,6 +93,13 @@ SPK_COLORS['SPK']='#E3FBE9'
 SPK_COLORS['PRO']='#FFDC98'
 SPK_COLORS['OTH']='#FFFFFF'
 
+# To know if we show/hide spk attributesin the view - based on .startswith("_")
+ATTRIBUTE_PUBLICY_CHOICES = (
+	('0', 'Private'),
+	('1', 'Public'),
+	('2', '**Unused'),
+	('7', 'for Spok'),
+)
 
 ################################################################################ VERBATIM
 ########## PONCTUATION
@@ -104,21 +109,27 @@ SENTENCE_UTT_SYMBOLS['declarative']='. '
 SENTENCE_UTT_SYMBOLS['interrogative']='? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
-########## CODES ACTIVATED (every code need to be declared in DEFINITIONS below anyway)
+
+
+########## CODES ACTIVATED (every code need to be declared in CODES DEFINITIONS TOO ! see below )
 # ACTIVATED CODES = those in TextStreamTimeline viz (in order) - nb: if there is not code in texte, it will not show on viz !
 STREAMVIZCODES={}
 STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible','break','comment','time']
 # deprecated colors, now all set in reanalyse.css
 #STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
 
-# ACTIVATED CODES = displayed IN edShow to show/hide
+# ACTIVATED CODES = displayed IN edShow to show/hide, with categories
 PARVBCODES={}
 PARVBCODES['Transcription'] = 	['break','comment','inaudible','question','time']
 PARVBCODES['Verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
 
+
+
 # THOSE YOU WANT TO PUT SPECIALLY on the margin (will add a css class)
-PARVBMARGL = ['comment','break']
-PARVBMARGR = ['time']
+PARVBMARGL = ['comment','break']	# left margin
+PARVBMARGR = ['time']				# right margin
+
+
 
 ########## CODES DEFINITION
 # SIMPLE IMAGE
@@ -131,7 +142,7 @@ CODES_IMAGE['laugh']=					'laugh'
 CODES_IMAGE['silence']=					'silence'
 CODES_IMAGE['points de suspension']=	'silence'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
 
-# IMAGE WITH TOOLTIP
+# IMAGE WITH TOOLTIP (ie with content)
 CODES_IMAGE_TOOLTIP={}
 CODES_IMAGE_TOOLTIP['break:']=			'break'
 CODES_IMAGE_TOOLTIP['body:']=			'body'
@@ -145,7 +156,7 @@ CODES_IMAGE_TOOLTIP['to:']=				'directed'	# (soon deprecated) more mapping, beca
 CODES_TEXT={} # text styling (no image no tooltip)
 CODES_TEXT['strong:']=			'strong'
 
-# TEXT STYLING WITH TOOLTIP
+# TEXT STYLING WITH TOOLTIP (ie with content)
 CODES_TEXT_TOOLTIP={} # text styling (with tooltip)
 CODES_TEXT_TOOLTIP['sic:']=				'sic'
 CODES_TEXT_TOOLTIP['uncertain:']=		'uncertain'

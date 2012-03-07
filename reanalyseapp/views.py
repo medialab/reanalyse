@@ -724,9 +724,9 @@ def edBrowse(request,eid):
 	
 	######################################### COLUMNS
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colArr=['CatTemp','CatAnaly','Name','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
+		colArr=['Research Phase','Doc Type','Name','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
 	else:
-		colArr=['CatTemp','CatAnaly','Name','Size','Viz','Investigator','Speakers']
+		colArr=['Research Phase','Doc Type','Name','Size','Viz','Investigator','Speakers']
 	
 	
 	######################################### VALUES
