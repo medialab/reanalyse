@@ -16,7 +16,7 @@ register = template.Library()
 # simple counts (for left main menu)
 @register.filter
 def vizPublicCount(e):
-	return e.visualization_set.filter(public=True).count()
+	return e.visualization_set.filter(public=True).exclude(viztype='Overview').count()
 @register.filter
 def docPublicCount(e):
 	#return e.texte_set.filter(Q(doccat='analyse')|Q(doccat='preparatory')|Q(doccat='verbatim')|Q(doccat='publication')).count()

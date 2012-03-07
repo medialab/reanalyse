@@ -1726,6 +1726,9 @@ def evBrowse(request,eid):
 # Delete Visualizations
 def evDelete(request,eid,vid):
 	v = Visualization.objects.get(enquete__id=eid,id=vid)
+	if v.viztype in GRAPHTYPES:
+		logger.info("["+str(eid)+"] removing graph file: "+v.locationpath)
+		os.system("rm -R "+v.locationpath)
 	v.delete()
 	return HttpResponse("killed", mimetype="application/json")
 ###########################################################################
@@ -1785,9 +1788,9 @@ def makeVisualization(request,eid):
 				
 	count = int(request.GET.get('count','0'))
 	
-	newVizu = makeViz(e,typ,speakers=speakers,textes=textes,attributetypes=attributetypes,count=count)
+	newViz = makeViz(e,typ,speakers=speakers,textes=textes,attributetypes=attributetypes,count=count)
 		
-	return HttpResponse(newVizu.json, mimetype="application/json")
+	return HttpResponse(simplejson.dumps({'status':'launched'},indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
 def getVizHtml(request,eid):
 	e = Enquete.objects.get(id=eid)

@@ -21,7 +21,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	
 	function switchMode() {
 		stackedMode = !stackedMode;
-		console.log("changed"+stackedMode);
+		//console.log("changed"+stackedMode);
 		var spk_Area = function(d,nSpk) {
 			var thearea = d3.svg.area()
 				.x(function(d,i) { return decx + scaleX(i); })
@@ -75,8 +75,8 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	var periodStep = thedata.period;
 	var stepLegend = 14;
 	var pixelStep = 10; 
-	var leftMargin = 105;
-	var rightMargin = 58; // for legend (sentences)
+	var leftMargin = 90;
+	var rightMargin = 90; // for slider
 	
 	var topParvbMargin = stepLegend*nParaverbal+15; // space for paraverbal
 	var graphTopMargin = 5; // 5 ? inside graph only
@@ -91,7 +91,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		console.log("width is "+totalW+", too small!");
 		totalW = $(unik).parent().parent().parent().width()-12; // 12 for padding
 	}
-	console.log("got width:"+totalW);
+	//console.log("got width:"+totalW);
 	var vis = vizdiv.append("svg:svg")
 		.attr("width", totalW)
 		.attr("height", totalH);
@@ -144,12 +144,12 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 	
 	////////////////////////////////////////////////////////////////// SLIDER to update precision (jquery!!)
 	var bottomDiv = vizdiv.append("div")
-		.style("width",leftMargin-20+"px")
+		.style("width",rightMargin-10+"px")
 		.style("position","absolute")
 		.style("font-size",10)
 		.style("line-height","1em")
-		.style("left","5px" )
-		.style("top",totalH-50+"px" );
+		.style("left",totalW-rightMargin+10+"px" )
+		.style("top",totalH-45+"px" );
 	bottomDiv.append("span")
 		.text("set precision to");
 	bottomDiv.append("div")
@@ -158,7 +158,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.style("margin-top","5px")
 		.style("margin-bottom","5px")
 		.attr("id","slider_"+theId);
-	bottomDiv.append("span")
+	bottomDiv.append("div")
 		.attr("id","sliderlabel_"+theId)
 		.text(parseInt(periodWantedScaled*periodStep)+" sentences");
 	
@@ -170,7 +170,7 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		min:0,
 		max:100,
 		value:scaleEchantill.invert(periodWantedScaled),
-		change: function(event, ui) {
+		slide: function(event, ui) {
 			periodWantedScaled = scaleEchantill(ui.value);
 			periodWantedInt = parseInt(periodWantedScaled);
 			//console.log("changing echantill val:"+ui.value);
@@ -498,8 +498,8 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 			.attr("class", function(d, i) { return "speakerColor_"+d[0]+" spk_rect spk_rect_"+i; })
 			.attr("width", 10)
 			.attr("height",10)
-			.attr("x",5)
-			.attr("y",function(d,i){return topParvbMargin + 6+i*stepLegend;})
+			.attr("x",leftMargin-15+"px")
+			.attr("y",function(d,i){return parseInt(topParvbMargin-8+(i+1)*dec4spk)+"px";}) // topParvbMargin + 6+i*stepLegend;})
 			.on("mouseover", highlightSpk(false))
 			.on("mouseout", highlightSpk(true));	
 	vis.selectAll("spk_legendTexts")
@@ -507,9 +507,9 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.enter().append("svg:text")
 			.attr("class", function(d, i) { return "spk_label spk_label_"+i; })
 			.style("cursor","pointer")
-			.attr("text-anchor", "left")
-			.attr("x",20)
-			.attr("y",function(d,i){return topParvbMargin + 6+i*stepLegend+10;})
+			.attr("text-anchor", "end")
+			.attr("x",leftMargin-20+"px")
+			.attr("y",function(d,i){return parseInt(topParvbMargin+(i+1)*dec4spk)+"px";})// we used to put them on the left as praverbal : topParvbMargin + 6+i*stepLegend+10;})
 			.attr("fill","gray")
 			.text( function(d,i) {return d[1];} )
 			.on("mouseover", highlightSpk(false))
@@ -532,10 +532,13 @@ function buildD3_TexteStreamTimeline(thedata,theId) {
 		.attr("x1",graphW+leftMargin+"px")
 		.attr("y1",totalH+"px")
 		.attr("stroke","gray");
+/*
+	// no more legend, we use slider instead
 	vis.append("svg:text")
 		.attr("x",leftMargin+graphW+9+"px")
 		.attr("y",totalH-5+"px")
 		.text("Sentences");
+*/
 		
 	var scale=1,
 		decx=0;

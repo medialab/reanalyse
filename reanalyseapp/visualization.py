@@ -568,7 +568,7 @@ def visMakeOverview(e):
 
 
 ###########################################################################
-# attributes "chronogram", rollovable
+# spk attributes grid, rollovable
 def visMakeAttributes(e,param):
 	speakers = param['who']
 	textes = param['where']
@@ -582,7 +582,9 @@ def visMakeAttributes(e,param):
 	attnames=[{'id':a.id,'name':a.name} for a in attributetypes]
 	spknames=[]
 	for s in speakers:
-		attvalues=[ a.id for a in s.attributes.exclude(attributetype__name__startswith='_') ]
+		attvalues = []
+		for attyp in attributetypes:
+			attvalues.append(s.attributes.get(attributetype=attyp).id)
 		spknames.append({'id':s.id,'name':s.name,'values':attvalues})
 
 	attributes=[]

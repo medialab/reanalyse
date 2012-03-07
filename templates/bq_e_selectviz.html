@@ -43,7 +43,7 @@
 	<!-- ============================================================================================= -->
 <td>
 	<ul class="vizLaunchList">
-		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersAttributes"></a>
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=2#viz_ex_Graph_SpeakersAttributes"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersAttributes",{"speakers":selectedSpeakerIds,"attributetypes":selectedAttributeTypesIds});return false;'>Graph Speakers-Attributes</a> using 
 			<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
 				<select id="attSelectDropDownList_graph" multiple="multiple">
@@ -57,30 +57,30 @@
 			<span class="vizLoadingSpinner Graph_SpeakersAttributes" style="display:none"></span>
 		</li>
 		
-		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersSpeakers"></a>
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=2#viz_ex_Graph_SpeakersSpeakers"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersSpeakers",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Speakers</a> (solr similarity)
 			<span class="vizLoadingSpinner Graph_SpeakersSpeakers" style="display:none"></span>
 		</li>
 		
-		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Graph_SpeakersWords"></a>
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=2#viz_ex_Graph_SpeakersWords"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"Graph_SpeakersWords",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Graph Speakers-Words</a> (django ngrams)
 			<span class="vizLoadingSpinner Graph_SpeakersWords" style="display:none"></span>
 		</li>
 		
-		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Cloud_SolrSpeakerTagCloud"></a>
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=2#viz_ex_Cloud_SolrSpeakerTagCloud"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"Cloud_SolrSpeakerTagCloud",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Tag cloud</a> 
 			{% if source = 'Documents' %}(fo each text){% endif %}
 			<span class="vizLoadingSpinner Cloud_SolrSpeakerTagCloud" style="display:none"></span>
 		</li>	
 		
 		{% if source = 'Documents' %}
-		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_TexteStreamTimeline"></a>
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=2#viz_ex_TexteStreamTimeline"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"TexteStreamTimeline",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds});return false;'>Interaction dynamics</a> (for each text)
 			<span class="vizLoadingSpinner TexteStreamTimeline" style="display:none"></span>
 		</li>
 		{% endif %}
 		
-		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=4#viz_ex_Attributes"></a>
+		<li><a class="imHelp" target="_new" href="/reanalyse/?p=method&q=2#viz_ex_Attributes"></a>
 			<a href="" onclick='createVisualization({{enquete.id}},"Attributes",{"speakers":selectedSpeakerIds,"textes":selectedTexteIds,"attributetypes":selectedAttributeTypesIds});return false;'>Attributes</a> matrix using 
 			<!-- ========================== ATTRIBUTE SELECTION DropDownCheckList-->
 				<select id="attSelectDropDownList_attr" multiple="multiple">

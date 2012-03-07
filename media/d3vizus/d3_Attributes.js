@@ -122,15 +122,17 @@ function buildD3_Attributes(thedata,theId) {
 		var theVals = classVals.split(" ");
 		theVals.pop();
 		
+		var durat = 0;
+		
 		theVals.map( function(u) {
 			d3.select(unikid+"#label_"+u).style("background",function(d,i){return flag ? noteValCol : valLabelCol; });
 			d3.select(unikid+"#line_"+u).attr("stroke",function(d,i){ return flag ? noteValCol : "transparent"; });
 			if(e.attr("sel")!=1){
-				d3.select(unikid+"#label_"+u).transition().duration(500).style("opacity",function(d,i){return flag ? 1 : 0;} );
+				d3.select(unikid+"#label_"+u).transition().duration(durat).style("opacity",function(d,i){return flag ? 1 : 0;} );
 				d3.select(unikid+"#label_"+u).style("display",function(d,i){return flag ? "inline-block" : "none";} );
-				d3.select(unikid+"#"+u).transition().duration(500).attr("fill",function(d,i){return flag ? involvedValCol : vValCol;});
+				d3.select(unikid+"#"+u).transition().duration(durat).attr("fill",function(d,i){return flag ? involvedValCol : vValCol;});
 				var cuy = parseFloat(d3.select(unikid+"#jauge_"+u).attr("height"));
-				d3.select(unikid+"#roll_jauge_"+u).attr("y",cuy).transition().duration(600).attr("height",function(d,i){ return flag ? parseFloat(yScale(1)) : 0; });
+				d3.select(unikid+"#roll_jauge_"+u).attr("y",cuy).transition().duration(durat).attr("height",function(d,i){ return flag ? parseFloat(yScale(1)) : 0; });
 			};
 			//d3.select(unikid+"#label_"+u).style("opacity",1);
 			//d3.select(unikid+"#"+u).style("opacity",1);
