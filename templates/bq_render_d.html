@@ -21,9 +21,9 @@
 
 {% for onlymargin,timepart in timeparts %}
 		
-		{% if timepart|length == 1 %}		<!-- ########### if only one speaker -->
+		{% if timepart|length == 1 %}		{% comment %}<!-- ########### if only one speaker -->{% endcomment %}
 		
-			{% if not onlymargin %} <!-- display raw div if only [comment/time] -->
+			{% if not onlymargin %} 	{% comment %}<!-- display raw div if only [comment/time] -->{% endcomment %}
 			<div class="text_part">
 				<div class="text_speaker speakerColor_{{timepart.0.0.speaker.id}} speaker_{{timepart.0.0.speaker.id}}">
 					<div class="text_speaker_name">

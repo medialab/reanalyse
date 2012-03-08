@@ -227,7 +227,7 @@
 			//"bSort": false,
 			"sScrollY": "400px", // rather take max width
 			"sScrollX": "550px", // not taken into acount !! set manually below
- 			"sScrollXInner": "{{sScrollXInner}}",
+ 			"sScrollXInner": "{{sScrollXInner}}", // set in the view, because depending on nb of columns
  			//"sScrollXInner": "{{sScrollXInner}}px",
 			"bScrollCollapse": true,
 			"bPaginate": false,
@@ -270,13 +270,10 @@
         	}
  		} );
 		
-		// todo: understand why "sScrollXInner" is not taken into account !
-		// we have to set it manually !
-		//$("#speakerTable tr").width({{sScrollXInner}});
 		
 {% if perms.reanalyseapp.can_make %}
 		
-		// NB: we have to dinstinguish LEFT/RIGHT click handlers, baecause at each redraw left-handler disapear ! (?)
+		// NB: we have to dinstinguish LEFT/RIGHT click handlers, because at each redraw left-handler disapear ! (?)
 		// RIGHT : click handler for row selection	
 		$('#speakerTable .speakerRow').click( function() {
 			if ( $(this).hasClass('row_selected') ) deselectSpeaker(this);

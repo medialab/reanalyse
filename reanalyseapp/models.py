@@ -688,6 +688,7 @@ def parseTEIWords(sentence,nodes,N):
 				N+=1
 			except:
 				# todo: to solve that thread-not-safe problem with get_or_create, which can produce duplicate entries !!!!
+				# update: is there really a problem here ?
 				logger.info("PROBLEM: get_or_create problem :"+codeName+","+wordContent+","+str(N) )
 				
 	# end symbol

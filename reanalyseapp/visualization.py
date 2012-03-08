@@ -334,7 +334,7 @@ def visMakeTermVectorGraph(e,viz,param):
 # 			edgedic.update({'weight':edgedic['tfidf']})
 # 			g.add_edge('Speaker_'+str(s.id),'Word_'+w[:7],edgedic)			
 	
-	############ USAGE B = todo: keeping all ngrams from django stored models
+	############ USAGE B = keeping all ngrams from django stored models
 	for s in speakers:
 		for ngs in s.ngramspeaker_set.all():
 			ng=ngs.ngram

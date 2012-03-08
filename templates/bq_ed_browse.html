@@ -8,10 +8,6 @@
 	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/datatables/css/demo_table.css" />
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.js"></script>
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
-	
-	<!-- auto-complete by tags using tag-it -->	
-	<!--<script src="{{ MEDIA_URL }}/js/tag-it.js" type="text/javascript" charset="utf-8"></script>-->
-    <!--<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/jquery.tagit.css">-->
 
 	<!-- jquery ui (slider for viz, and dropdownmenu) -->
 	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
@@ -312,21 +308,7 @@
 		initVizInvolvedModals("{% url reanalyse.reanalyseapp.views.getVizHtml enquete.id %}");
 					
 		
-		//////////////////////////////////////////////////////////////////////
-		// todo: maybe make that in the search page, allowing autocomplete in field ?
-		// AUTO COMPLETION FOR SEARCH FIELDS
-		// Loading tag-it values : all codes
-		// Adding all PEOPLE & CODES
-/*
-		var theTags = [{% for p in enquete.speaker_set.all %}'{{p.name}}',{% endfor %}{% for c in enquete.code_set.all %}'{{c.name}}',{% endfor %}'nope'];
-		$('#tagfields').tagit();
-		$('#tagfields').tagit({
-			availableTags: theTags, // this param is of course optional. it's for autocomplete.
-			// configure the name of the input field (will be submitted with form), default: item[tags]
-			itemName: 'item',
-			fieldName: 'q'
-		});
-*/
+
 	});
 </script>
 <!-- ======================================================= -->
