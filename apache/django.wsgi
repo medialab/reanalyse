@@ -2,8 +2,8 @@ import os
 import sys
 
 ##### PROD
-#sys.path.append('/mnt/expand/reanalyse')
-#sys.path.append('/mnt/expand')
+sys.path.append('/mnt/expand/reanalyse')
+sys.path.append('/mnt/expand')
 
 ##### DEV
 sys.path.append('/home/pj/djangos/reanalyse')
