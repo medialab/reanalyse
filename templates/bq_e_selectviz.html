@@ -1,6 +1,6 @@
 <table class="selectTable">
 <thead>
-	<th>1. Select {{source}}</th>
+	<th>1. Select {% if source = 'Documents' %}TEI Documents{% else %}Speakers{% endif %}</th>
 	<th>2. Launch Visualization</th>
 </thead>
 <tbody>
@@ -9,7 +9,7 @@
 		<!-- ============================================================================================= -->	
 		{% if source = 'Documents' %}
 		
-			<span id="documentsSelectedCountDiv">0</span> selected docs 
+			<span id="documentsSelectedCountDiv">0</span> selected TEI docs 
 			(select directly on table | <a href="" onclick='selectAllDocs();return false;'>all</a> | 
 			<a href="" onclick='deselectAllDocs();return false;'>none</a>) 
 			<ul class="selectedList" id="documentsSelectedList"></ul>

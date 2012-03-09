@@ -69,9 +69,8 @@
 		<!-- NB: we add "tei" class to the column Type to change color of those using css -->
 		<tr class="gradeA doctype_{{row.texte.doctype}}" id="texte_{{row.texte.id}}">
 			{% for v in row.vals %}				
-				
-				<!-- ====================== LAST COLUMN (d3 displayed content): we just put a div with texte.id, updated then using js -->
 				{% if forloop.last %}
+					<!-- LAST COLUMN (d3 displayed content): we just put a div with texte.id, updated then using js -->
 					<td class="content_littlefrise">
 						{% autoescape off %}{{v}}{% endautoescape %}
 					</td>
@@ -188,20 +187,22 @@
 			// elem.id = "texte_2738"
 			var tid = elem.id.split("_")[1];
 			// both left tr and right tr
-			$('.'+elem.id).addClass('row_selected');
-			theTr.addClass('row_selected');
-			// update column 'selected' TAKES LONG !!!!
-			//var rowPos = sTable.fnGetPosition(elem);
-			//sTable.fnUpdate( 'yes', rowPos, 0);
-			// update selected names list (new <li>)
-			var sNameLink = $(theTr.children()[NAMECOLUMNINDEX]).html()
-			var newElem = $("<li>").attr({'id':'selected_'+tid}).append(sNameLink);
-			$('#documentsSelectedList').append(newElem);
-			// update array with selected ids
-			selectedTexteIds.push(tid);
-			// update total count
-			$('#documentsSelectedCountDiv').html(selectedTexteIds.length);
-			//console.log("selectedTexteIds:"+selectedTexteIds);
+			//$('.'+elem.id).addClass('row_selected');
+			if (theTr.hasClass('doctype_TEI')) {
+				theTr.addClass('row_selected');
+				// update column 'selected' TAKES LONG !!!!
+				//var rowPos = sTable.fnGetPosition(elem);
+				//sTable.fnUpdate( 'yes', rowPos, 0);
+				// update selected names list (new <li>)
+				var sNameLink = $(theTr.children()[NAMECOLUMNINDEX]).html()
+				var newElem = $("<li>").attr({'id':'selected_'+tid}).append(sNameLink);
+				$('#documentsSelectedList').append(newElem);
+				// update array with selected ids
+				selectedTexteIds.push(tid);
+				// update total count
+				$('#documentsSelectedCountDiv').html(selectedTexteIds.length);
+				//console.log("selectedTexteIds:"+selectedTexteIds);
+			}
 		}
 	}
 	function deselectDoc(elem) {
