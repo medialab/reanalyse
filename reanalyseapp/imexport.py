@@ -83,9 +83,7 @@ def doFiestaToEnquete(e):
 	
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
-	logger.info("["+str(e.id)+"] now updating tfidf ...")
 	makeAllTfidf(e)
-	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
 	
 	if e.speaker_set.count()>0:
 		makeViz(e,'Cloud_SolrSpeakerTagCloud')
@@ -172,7 +170,7 @@ def importEnqueteUsingMeta(folderPath):
 		#mandatoryFields = ['*id','*name','*category','*description','*location','*date']
 		logger.info(eidstr+"=========== PARSING META_DOCUMENTS.CSV")
 		###### Parsing Documents
-		doc = csv.DictReader(open(docPath),delimiter='\t',quotechar='"')
+		doc = csv.DictReader(open(docPath),delimiter='\t')
 		for row in doc:
 			#try:
 			if row['*id']!='*descr':
@@ -190,8 +188,9 @@ def importEnqueteUsingMeta(folderPath):
 				#except:
 				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
 				try:
-					doc_date = datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
+					doc_date = datetime.datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
 				except:
+					logger.info(eidstr+"EXCEPT on date : "+row['*id']+" | "+row['*file'])
 					doc_date = datetime.datetime.today()
 
 				### special for ese, don't create any texte() model, just parse ese.xml

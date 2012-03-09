@@ -728,9 +728,9 @@ def edBrowse(request,eid):
 	
 	######################################### COLUMNS
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colArr=['Research Phase','Doc Type','Name','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
+		colArr=['Research Phase','Doc Type','Name','Date','Location','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
 	else:
-		colArr=['Research Phase','Doc Type','Name','Size','Viz','Investigator','Speakers']
+		colArr=['Research Phase','Doc Type','Name','Date','Location','Size','Viz','Investigator','Speakers']
 	
 	
 	######################################### VALUES
@@ -760,7 +760,11 @@ def edBrowse(request,eid):
 			# display link using edShow
 			linkDoc = reverse(edShow,args=eiddid)
 			nameStr = '<a href="'+linkDoc+'" onclick="event.stopPropagation();">'+t.name+'</a>'+' ('+t.get_doctype_display().lower()+')'
-
+		
+		# DOC DATE & LOCATION, sortable
+		dateStr	= t.date.isoformat() 	# '<span style="display:none;">'+t.date.isoformat()+'</span>'+
+		locStr 	= t.location
+		
 		# FILESIZE
 		if t.filesize==0:
 			sizeStr = '-'
@@ -819,9 +823,9 @@ def edBrowse(request,eid):
 		
 		################# VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
-			tArr=[t.doccat1,t.doccat2,nameStr,sizeStr,statusStr,vizStr,investStr,speakersStr] #+ [contentStr]
+			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,sizeStr,statusStr,vizStr,investStr,speakersStr] #+ [contentStr]
 		else:
-			tArr=[t.doccat1,t.doccat2,nameStr,sizeStr,vizStr,investStr,speakersStr]
+			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,sizeStr,vizStr,investStr,speakersStr]
 			
 		docDict['texte']=t
 		docDict['vals']=tArr
