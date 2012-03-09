@@ -170,6 +170,8 @@
 
 <script type="text/javascript">
 	
+	var NAMECOLUMNINDEX = 2; // to fetch content when spk selection
+	
 	//////////////////////////////////////////////////////////////////////
 	function selectAllDocs() {
 		var aTrs = dTable.fnGetNodes();
@@ -192,7 +194,7 @@
 			//var rowPos = sTable.fnGetPosition(elem);
 			//sTable.fnUpdate( 'yes', rowPos, 0);
 			// update selected names list (new <li>)
-			var sNameLink = $(theTr.children()[1]).html()
+			var sNameLink = $(theTr.children()[NAMECOLUMNINDEX]).html()
 			var newElem = $("<li>").attr({'id':'selected_'+tid}).append(sNameLink);
 			$('#documentsSelectedList').append(newElem);
 			// update array with selected ids

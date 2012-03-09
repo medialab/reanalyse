@@ -863,7 +863,7 @@ def esBrowse(request,eid):
 	e = Enquete.objects.get(id=eid)
 	
 	#speakers = e.speaker_set.all()
-	speakers = e.speaker_set.filter(ddi_type='SPK') # only real speakers : filter(ddi_type='SPK')
+	speakers = e.speaker_set.filter(public=True) # only real speakers : filter(ddi_type='SPK')
 	
 	attributeTypes = e.attributetype_set.filter(publicy='1') # only public attributes
 	
@@ -887,9 +887,9 @@ def esBrowse(request,eid):
 	# nb: color cells {'label':''} managed by javascript were commented
 	if request.user.has_perm('reanalyseapp.can_make'):
 		#colarray=[{'label':'Id'},{'label':''},{'label':'Name'},{'label':'Visualizations'},{'label':'Count'},{'label':'django_ngrams '+str(Ngram.objects.count())}]
-		colarray=[{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'},{'label':'Ngrams'},{'label':'Id'}]
+		colarray=[{'label':'Name'},{'label':'Type'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'},{'label':'Ngrams'},{'label':'Id'}]
 	else:
-		colarray=[{'label':'Name'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'}]
+		colarray=[{'label':'Name'},{'label':'Type'},{'label':'<span class="imDocument"></span> Textes'},{'label':'Viz'},{'label':'Words'}]
 		
 	for att in attributeTypes:
 		coldict={'id':att.id, 'label':att.name}
@@ -915,9 +915,9 @@ def esBrowse(request,eid):
 			'<span style="display:none;">'+intToSortableStr(txtlen)+'</span>'+\
 			'<div class="littleFrise" style="width:'+str(txtlen*LITTLEFRISEMAXWIDTH/globalMaxCount)+'px"></div>'
 			#' '+ str(txtlen)
-		typeStr = \
-			'<span style="display:none;">'+s.get_ddi_type_display()+'</span>'+\
-			'<span class="imSpk'+s.get_ddi_type_display()+'"></span>'
+		typeStr = s.get_ddi_type_display()
+			#'<span style="display:none;">'+s.get_ddi_type_display()+'</span>'+\
+			#'<span class="imSpk'+s.get_ddi_type_display()+'"></span>'
 
 		vizStr = getStrFromVizList(getRelatedViz(speakers=[s],user=request.user))
 		
@@ -938,9 +938,9 @@ def esBrowse(request,eid):
 		########################## VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
 			#vals = [s.id,s.color,nameLinkStr,vizStr,littleFriseStr,ngramsStr]
-			vals = [nameLinkStr,nameStr,vizStr,countStr,ngramsStr,s.id]
+			vals = [nameLinkStr,typeStr,nameStr,vizStr,countStr,ngramsStr,s.id]
 		else:
-			vals = [nameLinkStr,nameStr,vizStr,countStr]
+			vals = [nameLinkStr,typeStr,nameStr,vizStr,countStr]
 						
 		## one column for each attribute
 		for k,attype in enumerate(attributeTypes):
