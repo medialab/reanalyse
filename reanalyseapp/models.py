@@ -7,7 +7,13 @@ from reanalyse.reanalyseapp.globalvars import *
 from reanalyse.reanalyseapp.utils import *
 
 from django.db import models
+
+# For math manipulations in TF,DF,TFIDF
+from django.db.models import Avg, Max, Min, Count
+
 from xml.etree.ElementTree import ElementTree
+from lxml import etree
+
 from django.conf import settings
 
 # for date manip on parsing
@@ -15,17 +21,14 @@ import datetime
 
 import simplejson
 
-from lxml import etree
 from itertools import chain
 
 from string import maketrans
 import re, os
 
 # Python memory lookup
-import psutil
+#import psutil
 
-# For math manipulations in TF,DF,TFIDF
-from django.db.models import Avg, Max, Min, Count
 ####################
 import django_tables2 as tables
 from django.utils.safestring import mark_safe
@@ -179,6 +182,7 @@ class Speaker(models.Model):
 	## USED TO KNOW (investigator/speaker/protagonist)
 	ddi_type = models.CharField(max_length=3, choices=SPEAKER_TYPE_CHOICES)
 	#################
+	public = models.BooleanField(default=False)					# visible in esbrowse or not
 	attributes = models.ManyToManyField(Attribute)
 	color = models.CharField(max_length=7,default=HTML_COLORS[0])
 	# we may have to put all his text content in a TextField, to index with solr...

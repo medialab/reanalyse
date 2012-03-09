@@ -99,7 +99,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 		newVizu = makeVisualizationObject(e,typ,descr)
 		if speakers==[]:
 			if textes==[]:
-				speakers = e.speaker_set.exclude(ddi_type='INV')
+				speakers = e.speaker_set.filter(public=True)
 			else:
 				speakers=[]
 				for t in textes:
@@ -122,7 +122,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 			if textes==[]:
 				textes = Texte.objects.filter(doctype='TEI')
 			for t in textes:
-				spks = t.speaker_set.exclude(ddi_type='INV')
+				spks = t.speaker_set.filter(public=True)
 				if len(spks)>0:
 					newVizu = makeVisualizationObject(e,typ,descr)
 					d = visMakeTagCloudFromTermVectors(e,{'count':count,'who':spks})
@@ -553,7 +553,7 @@ def visMakeOverview(e):
 	
 	##### TRYOUT C : only speakers
 	links=[]
-	for s in e.speaker_set.exclude(ddi_type='INV'):
+	for s in e.speaker_set.exclude(public=True):
 		links.append({'spk':{'id':s.id,'label':s.name,'weight':0}})
 	res['links']=links
 	return res
@@ -862,6 +862,7 @@ def getSolrTermVectorsDict(speakers,field,mintn): # field = 'text'/'ngrams'
 ####################################################################
 # to avoid querying solr everyday, we store ngrams in DB
 def makeAllTfidf(e):
+	logger.info("["+str(e.id)+"] now updating tfidf ...")
 	for s in e.speaker_set.all():
 		#logger.info("now reseting tfidf ngrams for speaker:"+str(s.id))
 		s.ngramspeaker_set.all().delete()
@@ -870,6 +871,7 @@ def makeAllTfidf(e):
 			d=termd[w]
 			newNgram,isnew = Ngram.objects.get_or_create(enquete=e,content=w,df=d['df'])	
 			newNgramSpeaker,isnew = NgramSpeaker.objects.get_or_create(enquete=e,ngram=newNgram,speaker=s,tf=d['tf'],tn=d['tn'],tfidf=d['tfidf'])
+	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
 ####################################################################
 
 

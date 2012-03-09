@@ -23,7 +23,7 @@ def docPublicCount(e):
 	return e.texte_set.count()
 @register.filter
 def spkPublicCount(e):
-	return e.speaker_set.filter(ddi_type='SPK').count()
+	return e.speaker_set.filter(public=True).count()
 ###########################################################################    
 # to get speaker description ON THE LEFT
 @register.filter

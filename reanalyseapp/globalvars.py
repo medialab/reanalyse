@@ -24,34 +24,39 @@ STATUS_CHOICES = (
 
 ############################################################ DOCUMENTS meta_documents.csv
 # A) meta_documents.csv : COLUMN *category1 that are accepted, and their translation in the view
+# QUALI "RESEARCH PHASE"
 DOC_CAT_1={}
-DOC_CAT_1['preparatory'] = 'Preparatory'
-DOC_CAT_1['terrain'] = 'Fieldwork'
-DOC_CAT_1['data'] = 'Data'
-DOC_CAT_1['verbatim'] = 'Verbatim'
-DOC_CAT_1['result'] = 'Result'
-DOC_CAT_1['ese'] = 'ese'
-DOC_CAT_1['misc'] = 'Misc'
+DOC_CAT_1['preparatory']	= 'Preparatory'
+DOC_CAT_1['terrain'] 		= 'Fieldwork'
+DOC_CAT_1['data'] 			= 'Data'
+DOC_CAT_1['result'] 		= 'Result'
+DOC_CAT_1['enrich'] 		= 'Complement'
+DOC_CAT_1['misc'] 			= 'Misc'
+DOC_CAT_1['verbatim'] 		= '?Verbatim?'	
 
 # B) meta_documents.csv : COLUMN *category2 that are accepted, and their translation in the view
+# QUALI "DOCUMENT TYPE"
 DOC_CAT_2={}
-DOC_CAT_2['pv'] = 'Minutes'
-DOC_CAT_2['note'] = 'Notes'
-DOC_CAT_2['transcr'] = 'Transcr'
-DOC_CAT_2['video'] = 'Video'
-DOC_CAT_2['audio'] = 'Audio'
-DOC_CAT_2['resum'] = 'Summary'
-DOC_CAT_2['analyse'] = 'Analysis'
-DOC_CAT_2['quest'] = 'Quest'
-DOC_CAT_2['publi'] = 'Publ'
-DOC_CAT_2['com'] = 'Com'
-DOC_CAT_2['rap'] = 'Rep'
-DOC_CAT_2['recrut'] = 'Recr'
-DOC_CAT_2['guide'] = 'Guide'
-DOC_CAT_2['misc'] = 'Misc'
+DOC_CAT_2['transcr'] 	= 'Transcr'
+DOC_CAT_2['pv'] 		= 'Minutes'
+DOC_CAT_2['note'] 		= 'Notes'
+DOC_CAT_2['video'] 		= 'Video'
+DOC_CAT_2['audio'] 		= 'Audio'
+DOC_CAT_2['resum'] 		= 'Summary'
+DOC_CAT_2['analyse'] 	= 'Analysis'
+DOC_CAT_2['quest'] 		= 'Quest'
+DOC_CAT_2['publi'] 		= 'Publ'
+DOC_CAT_2['com'] 		= 'Com'
+DOC_CAT_2['rap'] 		= 'Rep'
+DOC_CAT_2['recrut'] 	= 'Recr'
+DOC_CAT_2['guide'] 		= 'Guide'
+DOC_CAT_2['misc'] 		= 'Misc'
 
-# C) meta_documents.csv : COLUMN *mimetype
-DOCUMENT_MIMETYPES=['xml','pdf','htm','csv','link','ref']
+# C) meta_documents.csv : COLUMN *mimetype . 
+DOCUMENT_MIMETYPES 	=  ['ese','tei']			# special files (parsed)
+DOCUMENT_MIMETYPES	+= ['pdf','htm','csv']		# normaly displayed docs
+DOCUMENT_MIMETYPES 	+= ['link','ref']			# doc without local file
+
 
 # documents are parsed only if they are in A) & B) & C)
 # note that ese is also processed, but in a different way. see importexport.py
@@ -73,16 +78,19 @@ DOCUMENT_TYPE_CHOICES = (
 ############################################################ SPEAKERS meta_speakers.csv
 # Speaker type translator from meta_speakers.csv
 SPEAKER_TYPE_CSV_DICT = {
-	'speaker':'SPK',
-	'investigator':'INV',
-	'protagonist':'PRO',
+	'investigator'	:'INV',		# (esBrowse off) researcher / interviewer
+	'speaker'		:'SPK',		# (public) main spk(s) interviewed
+	'protagonist'	:'PRO',		# (public) not interviewed
+	'figurant'		:'FIG',		# (esBrowse off) just mentionned
 }
+# only public (ie listed on esBrowse) speakers are considered for viz: attributes, ngrams, etc...
 
 # Speaker types for django model
 SPEAKER_TYPE_CHOICES = (
 	('INV', 'Investigator'),
 	('SPK', 'Speaker'),
 	('PRO', 'Protagonist'),
+	('FIG', 'Figurant'),
 	('OTH', 'Unknown'),
 )
 
@@ -91,6 +99,7 @@ SPK_COLORS={}
 SPK_COLORS['INV']='#EFEDFC'
 SPK_COLORS['SPK']='#E3FBE9'
 SPK_COLORS['PRO']='#FFDC98'
+SPK_COLORS['FIG']='#FFDC98'
 SPK_COLORS['OTH']='#FFFFFF'
 
 # To know if we show/hide spk attributesin the view - based on .startswith("_")

@@ -206,6 +206,9 @@ def eDelete(request,eid):
 				logger.info("["+str(eid)+"] removing graph file: "+v.locationpath)
 				os.system("rm -R "+v.locationpath)
 		e.delete()
+		# update index to avoid outdated data in lucene
+		update_index.Command().handle(verbosity=0)
+		logger.info("SOLR INDEX UPDATED")
 	return render_to_response('bq_e_browse.html', context_instance=RequestContext(request))
 ###########################################################################
 def logoutuser(request):
@@ -686,7 +689,8 @@ def eseShow(request,eid):
 		ese = simplejson.loads(e.ese)
 	else:
 		ese = None
-	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese':ese}
+	lan = request.LANGUAGE_CODE
+	ctx = {'bodyid':'e','pageid':'ese','enquete':e,'ese':ese[lan]}
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
 	return render_to_response('bq_e_ese.html',ctx ,context_instance=RequestContext(request))
@@ -1187,7 +1191,8 @@ def ecShow(request,eid,cid):
 def getEseReport(request,eid):
 	e = Enquete.objects.get(id=eid)
 	ese = simplejson.loads(e.ese)
-	filepath = ese['reportpath']
+	lan = request.LANGUAGE_CODE
+	filepath = ese[lan]['reportpath']
 	logger.info("["+str(eid)+"] Downloading ESE report:"+filepath)
 	#pdfname = eseid + "_"+ese.report.split('/')[-1]
 	pdfname = 'enquetesurenquete.pdf'

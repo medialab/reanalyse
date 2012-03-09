@@ -18,7 +18,8 @@ from django.contrib.auth.models import Group,Permission
 from django.contrib.contenttypes.models import ContentType
 
 from django.core import serializers
-#from xml.etree.ElementTree import ElementTree
+
+from xml.etree.ElementTree import ElementTree
 from lxml import etree
 
 # converting parsing rtf
@@ -78,7 +79,7 @@ def doFiestaToEnquete(e):
 		except:
 			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz: texteid="+str(t.id))
 		
-	logger.info("["+str(e.id)+"] all texts were sucessfully parsed")
+	logger.info("["+str(e.id)+"] all TEI files were sucessfully parsed")
 	
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
@@ -193,14 +194,14 @@ def importEnqueteUsingMeta(folderPath):
 				except:
 					doc_date = datetime.datetime.today()
 
-				### special for ese
-				if doc_category1=='ese':
-					try:
-						esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
-						newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
-						newEnquete.save()
-					except:
-						logger.info(eidstr+"EXCEPT with ESE")
+				### special for ese, don't create any texte() model, just parse ese.xml
+				if doc_mimetype=='ese':
+					#try:
+					esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
+					newEnquete.ese = simplejson.dumps(esedict,indent=4,ensure_ascii=False)
+					newEnquete.save()
+					#except:
+						#logger.info(eidstr+"EXCEPT with ESE")
 				### if normal cat create doc
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
@@ -218,7 +219,7 @@ def importEnqueteUsingMeta(folderPath):
 							except:
 								newDocument.filesize = -1
 								logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category1+" | "+doc_category2+" | "+file_location)
-							if doc_mimetype=='xml' and doc_category1=='verbatim' and doc_category2=='transcr':
+							if doc_mimetype=='tei':
 								newDocument.doctype	= 'TEI'
 								newDocument.status	= '5'
 								newDocument.save()
@@ -279,6 +280,7 @@ def importEnqueteUsingMeta(folderPath):
 					spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
 					spk_name = 	row['*pseudo']
 					newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
+					newSpeaker.public = (spk_type=='SPK' or spk_type=='PRO')
 					for attype in attributetypes:
 						attval=row[attype.name]
 						if attval=='':
@@ -311,50 +313,65 @@ def importEnqueteUsingMeta(folderPath):
 ###########################################################################
 # return json with all data from ese
 def getEnqueteSurEnqueteJson(eseXmlPath,e):
-	logger.info("["+str(e.id)+"] Fetching ese infos from xml: "+eseXmlPath)
+	eidstr = "["+str(e.id)+"] "
+	logger.info(eidstr+"=========== PARSING ESE XML: "+eseXmlPath)
 	res={}
 	
-	tree = ElementTree()
-	tree.parse(eseXmlPath)
+	tree = etree.parse(eseXmlPath)
 	root = tree.getroot()
 	
 	baseEseXmlFolder = '/'+'/'.join(eseXmlPath.split('/')[:-1])+'/'
 	
-	# Fetching summary
-	summary = root.findall('StudyUnit/Summary')[0]
-	res['reportpath'] = baseEseXmlFolder + summary.attrib['report']
-	res['html'] = summary.text
-	res['audiopaths'] = {}
+	out = {}
+	out['audiopaths'] = {}
 	apacount = 0
-	
-	# Fetching chapters
-	thechapters = []
-	for chapter in root.findall('StudyUnit/Chapters/Chapter'):
-		chapt = {}
-		chapt['name'] = chapter.attrib['name']
-		chapt['html'] = chapter.findall('text')[0].text
-		thesubchapters = []
-		for subChapter in chapter.findall('SubChapter'):
-			subchapt = {}
-			subchapt['name'] = subChapter.attrib['name']
-			subchapt['audiopath'] = subChapter.attrib['location']
-			# as the mp3 files may be located
-			# either (good) in the _ese folder
-			# either in the REANALYSEESE_FILES folder
-			# we need to check availability, mmh..
-			if os.path.exists(baseEseXmlFolder+subchapt['audiopath']):
-				subchapt['audiopath'] = baseEseXmlFolder + subchapt['audiopath']
-			else:
-				subchapt['audiopath'] = settings.REANALYSEESE_FILES+'/'+e.ddi_id+'/'+ subchapt['audiopath']
-			# rather store an id referencing real path in res['audiopaths']
-			res['audiopaths'][str(apacount)] = subchapt['audiopath']
-			subchapt['audioid'] = str(apacount)
-			apacount+=1
-			thesubchapters.append(subchapt)
-		chapt['subchapters'] = thesubchapters
-		thechapters.append(chapt)
-	res['chapters'] = thechapters
-	return res
+	for lan in ['fr','en']:
+		res = {}
+		
+		# Fetching report
+		rep = root.findall('Report')[0]
+		res['reportpath'] = baseEseXmlFolder + rep.find('file[@lang="'+lan+'"]').attrib['location']
+		
+		# Fetching chapters
+		thechapters = []
+		for chapter in root.findall('Chapters/Chapter'):
+			chapt = {}
+			chapt['name'] = chapter.find('./title[@lang="'+lan+'"]').text
+			chapt['html'] = chapter.find('./text[@lang="'+lan+'"]').text
+			thesubchapters = []
+			for subChapter in chapter.findall('SubChapter'):
+				#try:
+				subchapt = {}
+				aud = subChapter.find('audio[@lang="'+lan+'"]')
+				subchapt['name'] 		= aud.attrib['name']
+				subchapt['audiopath'] 	= aud.attrib['location']
+				# as the mp3 files may be located
+				# either (good) in the _ese folder
+				# either in the REANALYSEESE_FILES folder
+				# we need to check availability, mmh..
+				patharchive = baseEseXmlFolder+subchapt['audiopath']
+				if os.path.exists( patharchive ):
+					subchapt['audiopath'] = patharchive
+				else:
+					pathserver = settings.REANALYSEESE_FILES+'/'+e.ddi_id+'/'+ subchapt['audiopath']
+					if os.path.exists( pathserver ):
+						subchapt['audiopath'] = pathserver
+					else:
+						logger.info("["+str(e.id)+"] EXCEPT no audio file: "+patharchive)
+						logger.info("["+str(e.id)+"] EXCEPT no audio file: "+pathserver)
+					
+				# rather store an id referencing real path in out['audiopaths']
+				out['audiopaths'][str(apacount)] = subchapt['audiopath']
+				subchapt['audioid'] = str(apacount)
+				apacount+=1
+				thesubchapters.append(subchapt)
+				#except:
+					#logger.info("["+str(e.id)+"] EXCEPT with subchapter")
+			chapt['subchapters'] = thesubchapters
+			thechapters.append(chapt)
+		res['chapters'] = thechapters
+		out[lan] = res
+	return out
 ###########################################################################
 
 
