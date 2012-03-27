@@ -164,14 +164,14 @@
 	<p>
 	<ul>
 		<li><b>Investigator: </b>
-			{% if speakers.inv %}
-			<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.inv.0.id %}">{{speakers.inv.0.name}}</a>, {{speakers.inv.0|speakerMeta}}
-			{% endif %}
+			{% for i in speakers.inv %}
+			<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id i.id %}">{{i.name}}</a> ({{i|speakerMeta}})
+			{% endfor %}
 		</li>
-		<li><b>Speaker: </b>
-			{% if speakers.spk %}
-			<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id speakers.spk.0.id %}">{{speakers.spk.0.name}}</a>, {{speakers.spk.0|speakerMeta}}
-			{% endif %}
+		<li><b>Speaker(s): </b>
+			{% for s in speakers.spk %}
+			<a href="{% url reanalyse.reanalyseapp.views.esShow enquete.id s.id %}">{{s.name}}</a>, {%comment%} {{s|speakerMeta}}{%endcomment%}
+			{% endfor %}
 		</li>
 	</ul>
 	</p>	

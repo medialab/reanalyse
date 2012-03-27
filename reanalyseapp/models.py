@@ -68,7 +68,7 @@ class Enquete(models.Model):
 	metadata = models.TextField(default='{}') 							# store all metadata as json dict
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars
 	statuscomplete = models.BigIntegerField(default=0) 					# loading 0-100%
-	date = models.DateField(auto_now_add=True)							# date uploaded
+	date = models.DateTimeField(auto_now_add=True)							# date uploaded
 	ddi_id = models.CharField(max_length=170)
 	# since ese is not yet included (structured) in enquete, let's put all infos from ese.xml into a json dict
 	ese = models.TextField()
@@ -101,7 +101,7 @@ class Visualization(models.Model):
 	viztype = models.CharField(max_length=50)
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
 	public = models.BooleanField(default=False)
-	date = models.DateField(auto_now_add=True)
+	date = models.DateTimeField(auto_now_add=True)
 	contenthtml = models.TextField()
 	json = models.TextField()
 	# keeping link with texts/speakers involved

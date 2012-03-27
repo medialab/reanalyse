@@ -186,6 +186,7 @@
 					
 					<a href="#" class="butToggleDescription" id="butToggle_{{forloop.counter}}">description</a> | 
 					<a href="#" class="butReload" id="butReload_{{forloop.counter}}">reload</a>
+					{% if perms.can_make %} | {{v.date}}{%endif%}
 					<!-- <a href="#" class="butToggleShow" id="{{forloop.counter}}">toggle show</a> -->
 					</div>
 					

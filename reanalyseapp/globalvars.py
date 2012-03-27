@@ -23,6 +23,11 @@ STATUS_CHOICES = (
 )
 
 ############################################################ DOCUMENTS meta_documents.csv
+# Documents from meta_documents.csv are only processed if
+# - mimetype = 'ese'
+# OR
+# - *category1, *category2, *mimetype are listed below
+
 # A) meta_documents.csv : COLUMN *category1 that are accepted, and their translation in the view
 # QUALI "RESEARCH PHASE"
 DOC_CAT_1={}
@@ -53,22 +58,22 @@ DOC_CAT_2['guide'] 		= 'Guide'
 DOC_CAT_2['misc'] 		= 'Misc'
 
 # C) meta_documents.csv : COLUMN *mimetype . 
-DOCUMENT_MIMETYPES 	=  ['ese','tei']			# special files (parsed)
+DOCUMENT_MIMETYPES 	=  ['ese','tei']			# special files (ese is saved as json, tei is parsed)
+DOCUMENT_MIMETYPES 	+= ['link','ref']			# doc without local file (only title/text/description, or link, ...)
 DOCUMENT_MIMETYPES	+= ['pdf','htm','csv']		# normaly displayed docs
-DOCUMENT_MIMETYPES 	+= ['link','ref']			# doc without local file
-
 
 # documents are parsed only if they are in A) & B) & C)
 # note that ese is also processed, but in a different way. see importexport.py
 
-# types of document from the django models point of view
+# types of document from the django models point of view (ie texte.doctype)
+# NB: this Texte attribute is made using *mimetype.upper()
 DOCUMENT_TYPE_CHOICES = (
 	('TEI', 'XML TEI'),
+	('LINK', 'External link'),
+	('REF', 'Only reference'),
 	('PDF', 'PDF'),
 	('HTM', 'HTML File'),
 	('CSV', 'CSV Table'),
-	('LINK', 'External link'),
-	('REF', 'Only reference'),
 	#('TXT', 'Text File'),
 	#('RTF', 'RTF'),			# rather use htm for the moment, it's simpler
 	#('ATL', 'XML Atlas.Ti'),	# ...forget about it for the moment (data too much unstructured)

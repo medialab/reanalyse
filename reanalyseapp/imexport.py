@@ -187,13 +187,15 @@ def importEnqueteUsingMeta(folderPath):
 				logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
 				#except:
 				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
+				
+				### fetch document date
 				try:
 					doc_date = datetime.datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
 				except:
 					logger.info(eidstr+"EXCEPT on date : "+row['*id']+" | "+row['*file'])
 					doc_date = datetime.datetime.today()
 
-				### special for ese, don't create any texte() model, just parse ese.xml
+				### very special for ese, don't create any texte() model, just parse ese.xml and fill enquete.ese with a json
 				if doc_mimetype=='ese':
 					#try:
 					esedict = getEnqueteSurEnqueteJson(file_location,newEnquete)
@@ -201,7 +203,8 @@ def importEnqueteUsingMeta(folderPath):
 					newEnquete.save()
 					#except:
 						#logger.info(eidstr+"EXCEPT with ESE")
-				### if normal cat create doc
+						
+				### if cat(s) are listed in globalvars.py, create doc
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
 						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
@@ -213,14 +216,15 @@ def importEnqueteUsingMeta(folderPath):
 							newDocument.status			= '0'
 							newDocument.save()
 						else:
+							### get file size
 							try:
 								newDocument.filesize = int(os.path.getsize(file_location)/1024)
 							except:
 								newDocument.filesize = -1
 								logger.info(eidstr+"EXCEPT file does not exist: "+doc_mimetype+" | "+doc_category1+" | "+doc_category2+" | "+file_location)
+							
 							if doc_mimetype=='tei':
-								newDocument.doctype	= 'TEI'
-								newDocument.status	= '5'
+								newDocument.status	= '5' # 'waiting' status
 								newDocument.save()
 							elif doc_mimetype=='pdf' or doc_mimetype=='csv':
 								newDocument.status	= '0'

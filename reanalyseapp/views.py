@@ -728,9 +728,9 @@ def edBrowse(request,eid):
 	
 	######################################### COLUMNS
 	if request.user.has_perm('reanalyseapp.can_make'):
-		colArr=['Research Phase','Doc Type','Name','Date','Location','Size','Status','Viz','Investigator','Speakers'] #+ ['Length']
+		colArr=['Research Phase','Doc Type','Name','Date','Location','Size','Status','Viz','Speakers'] #+ ['Length']
 	else:
-		colArr=['Research Phase','Doc Type','Name','Date','Location','Size','Viz','Investigator','Speakers']
+		colArr=['Research Phase','Doc Type','Name','Date','Location','Viz','Speakers']
 	
 	
 	######################################### VALUES
@@ -795,15 +795,21 @@ def edBrowse(request,eid):
 		
 		# SPEAKERS
 		if t.doctype=='TEI':
-			nSpk = t.speaker_set.filter(ddi_type='SPK').count()
-			if nSpk>1:
-				speakersStr = str(nSpk)+" Speakers"
-			else:
-				speakersStr = ",".join([s.name for s in t.speaker_set.filter(ddi_type='SPK')])
+			spks = t.speaker_set.filter(ddi_type='SPK')
+			invs = t.speaker_set.filter(ddi_type='SPK')
+			
 			try:
-				investStr = t.speaker_set.filter(ddi_type='INV')[0].name
+				speakersStr = spks[0].name
+				if spks.count()>1:
+					speakersStr += " (+"+str(spks.count()-1)+" others)"
 			except:
-				investStr=""
+				speakersStr = "-"
+			try:
+				investStr = invs[0].name
+				if invs.count()>1:
+					investStr += " (+"+str(invs.count()-1)+" others)"
+			except:
+				investStr = "-"			
 		else:
 			speakersStr=""
 			investStr=""
@@ -823,9 +829,9 @@ def edBrowse(request,eid):
 		
 		################# VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
-			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,sizeStr,statusStr,vizStr,investStr,speakersStr] #+ [contentStr]
+			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,sizeStr,statusStr,vizStr,speakersStr] #+ [contentStr]
 		else:
-			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,sizeStr,vizStr,investStr,speakersStr]
+			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,vizStr,speakersStr]
 			
 		docDict['texte']=t
 		docDict['vals']=tArr
