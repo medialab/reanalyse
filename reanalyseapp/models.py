@@ -65,13 +65,12 @@ class Enquete(models.Model):
 	#connection_name="enquetes"				# todo: one db for each enquete ?
 	name = models.CharField(max_length=250)
 	locationpath = models.CharField(max_length=250)						# path of the uploaded folder
-	metadata = models.TextField(default='{}') 							# store all metadata as json dict
+	metadata = models.TextField(default='{}') 		# store all metadata as json dict
+	ese = models.TextField()						# ese is not yet included/structured in enquete, let's put all infos from ese.xml into a json dict
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars
 	statuscomplete = models.BigIntegerField(default=0) 					# loading 0-100%
 	date = models.DateTimeField(auto_now_add=True)							# date uploaded
 	ddi_id = models.CharField(max_length=170)
-	# since ese is not yet included (structured) in enquete, let's put all infos from ese.xml into a json dict
-	ese = models.TextField()
 	#permission = models.ForeignKey(Permission)
 	class Meta: # Users & Groups are initialized in views
 		permissions = (
@@ -102,7 +101,7 @@ class Visualization(models.Model):
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
 	public = models.BooleanField(default=False)
 	date = models.DateTimeField(auto_now_add=True)
-	contenthtml = models.TextField()
+	contenthtml = models.TextField()		# unused yet, could be useful if you want to store rendered html
 	json = models.TextField()
 	# keeping link with texts/speakers involved
 	textes = models.ManyToManyField('Texte')
@@ -110,6 +109,7 @@ class Visualization(models.Model):
 	def __unicode__(self):
 		return self.name
 ##############################################################################
+# 'Texte' model should rather be called 'Document'
 class Texte(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	# file

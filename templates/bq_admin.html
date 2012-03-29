@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block leftmenu %}
+	{% if request.user.is_staff %}
 	<div id="leftmenucontent">
 		<div class="leftmenublock">
 		<ul>
@@ -19,9 +20,12 @@
 		</ul>
 		</div>
 	</div>
+	{% endif %}
 {% endblock %}
 
 {% block content %}
+
+{% if request.user.is_staff %}
 	
 	<div class="contentHtml">
 	
@@ -129,6 +133,8 @@
 		
 	</div>
 	
+{% endif %}
+
 <! ================================================= -->
 {% endblock %}
 

@@ -26,36 +26,31 @@ STATUS_CHOICES = (
 # Documents from meta_documents.csv are only processed if
 # - mimetype = 'ese'
 # OR
-# - *category1, *category2, *mimetype are listed below
+# - *researchPhase, *documentType, *mimetype are listed below
 
-# A) meta_documents.csv : COLUMN *category1 that are accepted, and their translation in the view
+# A) meta_documents.csv : COLUMN *researchPhase that are accepted, and their translation in the view
 # QUALI "RESEARCH PHASE"
 DOC_CAT_1={}
-DOC_CAT_1['preparatory']	= 'Preparatory'
-DOC_CAT_1['terrain'] 		= 'Fieldwork'
-DOC_CAT_1['data'] 			= 'Data'
-DOC_CAT_1['result'] 		= 'Result'
-DOC_CAT_1['enrich'] 		= 'Complement'
-DOC_CAT_1['misc'] 			= 'Misc'
-DOC_CAT_1['verbatim'] 		= '?Verbatim?'	
+DOC_CAT_1['prep']		= '1.Preparatory'
+DOC_CAT_1['col'] 		= '2.Collection'
+DOC_CAT_1['anal'] 		= '3.Analysis'
+DOC_CAT_1['compl'] 		= '4.Complement'
+DOC_CAT_1['ese'] 		= 'ese'			# will not be displayed anyway
 
-# B) meta_documents.csv : COLUMN *category2 that are accepted, and their translation in the view
+# B) meta_documents.csv : COLUMN *documentType that are accepted, and their translation in the view
 # QUALI "DOCUMENT TYPE"
 DOC_CAT_2={}
-DOC_CAT_2['transcr'] 	= 'Transcr'
-DOC_CAT_2['pv'] 		= 'Minutes'
-DOC_CAT_2['note'] 		= 'Notes'
-DOC_CAT_2['video'] 		= 'Video'
+DOC_CAT_2['admi'] 		= 'Admin'
 DOC_CAT_2['audio'] 		= 'Audio'
-DOC_CAT_2['resum'] 		= 'Summary'
-DOC_CAT_2['analyse'] 	= 'Analysis'
-DOC_CAT_2['quest'] 		= 'Quest'
-DOC_CAT_2['publi'] 		= 'Publ'
-DOC_CAT_2['com'] 		= 'Com'
-DOC_CAT_2['rap'] 		= 'Rep'
-DOC_CAT_2['recrut'] 	= 'Recr'
-DOC_CAT_2['guide'] 		= 'Guide'
-DOC_CAT_2['misc'] 		= 'Misc'
+DOC_CAT_2['docu'] 		= 'Document'
+DOC_CAT_2['icono'] 		= 'Icono'
+DOC_CAT_2['inter'] 		= 'Intermediate'
+DOC_CAT_2['methodo'] 	= 'Method'
+DOC_CAT_2['note'] 		= 'Note'
+DOC_CAT_2['publi'] 		= 'Publication'
+DOC_CAT_2['revis'] 		= 'Reused'
+DOC_CAT_2['transcr'] 	= 'Transcription'
+
 
 # C) meta_documents.csv : COLUMN *mimetype . 
 DOCUMENT_MIMETYPES 	=  ['ese','tei']			# special files (ese is saved as json, tei is parsed)
@@ -83,10 +78,10 @@ DOCUMENT_TYPE_CHOICES = (
 ############################################################ SPEAKERS meta_speakers.csv
 # Speaker type translator from meta_speakers.csv
 SPEAKER_TYPE_CSV_DICT = {
-	'investigator'	:'INV',		# (esBrowse off) researcher / interviewer
-	'speaker'		:'SPK',		# (public) main spk(s) interviewed
-	'protagonist'	:'PRO',		# (public) not interviewed
-	'figurant'		:'FIG',		# (esBrowse off) just mentionned
+	'investigator'	:'INV',		# (esBrowse off) 	researcher / interviewer
+	'speaker'		:'SPK',		# (esBrowse on) 	main spk(s) interviewed
+	'protagonist'	:'PRO',		# (esBrowse on) 	not interviewed
+	'figurant'		:'FIG',		# (esBrowse off) 	just mentionned
 }
 # only public (ie listed on esBrowse) speakers are considered for viz: attributes, ngrams, etc...
 
@@ -275,6 +270,10 @@ VIZTYPES	= GRAPHTYPES + ['Cloud_SolrSpeakerTagCloud','TexteStreamTimeline','Attr
 
 VIZTYPESDESCR = 'Please clic me to update (html) description. If you need general technical information about that viz type, please clic the blue bubble above.'
 
+
+
+# DEPRECATED Descriptions
+#
 # VIZTYPESDESCR={}
 # VIZTYPESDESCR['Graph_SpeakersSpeakers'] = 		'Speakers Similarities Graph'
 # VIZTYPESDESCR['Graph_SpeakersWords'] = 			'Bipart Graph Speakers - Words'

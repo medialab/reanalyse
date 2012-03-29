@@ -34,7 +34,7 @@
 		<li id="e_{{e.id}}">
 			<div class="eBrowseEnquete" onclick='window.location.href="{% url reanalyse.reanalyseapp.views.eShow e.id %}"'>
 			
-				{% if perms.reanalyseapp.can_make %}
+				{% if perms.reanalyseapp.is_admin %}
 					<span class="eBrowseEnqueteStatus">	
 					{{e.date}} - [{{ e.get_status_display }}{% if e.status != '0' %} <span class="eProblem">{{e.statuscomplete}}%</span>{% endif %}]
 					<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eDelete e.id %}");$("#e_{{e.id}}").remove();event.stopPropagation();return false;'>delete</a>
@@ -44,9 +44,11 @@
 				<h1>{% if perms.reanalyseapp.can_make %}[{{e.id}}] {% endif %}{{e.name}}</h1>
 				<div class="eBrowseEnqueteMetaContainer">
 					<div class="eBrowseEnqueteMeta">
-						<span class="eMetaList">{{ e|enqueteMeta:'actor/authenty' }}</span>
-						<span class="eMetaList">{{ e|enqueteMeta:'general/nation' }}</span>
-						<span class="eMetaList">{{ e|enqueteMeta:'actor/distrbtr'}}</span>
+						<span class="eMetaList">{{ e|enqueteMeta:'actor/authenty' }}</span> |
+						<span class="eMetaList">{{ e|enqueteMeta:'actor/affiliation' }}</span> |
+						<span class="eMetaList">{{ e|enqueteMeta:'general/nation' }}</span> |
+						<span class="eMetaList">{{ e|enqueteMeta:'universe/studydates'}}</span> |
+						<span class="eMetaList">{{ e|enqueteMeta:'edition/locarch'}}</span>
 					</div>
 					<div class="eBrowseEnqueteContentStats">
 						<span class="eMetaDoc">{{e|docPublicCount}}DOC</span>

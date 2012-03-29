@@ -24,6 +24,9 @@ from django.core.mail import send_mail
 import glob
 import os
 
+# solr process
+import subprocess
+
 # just to make unique folder name when uploading enquete
 # note that time already imported in models.py
 from time import time
@@ -103,8 +106,27 @@ def checkSolrProcess():
 	tmp = os.popen("ps -Af").read()
 	if SOLR_JARNAME not in tmp[:]:
 		logger.info("solr is not running. Let's restart it")
+		
 		newprocess = "cd %s && nohup java -jar %s > %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME,settings.REANALYSELOGSOLR)
 		os.system(newprocess)
+		
+		# todo: log file writing does not work
+		# ... sandbox trying different subprocess techniques ...
+		
+		# we want to launch as a subprocess
+		#java -jar /home/pj/djangos/reanalyse/solr/startreanalysesolr.jar > /home/pj/djangos/reanalyse/logs/reanalyse_solr.log &
+		#subprocess.Popen(["java","-jar","/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar",">","/home/pj/djangos/reanalyse/logs/reanalyse_solr.log","&"],shell=True)
+		#subprocess.Popen(["java","-jar","/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar","/home/pj/djangos/reanalyse/logs/reanalyse_solr.log"],shell=True)
+		#logpath = "/home/pj/djangos/reanalyse/logs/reanalyse_solr.log"
+		#thelogfile = open(logpath,'w+')
+		#thejarpath = settings.REANALYSEPROJECTPATH + "/solr/" + SOLR_JARNAME
+		#thejarpath = "/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar"
+		#newprocess = ["cd","/home/pj/djangos/reanalyse/solr/","&&","java","-jar",thejarpath]
+		# ? rather configure it within jetty.xml in the solr folder
+		#newprocess = "cd %s && nohup java -jar %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME)
+		#subprocess.Popen(newprocess,stdout=thelogfile,shell=True)
+		#subprocess.Popen(newprocess,shell=True)
+		
 		return True
 	else:
 		return False
@@ -827,11 +849,21 @@ def edBrowse(request,eid):
 				'<span style="display:none;">'+intToSortableStr(len(t.contenttxt))+'</span>'+\
 				'<div class="littleFrise" style="width:'+str(int(len(t.contenttxt)*LITTLEFRISEMAXWIDTH/globalMaxLength))+'px"></div>'
 		
+		# DOC CAT (researchPhase / documentType)
+		try:
+			cat1 = '<span style="display:none;">'+DOC_CAT_1[t.doccat1].split('.')[0] + '</span>' + DOC_CAT_1[t.doccat1].split('.')[1]
+		except:
+			cat1 = t.doccat1
+		try:
+			cat2 = DOC_CAT_2[t.doccat2]
+		except:
+			cat2 = t.doccat2
+		
 		################# VALUES
 		if request.user.has_perm('reanalyseapp.can_make'):
-			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,sizeStr,statusStr,vizStr,speakersStr] #+ [contentStr]
+			tArr=[cat1,cat2,nameStr,dateStr,locStr,sizeStr,statusStr,vizStr,speakersStr] #+ [contentStr]
 		else:
-			tArr=[t.doccat1,t.doccat2,nameStr,dateStr,locStr,vizStr,speakersStr]
+			tArr=[cat1,cat2,nameStr,dateStr,locStr,vizStr,speakersStr]
 			
 		docDict['texte']=t
 		docDict['vals']=tArr
@@ -1805,8 +1837,14 @@ def makeVisualization(request,eid):
 	
 	newViz = makeViz(e,typ,speakers=speakers,textes=textes,attributetypes=attributetypes,count=count)
 		
-	return HttpResponse(simplejson.dumps({'status':'launched'},indent=4,ensure_ascii=False), mimetype="application/json")
+	return HttpResponse(simplejson.dumps({'status':'done'},indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
+
+
+
+
+###########################################################################
+# if you want to try another way of fetching viz, you can try rendering them within the view
 def getVizHtml(request,eid):
 	e = Enquete.objects.get(id=eid)
 	vId = request.GET.get('vizid',0)

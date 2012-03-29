@@ -553,7 +553,7 @@ def visMakeOverview(e):
 	
 	##### TRYOUT C : only speakers
 	links=[]
-	for s in e.speaker_set.exclude(public=True):
+	for s in e.speaker_set.all():
 		links.append({'spk':{'id':s.id,'label':s.name,'weight':0}})
 	res['links']=links
 	return res

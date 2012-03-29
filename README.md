@@ -7,6 +7,9 @@ Reanalyse
 * ./solrdataindex/
 * ./upload/
 
+## Static Html Pages
+files are stored within the template/content dir
+
 ## django Internationalization how-to
 ### within template
 {% load i18n %}

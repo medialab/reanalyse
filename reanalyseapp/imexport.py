@@ -179,8 +179,8 @@ def importEnqueteUsingMeta(folderPath):
 				file_extension = 	file_location.split(".")[-1].upper()
 				doc_name = 			row['*name']
 				doc_mimetype = 		row['*mimetype'].lower().replace(" ","")
-				doc_category1 = 	row['*category1'].lower().replace(" ","")
-				doc_category2 = 	row['*category2'].lower().replace(" ","")
+				doc_category1 = 	row['*researchPhase'].lower().replace(" ","")
+				doc_category2 = 	row['*documentType'].lower().replace(" ","")
 				doc_public = 		True # ...could be based on categories...
 				doc_description = 	row['*description']
 				doc_location = 		row['*location']

@@ -10,7 +10,7 @@ from django.db.models import Q
 
 
 
-
+# Some ideas if you plan to make a search engine all by yourself...
 ###########################################################################
 def normalize_query(query_string, findterms=re.compile(r'"([^"]+)"|(\S+)').findall, normspace=re.compile(r'\s{2,}').sub):
 	''' Splits the query string in invidual keywords, getting rid of unecessary spaces
@@ -42,6 +42,16 @@ def get_query(query_string, search_fields):
 		else:
 			query = query & or_query
 	return query
+###########################################################################
+
+
+
+
+
+
+
+
+
 ###########################################################################
 def highlightText(content,word):
 	outContent=content

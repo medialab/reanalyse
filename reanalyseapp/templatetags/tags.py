@@ -58,9 +58,10 @@ def enqueteMeta(e,typ):
 	except:
 		return "[meta-need-fieldcat/field]"
 	try:
-		return e.meta()['values'][fieldcat][field]['value'][0]
+		return ", ".join(e.meta()['values'][fieldcat][field]['value'])
 	except:
-		return "[meta-"+fieldcat+"/"+field+"]"
+		#return "NC"
+		return "[nometa-"+fieldcat+"/"+field+"]"
 ###########################################################################
 
 

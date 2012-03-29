@@ -186,30 +186,7 @@ def getTailOfFile(filepath,count):
 
 
 
-###########################################################################
-# will be deprecated, since we can use csv.DictReader instead...
-def parseCsvFile(inPath):
-	header=[]
-	content=[]
-	inFile = open(inPath,'r')
-	nm=0
-	for l in inFile.readlines():
-		arr=l.split('\t')
-		if nm==0:
-			nm+=1
-			for v in arr:
-				header.append(removeQuotesStartEnd(v))
-		else:
-			valtab=arr
-			values=dict()
-			for k in range(len(header)):
-				values[header[k]] = removeQuotesStartEnd(valtab[k])
-			if values[header[k]]=="":
-				values[header[k]]="[NC]"
-			content.append(values)
-	inFile.close()
-	return {'header':header,'content':content}
-###########################################################################
+
 
 
 	
@@ -234,14 +211,6 @@ def list2dict(data):
 
 
 
-###########################################################################
-# GET HTML around intervention
-MAX_EXTRACT_WORDS=200
-def getHtmlAroundIntervention(intervention):
-	intervention.contenthtml = stylizeTeiInterventionToHtml(intervention)
-	intervention.save()
-	return intervention.contenthtml
-###########################################################################
 
 
 
@@ -525,6 +494,41 @@ class unzip:
 
 
 
+
+
+
+
+###########################################################################
+# Deprecated, since we can use csv.DictReader instead...
+def parseCsvFile(inPath):
+	header=[]
+	content=[]
+	inFile = open(inPath,'r')
+	nm=0
+	for l in inFile.readlines():
+		arr=l.split('\t')
+		if nm==0:
+			nm+=1
+			for v in arr:
+				header.append(removeQuotesStartEnd(v))
+		else:
+			valtab=arr
+			values=dict()
+			for k in range(len(header)):
+				values[header[k]] = removeQuotesStartEnd(valtab[k])
+			if values[header[k]]=="":
+				values[header[k]]="[NC]"
+			content.append(values)
+	inFile.close()
+	return {'header':header,'content':content}
+###########################################################################
+# GET HTML around intervention
+MAX_EXTRACT_WORDS=200
+def getHtmlAroundIntervention(intervention):
+	intervention.contenthtml = stylizeTeiInterventionToHtml(intervention)
+	intervention.save()
+	return intervention.contenthtml
+###########################################################################
 
 
 

@@ -24,7 +24,7 @@
 			<li class="menu-studies {%if bodyid == 'e'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
 				<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>	
-			{% if perms.reanalyseapp.can_make %}
+			{% if perms.reanalyseapp.is_admin %}
 			<li class="menu-admin {%if bodyid == 'admin'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
 				<a href="{% url reanalyse.reanalyseapp.views.eAdmin %}">{% trans 'Admin' %}</a></li>
@@ -56,7 +56,34 @@
 		
 		<li id="menu-language">
 			<div class="icon-outer"><div class="icon"></div></div>
-				<a href="#" onclick="return false;" >language</a></li>	
+				<a href="#" id="setLan_switch">lan_{{LANGUAGE_CODE}}</a>
+				
+				<!-- workaround temporary switch language en/fr on click -->
+				{% get_language_info for LANGUAGE_CODE as lang %}
+				<script type="text/javascript">
+					$("#setLan_switch").click(function(e){
+						var newlan = 'en';
+						if(newlan=='{{LANGUAGE_CODE}}') newlan = 'fr';
+						console.log("switching language to: "+newlan);
+						$.post('/reanalyse/i18n/setlang/',{next:'{{request.path}}', language:newlan},function() {location.reload();});
+					});
+				</script>
+				
+				<!-- ...this may be the new language management -->
+				{% comment %}
+				{% get_language_info for LANGUAGE_CODE as lang %}
+				{% get_language_info_list for LANGUAGES as languages %}
+				{% for language in languages %}
+					<!--<div id="setLan_{{language.code}}" class="setLan {{language.code}} {{language.code}} {% if LANGUAGE_CODE = language.code %}selected{% endif %}">-->
+					<span id="setLan_{{language.code}}" {% if LANGUAGE_CODE = language.code %}style="background:white;"{% endif %}>{{language.code}}</span>
+					<script type="text/javascript">
+						$("#setLan_{{language.code}}").click(function(e){
+							$.post('/reanalyse/i18n/setlang/',{ next:'{{request.path}}', language:'{{language.code}}'});
+						});
+					</script>
+				{% endfor %}
+				{% endcomment %}
+				</li>	
 		
 		<li id="menu-login">
 			{% if user.is_authenticated %}
@@ -147,9 +174,8 @@
 	{% endblock bottom %}
 	
 	{% endblock bottomscripts %}
-		
+
 {% comment %}
-<li id="menu-language">
 			{% get_language_info for LANGUAGE_CODE as lang %}
 			{% get_language_info_list for LANGUAGES as languages %}
 			{% for language in languages %}
@@ -162,10 +188,6 @@
 					});
 				</script>
 			{% endfor %}
-			LANGUAGE
-			
-			
-		</li>
 		<!-- ======================== -->
 		<li id="menu-login">
 			{% if user.is_authenticated %}

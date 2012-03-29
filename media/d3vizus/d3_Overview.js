@@ -155,9 +155,9 @@ function buildD3_Overview(data,theId,param) {
 				var xS = spkScaleX(d.spk.weight)-bezierMargin;
 				var yS = they;
 				return "M "+xT+" "+yT+" C "+(xT+bezierDec)+" "+yT+" "+(xS-bezierDec)+" "+yS+" "+xS+" "+yS;
-			})
-			.on("mouseover",function(d,i){highlight(d.spk.id,true);})
-			.on("mouseout",function(d,i){highlight(d.spk.id,false);});
+			});
+			//.on("mouseover",function(d,i){highlight(d.spk.id,true);})
+			//.on("mouseout",function(d,i){highlight(d.spk.id,false);});
 		
 		// SPK LABEL	
 		thelinks.append("svg:text")
@@ -167,11 +167,11 @@ function buildD3_Overview(data,theId,param) {
 			.attr("y", function(d,i){return 4+getY(d,i);} )
 			.attr("fill",getSpkLabelFill)
 			.attr("text-anchor", "left")
-			.style("cursor","pointer")
+			//.style("cursor","pointer")
 			.attr("font-size",function(d,i){return labelScale(d.spk.weight);})
-			.text(function(d,i){return d.spk.label;})
-				.on("mouseover",function(d,i){highlight(d.spk.id,true);})
-				.on("mouseout",function(d,i){highlight(d.spk.id,false);});
+			.text(function(d,i){return d.spk.label;});
+				//.on("mouseover",function(d,i){highlight(d.spk.id,true);})
+				//.on("mouseout",function(d,i){highlight(d.spk.id,false);});
 		
 		// WEIGHT LABEL
 		thelinks.append("svg:text")
@@ -181,11 +181,11 @@ function buildD3_Overview(data,theId,param) {
 			.attr("y", function(d,i){return 4+getY(d,i);} )
 			.attr("fill",getSpkLabelFill)
 			.attr("text-anchor", "end")
-			.style("cursor","pointer")
+			//.style("cursor","pointer")
 			.attr("font-size",weightLabelFontSize)
-			.text(function(d,i){return d.spk.weight;})
-				.on("mouseover",function(d,i){highlight(d.spk.id,true);})
-				.on("mouseout",function(d,i){highlight(d.spk.id,false);});
+			.text(function(d,i){return d.spk.weight;});
+				//.on("mouseover",function(d,i){highlight(d.spk.id,true);})
+				//.on("mouseout",function(d,i){highlight(d.spk.id,false);});
 
 		// FIXED WEIGHT LABEL for max/min values
 		if(maxWeightSpeaker==0) {
@@ -211,7 +211,7 @@ function buildD3_Overview(data,theId,param) {
 				.attr("y",function(d,i){return d[0];})
 				.attr("fill","black")
 				.attr("text-anchor", "end")
-				.style("cursor","pointer")
+				//.style("cursor","pointer")
 				.attr("font-size",weightLabelFontSize)
 				.text(function(d,i){return d[1];});
 	}
