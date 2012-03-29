@@ -186,14 +186,14 @@
 					
 					<a href="#" class="butToggleDescription" id="butToggle_{{forloop.counter}}">description</a> | 
 					<a href="#" class="butReload" id="butReload_{{forloop.counter}}">reload</a>
-					{% if perms.can_make %} | {{v.date}}{%endif%}
+					{% if perms.reanalyseapp.can_make %} | {{v.date}}{%endif%}
 					<!-- <a href="#" class="butToggleShow" id="{{forloop.counter}}">toggle show</a> -->
 					</div>
 					
 				</div>
 					
 					<div class="descrContainer" id="descrContainer_{{forloop.counter}}">{% autoescape off %}{{ v.description }}{% endautoescape %}</div>
-					{% if perms.can_make %}
+					{% if perms.reanalyseapp.can_make %}
 					<script type="text/javascript">
 						$('#descrContainer_{{forloop.counter}}').editable({
 							'type':'textarea',
