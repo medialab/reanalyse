@@ -87,11 +87,11 @@ SPEAKER_TYPE_CSV_DICT = {
 
 # Speaker types for django model
 SPEAKER_TYPE_CHOICES = (
-	('INV', 'Investigator'),
-	('SPK', 'Speaker'),
-	('PRO', 'Protagonist'),
+	('INV', 'Enquêteur'),
+	('SPK', 'Locuteur'),
+	('PRO', 'Protagoniste'),
 	('FIG', 'Figurant'),
-	('OTH', 'Unknown'),
+	('OTH', 'Inconnu'),
 )
 
 # COLORS for TYPES
