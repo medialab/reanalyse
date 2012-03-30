@@ -469,7 +469,7 @@
 			{% for k,parvs in paraverbal.items %}
 			{% for p in parvs  %}
 			$('#paraCheck_{{p}}').attr('checked',chk);
-			$('.text_{{p}}:not(.text_legend)').toggle();
+			$('.text_{{p}}:not(.text_legend)').toggle( (chk=='checked') );
 			{% endfor %}
 			{% endfor %}
 		});
