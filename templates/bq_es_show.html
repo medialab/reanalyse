@@ -47,9 +47,17 @@
 
 	</div>
 	
+	<!-- ======================================================= -->
+	<h1>TEI Documents:</h1>
+	<ul>
+		{% for t in speaker.textes.all %}
+		<li><a href="{% url reanalyse.reanalyseapp.views.edShow enquete.id t.id %}">{{t.name}}</a></li>
+		{% endfor %}
+	</ul>
+	
 	{% comment %}
 	<!-- ======================================================= -->
-	<h2>{{ngrams.count}} ngrams made by solr</h2>
+	<h1>{{ngrams.count}} ngrams made by solr</h1>
 		<table class="display">
 			<thead>
 			<tr>
@@ -70,16 +78,15 @@
 			{% endfor %}
 			</tbody>
 		</table>
-	{% endcomment %}
 	<!-- ======================================================= -->
-	<h2>Raw content used for solr index</h2>
+	<h1>Raw content used for solr index</h1>
 	
 		{% autoescape off %}
 		{{content}}
 		{% endautoescape %}
 	
 	<!-- ======================================================= -->
-
+	{% endcomment %}
 	
 </div>
 {% endblock %}
