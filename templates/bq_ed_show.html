@@ -263,7 +263,9 @@
 <!-- ===================================================================================================================================== -->
 {% if texte.doctype == 'PDF' %}
 	<object data="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}" type="application/pdf" width="100%" height="100%">
-		alt : <a href="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}">{{texte.name}}</a>
+		<embed width="100%" height="100%" type="application/pdf" src="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}">
+			<a href="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}">{{texte.name}}</a>
+		</embed>
 	</object>
 {% endif %}
 <!-- ===================================================================================================================================== -->
