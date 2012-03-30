@@ -407,6 +407,7 @@ ul#eList {
 .enqueteMetaShowTableContainer {
 	background:white;
 	padding:5px;
+	font-size:0.85em;
 }
 div#enqueteMetaShow {
 	/*margin-left:15px;*/
@@ -436,7 +437,7 @@ div#enqueteMetaShow {
 }
 .enqueteMetaShowTableKeyField {
 	font-style:italic;
-	font-size: 0.9em;
+	font-size: 0.8em;
 	text-align:right;
 	color:gray;
 }

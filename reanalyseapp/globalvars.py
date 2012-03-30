@@ -149,7 +149,7 @@ CODES_IMAGE['interruption']=			'interruption'
 CODES_IMAGE['part:echo']=				'interruption'
 CODES_IMAGE['laugh']=					'laugh'
 CODES_IMAGE['silence']=					'silence'
-CODES_IMAGE['points de suspension']=	'silence'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
+CODES_IMAGE['points de suspension']=	'hesitation'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
 
 # IMAGE WITH TOOLTIP (ie with content)
 CODES_IMAGE_TOOLTIP={}
