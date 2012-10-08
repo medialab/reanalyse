@@ -452,19 +452,24 @@ class unzip:
 		zf = zipfile.ZipFile(file)
 		# create directory structure to house files
 		self._createstructure(file, dir)
-
 		num_files = len(zf.namelist())
 		percent = self.percent
 		divisions = 100 / percent
 		perc = int(num_files / divisions)
 
-		# extract files to directory structure
-		for i, name in enumerate(zf.namelist()):
-			if not name.endswith('/'):
-				outfile = open(os.path.join(dir, name), 'wb')
-				outfile.write(zf.read(name))
-				outfile.flush()
-				outfile.close()
+		try :
+			# extract files to directory structure
+			for i, name in enumerate(zf.namelist()) :
+				name=name.decode("utf-8")
+				logger.info(name)
+				if not name.endswith('/'):
+					outfile = open(os.path.join(dir, name), 'wb')
+					outfile.write(zf.read(name.encode("latin-1")))
+					outfile.flush()
+					outfile.close()
+		except Exception,e: 
+			logger.info("ERROR : A FILE NAME CONTAINS A COMPLEX CHARACTER, please use standard ascii charcater a-Z")
+			exit()
 
 	def _createstructure(self, file, dir):
 		self._makedirs(self._listdirs(file), dir)
