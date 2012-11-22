@@ -219,7 +219,7 @@ def eDelete(request,eid):
 		# remove uploaded/decompressed files
 		eqPath = e.locationpath
 		if eqPath.endswith('/extracted/'):
-			eqPath = '/'+'/'.join(eqPath.split('/')[:-2])
+			eqPath = '/'.join(eqPath.split('/')[:-2])
 		os.system("rm -R "+eqPath)
 		logger.info("["+str(eid)+"] removing study: "+eqPath)
 		# remove graph files if there is
@@ -559,9 +559,9 @@ def eParse(request):
 			os.mkdir(upPath+"extracted")
 			unzipper = unzip()
 			unzipper.extract(upPath+thezip,upPath+"extracted/")
-		except:
-			logger.info("EXCEPT de-zip-ing archive. weird zip ?")
-			
+		except Exception as e:
+		 	logger.info("EXCEPT de-zip-ing archive. weird zip ?")
+		 	logger.info(str(e))
 		enqueterootpath = ""
 		if os.path.exists(upPath+"extracted/_meta/"):
 			enqueterootpath = upPath+"extracted/"

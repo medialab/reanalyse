@@ -1,0 +1,11 @@
+*.pyc
+*.log
+logs/*
+build/
+media/pins/*
+!.gitignore
+upload/*
+download/*
+solrdataindex/*
+settingsprivate.py
+~             

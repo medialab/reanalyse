@@ -1,0 +1,56 @@
+{% extends "glue/middle.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+	<ul class="nav">
+		{% for section in page.accolites.all %}
+		<li><a href="#{{ section.slug }}">{{ section.title }}</a></li>
+		{% endfor %}
+	</ul>
+	
+{% endblock %}
+
+{% block page_title %}
+	{{ page.title }}
+{% endblock %}
+
+{% block page %}
+
+
+
+	{% for section in page.accolites.all %}
+	{% ifequal section.language language %}
+	<a id="{{ section.slug }}"></a>
+	<section {% if forloop.first %}class="alpha"{% endif %}>
+		<!-- textarea id="input" name="input">This is the fixed size demo.</textarea>
+	<script>
+		 $(document).ready(function() {
+        $("#input").cleditor()[0].focus();
+      });
+
+	</script -->
+		<h2>{{ section.title }} {% if edit_mode %} <a class="edit-mode delete" href="{% url admin:glue_bean_delete section.id %}">{% trans "delete section" %}</a>
+		 <a class="edit-mode" data-slug='{{ section.slug }}' data-language='{{ section.language }}' href="{% url admin:glue_bean_change section.id %}">^ {% trans "edit section" %} ^</a>{% endif %}</h2>
+		
+		<div class="abstract">
+			{{ section.abstract|safe }}
+			{% if edit_mode %}<div class="edit-mode">[ {% trans "change abstract" %} ]</div>{% endif %}
+		</div>
+
+		<div class="content">
+			{{ section.content|safe }}
+			{% if edit_mode %}<div class="edit-mode">[ {% trans "change content" %} ]</div>{% endif %}
+		</div>
+		
+		{% for paragraph in section.accolites.all %}
+		<div class="paragraph">
+			<a id="{{ paragraph.slug }} ">&nbsp;</a>
+			<h3>{{ paragraph.title|safe }}</h3>
+			<blockquote>{{ paragraph.abstract|safe }}</blockquote>
+			<p>{{ paragraph.content|safe }}</p>
+		</div>
+		{% endfor %}
+	</section>
+	{% endifequal %}
+	{% endfor %}
+{% endblock %}	

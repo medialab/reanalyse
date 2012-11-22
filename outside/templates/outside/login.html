@@ -1,0 +1,35 @@
+{% extends "outside/middle.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+	
+	
+{% endblock %}
+
+{% block page_title %}
+	
+{% endblock %}
+
+{% block page %}
+	
+	<section class="alpha">
+		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
+		<h2>{% trans "login required" %}</h2>
+		<p class="invalid">{{ error }}</p>
+		{{ next }}
+		<div class="mini-section">
+			{{ login_form.username.label_tag }}
+			{{ login_form.username }}
+		</div>
+		<div class="mini-section">
+			{{ login_form.password.label_tag }}
+			{{ login_form.password }}
+		</div>
+		<div class="mini-section center">
+			<input type="hidden" value="{{ next }}" name="next"/>
+			<input type="submit" value="{% trans "login"%}"/>
+		</div>
+	</form>
+	</section>
+	
+{% endblock %}	

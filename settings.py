@@ -177,7 +177,8 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'reanalyse.urls'
 
 TEMPLATE_DIRS = (
-	os.path.join(REANALYSEPROJECTPATH, 'templates')
+	os.path.join(REANALYSEPROJECTPATH, 'templates'),
+	os.path.join(REANALYSEPROJECTPATH, 'outside/templates')
 	# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 	# Always use forward slashes, even on Windows.
 	# Don't forget to use absolute paths, not relative paths.
@@ -195,6 +196,8 @@ INSTALLED_APPS = (
 	'reanalyseapp',
 	'django_tables2',
 	'haystack',
+	'glue', # content management via json api
+	'outside', # currently there is no model
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
 )
@@ -246,6 +249,14 @@ LOGGING = {
 			'maxBytes': '16777216', # 16megabytes
 			'formatter': 'verbose'
 		},
+		'glue_log_file':{
+
+			'level': 'DEBUG',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'filename': REANALYSELOGPATH + 'glue.log',
+			'maxBytes': '16777216', # 16megabytes
+			'formatter': 'verbose'
+		},
 		'mail_admins': {
 			'level': 'ERROR',
 			'class': 'django.utils.log.AdminEmailHandler',
@@ -263,6 +274,11 @@ LOGGING = {
 			'level': 'INFO',
 			'propagate': True,
 		},
+		'glue':{ # glue content management app
+			'handlers': ['glue_log_file'],
+			'level': 'INFO',
+			'propagate': True
+		}
 	}
 }
 

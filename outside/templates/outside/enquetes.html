@@ -1,0 +1,122 @@
+{% extends "outside/middle.html" %}
+{% load i18n %}
+
+
+{% block sidebar %}
+	<ul class="nav">
+		<li><a href="#studies">{{ page.title }}</a></li>
+		{% for section in page.accolites.all %}
+			{% ifequal section.language language %}
+			<li><a href="#{{ section.slug }}">{{ section.title }}</a></li>
+			{% endifequal %}
+		{% endfor %}
+
+	</ul>
+	
+	
+{% endblock %}
+
+{% block page_title %}
+	{% trans "enquetes" %}
+{% endblock %}
+
+{% block page %}
+<a id="enquetes"></a>
+	<section class="alpha" style="padding-right:2px">
+	
+	{% for s in enquetes %}
+		<div class="enquete big item hover">
+			<p class="classification">
+			{% for topicclassification  in s.meta.values.general.topicclassification.value %}
+				{{ topicclassification }}
+			{% endfor %}
+			</p>
+			<p class="title">{{s.name }}</p>
+			<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
+			<div class="metadata">
+				<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}{% endfor %},
+					{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>
+			
+				<p class="geocover">{% for geogcover in s.meta.values.universe.geogcover.value %}{{ geogcover }}{% endfor %}</p>
+				<p class="abstract" >{% for abstract  in s.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}</p>
+				<!-- ul class="statistics">
+					<li>
+						<span class="number">9</span> DOCS
+					</li>
+					<li>
+						<span class="number">7</span> PEOPLE
+					</li>
+					<li>
+						<span class="number">7</span> PEOPLE
+					</li>
+				</ul -->
+			</div>
+		</div>
+	{% endfor %}
+	
+	{% for s in studies.all %}
+		<div class="study big item">
+			<p class="classification">
+			{% for topicclassification  in s.meta.values.general.topicclassification.value %}
+				{{ topicclassification }}
+			{% endfor %}
+			</p>
+			<p class="title">{{s.name }}</p>
+			<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
+			<div class="metadata">
+				<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}{% endfor %},
+					{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>
+			
+				<p class="geocover">{% for geogcover in s.meta.values.universe.geogcover.value %}{{ geogcover }}{% endfor %}</p>
+				<p class="abstract" >{% for abstract  in s.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}</p>
+				<ul class="statistics">
+					<li>
+						<span class="number">9</span> DOCS
+					</li>
+					<li>
+						<span class="number">7</span> PEOPLE
+					</li>
+					<li>
+						<span class="number">7</span> PEOPLE
+					</li>
+				</ul>
+			</div>
+		</div>
+	{% endfor %}
+		<div class="clear"></div>
+	</section>
+
+	<!-- automatic pages -->
+	{% for section in page.accolites.all %}
+	{% ifequal section.language language %}
+	<a id="{{ section.slug }}"></a>
+	<section {% if forloop.first %}class="alpha"{% endif %}>
+
+		<h2>{{ section.title }}
+			{% if edit_mode %} 
+				<a  class="edit-mode" href="{% url admin:glue_bean_change section.id %}">{% trans "edit section" %}</a>
+				<a class="edit-mode delete" href="{% url admin:glue_bean_delete section.id %}">ss{% trans "delete section" %}</a>
+			{% endif %}
+		</h2>
+		
+		<div class="abstract">
+			{{ section.abstract|safe }}
+		</div>
+
+		<p>
+		{{ section.content|safe }}
+		</p>
+		
+		{% for paragraph in section.accolites.all %}
+		<div class="paragraph">
+			<a id="{{ paragraph.slug }} ">&nbsp;</a>
+			<h3>{{ paragraph.title|safe }}</h3>
+			<blockquote>{{ paragraph.abstract|safe }}</blockquote>
+			<p>{{ paragraph.content|safe }}</p>
+		</div>
+		{% endfor %}
+	</section>
+	{% endifequal %}
+	{% endfor %}
+	
+{% endblock %}	

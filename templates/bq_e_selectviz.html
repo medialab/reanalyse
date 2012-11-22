@@ -117,6 +117,7 @@
 
 {% if source = 'Speakers' %}
 		//////////////////////////////////////////////// GO for creation NEW SPEAKER SET
+		{% comment %}
 /*
 		$("#goCreateSet").click( function(event) {
 			goCreateSpeakerSet({{enquete.id}},"{% url reanalyseapp.views.makeSpeakerSet enquete.id %}");
@@ -133,7 +134,7 @@
 			return false;
 		});
 */		
-
+		{% endcomment %}
 		//////////////////////////////////////////////// Manage DropDownList jquery plugin to select by Attributes
 		$("#spkSelectDropDownList").dropdownchecklist({
 			'emptyText':'by attribute',

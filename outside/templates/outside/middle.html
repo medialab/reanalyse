@@ -1,0 +1,189 @@
+{% extends "outside/boilerplate.html" %}
+{% load i18n %}
+
+{% block body %}
+	
+	<header>
+		<div id="header-inner" class="container_12">
+			<a href="{% url outside_index %}"><div id="logo"></div></a>
+			<ul>
+				
+	{% if not request.user.is_authenticated %}
+				<li style="float:right">
+					<a href="#login" data-toggle="modal" data-target="#login-modal"> - {% trans "login" %} - </a>
+				</li>
+	{% else %}
+				<li style="float:right">
+					<a href="{% url outside_logout %}"rel="tooltip" title="{% trans "logout" %} {{ request.user.username }}" data-tooltip-placement="bottom"> - {% trans "logout" %} - </a>
+				</li>
+		{% if has_edit_mode %}
+			{% if edit_mode %}
+				<li style="float:right" class="selected">
+					<a style="width: 48px;" href="{{  request.path }}?disable-edit-mode"> - {% trans "disable edit mode"%} -
+						<!-- div  style="position:relative; top:0px" title="{% trans "disable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom" class="edit-mode on"></div>
+						&nbsp; -->
+					</a>
+				</li>
+			{% else %}
+				<li style="float:right">
+					<a href="{{  request.path }}?enable-edit-mode" title="{% trans "enable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom">- {% trans "edit"%} -
+						<!-- div class="edit-mode off" title="{% trans "enable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom"></div -->
+					</a>
+				</li>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+				<li style="float:right" {% ifequal language "EN" %} class="selected"{% endifequal %}>
+					<a href="{{  request.path }}?lang=en">- {% trans "EN" %} -</a>
+				</li>
+				<li style="float:right" {% ifequal language "FR" %} class="selected"{% endifequal %}>
+					<a href="{{  request.path }}?lang=fr">- {% trans "FR" %} -</a>
+				</li>
+				
+				{% if has_edit_mode and edit_mode %}
+				<li>
+					<a href="#"  data-toggle="modal" data-target="#add-page-modal">+</a>
+				</li>
+				{% endif %}
+
+				<!-- list of page according to desired language -->
+				{% for p in pages %}
+				<li{% if p.slug in tags %} class="selected"{% endif %}>
+					<a href="{% url outside_page p.slug %}">{{ p.title }}</a>
+				</li>
+				{% endfor %}
+
+				<!-- specific COMMON pages e.g. studies -->
+				<li{% if p.slug in tags %} class="selected"{% endif %}>
+					<a href="{% url outside_enquetes %}">{% trans "enquetes" %}</a>
+				</li>
+				
+
+			</ul>
+		</div>
+	</header>
+
+	<div class="wrapper container_12">
+		
+		
+
+		<div class="page" >
+			
+			<sidebar class="navbar">
+				
+				<h1>{% block page_title %}{% endblock %}</h1>
+				
+				<!-- logo dime-shs -->
+				{% block sidebar %}
+
+				{% endblock %}	
+
+
+			{% if edit_mode %}
+				<div class="edit-mode" style="text-align:center"><a href="#add-section-modal" rel="tooltip" data-toggle="modal" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add section" %} ]</a></div>
+			{% endif %}
+
+				<div id="collapse-menu" rel="tooltip" title="{% trans "collapse menu"%}"></div>
+				<div id="expand-menu" style="display:none" rel="tooltip" title="{% trans "expand menu"%}"></div>
+			</sidebar>
+			{{ warnings }}
+			{{ available_languages }}
+			
+			{% block page %}
+
+			{% endblock %}	
+			
+			<div class="extras">
+				
+			</div>
+		</div>
+		<div class="push"></div>
+	</div>
+	<!-- the footer -->
+	<footer>
+		{% block footer %}
+		<div id="footer-inner" class="container_12">
+			<div id="sciencespo-dimeshs-logo"></div>
+			<div class="clear"></div>
+		</div>
+		
+
+		{% endblock %}	
+		
+	</footer>
+
+	<!-- the login modal -->
+
+	<div class="modal fade hide" id="login-modal" style="display:none">
+		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
+			<div class="modal-header">
+				<h3>{% trans "login" %}</h3>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
+				{{ request.get_full_path }}
+				{{ login_form.as_p }}
+			</div>
+			<div class="modal-footer">
+				<input type="button" class="bad" value="{% trans "discard" %}" data-dismiss="modal"/>
+				<input type="submit" value="{% trans "login"%}"/>
+			</div>
+		</form>
+	</div>
+
+	
+	{% if edit_mode %}
+
+	<!-- add page! -->
+	<div class="modal fade hide" id="add-page-modal" style="display:none">
+		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
+
+		<div class="modal-header">
+		<!-- button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button -->
+		<h3>{% trans "add page" %}</h3>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
+
+			
+			{{ add_page_form.as_p }}
+		</div>
+		<div class="modal-footer">
+		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
+		<input type="submit" href="#" value="{% trans "add page" %}"/>
+		</div>
+	</div>
+
+	<!-- the add section modal -->
+	<div class="modal fade hide" id="add-section-modal" style="display:none">
+		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
+
+		<div class="modal-header">
+		<h3>{% trans "add section" %}{% if page %}in page "{{ page.title }}"{% endif %} </h3>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
+			{{ add_pin_form.as_p }}
+		</div>
+		<div class="modal-footer">
+		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
+		<input type="submit" href="#" value="{% trans "add section" %}"/>
+		
+		</div>
+	</div>
+
+
+	<!-- the edit section modal -->
+
+
+	{% endif %}
+{% endblock %}
+
+{% block api_urls %}
+	ds.vars.urls = {
+	
+	};
+
+{% endblock %}
+
+

@@ -7,7 +7,7 @@ urlpatterns = patterns('reanalyse',
 	# set langage redirect view
 	(r'^i18n/', include('django.conf.urls.i18n')),
 	url(r'^admin/', include(admin.site.urls)),
-	
+
 	(r'^$', 'reanalyseapp.views.home'),
 	
 	#(r'^account/login/$', 'reanalyseapp.views.home'), # deprecated : loginview is set in settings.py
@@ -84,8 +84,11 @@ urlpatterns = patterns('reanalyse',
 	########## 6.Search
 	(r'^e/(?P<eid>\d+)/search/', 'reanalyseapp.views.eSearch' ),
  	
+	# glue a.k.a. content management via api json
+	url(r'^glue/', include('glue.urls')),
 
-
+	# outside, new reanalyse/bequali app for content exploration, vizs...
+	url(r'^o/', include('outside.urls')),
 
 	################### DEPRECATED
  	#(r'^e/(?P<eid>\d+)/i/(?P<iid>\d+)$', 'reanalyseapp.views.eiGetExtractHtml'),			# Get JSON with html of intervention (for extracts in search results)

@@ -1,0 +1,59 @@
+{% extends "outside/middle.html" %}
+{% load i18n %}
+{% block page %}
+	<!-- static url: {{ STATIC_URL }} -->
+	
+	{% for p in pins %}
+
+		<a id="{{ p.slug }}"></a>
+		<section {% if forloop.first %}class="alpha"{% endif %}>
+			<!-- textarea id="input" name="input">This is the fixed size demo.</textarea>
+		<script>
+			 $(document).ready(function() {
+	        $("#input").cleditor()[0].focus();
+	      });
+
+		</script -->
+			<h2>{{ p.title }}
+				{% if edit_mode %}
+					<a class="edit-mode delete" href="#">{% trans "delete section" %}</a>
+					<a class="edit-mode" data-slug='{{ p.slug }}' data-language='{{ p.language }}' href="#">^ {% trans "edit section" %} ^</a>
+				{% endif %}
+			</h2>
+			
+			<div class="abstract">
+				{{ p.abstract|safe }}
+				{% if edit_mode %}<div class="edit-mode">[ {% trans "change abstract" %} ]</div>{% endif %}
+			</div>
+
+			<div class="content">
+				{% if p.mimetype %}
+
+					{% ifequal p.mimetype "text/plain" %}
+						<!-- uploaded text elements -->
+						{{ p.local.url }}
+
+					{% endifequal %}
+
+					{% ifequal p.mimetype "image/jpg" %}
+						<!-- uploaded image elements -->
+						{{ p.local.url }}
+					{% endifequal %}
+
+					
+					
+				{% else %}
+
+					{{ p.content|safe }}
+					{% if edit_mode %}<div class="edit-mode">[ {% trans "change content" %} ]</div>{% endif %}
+
+				{%endif%}
+			</div>
+			
+			
+			
+		</section>
+	
+	{% endfor %}
+
+{% endblock %}
