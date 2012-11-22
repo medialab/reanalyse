@@ -17,7 +17,8 @@ oo.magic.page.add = function( result ){
 
 oo.magic.pin = oo.magic.pin || {};
 oo.magic.pin.add = function( result ){
-
+	oo.log("[oo.magic.pin.add]", result);
+	// window.location.reload();
 }
 
 
@@ -32,12 +33,12 @@ oo.magic.pin.add = function( result ){
 */
 oo.api.pin = {};
 oo.api.pin.add = function( params ){
-	$.ajax( $.extend( oo.api.settings.get,{
+	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_pin,
 		data: params, 
 		success:function(result){
 			oo.log( "[oo.api.pin.add] result:", result );
-			oo.api.process( result, oo.magic.pin.add );
+			oo.api.process( result, oo.magic.pin.add, "id_add_pin" );
 		}
 	}));
 }
@@ -71,7 +72,16 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 		slug:$("#id_add_page_slug").val()
 	});});
 
-	$("#id_add_page_title_en").on('keyup', function( event ){ oo.log(event); $("#id_add_page_slug").val( oo.fn.slug( $("#id_add_page_title_en").val() ) ) });
+	$("#add-pin").on("click", function(event){ event.preventDefault(); oo.api.pin.add({
+		title_en:$("#id_add_pin_title_en").val(),
+		title_fr:$("#id_add_pin_title_fr").val(),
+		slug:$("#id_add_pin_slug").val(),
+		page_slug:$("body").attr("data-page-slug")
+		
+	});});
 
-	$(document).click( function(event){ $("form .invalid").removeClass('invalid');});
+	$("#id_add_page_title_en").on('keyup', function( event ){ oo.log(event); $("#id_add_page_slug").val( oo.fn.slug( $("#id_add_page_title_en").val() ) ) });
+	$("#id_add_pin_title_en").on('keyup', function( event ){ oo.log(event); $("#id_add_pin_slug").val( oo.fn.slug( $("#id_add_pin_title_en").val() ) ) });
+
+	$(document).click( function(event){ $(".invalid").removeClass('invalid');});
 };

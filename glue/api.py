@@ -2,9 +2,12 @@ import logging
 
 from django.db.models.loading import get_model
 from django.db import IntegrityError
+from django.utils.translation import ugettext as _
+
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY
 from glue.models import Page, Pin
-from glue.forms import AddPageForm
+from glue.forms import AddPageForm, AddPinForm
+
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +56,20 @@ def pins( request ):
 		form = AddPinForm( request.REQUEST )
 		if not form.is_valid():
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+
+		if len(form.cleaned_data['page_slug']) > 0:
+			# attacch new pin to a selected page (both languages)
+			response.add('page_slug',form.cleaned_data['page_slug'])
+			
+			try:
+				page_en = Page.objects.get( slug=form.cleaned_data['page_slug'],language='EN')
+				page_fr = Page.objects.get( slug=form.cleaned_data['page_slug'],language='FR')
+			except Page.DoesNotExist:
+				return response.throw_error( error=_("selected page does not exists"), code=API_EXCEPTION_FORMERRORS).json()
+
+			response.add('page', [ page_en.json(), page_fr.json() ] )
+		#return response.queryset( Pin.objects.filter() ).json()
+
 		try:
 			p_en = Pin( title=form.cleaned_data['title_en'], language='EN', slug=form.cleaned_data['slug'])
 			p_en.save()
@@ -61,10 +78,16 @@ def pins( request ):
 			p_fr.save() 
 		except IntegrityError, e:
 			return response.throw_error( error="%s" % e, code=API_EXCEPTION_INTEGRITY).json()
+		
+		if len(form.cleaned_data['page_slug']) > 0:
+			page_en.pins.add( p_en )
+			page_en.save()
+			page_fr.pins.add( p_fr )
+			page_fr.save()
 
 		response.add('object',[ p_en.json(), p_fr.json() ])
 
-	return response.queryset( Page.objects.filter() ).json()
+	return response.queryset( Pin.objects.filter() ).json()
 
 
 def pin( request, page_id ):

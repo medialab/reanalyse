@@ -156,7 +156,7 @@
 
 	<!-- the add section modal -->
 	<div class="modal fade hide" id="add-section-modal" style="display:none">
-		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
+		<form action="" method="POST">{% csrf_token %}
 
 		<div class="modal-header">
 			<h3>{% if page %} {% trans "add section into" %} "{{ page.title }}"{% else %} {% trans "add section"%} {% endif %} </h3>
@@ -168,9 +168,10 @@
 		</div>
 		<div class="modal-footer">
 		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" value="{% trans "add section" %}"/>
+		<input type="submit" href="#" id="add-pin" value="{% trans "add section" %}"/>
 		
 		</div>
+	</form>
 	</div>
 
 
@@ -183,7 +184,9 @@
 {% block api_urls %}
 	
 	oo.urls = {
-		add_page:"{% url glue_api_pages %}"
+		add_page:"{% url glue_api_pages %}",
+		add_pin:"{% url glue_api_pins %}"
+		
 	};
 
 {% endblock %}

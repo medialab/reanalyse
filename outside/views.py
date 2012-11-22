@@ -17,6 +17,10 @@ from glue.models import Pin, Page
 def index( request ):
 	data = shared_context( request, tags=[ "index" ] )
 	
+	if Page.objects.filter( slug="project", language=data['language'] ).count() > 0:
+		return page( request, "project")
+	
+	
 	# load all pins without page, without Enquete
 	data['pins'] = Pin.objects.filter(language=data['language'])
 
