@@ -28,6 +28,8 @@ class Pin( models.Model ):
 	permalink  = models.TextField( default="", blank=True, null=True ) # remote link
 
 	related = models.ManyToManyField("self", symmetrical=True, null=True, blank=True)
+	parent  = models.ForeignKey("self", null=True, blank=True )
+
 	geos = models.ManyToManyField( Geo, blank=True, null=True ) # add geographic point
 
 	class Meta:

@@ -202,6 +202,9 @@ header{
 			&:hover{
 				border-bottom: 1px solid @base-color;
 			}
+			a{
+				display:block;
+			}
 			&.selected{
 				a, a:visited{
 					color:black;
@@ -459,7 +462,7 @@ sidebar{
 	position:fixed;
 	top: @header-height + @grid-padding;
 	margin-left: -@grid-padding/2;
-	width: @grid-padding * 3.5;
+	width: @grid-padding * 3.8;
 	background: lighten(@page-color,1%);
 	.box-shadow( 1px 1px 2px darken( @background-color, 3%) );
 	border-top: 1px solid darken( @page-color, 5% );
@@ -750,7 +753,7 @@ textarea{
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #eee;
+  background-color: darken(@base-darkest-color, 5%);
 }
 
 .modal-backdrop.fade {

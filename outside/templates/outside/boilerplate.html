@@ -193,11 +193,18 @@
 
 
 		<script type="text/javascript">
+		{% block api_urls %}
+	
+			oo.urls = {};
+
+		{% endblock %}
+
 		$(document).ready(function(){
 			oo.api.init();
 			oo.modals.init();
 			oo.tooltip.init();
 			oo.sidebar.init();
+			oo.glue.init();
 			
 		});
 

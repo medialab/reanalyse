@@ -10,23 +10,23 @@
 				
 	{% if not request.user.is_authenticated %}
 				<li style="float:right">
-					<a href="#login" data-toggle="modal" data-target="#login-modal"> - {% trans "login" %} - </a>
+					<a href="#login" data-toggle="modal" data-target="#login-modal">{% trans "login" %}</a>
 				</li>
 	{% else %}
 				<li style="float:right">
-					<a href="{% url outside_logout %}"rel="tooltip" title="{% trans "logout" %} {{ request.user.username }}" data-tooltip-placement="bottom"> - {% trans "logout" %} - </a>
+					<a href="{% url outside_logout %}"rel="tooltip" title="{% trans "logout" %} {{ request.user.username }}" data-tooltip-placement="bottom">{% trans "logout" %}</a>
 				</li>
 		{% if has_edit_mode %}
 			{% if edit_mode %}
 				<li style="float:right" class="selected">
-					<a style="width: 48px;" href="{{  request.path }}?disable-edit-mode"> - {% trans "disable edit mode"%} -
+					<a  href="{{  request.path }}?disable-edit-mode">{% trans "disable edit"%}
 						<!-- div  style="position:relative; top:0px" title="{% trans "disable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom" class="edit-mode on"></div>
 						&nbsp; -->
 					</a>
 				</li>
 			{% else %}
 				<li style="float:right">
-					<a href="{{  request.path }}?enable-edit-mode" title="{% trans "enable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom">- {% trans "edit"%} -
+					<a href="{{  request.path }}?enable-edit-mode" title="{% trans "enable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom">{% trans "edit"%}
 						<!-- div class="edit-mode off" title="{% trans "enable edit mode"%}" rel="tooltip" data-tooltip-placement="bottom"></div -->
 					</a>
 				</li>
@@ -41,7 +41,7 @@
 				</li>
 				
 				{% if has_edit_mode and edit_mode %}
-				<li>
+				<li  rel="tooltip" title="{% trans "add page"%}" data-tooltip-placement="bottom">
 					<a href="#"  data-toggle="modal" data-target="#add-page-modal">+</a>
 				</li>
 				{% endif %}
@@ -54,7 +54,7 @@
 				{% endfor %}
 
 				<!-- specific COMMON pages e.g. studies -->
-				<li{% if p.slug in tags %} class="selected"{% endif %}>
+				<li{% if "enquetes" in tags %} class="selected"{% endif %}>
 					<a href="{% url outside_enquetes %}">{% trans "enquetes" %}</a>
 				</li>
 				
@@ -136,7 +136,7 @@
 
 	<!-- add page! -->
 	<div class="modal fade hide" id="add-page-modal" style="display:none">
-		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
+		<form method="POST">{% csrf_token %}
 
 		<div class="modal-header">
 		<!-- button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button -->
@@ -150,7 +150,7 @@
 		</div>
 		<div class="modal-footer">
 		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" value="{% trans "add page" %}"/>
+		<input type="submit" href="#" id="add-page" value="{% trans "add page" %}"/>
 		</div>
 	</div>
 
@@ -159,9 +159,10 @@
 		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
 
 		<div class="modal-header">
-		<h3>{% trans "add section" %}{% if page %}in page "{{ page.title }}"{% endif %} </h3>
+			<h3>{% if page %} {% trans "add section into" %} "{{ page.title }}"{% else %} {% trans "add section"%} {% endif %} </h3>
 		</div>
 		<div class="modal-body">
+			{% trans "add section rules" %}
 			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
 			{{ add_pin_form.as_p }}
 		</div>
@@ -180,8 +181,9 @@
 {% endblock %}
 
 {% block api_urls %}
-	ds.vars.urls = {
 	
+	oo.urls = {
+		add_page:"{% url glue_api_pages %}"
 	};
 
 {% endblock %}

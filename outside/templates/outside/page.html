@@ -1,10 +1,10 @@
-{% extends "glue/middle.html" %}
+{% extends "outside/middle.html" %}
 {% load i18n %}
 
 {% block sidebar %}
 	<ul class="nav">
-		{% for section in page.accolites.all %}
-		<li><a href="#{{ section.slug }}">{{ section.title }}</a></li>
+		{% for pin in page.pins.all %}
+		<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
 		{% endfor %}
 	</ul>
 	

@@ -16,5 +16,5 @@ class AddPinForm(forms.Form):
 	title_fr = forms.CharField( label=_("french title"),required=True )
 	title_en = forms.CharField( label=_("english title"), required=True )
 	slug = forms.SlugField( required=True )
-	page_slug = forms.SlugField( required=False )
-	parent_pin_slug = forms.SlugField( required=False )
+	page_slug = forms.SlugField( required=False, widget=forms.HiddenInput )
+	parent_pin_slug = forms.SlugField( required=False, widget=forms.HiddenInput )

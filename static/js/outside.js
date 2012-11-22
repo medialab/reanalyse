@@ -2,7 +2,7 @@
 
 var oo = oo || {};
 oo.vars = oo.vars || {};
-
+oo.urls = oo.urls || {};
 
 /*
 
@@ -35,11 +35,11 @@ oo.api = {
 };
 
 oo.api.init = function(){
-
+	oo.vars.csrftoken = oo.fn.get_cookie('csrftoken');
 	$.ajaxSetup({
 		crossDomain: false, // obviates need for sameOrigin test
 		beforeSend: function(xhr, settings) { if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type))){ xhr.setRequestHeader("X-CSRFToken", oo.vars.csrftoken);}}
-	});
+	});oo.log("[oo.api.init]");
 }
 
 oo.api.process = function(result, callback, namespace ){
@@ -48,10 +48,10 @@ oo.api.process = function(result, callback, namespace ){
 			oo.toast( callback.message, callback.title );
 		} else return callback( result );
 	} else if( typeof result.error == "object" ){
-		oo.magic.invalidate( result.error, namespace );
-		ds.m.toast(  ds.i18n.translate("invalid form") , ds.i18n.translate("error"), {stayTime:3000, cleanup: true});
+		oo.invalidate( result.error, namespace );
+		oo.toast(  oo.i18n.translate("invalid form") , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
 	} else {
-		ds.m.handlers.fault( result.error )
+		oo.toast( result.error , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
 	}
 		
 }
@@ -107,7 +107,7 @@ oo.toast = function( message, title, options ){
     =================
 
 */
-oo.invalidate = function( errors, namespace ){ if (!namespace){ namespace = "id";} ds.log("[oo.invalidate] namespace:",namespace, " errors:",errors );
+oo.invalidate = function( errors, namespace ){ if (!namespace){ namespace = "id";} oo.log("[oo.invalidate] namespace:",namespace, " errors:",errors );
 	for (var i in errors){
 		if( i.indexOf("_date") != -1  ){
 			$("#"+namespace+"_"+i+"_day").parent().addClass("invalid");	
@@ -128,6 +128,7 @@ oo.fault = function( message ){
 	message = typeof message == "undefined"? "": message;
 	oo.toast( message, oo.i18n.translate("connection error"), {stayTime:3000, cleanup: true});
 }
+
 
 /*
 

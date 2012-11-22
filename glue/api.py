@@ -24,7 +24,7 @@ def pages(request):
 	# logger.info("Welcome to GLUEBOX api")
 	response = Epoxy( request )
 	if response.method =='POST':
-		form = AddPageForm( response.request )
+		form = AddPageForm( request.REQUEST )
 		if not form.is_valid():
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
 		try:
@@ -46,6 +46,26 @@ def page( request, page_id ):
 
 def page_by_slug( request, page_slug, page_language ):
 	return Epoxy( request ).single( Page, {'slug':page_slug,'language':page_language} ).json()
+
+def pins( request ):
+	response = Epoxy( request )
+	if response.method =='POST':
+		form = AddPinForm( request.REQUEST )
+		if not form.is_valid():
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+		try:
+			p_en = Pin( title=form.cleaned_data['title_en'], language='EN', slug=form.cleaned_data['slug'])
+			p_en.save()
+
+			p_fr = Pin( title=form.cleaned_data['title_fr'], language='FR', slug=form.cleaned_data['slug'])
+			p_fr.save() 
+		except IntegrityError, e:
+			return response.throw_error( error="%s" % e, code=API_EXCEPTION_INTEGRITY).json()
+
+		response.add('object',[ p_en.json(), p_fr.json() ])
+
+	return response.queryset( Page.objects.filter() ).json()
+
 
 def pin( request, page_id ):
 	return Epoxy( request ).single( Pin, {'id':pin_id} ).json()

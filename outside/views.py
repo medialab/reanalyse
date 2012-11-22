@@ -23,17 +23,19 @@ def index( request ):
 	return render_to_response('outside/index.html', RequestContext(request, data ) )
 
 def page( request, page_slug ):
-	data = shared_context( request, tags=[ "page" ] )
-	return render_to_response('outside/index.html', RequestContext(request, data ) )
+	data = shared_context( request, tags=[ page_slug ] )
+	data['page'] = get_object_or_404(Page, slug=page_slug, language=data['language'] )
+
+	return render_to_response('outside/page.html', RequestContext(request, data ) )
 
 def enquete( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquete" ] )
+	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 
 	return render_to_response('outside/enquete.html', RequestContext(request, data ) )
 
 def enquetes( request ):
-	data = shared_context( request, tags=[ "enquete" ] )
+	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquetes'] = Enquete.objects.all() 
 
 	return render_to_response('outside/enquetes.html', RequestContext(request, data ) )
@@ -91,7 +93,7 @@ def shared_context( request, tags=[], previous_context={} ):
 	load_language( request, d )
 	
 
-	d['pages'] = [ p for p in Page.objects.filter( language=d['language'] ).order_by('-id') ] # menu up. type PAGE should be translated via django trans tamplate tags.
+	d['pages'] = [ p for p in Page.objects.filter( language=d['language'] ).order_by('id') ] # menu up. type PAGE should be translated via django trans tamplate tags.
 	
 	return d
 
@@ -113,8 +115,8 @@ def load_edit_mode( request, d ):
 
 	# add editable field
 	if d['edit_mode']:
-		d['add_page_form'] = AddPageForm()
-		d['add_pin_form'] = AddPinForm()
+		d['add_page_form'] = AddPageForm( auto_id="id_add_page_%s" )
+		d['add_pin_form'] = AddPinForm( auto_id="id_add_pin_%s" )
 		#d['pageaddform'] = PageAddForm(auto_id="id_page_%s")
 
 #
