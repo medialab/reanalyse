@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import login, logout, authenticate
-from glue.forms import LoginForm, AddPageForm, AddPinForm
+from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 
 
 from reanalyseapp.models import Enquete
@@ -121,6 +121,8 @@ def load_edit_mode( request, d ):
 	if d['edit_mode']:
 		d['add_page_form'] = AddPageForm( auto_id="id_add_page_%s" )
 		d['add_pin_form'] = AddPinForm( auto_id="id_add_pin_%s" )
+		d['edit_pin_form'] = EditPinForm( auto_id="id_edit_pin_%s" )
+		
 		#d['pageaddform'] = PageAddForm(auto_id="id_page_%s")
 
 #

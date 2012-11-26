@@ -174,6 +174,50 @@
 	</form>
 	</div>
 
+	<!-- the edit section modal -->
+	<div class="modal fade hide" id="edit-pin-modal" style="display:none; width:640px; height:540px; overflow:hidden;margin-left: -320px">
+		<form action="" method="POST">{% csrf_token %}
+
+		<div class="modal-header">
+			<h3>{% trans "edit section" %}</h3>
+		</div>
+		<div class="modal-body" style="max-height:400px; overflow:hidden">
+			{{ edit_pin_form.title }}
+			<p>
+				{{ edit_pin_form.abstract.label_tag }}
+				<textarea id="id_edit_pin_abstract" rows="15" style="height:36px" cols="40" name="abstract"></textarea>
+			</p>
+
+			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
+			<div id="wysihtml5-toolbar" style="display: none;">
+			<a data-wysihtml5-command="bold">bold</a>
+			<a data-wysihtml5-command="italic">italic</a>
+
+			<!-- Some wysihtml5 commands require extra parameters -->
+			<a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red">red</a>
+			<a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green">green</a>
+			<a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue">blue</a>
+
+			<!-- Some wysihtml5 commands like 'createLink' require extra paramaters specified by the user (eg. href) -->
+			<a data-wysihtml5-command="createLink">insert link</a>
+			<div data-wysihtml5-dialog="createLink" style="display: none;">
+			<label>
+			Link:
+			<input data-wysihtml5-dialog-field="href" value="http://" class="text">
+			</label>
+			<a data-wysihtml5-dialog-action="save">OK</a> <a data-wysihtml5-dialog-action="cancel">Cancel</a>
+			</div>
+			</div>
+
+			<textarea id="id_edit_pin_content" style="height:306px" cols="40" name="content"></textarea>
+		</div>
+		<div class="modal-footer">
+		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
+		<input type="submit" href="#" id="edit-pin" data-pin-id="0" value="{% trans "edit section" %}"/>
+		
+		</div>
+	</form>
+	</div>
 
 	<!-- the edit section modal -->
 
@@ -185,8 +229,9 @@
 	
 	oo.urls = {
 		add_page:"{% url glue_api_pages %}",
-		add_pin:"{% url glue_api_pins %}"
-		
+		add_pin:"{% url glue_api_pins %}",
+		edit_pin:"{% url glue_api_pin 0 %}",
+		get_pin:"{% url glue_api_pin 0 %}"
 	};
 
 {% endblock %}

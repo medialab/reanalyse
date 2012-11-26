@@ -34,6 +34,7 @@ class Pin( models.Model ):
 
 	class Meta:
 		unique_together = ( "slug", "language" )
+		ordering = ('sort','id')
 
 	def json( self ):
 		return{

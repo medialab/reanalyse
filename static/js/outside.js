@@ -42,7 +42,7 @@ oo.api.init = function(){
 	});oo.log("[oo.api.init]");
 }
 
-oo.api.process = function(result, callback, namespace ){
+oo.api.process = function( result, callback, namespace ){
 	if( result.status == 'ok'){
 		if (typeof callback == "object"){
 			oo.toast( callback.message, callback.title );
@@ -53,9 +53,7 @@ oo.api.process = function(result, callback, namespace ){
 	} else {
 		oo.toast( result.error , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
 	}
-		
 }
-
 
 oo.api.urlfactory = function( url, factor, pattern ){
 	if( typeof factor == "undefined" ){ ds.log("[ds.m.api.urlfactory] warning'"); return url; };

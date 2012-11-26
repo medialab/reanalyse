@@ -39,48 +39,48 @@
 	background-position: -( @col * ( @width + @padding ) + @padding ) -( @row * ( @height + @padding ) + @padding );
 }
 
+.font-common( @font-size:12px, @text-transform:normal,@line-height-ratio:1.67 ){
+	font-size:@font-size;
+	line-height:@font-size * @line-height-ratio;
+	text-transform: @text-transform;
+	font-weight:normal;
+	font-style:normal;
+}
+
 .sans-serif( @font-size:12px, @text-transform:lowercase,@line-height-ratio:1.67 ){
 	font-family:'LatinModernSans10Regular';
-	text-transform: @text-transform;
-	font-size: @font-size;
-	line-height: @font-size * @line-height-ratio;
-	font-weight:normal;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
 }
 
 .serif( @font-size:16px, @text-transform:lowercase,@line-height-ratio:1.414 ){
 	font-family: 'LatinModernRoman10Regular', serif;
-	font-size:@font-size;
-	line-height:@font-size * @line-height-ratio;
-	font-weight:normal;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
+}
+
+.serif-bold( @font-size:16px, @text-transform:lowercase,@line-height-ratio:1.414 ){
+	font-family: 'LatinModernRoman10Bold', serif;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
 }
 
 .serif-italic( @font-size:12px, @text-transform:lowercase,@line-height-ratio:1.67 ){
 	font-family: 'LatinModernRoman10Italic', serif;
-	font-size:@font-size;
-	line-height:@font-size * @line-height-ratio;
-	font-weight:normal;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
 }
 
 .serif-slant( @font-size:12px, @text-transform:lowercase,@line-height-ratio:1.67 ){
 	font-family: 'LatinModernRomanSlanted10Rg', serif;
-	font-size:@font-size;
-	line-height:@font-size * @line-height-ratio;
-	font-weight:normal;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
 }
 
 
 .mono( @font-size:12px, @text-transform:normal,@line-height-ratio:1.67 ){
 	font-family: 'LatinModernMonoProp10Regular', mono;
-	font-size:@font-size;
-	line-height:@font-size * @line-height-ratio;
-	font-weight:normal;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
 }
 
 .mono-caps( @font-size:12px, @text-transform:normal,@line-height-ratio:1.67 ){
 	font-family: 'LatinModernMonoCaps10Regular', mono;
-	font-size:@font-size;
-	line-height:@font-size * @line-height-ratio;
-	font-weight:normal;
+	.font-common( @font-size,@text-transform, @line-height-ratio );
 }
 
 //
@@ -93,7 +93,7 @@ html{
 }
 body{
 	background: @background-color;
-	.serif;
+	.serif(16px);
 }
 i{
 	.serif-italic;
@@ -169,8 +169,8 @@ header{
 	#header-inner{	
 		height:@header-height;
 		background:@page-color;
-		border-left: 1px solid darken( @page-color, 8%);
-	border-right: 1px solid darken( @page-color, 14%);
+		border-left: 1px solid darken( @page-color, 12%);
+		border-right: 1px solid darken( @page-color, 14%);
 	}
 	
 	.edit-mode{
@@ -222,7 +222,7 @@ header{
 	}
 }
 
-html, body {
+html{
 	height: 100%;
 }
 .wrapper {
@@ -231,7 +231,7 @@ html, body {
 	height: 100%;
 	margin: 0 auto -@footer-height;
 	//.box-shadow( 0px 0px 1px fade( black, 20%) );
-	border-left: 1px solid darken( @page-color, 8%);
+	border-left: 1px solid darken( @page-color, 12%);
 	border-right: 1px solid darken( @page-color, 14%);
 	background: @page-color;
 }
@@ -577,14 +577,59 @@ h1,h2{
 @grid-padding: 36px;
 
 section{
-	padding:@grid-padding @grid-padding*6 @grid-padding*2 @grid-padding*4;
+	padding:@grid-padding 0 @grid-padding*2 @grid-padding*4;
 	
-	.abstract{
-		.serif-italic();
+	>.abstract{
+		.serif-italic( 20px);
 		color: lighten( @text-color, 10%);
-		margin-bottom: @grid-padding;
+		margin-bottom: @grid-padding / 2;
 		padding-left: @grid-padding;
+		margin-right: @grid-padding*5;
+		i{
+			.serif( 17px );
+		}
 	}
+	.pins{
+		float:right;
+		width:@grid-padding*5; 
+		overflow:hidden;
+		.abstract{
+			.mono(14px);
+			margin: @grid-padding / 4;
+		}
+		.media img{
+			border-bottom: 1px solid darken( @page-color, 14%);
+			border-left: 1px solid darken( @page-color, 14%);
+			border-top: 1px solid darken( @page-color, 14%);
+		}
+		.content{
+			.serif(14px);
+			margin-right: @grid-padding / 2;
+			margin-left: @grid-padding / 3;
+		}
+		padding-bottom: @grid-padding / 2;
+		border-bottom: 1px solid darken( @page-color, 12%);
+	}
+	>.content{
+		text-align:justify;
+		margin-right: @grid-padding*6;
+		.serif( 16px );
+		a, a:visited{
+			.mono( 16px );
+			color: @base-color;
+			text-decoration: underline;
+		}
+		p{
+			margin-bottom: @grid-padding / 3;
+		}
+		b{
+			.serif-bold(15px);
+		}
+		i{
+			.serif-italic( 16px);
+		}
+	}
+
 	&:not(.alpha){
 		.box-shadow(inset 0px 1px 1px white);
 		border-top: 1px solid darken( #f1f1f1, 3% );

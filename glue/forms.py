@@ -18,3 +18,8 @@ class AddPinForm(forms.Form):
 	slug = forms.SlugField( required=True )
 	page_slug = forms.SlugField( required=False, widget=forms.HiddenInput )
 	parent_pin_slug = forms.SlugField( required=False, widget=forms.HiddenInput )
+
+class EditPinForm(forms.Form):
+	title = forms.CharField( label=_("title"),required=True )
+	abstract = forms.CharField( label=_("abstract"), required=True, widget=forms.Textarea )
+	content = forms.CharField( label=_("content"), required=True, widget=forms.Textarea )

@@ -4,9 +4,9 @@ from django.db.models.loading import get_model
 from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 
-from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY
+from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_DOESNOTEXIST
 from glue.models import Page, Pin
-from glue.forms import AddPageForm, AddPinForm
+from glue.forms import AddPageForm, AddPinForm, EditPinForm
 
 
 logger = logging.getLogger(__name__)
@@ -90,8 +90,24 @@ def pins( request ):
 	return response.queryset( Pin.objects.filter() ).json()
 
 
-def pin( request, page_id ):
-	return Epoxy( request ).single( Pin, {'id':pin_id} ).json()
+def pin( request, pin_id ):
+	# @todo: check pin permissions
+	response = Epoxy( request )
+	if response.method == 'POST':
+		form = EditPinForm( request.REQUEST )
+		if form.is_valid():
+			try:
+				pin = Pin.objects.get( id=pin_id )
+				pin.title = form.cleaned_data['title']
+				pin.abstract = form.cleaned_data['abstract']
+				pin.content = form.cleaned_data['content']
+				pin.save()
+			except Pin.DoesNotExist, e:
+				return response.throw_error( error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST).json()
+		else:
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+
+	return response.single( Pin, {'id':pin_id} ).json()
 
 def pin_by_slug( request, pin_slug, pin_language ):
 	return Epoxy( request ).single( Pin, {'slug':pin_slug,'language':pin_language} ).json()

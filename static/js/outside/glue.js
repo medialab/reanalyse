@@ -8,6 +8,10 @@ var oo = oo || {}; oo.vars.pin = oo.vars.pin || {}; oo.glue = {};
 
 */
 oo.magic = oo.magic || {};
+oo.magic.reload = function(){
+	window.location.reload();
+}
+
 oo.magic.page = oo.magic.page || {};
 
 oo.magic.page.add = function( result ){
@@ -18,9 +22,12 @@ oo.magic.page.add = function( result ){
 oo.magic.pin = oo.magic.pin || {};
 oo.magic.pin.add = function( result ){
 	oo.log("[oo.magic.pin.add]", result);
+	window.location.reload();
+}
+oo.magic.pin.get = function( result ){
+	oo.log("[oo.magic.pin.get]", result);
 	// window.location.reload();
 }
-
 
 
 
@@ -41,7 +48,29 @@ oo.api.pin.add = function( params ){
 			oo.api.process( result, oo.magic.pin.add, "id_add_pin" );
 		}
 	}));
-}
+};
+
+oo.api.pin.get = function( pk, params, callback ){
+	$.ajax( $.extend( oo.api.settings.get,{
+		url: oo.api.urlfactory( oo.urls.get_pin, pk ),
+		data: params, 
+		success:function(result){
+			oo.log( "[oo.api.pin.get] result:", result );
+			oo.api.process( result, typeof callback == "function"? callback: oo.magic.pin.get );
+		}
+	}));
+};
+
+oo.api.pin.edit = function( pk, params, callback ){
+	$.ajax( $.extend( oo.api.settings.post,{
+		url: oo.api.urlfactory( oo.urls.edit_pin, pk ),
+		data: params, 
+		success:function(result){
+			oo.log( "[oo.api.pin.edit] result:", result );
+			oo.api.process( result, typeof callback == "function"? callback: oo.magic.reload,"id_edit_pin" );
+		}
+	}));
+};
 
 oo.api.page = {};
 oo.api.page.add = function( params ){
@@ -56,12 +85,13 @@ oo.api.page.add = function( params ){
 	}));
 }
 
-
 /*
 
 
     Pin/Page Init
-    ========
+    =============
+
+	Require wysihtml5 plugin
 
 */
 oo.glue = {};
@@ -80,8 +110,35 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 		
 	});});
 
-	$("#id_add_page_title_en").on('keyup', function( event ){ oo.log(event); $("#id_add_page_slug").val( oo.fn.slug( $("#id_add_page_title_en").val() ) ) });
-	$("#id_add_pin_title_en").on('keyup', function( event ){ oo.log(event); $("#id_add_pin_slug").val( oo.fn.slug( $("#id_add_pin_title_en").val() ) ) });
+	$("#edit-pin").on("click", function(event){ event.preventDefault(); oo.api.pin.edit( $(this).attr("data-pin-id"),{
+		title:$("#id_edit_pin_title").val(),
+		content:$("#id_edit_pin_content").val(),
+		abstract:$("#id_edit_pin_abstract").val()
+	});});
 
+	$("#id_add_page_title_en").on('keyup', function( event ){ $("#id_add_page_slug").val( oo.fn.slug( $("#id_add_page_title_en").val() ) ) });
+	$("#id_add_pin_title_en").on('keyup', function( event ){ $("#id_add_pin_slug").val( oo.fn.slug( $("#id_add_pin_title_en").val() ) ) });
+
+
+
+	// html5 pin editor
+	var editor = new wysihtml5.Editor("id_edit_pin_content", { // id of textarea element
+		toolbar:      "wysihtml5-toolbar", // id of toolbar element
+		parserRules:  wysihtml5ParserRules // defined in parser rules set 
+	});
+
+	// $("#edit-section-modal").modal('show')
 	$(document).click( function(event){ $(".invalid").removeClass('invalid');});
+	$(document).on("click",".edit-pin", function(event){ 
+		// load content before all
+		oo.api.pin.get( $(this).attr('data-pin-id'), {}, function(result){
+			$('#edit-pin-modal').modal('show');
+			$('#id_edit_pin_title').val( result.object.title )
+			$('#id_edit_pin_abstract').val( result.object.abstract )
+			$('#id_edit_pin_content').val( result.object.content )
+			editor.setValue( result.object.content );
+			// $('#edit-pin-modal').result.object.title
+			$('#edit-pin').attr("data-pin-id",result.object.id );
+		});
+		oo.log("eeee");} );
 };
