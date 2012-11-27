@@ -16,7 +16,7 @@ oo.magic.page = oo.magic.page || {};
 
 oo.magic.page.add = function( result ){
 	oo.log("[oo.magic.page.add]", result);
-	window.location.reload();
+	// window.location.reload();
 }
 
 oo.magic.pin = oo.magic.pin || {};
@@ -102,13 +102,25 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 		slug:$("#id_add_page_slug").val()
 	});});
 
-	$("#add-pin").on("click", function(event){ event.preventDefault(); oo.api.pin.add({
-		title_en:$("#id_add_pin_title_en").val(),
-		title_fr:$("#id_add_pin_title_fr").val(),
-		slug:$("#id_add_pin_slug").val(),
-		page_slug:$("body").attr("data-page-slug")
+	$("#add-pin").on("click", function(event){ event.preventDefault(); 
+		var el = $(this);
+		oo.log("[oo.glue.init:click] #add-pin, page-slug:", el.attr("data-page-slug"), ", parent-pin-slug:", el.attr("data-parent-pin-slug") );
+
+		var params = {
+			title_en:$("#id_add_pin_title_en").val(),
+			title_fr:$("#id_add_pin_title_fr").val(),
+			slug:$("#id_add_pin_slug").val()
+		}
+		if ( typeof el.attr("data-page-slug") != "undefined" ){
+			$.extend(params,{page_slug:el.attr("data-page-slug")});
+		}
+
+		if ( typeof el.attr("data-parent-pin-slug") != "undefined" ){
+			$.extend(params,{parent_pin_slug:el.attr("data-parent-pin-slug")});
+		}
+		oo.api.pin.add( params );
+	});
 		
-	});});
 
 	$("#edit-pin").on("click", function(event){ event.preventDefault(); oo.api.pin.edit( $(this).attr("data-pin-id"),{
 		title:$("#id_edit_pin_title").val(),
@@ -129,6 +141,23 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 
 	// $("#edit-section-modal").modal('show')
 	$(document).click( function(event){ $(".invalid").removeClass('invalid');});
+
+	// ADD PIN
+	$(document).on("click",".add-pin", function(event){
+		var el = $(this);
+		oo.log("[oo.glue.init:click] .add-pin", el.attr("data-page-slug"),  el.attr('data-parent-pin-slug') );
+		$('#add-pin-modal').modal('show');
+		if( typeof el.attr('data-parent-pin-slug') == "undefined"){
+			$('#parent-pin-slug').empty();
+		} else {
+			$('#parent-pin-slug').html( "&rarr;" + el.attr('data-parent-pin-slug') )
+		
+		}
+		$('#add-pin').attr("data-parent-pin-slug", el.attr('data-parent-pin-slug') );
+		$('#add-pin').attr("data-page-slug", el.attr('data-page-slug') );
+
+	});
+
 	$(document).on("click",".edit-pin", function(event){ 
 		// load content before all
 		oo.api.pin.get( $(this).attr('data-pin-id'), {}, function(result){
@@ -140,5 +169,6 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 			// $('#edit-pin-modal').result.object.title
 			$('#edit-pin').attr("data-pin-id",result.object.id );
 		});
-		oo.log("eeee");} );
+		oo.log("eeee");
+	});
 };

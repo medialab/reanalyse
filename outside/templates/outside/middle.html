@@ -5,7 +5,6 @@
 	
 	<header>
 		<div id="header-inner" class="container_12">
-			<a href="{% url outside_index %}"><div id="logo"></div></a>
 			<ul>
 				
 	{% if not request.user.is_authenticated %}
@@ -70,7 +69,8 @@
 		<div class="page" >
 			
 			<sidebar class="navbar">
-				
+				<a href="{% url outside_index %}"><div id="logo"></div></a>
+			
 				<h1>{% block page_title %}{% endblock %}</h1>
 				
 				<!-- logo dime-shs -->
@@ -80,7 +80,8 @@
 
 
 			{% if edit_mode %}
-				<div class="edit-mode" style="text-align:center"><a href="#add-section-modal" rel="tooltip" data-toggle="modal" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add section" %} ]</a></div>
+				<div class="edit-mode add-pin" data-page-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add section" %} ]
+				</div>
 			{% endif %}
 
 				<div id="collapse-menu" rel="tooltip" title="{% trans "collapse menu"%}"></div>
@@ -154,12 +155,12 @@
 		</div>
 	</div>
 
-	<!-- the add section modal -->
-	<div class="modal fade hide" id="add-section-modal" style="display:none">
+	<!-- the add section/pin modal -->
+	<div class="modal fade hide" id="add-pin-modal" style="display:none">
 		<form action="" method="POST">{% csrf_token %}
 
 		<div class="modal-header">
-			<h3>{% if page %} {% trans "add section into" %} "{{ page.title }}"{% else %} {% trans "add section"%} {% endif %} </h3>
+			<h3>{% if page %} {% trans "add section into" %} &rarr; {{ page.title }} {% else %} {% trans "add section"%} {% endif %} <span id="parent-pin-slug" data-parent-pin="0"></span></h3>
 		</div>
 		<div class="modal-body">
 			{% trans "add section rules" %}

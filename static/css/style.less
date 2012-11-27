@@ -480,17 +480,15 @@ sidebar{
 		}
 	}
 	h1{
+		margin-top:20px;
 		border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
 		margin-bottom: 0px;
-		padding: 0px;
-		text-align: center;
-		font-size: 16px;
-		font-family: 'Calluna-Regular';
-		font-style:italic;
-		text-transform: lowercase;
-		line-height: 18px;
-		line-height: 16px*1.414;
-		padding: 15px 10px;
+		
+
+		text-align: left;
+		.serif-slant(16px);
+
+		padding: 15px 10px 15px 27px;
 		color: fade(#383838, 72%);
 	}
 	ul{
@@ -522,15 +520,12 @@ sidebar{
 					margin-right:@grid-padding;
 				}
 			}
-			&.edit-mode{
-				margin: @grid-padding/3;
-				a, a:visited{
-					color: @base-color;
-				}
-
-			}
+			
 		}
+
 	}
+	
+	
 
 	#collapse-menu{
 		.spring(0,5);
@@ -539,6 +534,7 @@ sidebar{
 			.spring-position(1,5);
 		}
 	}
+	
 	#expand-menu{
 		.spring(0,6);
 		cursor:pointer;
@@ -549,7 +545,9 @@ sidebar{
 }
 
 .edit-mode{
-	display:inline;
+	display:block;
+	text-align:center;
+	
 	color: @base-color;
 	.sans-serif();
 	color: @base-color;
@@ -578,7 +576,9 @@ h1,h2{
 
 section{
 	padding:@grid-padding 0 @grid-padding*2 @grid-padding*4;
-	
+	>.edit-mode{
+		display: inline;
+	}
 	>.abstract{
 		.serif-italic( 20px);
 		color: lighten( @text-color, 10%);
@@ -593,22 +593,26 @@ section{
 		float:right;
 		width:@grid-padding*5; 
 		overflow:hidden;
-		.abstract{
-			.mono(14px);
-			margin: @grid-padding / 4;
+		.child{
+			.title{
+				.mono(14px);
+				margin: @grid-padding / 4;
+			}
+			.media img{
+				border-bottom: 1px solid darken( @page-color, 14%);
+				border-left: 1px solid darken( @page-color, 14%);
+				border-top: 1px solid darken( @page-color, 14%);
+			}
+			.abstract, .content{
+				.serif(14px);
+				margin-right: @grid-padding / 2;
+				margin-left: @grid-padding / 3;
+			}
+		
+			padding-bottom: @grid-padding / 2;
+			border-bottom: 1px solid darken( @page-color, 12%);
 		}
-		.media img{
-			border-bottom: 1px solid darken( @page-color, 14%);
-			border-left: 1px solid darken( @page-color, 14%);
-			border-top: 1px solid darken( @page-color, 14%);
-		}
-		.content{
-			.serif(14px);
-			margin-right: @grid-padding / 2;
-			margin-left: @grid-padding / 3;
-		}
-		padding-bottom: @grid-padding / 2;
-		border-bottom: 1px solid darken( @page-color, 12%);
+		
 	}
 	>.content{
 		text-align:justify;

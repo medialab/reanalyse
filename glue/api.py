@@ -68,16 +68,34 @@ def pins( request ):
 				return response.throw_error( error=_("selected page does not exists"), code=API_EXCEPTION_FORMERRORS).json()
 
 			response.add('page', [ page_en.json(), page_fr.json() ] )
+
+		if len(form.cleaned_data['parent_pin_slug']) > 0:
+			# attacch new pin to a selected pin (pin children, usually displayed on the right side, both languages)
+			response.add('parent_pin_slug',form.cleaned_data['parent_pin_slug'])
+			
+			try:
+				pin_en = Pin.objects.get( slug=form.cleaned_data['parent_pin_slug'],language='EN')
+				pin_fr = Pin.objects.get( slug=form.cleaned_data['parent_pin_slug'],language='FR')
+			except Pin.DoesNotExist, e:
+				return response.throw_error( error=_("selected pin does not exists. Exception: %s" % e), code=API_EXCEPTION_FORMERRORS).json()
+
+			response.add('pin', [ pin_en.json(), pin_fr.json() ] )
+
 		#return response.queryset( Pin.objects.filter() ).json()
 
 		try:
 			p_en = Pin( title=form.cleaned_data['title_en'], language='EN', slug=form.cleaned_data['slug'])
-			p_en.save()
-
 			p_fr = Pin( title=form.cleaned_data['title_fr'], language='FR', slug=form.cleaned_data['slug'])
+			
+			if len(form.cleaned_data['parent_pin_slug']) > 0:
+				p_en.parent = pin_en
+				p_fr.parent = pin_fr
+
+			
+			p_en.save()
 			p_fr.save() 
 		except IntegrityError, e:
-			return response.throw_error( error="%s" % e, code=API_EXCEPTION_INTEGRITY).json()
+			return response.throw_error( error={'slug':"Exception %s" % e}, code=API_EXCEPTION_INTEGRITY).json()
 		
 		if len(form.cleaned_data['page_slug']) > 0:
 			page_en.pins.add( p_en )

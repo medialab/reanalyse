@@ -28,7 +28,7 @@ class Pin( models.Model ):
 	permalink  = models.TextField( default="", blank=True, null=True ) # remote link
 
 	related = models.ManyToManyField("self", symmetrical=True, null=True, blank=True)
-	parent  = models.ForeignKey("self", null=True, blank=True )
+	parent  = models.ForeignKey("self", null=True, blank=True, related_name="children" )
 
 	geos = models.ManyToManyField( Geo, blank=True, null=True ) # add geographic point
 
@@ -56,7 +56,7 @@ class Page( models.Model ):
 	
 	language =  models.CharField( max_length=2, default='EN', choices=LANGUAGE_CHOICES ) # magic admin features: create a pin for the same language
 	
-	pins = models.ManyToManyField( Pin, null=True, blank=True)
+	pins = models.ManyToManyField( Pin, null=True, blank=True, related_name="page")
 
 	class Meta:
 		unique_together = ( "slug", "language" )
