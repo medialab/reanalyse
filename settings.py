@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #####################################################################
 # Django settings for reanalyse project.
-# pierre.jdlf started working hardly
+# pierre.jdlf started working hardly ! 
 
 import os
 DEBUG = True
