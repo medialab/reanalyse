@@ -15,7 +15,6 @@ oo.filt.events = {
 };
 
 oo.filt.on = function( eventType, callback ){
-	oo.log("[oo.filt.on]", eventType, callback);
 	$(window).on( eventType, callback );
 }
 
@@ -41,18 +40,23 @@ oo.filt.push = function(){
 }
 
 oo.filt.add = function( eventType, data ){
+	oo.log("[oo.filt.add] received", eventType, data);
+	
 	for (var f in data){
 		oo.log( f, data[f]);
 		if( typeof oo.filt.filters[f] == "object" ){
 			// kind of merge
 			oo.filt.filters[f].push( data[f] );
 			$.unique( oo.filt.filters[f] );
+		} else {
+			oo.filt.filters[f] = data[f];
 		}
 	}
 	oo.filt.push();
 };
 
 oo.filt.remove = function( eventType, data ){
+	oo.log("[oo.filt.remove] received", eventType, data);
 	for (var f in data){
 		if( typeof oo.filt.filters[f] != "undefined" ){
 			// which data?
