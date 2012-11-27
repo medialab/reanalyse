@@ -1,0 +1,178 @@
+{
+	"status" : "ok",
+	"error" : "",
+	"code" : "ERROR_CODE",
+	"documents" : [
+		{
+			"id" : "1",
+			"title" : "Les dauphins et la liberté",
+			"abstract" : "Ils font des bonds, ils jouent au ballon. Ils ont les yeux marron, ils nous sourient - du moins le croyons-nous... Qui sont-ils, ces mystérieux mammifères dont le cerveau pèse plus lourd que le nôtre ? Merveille de la nature capable de nager à 80 kilomètres à l'heure, le dauphin peut aussi faire la grève de la faim ou même se suicider si on l'isole dans un bassin... Pendant vingt-cinq ans, le commandant Cousteau et l'équipe de la Calypso ont étudié les dauphins. Avec patience, objectivité et tendresse. Convaincus que la captivité modifie le comportement d'un animal, ils ont réussi un exploit sans précédent : se faire admettre en plongée au milieu de la communauté des dauphins libres. Une enquête passionnante sur l'animal le plus proche de l'homme.",
+			"authors" : [
+				{
+					"id" : "1",
+					"name" : "Jacques",
+					"surname" : "Cousteau",
+					"organization" : "Marine nationale française"
+				}
+			],
+			"types" : [
+				{
+					"type" : "2"
+				}
+			],
+			"phases" : [
+				{
+					"phase" : "1"
+				}
+			],
+			"articles" : [
+				{
+					"article" : "3"
+				}
+			],
+			"coordinates" : {
+				"type": "Feature",
+      			"geometry": {
+      				"type": "Point",
+      				"coordinates": [2.35222, 48.85661]
+      			},
+      			"properties": {"prop0": "value0"}
+      		},
+			"times" : [
+				{
+					"time" : "1993-03-05"
+				}
+			],
+			"text" : "TEXT"
+		},
+
+		{
+			"id" : "2",
+			"title" : "Pieuvres - La Fin D'un Malentendu",
+			"abstract" : "Le poulpe commun se rencontre dans les eaux tempérées et tropicales du monde entier. En métropole, il est présent sur tout le bassin méditerranéen et sur toute la façade atlantique, Manche et mer du Nord comprises.",
+			"authors" : [
+				{
+					"id" : "1",
+					"name" : "Jacques",
+					"surname" : "Cousteau",
+					"organization" : "Marine nationale française"
+				}
+			],
+			"types" : [
+				{
+					"type" : "3"
+				}
+			],
+			"phases" : [
+				{
+					"phase" : "1"
+				}
+			],
+			"articles" : [
+				{
+					"article" : "3"
+				}
+			],
+			"coordinates" : {
+				"type": "Feature",
+      			"geometry": {
+      				"type": "Point",
+      				"coordinates": [-80.78213, 8.53798]
+      			},
+      			"properties": {"prop0": "value0"}
+      		},
+			"times" : [
+				{
+					"time" : "1973-08-15"
+				}
+			],
+			"text" : "TEXT"
+		},
+
+		{
+			"id" : "3",
+			"title" : "Un trésor englouti",
+			"abstract" : "Un trésor est au sens propre un ensemble d'objets de valeur accumulés et généralement dissimulé ou perdu.",
+			"authors" : [
+				{
+					"id" : "3",
+					"name" : "Jacques",
+					"surname" : "Cousteau",
+					"organization" : "Marine nationale française"
+				}
+			],
+			"types" : [
+				{
+					"type" : "3"
+				}
+			],
+			"phases" : [
+				{
+					"phase" : "2"
+				}
+			],
+			"articles" : [
+				{
+					"article" : "3"
+				}
+			],
+			"coordinates" : {
+				"type": "Feature",
+      			"geometry": {
+      				"type": "Point",
+      				"coordinates": [-74.00597, 40.71435]
+      			},
+      			"properties": {"prop0": "value0"}
+      		},
+			"times" : [
+				{
+					"time" : "1983-01-10"
+				}
+			],
+			"text" : "TEXT"
+		},
+
+		{
+			"id" : "4",
+			"title" : "A la conquête du ciel et des abysses",
+			"abstract" : "Le physicien Auguste Piccard (1884-1962) - qui inspira à Hergé le personnage du professeur Tournesol -, son fils Jacques (1922-2008) et son petit-fils Bertrand (né en 1958) forment à eux trois une dynastie unique en son genre. Depuis plus d'un siècle, cette étonnante famille suisse s'emploie à repousser les limites du connu et du possible, dans un subtil alliage de rigueur scientifique, de goût de l'innovation et de soif d'exploration. Une ambition qui nécessite l'engagement du corps autant que celui de l'esprit et a fait des Piccard des personnages dignes de Jules Verne. Auguste et ses vols stratosphériques en ballon, Jacques et ses plongées abyssales, Bertrand et son projet de tour du monde en avion solaire... Ces trois hommes ont, l'un après l'autre, préfiguré les grands défis de leur temps. Raconter leur histoire, c'est évoquer le siècle de la conquête du ciel et des abysses. C'est aussi pénétrer au coeur d'une famille portée par un bel humanisme et très tôt sensibilisée à la nécessité de préserver la planète.",
+			"authors" : [
+				{
+					"id" : "3",
+					"name" : "Jacques",
+					"surname" : "« Piccard",
+					"organization" : "Marine américaine"
+				}
+			],
+			"types" : [
+				{
+					"type" : "3"
+				}
+			],
+			"phases" : [
+				{
+					"phase" : "3"
+				}
+			],
+			"articles" : [
+				{
+					"article" : "1"
+				}
+			],
+			"coordinates" : {
+				"type": "Feature",
+      			"geometry": {
+      				"type": "Point",
+      				"coordinates": [-0.12768, 51.50733]
+      			},
+      			"properties": {"prop0": "value0"}
+      		},
+			"times" : [
+				{
+					"time" : "2009-05-10"
+				}
+			],
+			"text" : "TEXT"
+		}
+	]
+}

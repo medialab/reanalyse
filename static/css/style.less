@@ -460,7 +460,8 @@ html{
 }
 sidebar{
 	position:fixed;
-	top: @header-height + @grid-padding;
+	top: @header-height - 2;// + @grid-padding;
+
 	margin-left: -@grid-padding/2;
 	width: @grid-padding * 3.8;
 	background: lighten(@page-color,1%);
@@ -579,6 +580,9 @@ section{
 	>.edit-mode{
 		display: inline;
 	}
+	>h2{
+		margin-right: @grid-padding*5;
+	}
 	>.abstract{
 		.serif-italic( 20px);
 		color: lighten( @text-color, 10%);
@@ -589,6 +593,9 @@ section{
 			.serif( 17px );
 		}
 	}
+
+	&.enquete{}
+
 	.pins{
 		float:right;
 		width:@grid-padding*5; 
@@ -1241,3 +1248,36 @@ p.invalid{
     background:url(../../images/error.png);
 }
 
+
+//
+//
+//    Map & filters
+//    =============
+//
+@map-width: 598px;
+@map-height: 256px;//@map-width * 9 / 16;
+@timeline-height: 100px;
+
+@import "enquete.less";
+
+#map {
+	width: @map-width;
+	height: @map-height;
+	position:absolute;
+}
+
+.map-attribution{
+	display:none;
+}
+
+#timeline {
+	margin-top: @map-height;
+	width: @map-width;
+	height: @timeline-height;
+	position: relative;
+}
+
+#svg {
+	width: 100%;
+	height: 100%;
+}

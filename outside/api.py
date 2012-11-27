@@ -1,4 +1,7 @@
-from glue.models import Pin, Leaf
+from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.template import RequestContext
+from django.conf import settings
+from glue.models import Pin
 from glue.misc import Epoxy
 from reanalyse.reanalyseapp.models import Enquete
 
@@ -20,5 +23,6 @@ def is_editor(user):
 API_ACCESS_DENIED_URL = "/elipss/panelmanager/api/access-restricted"
 
 
-def studies( request ):
-	return Epoxy( request ).queryset( Enquete.objects.filter() ).json()
+def enquete_data( request, enquete_id ):
+	data = {}
+	return render_to_response('outside/enquete_data.json', RequestContext(request, data ) )

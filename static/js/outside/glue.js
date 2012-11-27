@@ -134,11 +134,14 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 
 
 	// html5 pin editor
-	var editor = new wysihtml5.Editor("id_edit_pin_content", { // id of textarea element
-		toolbar:      "wysihtml5-toolbar", // id of toolbar element
-		parserRules:  wysihtml5ParserRules // defined in parser rules set 
-	});
-
+	try{
+		var editor = new wysihtml5.Editor("id_edit_pin_content", { // id of textarea element
+			toolbar:      "wysihtml5-toolbar", // id of toolbar element
+			parserRules:  wysihtml5ParserRules // defined in parser rules set 
+		});
+	} catch(e){
+		oo.log("[oo.glue.init:exception]",e);
+	}
 	// $("#edit-section-modal").modal('show')
 	$(document).click( function(event){ $(".invalid").removeClass('invalid');});
 

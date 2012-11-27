@@ -45,6 +45,7 @@ def enquetes( request ):
 
 	return render_to_response('outside/enquetes.html', RequestContext(request, data ) )
 
+
 def login_view( request ):
 	
 	form = LoginForm( request.POST )

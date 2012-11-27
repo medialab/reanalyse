@@ -189,10 +189,11 @@
 
 
 		</script -->
+		{% block outside_scripts %}
 		<script src="{{ STATIC_URL }}js/outside.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/sidebar.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/glue.js" type="text/javascript"></script>
-
+		{% endblock %}
 
 		<script type="text/javascript">
 		{% block api_urls %}
@@ -202,12 +203,13 @@
 		{% endblock %}
 
 		$(document).ready(function(){
+			{% block document_ready %}
 			oo.api.init();
 			oo.modals.init();
 			oo.tooltip.init();
 			oo.sidebar.init();
 			oo.glue.init();
-			
+			{% endblock %}
 		});
 
 		</script>

@@ -25,6 +25,7 @@
 	<section class="alpha" style="padding-right:2px">
 	
 	{% for s in enquetes %}
+	<a href="{% url outside_enquete s.id %}">
 		<div class="enquete big item hover">
 			<p class="classification">
 			{% for topicclassification  in s.meta.values.general.topicclassification.value %}
@@ -52,6 +53,7 @@
 				</ul -->
 			</div>
 		</div>
+	</a>
 	{% endfor %}
 	
 	{% for s in studies.all %}

@@ -36,6 +36,9 @@ class Pin( models.Model ):
 		unique_together = ( "slug", "language" )
 		ordering = ('sort','id')
 
+	def __unicode__(self):
+		return "%s (%s) a.k.a. %s" % (self.slug, self.language, self.title)
+
 	def json( self ):
 		return{
 			'id': self.id,
@@ -61,6 +64,8 @@ class Page( models.Model ):
 	class Meta:
 		unique_together = ( "slug", "language" )
 
+	def __unicode__(self):
+		return "%s (%s) a.k.a. %s" % (self.slug, self.language, self.title)
 	def json( self ):
 		return{
 			'id': self.id,
