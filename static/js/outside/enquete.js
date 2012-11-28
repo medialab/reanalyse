@@ -3,6 +3,8 @@ var oo = oo || {};
 oo.enq = {};
 
 oo.enq.d3layer = function() {
+
+	oo.log("[oo.enq.d3layer]")
     
     var f = {}, bounds, feature, collection;
 
@@ -44,11 +46,11 @@ oo.enq.d3layer = function() {
             new MM.Location(bounds[0][1], bounds[0][0]),
             new MM.Location(bounds[1][1], bounds[1][0]));
     };
+
     return f;
 };
 
 oo.enq.init = function(){
-
 
 	oo.log("[oo.enq.init]")
 	
@@ -75,36 +77,53 @@ oo.enq.init = function(){
 
 			var format = d3.time.format("%Y-%m-%d");
 
-				var data = d3.range(collection.documents.length).map(function(i) {
-					return {
-						x: format.parse(collection.documents[i].times[0].time),
-						y: Math.floor(Math.random()*5)
-					};
-				});
+			var data = d3.range(collection.documents.length).map(function(i) {
+				return {
+					x: format.parse(collection.documents[i].times[0].time),
+					y: Math.floor(Math.random()*5)
+				};
+			});
 
-				var width = $('#map').width();
-				var height = $('#map').height();
+			var width = $('#map').width(),
+				height = $('#map').height(),
+				margin = {top: 20, right: 10};
 
-				var min = d3.min(data, function (d) { return d.x });
-				var max = d3.max(data, function (d) { return d.x });
-				var x = d3.scale.linear().domain([min, max]).range([0, width]);
-  				var y = d3.scale.linear().domain([0, 0]).range([0, 0]);
 
-  				var timeline = d3.select('#timeline').append('svg').append("g");
+			var minX = d3.min(data, function (d) { return d.x });
+			var maxX = d3.max(data, function (d) { return d.x });
+			var minY = d3.min(data, function (d) { return d.y });
+			var maxY = d3.max(data, function (d) { return d.y });
 
-  				timeline.attr("transform", "translate(0," + 30 + ")");
+			var scaleX = d3.scale.linear().domain([minX, maxX]).range([ 0, width - margin.right*2 ]);
+			var scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]);
 
-  				timeline.selectAll(".dot")
-					.data(data)
-			    	.enter().append("circle")
-			    		.attr('class', 'dot')
-			    		.attr("cx", function(d) { return x(d.x); })
-			    		.attr("cy", function(d) { return d.y; })
-						.attr("r", 3)
-						.style('fill', 'white')
-						.style('stroke', '#333')
-						.style('stroke-width', '1.5px');
-});
+			var timeline = d3.select('#timeline').append('svg').append("g");
+
+			timeline.attr("transform", "translate(" + margin.right + "," + margin.top + ")");
+
+			timeline.selectAll(".dot")
+				.data(data)
+				.enter().append("circle")
+				.attr('class', 'dot')
+				.attr("cx", function(d) { return scaleX(d.x); })
+				.attr("cy", function(d) { return scaleY(d.y); })
+				.attr("data-time", function(d) { return d.x; })
+				.attr("r", 4);
+
+
+			// Behaviors
+
+			$('#map').on('click', 'path', function() {
+				oo.filt.trigger( oo.filt.events.add, {'place':['Paris']} );
+			});
+
+			$('#timeline').on('click', 'circle', function() {
+				var time = $(this).attr('data-time');
+				oo.log(time)
+				oo.filt.trigger( oo.filt.events.add, {'time':[time]} );
+			});
+
+	});
 }
 
 
