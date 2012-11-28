@@ -1,5 +1,6 @@
 *.pyc
 *.log
+apache/django.wsgi
 logs/*
 build/
 media/pins/*

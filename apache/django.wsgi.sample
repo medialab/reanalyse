@@ -2,8 +2,8 @@ import os
 import sys
 
 ##### PROD
-sys.path.append('/var/opt/reanalyse')
-sys.path.append('/var/opt')
+sys.path.append('/home/pj/djangos')
+sys.path.append('/home/pj/djangos/reanalyse')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'reanalyse.settings'
 
