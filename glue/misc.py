@@ -79,7 +79,7 @@ class Epoxy:
 		self.order_by = []
 		self.process()
 
-	def warning( key, message ):
+	def warning( self, key, message ):
 		if 'warnings' not in self.response['meta']:
 			self.response['meta']['warnings'] = {}
 		self.response['meta']['warnings'][ key ] = message

@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 	
 	url(r'^enquetes/$','outside.views.enquetes', name='outside_enquetes'),
 	url(r'^enquete/(?P<enquete_id>\d+)/$','outside.views.enquete', name='outside_enquete'),
+	url(r'^enquiry/(?P<enquete_id>\d+)/$','outside.views.enquiry', name='outside_enquiry'), # foreign key to enquete for model Oustide_Enquiry
 
 	url(r'^enquete/(?P<enquete_id>\d+)/data/$','outside.api.enquete_data', name='outside_enquete_data'),
 

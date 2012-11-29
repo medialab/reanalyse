@@ -9,6 +9,7 @@ from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 
 from reanalyseapp.models import Enquete
 from glue.models import Pin, Page
+from outside.models import Enquiry
 
 #
 #    Outside
@@ -38,6 +39,12 @@ def enquete( request, enquete_id ):
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 
 	return render_to_response('outside/enquete.html', RequestContext(request, data ) )
+
+def enquiry( request, enquete_id ):
+	data = shared_context( request, tags=[ "enquetes" ] )
+	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
+
+	return render_to_response('outside/enquiry.html', RequestContext(request, data ) )
 
 def enquetes( request ):
 	data = shared_context( request, tags=[ "enquetes" ] )
