@@ -259,7 +259,15 @@ html{
 }
 
 .pin{
- 	
+ 	&:not(.item){
+ 		>.title, >.content, >.abstract, >.dates{
+ 			margin-right: @grid-padding * 5;
+ 		}
+ 		>.abstract{
+ 			.serif-italic(16px);
+ 			padding-left: @grid-padding;
+ 		}
+ 	}
 	&:not(.item),&:not(.alpha){
 		border-bottom: 1px solid fade( black, 20%);
 

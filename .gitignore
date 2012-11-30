@@ -1,6 +1,5 @@
 *.pyc
 *.log
-apache/django.wsgi
 logs/*
 build/
 media/pins/*
@@ -9,4 +8,5 @@ upload/*
 download/*
 solrdataindex/*
 settingsprivate.py
+apache/django.wsgi
 ~             

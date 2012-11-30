@@ -78,11 +78,14 @@
 
 				{% endblock %}	
 
-
-			{% if edit_mode %}
+				{% block sidebar_add_section %}
+					{% if edit_mode %}
+					
 				<div class="edit-mode add-pin" data-page-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add section" %} ]
 				</div>
-			{% endif %}
+
+					{% endif %}
+				{% endblock %}	
 
 				<div id="collapse-menu" rel="tooltip" title="{% trans "collapse menu"%}"></div>
 				<div id="expand-menu" style="display:none" rel="tooltip" title="{% trans "expand menu"%}"></div>

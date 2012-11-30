@@ -50,8 +50,7 @@ class Pin( models.Model ):
 			'mimetype': self.mimetype
 		}
 
-
-class Page( models.Model ):
+class PageAbstract( models.Model ):
 	slug = models.SlugField()
 	title = models.CharField( max_length=160, default="", blank=True, null=True )
 	abstract = models.TextField( default="", blank=True, null=True )
@@ -59,10 +58,10 @@ class Page( models.Model ):
 	
 	language =  models.CharField( max_length=2, default='EN', choices=LANGUAGE_CHOICES ) # magic admin features: create a pin for the same language
 	
-	pins = models.ManyToManyField( Pin, null=True, blank=True, related_name="page")
-
 	class Meta:
 		unique_together = ( "slug", "language" )
+		abstract = True
+
 
 	def __unicode__(self):
 		return "%s (%s) a.k.a. %s" % (self.slug, self.language, self.title)
@@ -75,3 +74,8 @@ class Page( models.Model ):
 			'content': self.content,
 			'language': self.language
 		}
+
+class Page( PageAbstract ):
+	pins = models.ManyToManyField( Pin, null=True, blank=True, related_name="page")
+
+	
