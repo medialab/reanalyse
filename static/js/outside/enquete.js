@@ -108,14 +108,14 @@ oo.enq.init = function(){
 		map.addCallback('panned', function(map, panOffset) {
 			// This is a stream of several extent
 			// console.log('f.map.extent()', map.extent())
-			oo.filt.trigger( oo.filt.events.add, {'extent':map.extent()} );
+			oo.filt.trigger( oo.filt.events.add, {'extent': map.extent()} );
 		});
 
 		map.addCallback('zoomed', function(map, zoomOffset) {
 			// console.log('f.map.extent() - start', map.extent())
 			setTimeout( function() {
         		// console.log('f.map.extent() - end  ', f.map.extent())
-        		oo.filt.trigger( oo.filt.events.add, {'extent':map.extent()} );
+        		oo.filt.trigger( oo.filt.events.add, {'extent': map.extent()} );
         	}, 1000 );
 		});
 
@@ -157,33 +157,41 @@ oo.enq.init = function(){
 			.attr("data-time", function(d) { return d.x; })
 			.attr("r", 4);
 
+		// Behaviors
+
+		// $('#timeline').on('click', 'circle', function() {
+		// 	var time = $(this).attr('data-time');
+		// 	oo.filt.trigger( oo.filt.events.add, {'time':[time]} );
+		// });
+
+
+
 		var brush = d3.svg.brush()
 		    .x(scaleX)
-		    .on("brush", brush);
+		    .on("brush", onBrush);
 
 		timeline.append("g")
 	      .attr("class", "x brush")
 	      .call(brush)
-	    .selectAll("rect")
-	      // .attr("x", 0)
+	      .selectAll("rect")
 	      .attr("y", -margin.top)
-	      // .attr('width', $('#timeline').width())
 	      .attr("height", $('#timeline').height());
 
+		function onBrush() {
+			// this will return a date range to pass into the chart object 
 
-		// Behaviors
+			var b = brush.empty() ? scaleX.domain() : brush.extent();
 
-		$('#timeline').on('click', 'circle', function() {
-			var time = $(this).attr('data-time');
-			// oo.log(time)
-			oo.filt.trigger( oo.filt.events.add, {'time':[time]} );
-		});
-
-		// function brush() {
-		//   x.domain(brush.empty() ? x2.domain() : brush.extent());
-		//   focus.select("path").attr("d", area);
-		//   focus.select(".x.axis").call(xAxis);
-		// }
+			oo.log(b)
+ 
+		    // for(var i = 0; i < countriesCount; i++){
+		    //     charts[i].showOnly(b);
+		    // }
+			    
+		  // scaleX.domain(brush.extent());
+		  focus.select("path").attr("d", area);
+		  // focus.select(".x.axis");
+		}
 
 	});
 }
