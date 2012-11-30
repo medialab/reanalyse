@@ -37,6 +37,9 @@
 		<div class="pin-box">
 			{% for p in enquiry.pins.all %}
 				<div class="pin">
+					<div class="pins">
+						hello related
+					</div>
 					<p class="title">{{ p.title }}</p>
 
 					{% if p.abstract %}
@@ -52,6 +55,7 @@
 					<p class="href"><a href="{{ p.href }}">{{ p.href }}</a></p>
 					{% endif %}
 				</div>
+
 			{% endfor %}
 		</div>
 
