@@ -55,9 +55,23 @@ oo.filt.listen = function( result ){
 	oo.filt.on( oo.filt.events.remove, oo.filt.remove );
 	oo.filt.on( oo.filt.events.reset, oo.filt.reset );
 	oo.filt.on( oo.filt.events.clean, oo.filt.clean );
+	oo.filt.on( oo.filt.events.replace, oo.filt.replace );
 };
 
+/*
+	Call the oo.filt.execute function after a predefined delay
+*/
+oo.filt.push = function(){
+	oo.log("[oo.filt.push]");
+	clearTimeout( oo.filt.timer );
+	oo.filt.timer = setTimeout( oo.filt.execute, 1000 );	
+}
 
+/*
+	Run through oo.data
+	and filter according to oo.filt.filters.
+	Selected items will be available inside oo.filt.data.
+*/
 oo.filt.execute = function(){
 	oo.log("[oo.filt.execute]");
 
@@ -80,16 +94,7 @@ oo.filt.execute = function(){
 
 }
 
-/*
-   Call the oo.filt.execute function which run through oo.data
-   and filter according to oo.filt.filters.
-   Selected items will be available inside oo.filt.data.
-*/
-oo.filt.push = function(){
-	oo.log("[oo.filt.push]");
-	clearTimeout( oo.filt.timer );
-	oo.filt.timer = setTimeout( oo.filt.execute, 1000 );	
-}
+
 
 /*
 	example oo.filt.trigger( oo.filt.events.add, {'place':['Paris','New York']} )
