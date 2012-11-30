@@ -39,6 +39,9 @@ oo.filt.push = function(){
 	oo.filt.trigger( oo.filt.events.change, oo.filt.filters );
 }
 
+/*
+	example oo.filt.trigger( oo.filt.events.add, {'place':['Paris','New York']} )
+*/
 oo.filt.add = function( eventType, data ){
 	oo.log("[oo.filt.add] received", eventType, data);
 	
@@ -55,6 +58,9 @@ oo.filt.add = function( eventType, data ){
 	oo.filt.push();
 };
 
+/*
+	example oo.filt.trigger( oo.filt.events.remove, {'place':['Paris','New York']} )
+*/
 oo.filt.remove = function( eventType, data ){
 	oo.log("[oo.filt.remove] received", eventType, data);
 	for (var f in data){
@@ -77,6 +83,10 @@ oo.filt.reset = function( eventType, data ){
 	oo.filt.push();
 };
 
+/*
+	example oo.filt.trigger( oo.filt.events.clean, {} )
+	This will delete the type field from the stored filters.
+*/
 oo.filt.clean = function( eventType, data ){
 	oo.filt.filters = {};
 	oo.filt.push();
