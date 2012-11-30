@@ -1,29 +1,70 @@
-.d3-vec {
-	position:absolute;
-}
+@path_fill: white;
+@path_stroke: #333;
+@path_opacity: .2;
 
-path {
-	fill: #000;
-	fill-opacity: .2;
-	stroke: #fff;
-	stroke-width: 1.5px;
-	cursor: pointer;
-	
-	&:hover {
-		fill: brown;
-		fill-opacity: .7;
+#map {
+
+	.d3_layer {
+		position:absolute;
 	}
-}
 
-circle.dot {
-	fill: white;
-	stroke: #333;
-	stroke-width: 1.5px;
-	cursor: pointer;
-
-	&:hover {
-		fill: brown;
-		fill-opacity: .7;
+	path {
+		fill: @path_fill;
+		fill-opacity: @path_opacity;
+		stroke: @path_stroke;
+		stroke-width: 1.5px;
 		cursor: pointer;
+		
+		&:hover {
+			fill: brown;
+			fill-opacity: .7;
+		}
 	}
+
+	.zoomer {
+
+		&.zoomin {
+			width: 25px;
+			height: 25px;
+			background-position: -34px -3px;
+			left: 34px;
+		}
+
+		&.zoomout {
+			width: 25px;
+			height: 25px;
+			background-position: -64px -3px;
+		}
+	}
+
 }
+
+#timeline {
+
+	circle.dot {
+		fill: @path_fill;
+		fill-opacity: @path_opacity;
+		stroke: @path_stroke;
+		stroke-width: 1.5px;
+		cursor: pointer;
+
+		&:hover {
+			fill: brown;
+			fill-opacity: .7;
+			cursor: pointer;
+		}
+	}
+
+	.brush .extent {
+		stroke: #fff;
+		fill-opacity: .125;
+		shape-rendering: crispEdges;
+	}
+
+}
+
+
+
+
+
+
