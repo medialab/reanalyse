@@ -16,9 +16,9 @@ oo.filt.events = {
 	'reset':'oo.filt.events.reset'
 };
 
-oo.filt.cross = {
-	'extent': function( item ){ return false; },
-	'type': function( item ){ return true; }
+oo.filt.cross = oo.filt.cross || {
+	'extent': function( item, filter ){ return false; },
+	'type': function( item, filter ){ return true; }
 };
 
 oo.filt.on = function( eventType, callback ){
@@ -79,12 +79,12 @@ oo.filt.execute = function(){
 
 	for( var i in oo.data.objects ){
 		oo.filt.data[ i ] = oo.data.objects[ i ];
-	}
+	};
 
 	// progressive filtering
-	for( var type in oo.filt.filter ){
+	for( var type in oo.filt.filters ){
 		for ( var i in oo.filt.data ){
-			if ( ! oo.filt.cross[ type ]( o.data.objects[ i ] ) ){
+			if ( ! oo.filt.cross[ type ]( o.data.objects[ i ], oo.filt.filters[type] ) ){
 				delete oo.filt.data[ i ]
 			};
 		}

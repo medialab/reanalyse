@@ -2,6 +2,13 @@ var oo = oo || {};
 
 oo.enq = {};
 
+// plugin filters
+oo.filt.cross.extent = function( item, ExtentObject ){
+	// if item is in ExtentObject
+    //	return true
+    return false;
+}
+
 oo.enq.d3layer = function() {
 
 	oo.log("[oo.enq.d3layer]")
@@ -108,14 +115,14 @@ oo.enq.init = function(){
 		map.addCallback('panned', function(map, panOffset) {
 			// This is a stream of several extent
 			// console.log('f.map.extent()', map.extent())
-			oo.filt.trigger( oo.filt.events.add, {'extent': map.extent()} );
+			oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
 		});
 
 		map.addCallback('zoomed', function(map, zoomOffset) {
 			// console.log('f.map.extent() - start', map.extent())
 			setTimeout( function() {
         		// console.log('f.map.extent() - end  ', f.map.extent())
-        		oo.filt.trigger( oo.filt.events.add, {'extent': map.extent()} );
+        		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
         	}, 1000 );
 		});
 
