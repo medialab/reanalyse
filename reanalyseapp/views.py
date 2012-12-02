@@ -216,18 +216,25 @@ def updateCtxWithSearchForm(ctx):
 def eDelete(request,eid):
 	if request.user.is_staff:
 		e = Enquete.objects.get(id=eid)
+		
+		# status flag = 4 = deleting... (to hide enquete from the list)
+		e.status = '4'
+		e.save()
+		
 		# remove uploaded/decompressed files
 		eqPath = e.locationpath
 		if eqPath.endswith('/extracted/'):
 			eqPath = '/'.join(eqPath.split('/')[:-2])
 		os.system("rm -R "+eqPath)
 		logger.info("["+str(eid)+"] removing study: "+eqPath)
+		
 		# remove graph files if there is
 		for vtyp in GRAPHTYPES:
 			for v in e.visualization_set.filter(viztype=vtyp):
 				logger.info("["+str(eid)+"] removing graph file: "+v.locationpath)
 				os.system("rm -R "+v.locationpath)
 		e.delete()
+		
 		# update index to avoid outdated data in lucene
 		update_index.Command().handle(verbosity=0)
 		logger.info("SOLR INDEX UPDATED")
@@ -554,6 +561,7 @@ def eParse(request):
 			thezip=f
 			
 	######## unzip and parse
+	logger.info("=========== UNZIPPING ARCHIVE")
 	if thezip!="" and os.path.exists(upPath+thezip):
 		try:
 			os.mkdir(upPath+"extracted")
@@ -598,7 +606,8 @@ def eParse(request):
 ################################################################################
 def eBrowse(request):
 	enquetesandmeta=[]
-	enquetes = Enquete.objects.all().order_by('-id')
+	# all except those in process of being removed
+	enquetes = Enquete.objects.all().exclude(status='4').order_by('-id')
 	return render_to_response('bq_e_browse.html', {'bodyid':'e' ,'enquetes':enquetes}, context_instance=RequestContext(request))
 ################################################################################	
 
@@ -1072,17 +1081,21 @@ def edXmlShow(request,eid,did):
 	# return HTML made by XSLT from XML file
 	
 	texte = Texte.objects.get(id=did)
+	#xml_file = texte.locationpath
 	
-	xml_file = texte.locationpath
-	xslt_file = settings.MEDIA_ROOT + 'xml/txm2html.xsl'
-	#xslt_file = settings.MEDIA_ROOT + 'xml/tei2html.xsl'
+	# tryout with samples
+	xml_file = settings.MEDIA_ROOT + 'samples/simpliste/simpliste_TEIexma.xml'
+	xslt_file = settings.MEDIA_ROOT + 'xslt/ex_tei2html.xsl'
+	
+	#xslt_file = settings.MEDIA_ROOT + 'xslt/txm2html.xsl'
+	#xslt_file = settings.MEDIA_ROOT + 'xslt/tei2html.xsl'
 	
 	########## A: using etree
 	xml_root = etree.XML(open(xml_file, 'r').read())
 	xslt_root = etree.XML(open(xslt_file, 'r').read())
-	transform = etree.XSLT(xslt_root)
-	result = etree.tostring(transform(xml_root))
-	return HttpResponse(result)
+	#transform = etree.XSLT(xslt_root)
+	#result = etree.tostring(transform(xml_root))
+	return HttpResponse(xml_root)
 	
 	########## A: using libxslt
 # 	xsl = libxslt.parseStyleSheetDoc(libxml2.parseFile( xslt_file ))

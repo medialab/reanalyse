@@ -5,41 +5,41 @@
 
 {% block enqueteheadmore %}
 	
-	<!-- jquery ui for dropdownmenu & for (deprecated) slider -->
-	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/jqueryui/css/smoothness/jquery-ui-1.8.16.custom.css" />
+		<!-- jquery ui for dropdownmenu & for (deprecated) slider -->
+		<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/jqueryui/css/smoothness/jquery-ui-1.8.16.custom.css" />
+		
+	{% if texte.doctype == 'CSV' %}
+		<!-- FOR CSV : datatables jquery plugin -->
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/datatables/css/demo_table.css" />
+		<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.js"></script>
+		<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
+	{% endif %}
 	
-{% if texte.doctype == 'CSV' %}
-	<!-- FOR CSV : datatables jquery plugin -->
-	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/datatables/css/demo_table.css" />
-	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.js"></script>
-	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
-{% endif %}
-
-{% if texte.doctype == 'TEI' %}
-	<!-- Dropdownmenu checklist jquery plugin (POS display selection) -->
-	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
-	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />	
-
-	<!-- =============================== FOR VIZ -->
-	<!-- d3.js -->
-	<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
-	<!-- the only viz we display for the moment: -->
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
-
-{% endif %}
-
-	<!-- =============================== CSS FOR SPEAKERS COLORS (used for css verbatim block + d3.js viz -->
-	<style type="text/css">
-		{% for k,v in speakersColors.items %}.speakerColor_{{k}} {background-color:{{v}};fill:{{v}};}
-		{% endfor %}
-	</style>
-	<!-- ======================================================= -->
+	{% if texte.doctype == 'TEI' %}
+		<!-- Dropdownmenu checklist jquery plugin (POS display selection) -->
+		<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />	
+	
+		<!-- =============================== FOR VIZ -->
+		<!-- d3.js -->
+		<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
+		<!-- the only viz we display for the moment: -->
+		<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
+	
+	{% endif %}
+	
+		<!-- =============================== CSS FOR SPEAKERS COLORS (used for css verbatim block + d3.js viz -->
+		<style type="text/css">
+			{% for k,v in speakersColors.items %}.speakerColor_{{k}} {background-color:{{v}};fill:{{v}};}
+			{% endfor %}
+		</style>
+		<!-- ======================================================= -->
 
 {% endblock %}
 
@@ -154,6 +154,11 @@
 <!-- =================================== NAME -->
 <div id="topAnchor" class="introHtml">
 	<h1>{{texte.name}}</h1>
+	{% if perms.reanalyseapp.can_make %}
+	<ul>
+		<li><a href="{% url reanalyse.reanalyseapp.views.edXmlShow enquete.id texte.id %}">see XSLT'ed HTML</a></li>
+	</ul>
+	{% endif %}
 </div>
 
 <!-- ===================================================================================================================================== -->
@@ -178,7 +183,7 @@
 	
 	{% comment %}
 	<!-- ========================================================================= -->
-	<!-- Form to tune display of words in verbatim. javascript to update css -->
+	<!-- experimetnal form to tune display of words in verbatim. javascript to update css -->
 	<!-- note bug with dropdownchecklist if "display:none;" at the beginning -->
 	<a href="#" onclick='$("#verb_controls").toggle("fast"); return false;'>Experimental: display tuning</a>
 	<div id="verb_controls">
@@ -339,8 +344,8 @@
 			});
 		});
 		return classes;
-	}
-;	function updateDictionnarySelect() {
+	};
+	function updateDictionnarySelect() {
 		var classLem = getClassDic("lem_");
 		var count=0;
 		for(c in classLem) {
@@ -356,7 +361,7 @@
 			$("<option>"+count+" - "+c+"</option>").appendTo(seldic);
 			count+=1;
 		}
-	}
+	};
 	
 {% endif %}
 
@@ -365,7 +370,7 @@
 		
 		{% if texte.doctype == 'TEI' %}
 		
-		///////////////// init verbatim display js controls (stopwords,...)
+		///////////////// init verbatim fine display js controls (stopwords,lemmas,grammar,etc...)
 		// for each word, the view gives us all informations .. so we can filter the display !
 		// ex:
 		//	<span class="w_mangeais l_manger tfidf_0.2 pos_VERB" title="tfidf=0.1876,..."> mangeais </span>

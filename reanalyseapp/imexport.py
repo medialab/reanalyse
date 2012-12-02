@@ -56,6 +56,13 @@ def doFiestaToEnquete(e):
 	e.save()
 	
 	makeViz(e,'Overview')		# for left-menu-facets
+	#
+	# 	Important NB:
+	#	this  experimental 'Overview' viz, is aimed to be used as a left facet for different views
+	#	note that the viz total count will increase by 1 (logical :)
+	#	... so that it may look like the vBrowse list is missing one :)
+	#	... we need to -1 manually in the displayed counts within the templates (cf tags.py)
+	
 	makeViz(e,'Attributes')		# with all speakers (since they should be defined in meta_speakers.csv table)
 	
 	####### PARSE TEI and UPDATE INDEX (and save statuscomplete to know loading status)
@@ -192,7 +199,7 @@ def importEnqueteUsingMeta(folderPath):
 				try:
 					doc_date = datetime.datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
 				except:
-					logger.info(eidstr+"EXCEPT on date : "+row['*id']+" | "+row['*file'])
+					logger.info(eidstr+"EXCEPT malformed or empty date @ "+row['*id']+" | "+row['*file'])
 					doc_date = datetime.datetime.today()
 
 				### very special for ese, don't create any texte() model, just parse ese.xml and fill enquete.ese with a json
@@ -252,10 +259,10 @@ def importEnqueteUsingMeta(folderPath):
 	# 							except:
 	# 								blabla
 					else:
-						logger.info(eidstr+"EXCEPT unconsidered *mimetype: "+doc_mimetype)
+						logger.info(eidstr+"EXCEPT unconsidered or empty *mimetype: "+doc_mimetype)
 				### unknown cat
 				else:
-					logger.info(eidstr+"EXCEPT unconsidered *category: "+doc_category1+" | "+doc_category2)
+					logger.info(eidstr+"EXCEPT unconsidered or empty *category: ("+doc_category1+") | ("+doc_category2+")")
 			#except:
 				#logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:
@@ -277,22 +284,22 @@ def importEnqueteUsingMeta(folderPath):
 				newAttType,isnew = AttributeType.objects.get_or_create(enquete=newEnquete,publicy=publicy,name=catval)
 				attributetypes.append(newAttType)
 		for row in spk:
-			try:
-				if row['*id']!='*descr':
-					spk_id = 	row['*id']
-					spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
-					spk_name = 	row['*pseudo']
-					newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
-					newSpeaker.public = (spk_type=='SPK' or spk_type=='PRO')
-					for attype in attributetypes:
-						attval=row[attype.name]
-						if attval=='':
-							attval='[NC]'
-						newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
-						newSpeaker.attributes.add(newAttribute)
-					newSpeaker.save()
-			except:
-				logger.info(eidstr+" EXCEPT on meta_speakers.csv line: "+row['*id'])
+			#try:
+			if row['*id']!='*descr':
+				spk_id = 	row['*id']
+				spk_type = 	SPEAKER_TYPE_CSV_DICT.get(row['*type'],'OTH')
+				spk_name = 	row['*pseudo']
+				newSpeaker,isnew = Speaker.objects.get_or_create(enquete=newEnquete,ddi_id=spk_id,ddi_type=spk_type,name=spk_name)
+				newSpeaker.public = (spk_type=='SPK' or spk_type=='PRO')
+				for attype in attributetypes:
+					attval=row[attype.name]
+					if attval=='':
+						attval='[NC]'
+					newAttribute,isnew = Attribute.objects.get_or_create(enquete=newEnquete,attributetype=attype,name=attval)
+					newSpeaker.attributes.add(newAttribute)
+				newSpeaker.save()
+			#except:
+			#	logger.info(eidstr+" EXCEPT on meta_speakers.csv line: "+row['*id'])
 		setSpeakerColorsFromType(newEnquete)
 	else:
 		logger.info(eidstr+"=========== PARSING: no spk meta found")

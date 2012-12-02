@@ -490,7 +490,7 @@ class unzip:
 		dirs = []
 
 		for name in zf.namelist():
-			if name.endswith('/'):
+			if name.endswith('/') and "__MACOSX" not in name:
 				dirs.append(name)
 
 		dirs.sort()

@@ -15,6 +15,10 @@ register = template.Library()
 ###########################################################################    
 # simple counts (for left main menu)
 @register.filter
+def vizTotalCount(e):
+	# note that we need to remove 1 to the viz counts due to the special 'Overview' viz
+	return e.visualization_set.count() - 1
+@register.filter
 def vizPublicCount(e):
 	return e.visualization_set.filter(public=True).exclude(viztype='Overview').count()
 @register.filter

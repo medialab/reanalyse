@@ -23,8 +23,10 @@ from django.utils.translation import ugettext as _
 mystring = _('congratulations')
 
 ### translation
-* > sudo django-admin.py makemessages --ignore ./upload/ -a
-* translate file /locale/fr/LC_MESSAGES/django.po
+required: sudo apt-get install gettext
+from django project root, do:
+* > sudo django-admin.py makemessages --ignore ./upload --ignore ./media --ignore ./solr -a
+* manually translate file /locale/fr/LC_MESSAGES/django.po
 * > django-admin.py compilemessages
 
 ## solr is based on the default conf (from example), except for

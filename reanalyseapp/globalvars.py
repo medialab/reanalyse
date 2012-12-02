@@ -18,7 +18,8 @@ STATUS_CHOICES = (
 	('1', 'Loading'),	
 	('2','Parsing'),		# tei processed
 	('3','Styling'),		# deprecated ?
-	('4','**Internal use'),
+	('4','Deleting'),		# won't show in lists
+	('55','**Internal use'),
 	('77', '**You won something')
 )
 

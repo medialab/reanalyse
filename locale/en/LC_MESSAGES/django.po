@@ -8,36 +8,232 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-28 11:46+0100\n"
+"POT-Creation-Date: 2012-12-02 18:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/bq_base.html:57
+#: glue/api.py:68
+msgid "selected page does not exists"
+msgstr ""
+
+#: glue/api.py:80
+#, python-format
+msgid "selected pin does not exists. Exception: %s"
+msgstr ""
+
+#: glue/forms.py:6 outside/templates/outside/login.html:30
+#: outside/templates/outside/middle.html:12
+#: outside/templates/outside/middle.html:124
+#: outside/templates/outside/middle.html:133
+msgid "login"
+msgstr ""
+
+#: glue/forms.py:7
+msgid "password"
+msgstr ""
+
+#: glue/forms.py:11 glue/forms.py:16
+msgid "french title"
+msgstr ""
+
+#: glue/forms.py:12 glue/forms.py:17
+msgid "english title"
+msgstr ""
+
+#: glue/forms.py:23
+msgid "title"
+msgstr ""
+
+#: glue/forms.py:24
+msgid "abstract"
+msgstr ""
+
+#: glue/forms.py:25
+msgid "content"
+msgstr ""
+
+#: outside/views.py:69
+msgid "user has been disabled"
+msgstr ""
+
+#: outside/views.py:71 outside/views.py:74
+msgid "invalid credentials"
+msgstr ""
+
+#: outside/views.py:156
+msgid "language not found"
+msgstr ""
+
+#: outside/templates/outside/enquete.html:26
+msgid "description"
+msgstr ""
+
+#: outside/templates/outside/enquete.html:27
+msgid "enquete sur l'enquete"
+msgstr ""
+
+#: outside/templates/outside/enquete.html:33
+msgid "enquete"
+msgstr ""
+
+#: outside/templates/outside/enquete.html:50
+msgid "file type"
+msgstr ""
+
+#: outside/templates/outside/enquete.html:53
+msgid "file list"
+msgstr ""
+
+#: outside/templates/outside/enquetes.html:20
+#: outside/templates/outside/middle.html:57
+msgid "enquetes"
+msgstr ""
+
+#: outside/templates/outside/enquetes.html:99
+#: outside/templates/outside/index.html:20
+#: outside/templates/outside/middle.html:186
+#: outside/templates/outside/middle.html:220
+msgid "edit section"
+msgstr ""
+
+#: outside/templates/outside/enquetes.html:100
+#: outside/templates/outside/index.html:19
+msgid "delete section"
+msgstr ""
+
+#: outside/templates/outside/enquiry.html:28
+msgid "an enquiry about"
+msgstr ""
+
+#: outside/templates/outside/enquiry.html:32
+#: outside/templates/outside/middle.html:84
+#: outside/templates/outside/page.html:55
+msgid "edit mode"
+msgstr ""
+
+#: outside/templates/outside/enquiry.html:32
+msgid "add enquiry content"
+msgstr ""
+
+#: outside/templates/outside/index.html:26
+msgid "change abstract"
+msgstr ""
+
+#: outside/templates/outside/index.html:48
+msgid "change content"
+msgstr ""
+
+#: outside/templates/outside/login.html:17
+msgid "login required"
+msgstr ""
+
+#: outside/templates/outside/middle.html:16
+msgid "logout"
+msgstr ""
+
+#: outside/templates/outside/middle.html:21
+msgid "disable edit"
+msgstr ""
+
+#: outside/templates/outside/middle.html:22
+msgid "disable edit mode"
+msgstr ""
+
+#: outside/templates/outside/middle.html:28
+#: outside/templates/outside/middle.html:29
+msgid "enable edit mode"
+msgstr ""
+
+#: outside/templates/outside/middle.html:28
+msgid "edit"
+msgstr ""
+
+#: outside/templates/outside/middle.html:36
+msgid "EN"
+msgstr ""
+
+#: outside/templates/outside/middle.html:39
+msgid "FR"
+msgstr ""
+
+#: outside/templates/outside/middle.html:43
+#: outside/templates/outside/middle.html:147
+#: outside/templates/outside/middle.html:157
+msgid "add page"
+msgstr ""
+
+#: outside/templates/outside/middle.html:84
+#: outside/templates/outside/middle.html:166
+#: outside/templates/outside/middle.html:175
+msgid "add section"
+msgstr ""
+
+#: outside/templates/outside/middle.html:90
+msgid "collapse menu"
+msgstr ""
+
+#: outside/templates/outside/middle.html:91
+msgid "expand menu"
+msgstr ""
+
+#: outside/templates/outside/middle.html:132
+msgid "discard"
+msgstr ""
+
+#: outside/templates/outside/middle.html:156
+#: outside/templates/outside/middle.html:174
+#: outside/templates/outside/middle.html:219
+msgid "cancel"
+msgstr ""
+
+#: outside/templates/outside/middle.html:166
+msgid "add section into"
+msgstr ""
+
+#: outside/templates/outside/middle.html:169
+msgid "add section rules"
+msgstr ""
+
+#: outside/templates/outside/page.html:35
+#: outside/templates/outside/page.html:48
+msgid "edit content"
+msgstr ""
+
+#: outside/templates/outside/page.html:36
+msgid "edit slug"
+msgstr ""
+
+#: outside/templates/outside/page.html:55
+msgid "add pin"
+msgstr ""
+
+#: templates/bq_base.html:10
 msgid "a project from"
 msgstr ""
 
 #. Translators: Main top menu choices
-#: templates/bq_base.html:64
+#: templates/bq_base.html:17
 msgid "Project"
 msgstr ""
 
-#: templates/bq_base.html:67
+#: templates/bq_base.html:20
 msgid "Methodology"
 msgstr ""
 
-#: templates/bq_base.html:70
+#: templates/bq_base.html:23
 msgid "Access"
 msgstr ""
 
-#: templates/bq_base.html:73
+#: templates/bq_base.html:26
 msgid "The Studies"
 msgstr ""
 
-#: templates/bq_base.html:77
+#: templates/bq_base.html:30
 msgid "Admin"
 msgstr ""
 
@@ -45,38 +241,38 @@ msgstr ""
 msgid "Back to the studies list"
 msgstr ""
 
-#: templates/bq_e_base.html:77
+#: templates/bq_e_base.html:81
 msgid "Overview"
 msgstr ""
 
-#: templates/bq_e_base.html:81 templates/bq_e_base.html.py:83
+#: templates/bq_e_base.html:85 templates/bq_e_base.html.py:87
 msgid "On the Research"
 msgstr ""
 
-#. Translators: Studies list
-#: templates/bq_e_base.html:87 templates/bq_e_base.html.py:136
-#: templates/bq_e_browse.html:51
+#: templates/bq_e_base.html:91 templates/bq_e_base.html.py:140
 msgid "Documents"
 msgstr ""
 
-#: templates/bq_e_base.html:88 templates/bq_e_base.html.py:137
-#: templates/bq_e_browse.html:52
+#: templates/bq_e_base.html:92 templates/bq_e_base.html.py:141
 msgid "Speakers"
 msgstr ""
 
-#: templates/bq_e_base.html:89 templates/bq_e_base.html.py:138
-#: templates/bq_e_browse.html:53
+#: templates/bq_e_base.html:93 templates/bq_e_base.html.py:142
 msgid "Visualizations"
 msgstr ""
 
 #. Translators: Left menu link to register page
-#: templates/bq_e_base.html:145
+#: templates/bq_e_base.html:149
 msgid "To consult the entire study, please consult the page"
 msgstr ""
 
 #. Translators: back to home when looking at studies list
-#: templates/bq_e_browse.html:22
+#: templates/bq_e_browse.html:23
 msgid "Back"
+msgstr ""
+
+#: templates/bq_e_browse.html:81
+msgid "There isn't any study in this site. Please come back later."
 msgstr ""
 
 #. Translators: ESE final report download
@@ -85,11 +281,11 @@ msgid "The final report can be downloaded"
 msgstr ""
 
 #. Translators: Documents browse when null
-#: templates/bq_ed_browse.html:107
+#: templates/bq_ed_browse.html:102
 msgid "There is no linked documents in this study"
 msgstr ""
 
-#. Translators: edShow: toggle text for streamtimeline viz
+#. Translators: edShow: on top toggle text for streamtimeline viz used for navigation
 #: templates/bq_ed_show.html:131
 msgid "exploration using viz"
 msgstr ""
@@ -100,66 +296,63 @@ msgid "There is no linked speakers in this study"
 msgstr ""
 
 #. Translators: Visualization browse when null
-#: templates/bq_ev_browse.html:95
+#: templates/bq_ev_browse.html:96
 msgid "There isn\\'t any Visualisation in this study"
 msgstr ""
 
 #. Translators: Login page title
-#: templates/bq_home.html:52
+#: templates/bq_home.html:45
 msgid "If you already have an account, please login"
 msgstr ""
 
+#. Translators: Login form button
 #: templates/bq_home.html:53
-msgid "If you don't, please consult the page"
+msgid "Login"
 msgstr ""
 
-#: templates/bq_home.html:62
-msgid "login"
-msgstr ""
-
-#. Translators: Access page: ask for explore status
+#. Translators: Below login form, link to register form page
 #: templates/bq_home.html:70
-msgid "You can explore the whole site"
+msgid "To ask for an account, please go to the page"
 msgstr ""
 
 #. Translators: Access page: ask for explore status
-#: templates/bq_home.html:77
+#: templates/bq_home.html:79
 msgid "Ask for an exploration status"
 msgstr ""
 
 #. Translators: Access page: ask for explore status: Study
-#: templates/bq_home.html:84
+#: templates/bq_home.html:86
 msgid "Study:"
 msgstr ""
 
 #. Translators: Access page: request explore status sent
-#: templates/bq_home.html:99
+#: templates/bq_home.html:101
 #, python-format
 msgid ""
 "\n"
-"\t\t\t\t\t\t\t</br>You request concerning study <b>%(enquetename)s</b> was "
+"\t\t\t\t\t</br>You request concerning study <b>%(enquetename)s</b> was "
 "successfully sent. You will soon receive information in your mailbox.\n"
-"\t\t\t\t\t\t"
+"\t\t\t\t"
 msgstr ""
 
 #. Translators: Access page: Current Status title
-#: templates/bq_home.html:105
+#: templates/bq_home.html:107
 msgid "Current Status"
 msgstr ""
 
-#: templates/bq_home.html:106
+#: templates/bq_home.html:108
 msgid ""
 "You can consult studies on studies. To explore a whole study site, please go "
 "to the study you wish to consult."
 msgstr ""
 
-#. Translators: Access page: ask for browse(discover) status
-#: templates/bq_home.html:113
+#. Translators: register form page title: ask for browse(discover) status
+#: templates/bq_home.html:115
 msgid "You can ask for a Discover status"
 msgstr ""
 
 #. Translators: Access page: request browse(discover) status sent
-#: templates/bq_home.html:124
+#: templates/bq_home.html:126
 msgid ""
 "Your request was sent ! You will soon receive information in your mailbox."
 msgstr ""

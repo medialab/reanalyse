@@ -27,7 +27,7 @@
 
 {% block content %}
 
-<! ================================================= -->
+<!-- ================================================= -->
 {% if enquetes %}
 	<ul id="eList">
 	{% for e in enquetes %}
@@ -37,23 +37,37 @@
 				{% if perms.reanalyseapp.is_admin %}
 					<span class="eBrowseEnqueteStatus">	
 					{{e.date}} - [{{ e.get_status_display }}{% if e.status != '0' %} <span class="eProblem">{{e.statuscomplete}}%</span>{% endif %}]
-					<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eDelete e.id %}");$("#e_{{e.id}}").remove();event.stopPropagation();return false;'>delete</a>
+
+					<!-- remove enquete button + action -->
+					<script type="text/javascript">
+						var clicToRemoveEnquete = function() {
+							var r = confirm("You are about to delete this study. Are you sure you want to do this ?");
+							if(r==true) {
+								doGetAtUrl("{% url reanalyse.reanalyseapp.views.eDelete e.id %}");
+								$("#e_{{e.id}}").remove();
+							} else {
+								// ok, 'atta boy
+							}
+						};
+					</script>
+					<a href="#" onclick='clicToRemoveEnquete();event.stopPropagation();return false;'>delete</a>
+					
 					</span>
 				{% endif %}
 				
 				<h1>{% if perms.reanalyseapp.can_make %}[{{e.id}}] {% endif %}{{e.name}}</h1>
 				<div class="eBrowseEnqueteMetaContainer">
 					<div class="eBrowseEnqueteMeta">
-						<span class="eMetaList">{{ e|enqueteMeta:'actor/authenty' }}</span> |
-						<span class="eMetaList">{{ e|enqueteMeta:'actor/affiliation' }}</span> |
-						<span class="eMetaList">{{ e|enqueteMeta:'general/nation' }}</span> |
-						<span class="eMetaList">{{ e|enqueteMeta:'universe/studydates'}}</span> |
-						<span class="eMetaList">{{ e|enqueteMeta:'edition/locarch'}}</span>
+						<span class="eMetaList">{{e|enqueteMeta:'actor/authenty'}}</span> |
+						<span class="eMetaList">{{e|enqueteMeta:'actor/affiliation'}}</span> |
+						<span class="eMetaList">{{e|enqueteMeta:'general/nation'}}</span> |
+						<span class="eMetaList">{{e|enqueteMeta:'universe/studydates'}}</span> |
+						<span class="eMetaList">{{e|enqueteMeta:'edition/locarch'}}</span>
 					</div>
 					<div class="eBrowseEnqueteContentStats">
 						<span class="eMetaDoc">{{e|docPublicCount}}DOC</span>
 						<span class="eMetaSpk">{{e|spkPublicCount}}SPK</span>
-						<span class="eMetaViz">{{e|vizPublicCount}}VIZ</span>
+						<span class="eMetaViz">{{e|vizPublicCount}}{% if perms.reanalyseapp.can_make %}/{{e|vizTotalCount}}{% endif %}VIZ</span>
 					</div>
 				</div>
 				
