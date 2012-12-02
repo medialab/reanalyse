@@ -1079,23 +1079,24 @@ def dGetHtmlContent(request,eid,did):
 @permission_required('reanalyseapp.can_browse')
 def edXmlShow(request,eid,did):
 	# return HTML made by XSLT from XML file
+	# all this is experimetal and testing only
 	
 	texte = Texte.objects.get(id=did)
 	#xml_file = texte.locationpath
 	
 	# tryout with samples
 	xml_file = settings.MEDIA_ROOT + 'samples/simpliste/simpliste_TEIexma.xml'
-	xslt_file = settings.MEDIA_ROOT + 'xslt/ex_tei2html.xsl'
-	
+
+	#xslt_file = settings.MEDIA_ROOT + 'xslt/ex_tei2html.xsl'
 	#xslt_file = settings.MEDIA_ROOT + 'xslt/txm2html.xsl'
-	#xslt_file = settings.MEDIA_ROOT + 'xslt/tei2html.xsl'
+	xslt_file = settings.MEDIA_ROOT + 'xslt/tei2html.xsl'
 	
 	########## A: using etree
 	xml_root = etree.XML(open(xml_file, 'r').read())
 	xslt_root = etree.XML(open(xslt_file, 'r').read())
-	#transform = etree.XSLT(xslt_root)
-	#result = etree.tostring(transform(xml_root))
-	return HttpResponse(xml_root)
+	transform = etree.XSLT(xslt_root)
+	result = etree.tostring(transform(xml_root))
+	return HttpResponse(result)
 	
 	########## A: using libxslt
 # 	xsl = libxslt.parseStyleSheetDoc(libxml2.parseFile( xslt_file ))

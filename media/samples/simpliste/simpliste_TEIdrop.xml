@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:tesla="http://www.exmaralda.org" xmlns:tei="http://www.tei-c.org/ns/1.0">
+	   <teiHeader>
+	      <fileDesc>
+	         <titleStmt>
+	            <title />
+	         </titleStmt>
+	         <publicationStmt>
+	            <p />
+	         </publicationStmt>
+	         <sourceDesc>
+	            <recordingStmt>
+	               <recording type="video" url="" />
+	            </recordingStmt>
+	         </sourceDesc>
+	      </fileDesc>
+	      <profileDesc>
+	         <particDesc>
+	            <person xml:id="SPK0" sex="1">
+	               <persName>
+	                  <abbr>s001</abbr>
+	               </persName>
+	            </person>
+	            <person xml:id="SPK1" sex="1">
+	               <persName>
+	                  <abbr>s002</abbr>
+	               </persName>
+	            </person>
+	            <person xml:id="SPK2" sex="1">
+	               <persName>
+	                  <abbr>s003</abbr>
+	               </persName>
+	            </person>
+	         </particDesc>
+	      </profileDesc>
+	      <revisionDesc>
+	         <change when="2012-12-02T14:31:45.416-05:00">Created by XSL transformation from an EXMARaLDA segmented transcription</change>
+	      </revisionDesc>
+	   </teiHeader>
+	   <text>
+	      <timeline unit="s" origin="#T0">
+	         <when xml:id="T0" />
+	         <when xml:id="T1" />
+	         <when xml:id="T2" />
+	         <when xml:id="T3" />
+	         <when xml:id="T4" />
+	         <when xml:id="T5" />
+	         <when xml:id="T6" />
+	      </timeline>
+	      <body>
+	<div>
+		<u who="#SPK0">
+			<anchor synch="#T0" />
+			<seg function="utterance" type="interrogative">
+				<incident>
+					<desc>question: sur place</desc>
+				</incident>
+				<incident>
+					<desc>comment:avec brio</desc>
+				</incident>
+				<w xml:id="w1">Comment</w>
+				<pause />
+				<w xml:id="w2">allez</w>
+				<incident>
+					<desc>strong:vous</desc>
+				</incident>
+			</seg>
+			<seg function="utterance" type="not_classified">
+				<w xml:id="w3">je</w>
+				<incident>
+					<desc>body:touche</desc>
+				</incident>
+				<w xml:id="w4">suis</w>
+				<w xml:id="w5">vert</w>
+			</seg>
+			<anchor synch="#T1" />
+		</u>
+	</div>
+	<div>
+		<u who="#SPK1">
+			<anchor synch="#T1" />
+			<seg function="utterance" type="declarative">
+				<w xml:id="w6">Je</w>
+				<incident>
+					<desc>uncertain:suis</desc>
+				</incident>
+				<w xml:id="w7">vraiment</w>
+				<incident>
+					<desc>hesitation</desc>
+				</incident>
+				<w xml:id="w8">bien</w>
+				<pause />
+				<w xml:id="w9">placé</w>
+			</seg>
+			<anchor synch="#T2" />
+		</u>
+	</div>
+	<div>
+		<u who="#SPK0">
+			<anchor synch="#T2" />
+			<seg function="utterance" type="not_classified">
+				<incident>
+					<desc>time:10</desc>
+				</incident>
+			</seg>
+			<anchor synch="#T3" />
+		</u>
+	</div>
+	<div>
+		<u who="#SPK2">
+			<anchor synch="#T3" />
+			<seg function="utterance" type="declarative">
+				<w xml:id="w10">Ce</w>
+				<w xml:id="w11">qu'il</w>
+				<w xml:id="w12">dit</w>
+				<incident>
+					<desc>laugh</desc>
+				</incident>
+				<c>,</c>
+				<w xml:id="w13">c'est</w>
+				<incident>
+					<desc>comment:au plafond</desc>
+				</incident>
+				<w xml:id="w14">beau</w>
+			</seg>
+			<anchor synch="#T4" />
+		</u>
+	</div>
+	<div>
+		<u who="#SPK0">
+			<anchor synch="#T4" />
+			<seg function="utterance" type="declarative">
+				<w xml:id="w15">D'accord</w>
+			</seg>
+			<seg function="utterance" type="interrogative">
+				<incident>
+					<desc>directed:vers la fenêtre</desc>
+				</incident>
+				<w xml:id="w16">Vous</w>
+				<w xml:id="w17">êtes</w>
+				<w xml:id="w18">sûr</w>
+			</seg>
+			<anchor synch="#T5" />
+		</u>
+	</div>
+	<div>
+		<u who="#SPK1">
+			<anchor synch="#T5" />
+			<seg function="utterance" type="declarative">
+				<incident>
+					<desc>interruption</desc>
+				</incident>
+				<w xml:id="w19">Tout</w>
+				<w xml:id="w20">oui</w>
+			</seg>
+			<anchor synch="#T6" />
+		</u>
+	</div>
+</body>
+   </text>
+</TEI>
