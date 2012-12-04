@@ -32,6 +32,14 @@ BASE_URL = '/reanalyse/'
 LOGIN_REDIRECT_URL = BASE_URL
 LOGIN_URL = '/reanalyse/?p=access&q=login'
 
+######## SOLR
+SOLR_JARFOLDER = REANALYSEPROJECTPATH + "solr/"
+SOLR_JARNAME = "startreanalysesolr.jar"
+# SOLR_PORT = was 8983 by default, defined in solr/et/jetty.xml
+# from now on, we launch solr (in views.py) with -Djetty.port=SOLR_PORT to allow custom PORT
+# (avoids conflicts between multiple reanalyse instances)
+SOLR_PORT = 8985
+
 ######## HAYSTACK
 # Required and specific to where you place the file.
 HAYSTACK_SITECONF = 'reanalyse.search_sites'
@@ -41,11 +49,11 @@ HAYSTACK_SITECONF = 'reanalyse.search_sites'
 HAYSTACK_INCLUDE_SPELLING = True
 # For Solr:
 HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
+HAYSTACK_SOLR_URL = 'http://localhost:'+str(SOLR_PORT)+'/solr/'
 HAYSTACK_SOLR_TIMEOUT = 60 * 5
 
 # For admin page:
-SOLR_URL = REANALYSEURL + ":8983"
+SOLR_URL = REANALYSEURL+":"+str(SOLR_PORT)
 
 
 ADMINS = (

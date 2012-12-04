@@ -100,14 +100,17 @@ nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 # SOLR simple process manager
 ###########################################################################
-SOLR_JARNAME = "startreanalysesolr.jar"
-###############################
 def checkSolrProcess():
 	tmp = os.popen("ps -Af").read()
-	if SOLR_JARNAME not in tmp[:]:
+	if settings.SOLR_JARNAME not in tmp[:]:
 		logger.info("solr is not running. Let's restart it")
 		
-		newprocess = "cd %s && nohup java -jar %s > %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME,settings.REANALYSELOGSOLR)
+		path 	= settings.SOLR_JARFOLDER
+		port 	= str(settings.SOLR_PORT)
+		jar		= settings.SOLR_JARNAME
+		log		= settings.REANALYSELOGSOLR
+		
+		newprocess = "cd %s && nohup java -jar -Djetty.port=%s %s > %s &" % (path,port,jar,log)
 		os.system(newprocess)
 		
 		# todo: log file writing does not work
@@ -134,7 +137,7 @@ def checkSolrProcess():
 @login_required
 def killSolrProcess(request):
 	if request.user.is_staff:
-		killcmd = "kill `ps -ef | grep "+SOLR_JARNAME+" | grep -v grep | awk '{print $2}'`"
+		killcmd = "kill `ps -ef | grep "+settings.SOLR_JARNAME+" | grep -v grep | awk '{print $2}'`"
 		os.system(killcmd)
 		res = {'status':"solr killed"}
 	else:
