@@ -9,6 +9,7 @@ oo.filt.data = {}; // data, filtered according to oo.filt.filters
 
 oo.filt.events = {
 	'change':'oo.filt.events.change',
+	'init':'oo.filt.events.init',
 	'clean':'oo.filt.events.clean',
 	'add':'oo.filt.events.add',
 	'replace':'oo.filt.events.replace',
@@ -16,8 +17,16 @@ oo.filt.events = {
 	'reset':'oo.filt.events.reset'
 };
 
+oo.filt.parser = {
+	datetime: d3.time.format("%Y-%m-%d")
+}
+
 oo.filt.cross = oo.filt.cross || {
 	'extent': function( item, filter ){ return false; },
+	'period': function( item, filter ){
+		var item_time = oo.filt.parser.datetime.parse( item.times[0].time ).getTime();
+		return item_time > filter[0] && item_time < filter[1];
+	},
 	'type': function( item, filter ){ return true; }
 };
 
@@ -51,11 +60,14 @@ oo.filt.init = function(){
 oo.filt.listen = function( result ){
 	oo.log("[oo.filt.listen]", result);
 	oo.data = result;
+
 	oo.filt.on( oo.filt.events.add, oo.filt.add );
 	oo.filt.on( oo.filt.events.remove, oo.filt.remove );
 	oo.filt.on( oo.filt.events.reset, oo.filt.reset );
 	oo.filt.on( oo.filt.events.clean, oo.filt.clean );
 	oo.filt.on( oo.filt.events.replace, oo.filt.replace );
+
+	oo.filt.trigger( oo.filt.events.init, oo.data );
 };
 
 /*
@@ -84,7 +96,7 @@ oo.filt.execute = function(){
 	// progressive filtering
 	for( var type in oo.filt.filters ){
 		for ( var i in oo.filt.data ){
-			if ( ! oo.filt.cross[ type ]( o.data.objects[ i ], oo.filt.filters[type] ) ){
+			if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
 				delete oo.filt.data[ i ]
 			};
 		}

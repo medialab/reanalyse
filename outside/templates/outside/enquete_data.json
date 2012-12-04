@@ -2,7 +2,7 @@
 	"status" : "ok",
 	"error" : "",
 	"code" : "ERROR_CODE",
-	"documents" : [
+	"objects" : [
 		{
 			"id" : "1",
 			"title" : "Les dauphins et la liberté",
