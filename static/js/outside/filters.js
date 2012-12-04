@@ -17,8 +17,16 @@ oo.filt.events = {
 	'reset':'oo.filt.events.reset'
 };
 
+oo.filt.parser = {
+	datetime: d3.time.format("%Y-%m-%d")
+}
+
 oo.filt.cross = oo.filt.cross || {
 	'extent': function( item, filter ){ return false; },
+	'period': function( item, filter ){
+		var item_time = oo.filt.parser.datetime.parse( item.times[0].time ).getTime();
+		return item_time > filter[0] && item_time < filter[1];
+	},
 	'type': function( item, filter ){ return true; }
 };
 
@@ -88,7 +96,7 @@ oo.filt.execute = function(){
 	// progressive filtering
 	for( var type in oo.filt.filters ){
 		for ( var i in oo.filt.data ){
-			if ( ! oo.filt.cross[ type ]( o.data.objects[ i ], oo.filt.filters[type] ) ){
+			if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
 				delete oo.filt.data[ i ]
 			};
 		}

@@ -1,80 +1,98 @@
 var oo = oo || {};
 
-oo.enq = {};
+oo.enq = {
+	map : {},
+	timeline : {}
+};
 
-// plugin filters
+// 
+// 
+// Enquête
+// 
+// 
+
+oo.enq.init = function(){
+
+	oo.filt.on( oo.filt.events.init, function( event, data ){
+		oo.log("[oo.enq.init]");
+
+		oo.enq.map.update( data.objects );
+		oo.enq.timeline.update( data.objects );
+
+		oo.log('[oo.enq]', oo.enq)
+	});
+	// change
+	// oo.enq.map.update( oo.filt.data );
+	//
+
+}
+
+// 
+// 
+// Plugin filters
+// 
+// 
+
 oo.filt.cross.extent = function( item, ExtentObject ){
-
-
 	// if item is in ExtentObject
     //	return true
     return false;
 }
 
 oo.filt.cross.extent = function( item, ExtentObject ){
-	
-
 	// if item is in ExtentObject
     //	return true
     return false;
 }
 
-
-
-oo.enq.timeline = {};
-oo.enq.timeline.init = function(){
-	
-};
-oo.enq.timeline.update = function(){
-
-};
-
-
+// 
+// 
 // Map
+// 
+// 
 
-oo.enq.geo = {};
-
-oo.enq.geo.init = function(){
+oo.enq.map.init = function(){
 	
 	oo.filt.on( oo.filt.events.change, function(e, filters){
 		oo.log(e, filters, oo.filt.data );
 	});
+
 };
 
-oo.enq.geo.update = function ( objects ){
+oo.enq.map.update = function ( objects ){
 
-	oo.enq.geo.data = { type: "FeatureCollection", features:[]};
+	oo.enq.map.data = { type: "FeatureCollection", features:[]};
 
 	for( var i in objects ){
-		oo.enq.geo.data.features.push( objects[i].coordinates );
+		oo.enq.map.data.features.push( objects[i].coordinates );
 	}
 
 	// Viz
 
-	oo.enq.geo.map = mapbox.map('map');
-    oo.enq.geo.map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
+	oo.enq.map.map = mapbox.map('map');
+    oo.enq.map.map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
 
-    layer = oo.enq.geo.d3layer().data(oo.enq.geo.data);
-	oo.enq.geo.map.addLayer(layer);
-	oo.enq.geo.map.extent(layer.extent());
+    layer = oo.enq.map.d3layer().data(oo.enq.map.data);
+	oo.enq.map.map.addLayer(layer);
+	oo.enq.map.map.extent(layer.extent());
 
-	oo.enq.geo.map.ui.zoomer.add();
+	oo.enq.map.map.ui.zoomer.add();
 	
-	oo.enq.geo.map.addCallback('panned', function(map, panOffset) {
+	oo.enq.map.map.addCallback('panned', function(map, panOffset) {
 		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
 	});
 
-	oo.enq.geo.map.addCallback('zoomed', function(map, zoomOffset) {
+	oo.enq.map.map.addCallback('zoomed', function(map, zoomOffset) {
 		setTimeout( function() {
     		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
     	}, 1000 );
 	});
 
-	oo.log('[oo.enq.geo]', oo.enq.geo)	
+	oo.log('[oo.enq.map]', oo.enq.map)	
 
 }
 
-oo.enq.geo.d3layer = function() {
+oo.enq.map.d3layer = function() {
 
     var f = {}, bounds, feature, collection;
 
@@ -131,118 +149,112 @@ oo.enq.geo.d3layer = function() {
     return f;
 };
 
+// 
+// 
+// Timeline
+// 
+// 
 
+oo.enq.timeline.init = function(){
 
+	oo.filt.on( oo.filt.events.change, function(e, filters){
+		oo.log(e, filters, oo.filt.data );
+	});
+	
+};
 
+oo.enq.timeline.update = function( objects ){
 
+	var format = d3.time.format("%Y-%m-%d");
 
-
-oo.enq.init = function(){
-
-	oo.filt.on( oo.filt.events.init, function( event, data ){
-		oo.log("[oo.enq.init]");
-
-		oo.enq.geo.update( data.objects );
-		oo.enq.timeline.update( data.objects );
+	oo.enq.timeline.data = d3.range(objects.length).map(function(i) {
+		return {
+			x: format.parse(objects[i].times[0].time),
+			y: Math.floor(Math.random()*5)
+		};
 	});
 
+	var width = $('#map').width(),
+		height = $('#map').height(),
+		margin = {top: 20, right: 10};
 
-	return;
+	var minX = d3.min(oo.enq.timeline.data, function (d) { return d.x }),
+		maxX = d3.max(oo.enq.timeline.data, function (d) { return d.x }),
+		minY = d3.min(oo.enq.timeline.data, function (d) { return d.y }),
+		maxY = d3.max(oo.enq.timeline.data, function (d) { return d.y }),
+		scaleX = d3.scale.linear().domain([minX, maxX]).range([ 0, width - margin.right*2 ]),
+		scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
 
-	d3.json( oo.api.urlfactory( oo.urls.get_enquete_data, 88 ), function(collection) {
+	var container = d3.select('#timeline').append('svg');
+	
+	oo.enq.timeline.brush = container.append('g');
+	oo.enq.timeline.circles = container.append('g');
 
+	d3.selectAll('#timeline g').attr("transform", "translate(" + margin.right + "," + margin.top + ")");
 
-		// Timeline
+	oo.enq.timeline.circles.selectAll(".dot")
+		.data(oo.enq.timeline.data)
+		.enter().append("circle")
+		.attr('class', 'dot')
+		.attr("cx", function(d) { return scaleX(d.x); })
+		.attr("cy", function(d) { return scaleY(d.y); })
+		.attr("data-time", function(d) { return d.x; })
+		.attr("r", 4);
 
-		var format = d3.time.format("%Y-%m-%d");
+	// Circles behavior
 
-		var data = d3.range(collection.documents.length).map(function(i) {
-			return {
-				x: format.parse(collection.documents[i].times[0].time),
-				y: Math.floor(Math.random()*5)
-			};
-		});
-
-		var width = $('#map').width(),
-			height = $('#map').height(),
-			margin = {top: 20, right: 10};
-
-		var minX = d3.min(data, function (d) { return d.x }),
-			maxX = d3.max(data, function (d) { return d.x }),
-			minY = d3.min(data, function (d) { return d.y }),
-			maxY = d3.max(data, function (d) { return d.y }),
-			scaleX = d3.scale.linear().domain([minX, maxX]).range([ 0, width - margin.right*2 ]),
-			scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
-
-		var timeline = d3.select('#timeline').append('svg'),
-			brush = timeline.append('g'),
-			circles = timeline.append('g')
-
-		d3.selectAll('#timeline g').attr("transform", "translate(" + margin.right + "," + margin.top + ")");
-
-		circles.selectAll(".dot")
-			.data(data)
-			.enter().append("circle")
-			.attr('class', 'dot')
-			.attr("cx", function(d) { return scaleX(d.x); })
-			.attr("cy", function(d) { return scaleY(d.y); })
-			.attr("data-time", function(d) { return d.x; })
-			.attr("r", 4);
-
-		// Behaviors
-
+	$('#timeline').on('click', 'circle', function() {
 		
+		oo.log('range', range, 'width', width)
 
-		$('#timeline').on('click', 'circle', function() {
+		// Missing right circle position
 
-			
-			oo.log('range', range, 'width', width)
+		var time = $(this).attr('data-time');
 
-			// Missing right circle position
+		var formattedTime = format.parse(time);
 
-			var time = $(this).attr('data-time');
+		var circleX = scaleX(formattedTime);
 
-			var formattedTime = format.parse(time);
+		oo.log('width/10', widthExtent, 'circleX', circleX)
 
-			var circleX = scaleX(formattedTime);
+		var left = circleX - widthExtent / 2;
+		var right = circleX + widthExtent / 2;
 
-			oo.log('width/10', widthExtent, 'circleX', circleX)
-
-			var left = circleX - widthExtent / 2;
-			var right = circleX + widthExtent / 2;
-
-			brushObj.extent([left, right]);
-			brush.call(brushObj);
-
-		});
-
-		
-		var brushObj = d3.svg.brush()
-			.x(scaleX)
-			.extent(scaleX.domain())
-			.on("brushend", onBrush);
-
-		brush.attr("class", "x brush")
-			.call(brushObj)
-			.selectAll("rect")
-			.attr("y", - margin.top - 1 )
-			.attr("height", $('#timeline').height() +1);
-
-		var range = brushObj.extent();
-
-		var widthExtent = ( range[1] - range[0] ) / 10;
-
-		function onBrush() {
-
-			// this returns a period of time
-
-			var b = brushObj.empty() ? scaleX.domain() : brushObj.extent();
-			oo.filt.trigger( oo.filt.events.replace, {'period': b } );
-		}
-
-		
+		brushObj.extent([left, right]);
+		oo.enq.timeline.brush.call(brushObj);
 
 	});
-}
+
+	// Brush
+	
+	var brushObj = d3.svg.brush()
+		.x(scaleX)
+		.extent(scaleX.domain())
+		.on("brushend", onBrush);
+
+	oo.enq.timeline.brush.attr("class", "x brush")
+		.call(brushObj)
+		.selectAll("rect")
+		.attr("y", - margin.top - 1 )
+		.attr("height", $('#timeline').height() +1);
+
+	var range = brushObj.extent();
+
+	var widthExtent = ( range[1] - range[0] ) / 10;
+
+	function onBrush() {
+
+		// this returns a period of time
+		// To check
+
+		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent();
+		oo.filt.trigger( oo.filt.events.replace, {'period': b } );
+
+	}
+
+	oo.log('[oo.enq.timeline]', oo.enq.timeline)
+
+};
+
 
 
