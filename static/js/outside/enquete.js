@@ -54,7 +54,6 @@ oo.enq.d3layer = function() {
             .enter().append("path")
             
             // On-click event
-
             .on("click", function(d,i) {
             	
             	f.map.center({
@@ -144,13 +143,13 @@ oo.enq.init = function(){
 			minY = d3.min(data, function (d) { return d.y }),
 			maxY = d3.max(data, function (d) { return d.y }),
 			scaleX = d3.scale.linear().domain([minX, maxX]).range([ 0, width - margin.right*2 ]),
-			scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]);
+			scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
 
 		var timeline = d3.select('#timeline').append('svg'),
 			brush = timeline.append('g'),
 			circles = timeline.append('g')
 
-		// .attr("transform", "translate(" + margin.right + "," + margin.top + ")")
+		d3.selectAll('#timeline g').attr("transform", "translate(" + margin.right + "," + margin.top + ")");
 
 		circles.selectAll(".dot")
 			.data(data)
@@ -163,37 +162,53 @@ oo.enq.init = function(){
 
 		// Behaviors
 
-		// $('#timeline').on('click', 'circle', function() {
-		// 	var time = $(this).attr('data-time');
-		// 	oo.filt.trigger( oo.filt.events.add, {'time':[time]} );
-		// });
+		
+
+		$('#timeline').on('click', 'circle', function() {
+
+			
+			oo.log('range', range, 'width', width)
+
+			// Missing right circle position
+
+			var time = $(this).attr('data-time');
+
+			var formattedTime = format.parse(time);
+
+			var circleX = scaleX(formattedTime);
+
+			oo.log('width/10', widthExtent, 'circleX', circleX)
+
+			var left = circleX - widthExtent / 2;
+			var right = circleX + widthExtent / 2;
+
+			brushObj.extent([left, right]);
+			brush.call(brushObj);
+
+		});
 
 		
-		var brushInit = d3.svg.brush()
+		var brushObj = d3.svg.brush()
 			.x(scaleX)
+			.extent(scaleX.domain())
 			.on("brushend", onBrush);
 
 		brush.attr("class", "x brush")
-			.call(brushInit)
+			.call(brushObj)
 			.selectAll("rect")
-			.attr("y", -1)
+			.attr("y", - margin.top - 1 )
 			.attr("height", $('#timeline').height() +1);
 
+		var range = brushObj.extent();
+
+		var widthExtent = ( range[1] - range[0] ) / 10;
+
 		function onBrush() {
-			// this will return a date range to pass into the chart object 
 
-			var b = brush.empty() ? scaleX.domain() : brush.extent();
+			// this returns a period of time
 
-			// oo.log('scaleX.domain())', scaleX.domain())
-			// oo.log('brush.extent()', brush.extent())
- 
-		    // for(var i = 0; i < countriesCount; i++){
-		    //     charts[i].showOnly(b);
-		    // }
-			    
-		  // scaleX.domain(brush.extent());
-		  // focus.select("path").attr("d", area);
-		  // focus.select(".x.axis");
+			var b = brushObj.empty() ? scaleX.domain() : brushObj.extent();
+			oo.filt.trigger( oo.filt.events.replace, {'period': b } );
 		}
 
 		
