@@ -1,0 +1,6 @@
+s001: ((question: sur place)) ((comment:avec brio)) Comment • allez ((strong:vous)) ? je ((body:touche)) suis vert
+s002: Je ((uncertain:suis)) vraiment ((hesitation)) bien • placé.
+s001: ((time:10))
+s003: Ce qu'il dit ((laugh)), c'est ((comment:au plafond)) beau.
+s001: D'accord. ((directed:vers la fenêtre)) Vous êtes sûr ?
+s002: ((interruption)) Tout oui.

@@ -780,7 +780,7 @@ def getSolrSimilarArray(speaker,maxcount):
 			eidc=res['speakerid']
 			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+str(sid)+"), unknown spk: "+str(eidc))
 	return array
-########################################################################### SOLR RAW QUERIES DO GET WORD LIST (graph,tagcloud,...)
+########################################################################### SOLR RAW QUERIES DO GET WORD LIST (used in graph,tagcloud,...)
 def getSolrTermVectorsDict(speakers,field,mintn): # field = 'text'/'ngrams'
 	# USING PYSOLR or PYTHONSOLR : same syntax
 	# http://jiminy-dev.medialab.sciences-po.fr:8983/solr/select?q=speakerid:36&fq=django_ct:(reanalyseapp.speaker)&qt=tvrh&fl=text&tv.fl=ngrams&tv.all=true
@@ -895,7 +895,7 @@ def visMakeTagCloudFromTermVectors(e,param):
 
 	wordsArr=[]
   	
-  	############################################# WE COULD : SOLR QUERY !
+  	############################################# ALTERNATIVE A : SOLR QUERY !
 	d = getSolrTermVectorsDict(speakers,'ngrams',mintn=2)
 	for w in d.keys():
 		dic = {'word':w,'count':d[w]['tfidf']}
@@ -904,7 +904,7 @@ def visMakeTagCloudFromTermVectors(e,param):
 	wordsArr = sorted(wordsArr, key=lambda k: -k['count'])
 	wordsArr = wordsArr[:howmany]
 	
-  	############################################# WE COULD : look at stored model (works only for only ONE speaker)
+  	############################################# ALTERNATIVE B : look at stored model (pb: works only for only ONE speaker)
   	# only ok for 1 speaker
   	#thengs = s.ngramspeaker_set.order_by("-tfidf")[:howmany]
 	#qs = e.ngram_set.all()

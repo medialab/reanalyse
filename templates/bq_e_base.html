@@ -90,7 +90,7 @@
 {% if permexplorethis %}
 	<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|docPublicCount}})</div></a>
 	<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|spkPublicCount}})</div></a>
-	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} {% if perms.reanalyseapp.can_make %}({{enquete.visualization_set.count}}){% else %}({{enquete|vizPublicCount}}){% endif %}</div></a>
+	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} ({{enquete|vizPublicCount}}{% if perms.reanalyseapp.can_make %}/{{enquete|vizTotalCount}}{% endif %})</div></a>
 
 	{% block enqueteleftmenuviz %}
 	{% endblock %}

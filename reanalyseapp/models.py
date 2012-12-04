@@ -109,7 +109,7 @@ class Visualization(models.Model):
 	def __unicode__(self):
 		return self.name
 ##############################################################################
-# 'Texte' model should rather be called 'Document'
+# 'Texte' model .... ( to rename to 'Document'? )
 class Texte(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	# file
@@ -282,8 +282,8 @@ class Word(models.Model):
 
 ####################################################################
 # Storing solr ngrams & tfidf results !
-# looks like WordEntity & WordEntitySpeaker..
-# but here it's lighter because we only keep high tfidf words.. (see vis - makeAllTfidf())
+# it looks like deprecated WordEntity & WordEntitySpeaker models at the beginning of the project
+# ... but here it's lighter because we only keep high tfidf words.. (see viz.py - makeAllTfidf())
 ####################################################################
 class Ngram(models.Model):
 	enquete = models.ForeignKey(Enquete)
@@ -318,7 +318,9 @@ class NgramSpeaker(models.Model):
 ############################################################################################
 # TEI XML PARSER
 ############################################################################################
-def parseXmlDocument(texte):	
+def parseXmlDocument(texte):
+	e = texte.enquete
+	
 	# WE ERASE ALL OBJECTS if there is (will erase Sentences & Words too)
 	texte.sentence_set.all().delete()
 	
@@ -326,10 +328,21 @@ def parseXmlDocument(texte):
 	root = tree.getroot()
 	roottag = root.tag
 	
-	######################### todo
-	# it may be better to use xslt to "parse" xml
+	######################### NB + todo
 	# the current parsing loops are expensive !
+	# it may be better to use xslt to "parse" xml
 	# xslt could also fetch subparts of the original xml file !
+	#
+	# ...to do:
+	#
+	# 1) using xslt, extract:
+	# 	- txtcontent of each speaker , to populate each speaker.contenttxt
+	# 	- txtcontent of whole document, to populate texte.contenttxt
+	# both are used for indexation
+	#
+	# 2) using xslt, style wanted part of original TEI xml, to populate html template
+	#
+	
 	
 	######################### NB
 	# we don't care about speakers !
@@ -345,8 +358,9 @@ def parseXmlDocument(texte):
 	#	- XML-TXM file made by Transcriber > TXM		tag <TEI>
 	# todo: use DTD to parse any schema..
 	
-	######################### XML TXM
+	######################### XML TXM		## Built using Formatted .txt > TXM
 	if roottag=='Trans':
+		logger.info("["+str(e.id)+"] parsing type: TXM")
 		persons = root.findall('Speakers/Speaker')
 		for n,p in enumerate(persons):
 			speakersArray.append( p.attrib['id'] )
@@ -354,8 +368,9 @@ def parseXmlDocument(texte):
 		childs = root.findall('Episode/Section/Turn')
 		parseTXMDivs(texte,childs,speakersArray)
 	
-	######################### XML TEI
+	######################### XML TEI		## Built using: Formatted .txt > Exmaralda .exb > TEI Drop
 	elif roottag==XMLTEINMS+'TEI':
+		logger.info("["+str(e.id)+"] parsing type: Exmaralda TEI")
 		persons = root.findall(XMLTEINMS+'teiHeader/'+XMLTEINMS+'profileDesc/'+XMLTEINMS+'particDesc/'+XMLTEINMS+'person')
 		# putting speakers ddi_id from TEI header in a dict to access them (if the <who> tags contains #references to that header)
 		speakersDDIDict={}
@@ -433,7 +448,7 @@ def parseTXMDivs(texte,nodes,speakersArray):
 		s.save()
 ################################################
 def parseTXMWords(sentence,words,N):
-	# for the moment only lookin at normal words+punctuation
+	# for the moment only looking at normal words+punctuation
 	allSentenceTxt=""
 	allSentenceHtml=""
 	
@@ -764,16 +779,16 @@ def parseTEIWords(sentence,nodes,N):
 
 # NEW ONE FETCHING only [i,j] timeparts (if interested, see old deprecated way below)
 ####################################################################
-# getTextContent() returns an array of successive styled sentences
+# getTextContent() returns an array of successive styled (ie, with html tags) sentences
 # additionnal styling (for blocks of verbatim) is made in template render_d.html
 # the array is asked at each new texte pagination in the view
 #
-# NB: hard styled in sentence.contenthtml
+# NB: hard styled in sentence.contenthtml, made during parsing
 #	<div class="text_anyparvb">
 #	<a rel="text_tooltip"
 #	<span class="w_manger"> ...
 #
-# NB: styled in template
+# NB: styled in django template, see render_d.html
 #	<div class="text_part speakerColor_23">
 #	<div class="text_speaker"> ...
 #

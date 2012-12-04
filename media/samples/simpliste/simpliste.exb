@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (c) http://www.rrz.uni-hamburg.de/exmaralda -->
+<basic-transcription>
+	<head>
+		<meta-information>
+			<project-name>
+			</project-name>
+			<transcription-name>
+			</transcription-name>
+			<referenced-file url=""/>
+			<ud-meta-information>
+				<ud-information attribute-name="Source file name">/Users/poa/Desktop/MEDIALAB 2012/enquete/prep/transcr/simpliste.txt</ud-information>
+			</ud-meta-information>
+			<comment>Imported from a Simple EXMARaLDA file</comment>
+			<transcription-convention>
+			</transcription-convention>
+		</meta-information>
+		<speakertable>
+			<speaker id="s001">
+				<abbreviation>s001</abbreviation>
+				<sex value="m"/>
+				<languages-used>
+				</languages-used>
+				<l1>
+				</l1>
+				<l2>
+				</l2>
+				<ud-speaker-information>
+				</ud-speaker-information>
+				<comment>
+				</comment>
+			</speaker>
+			<speaker id="s002">
+				<abbreviation>s002</abbreviation>
+				<sex value="m"/>
+				<languages-used>
+				</languages-used>
+				<l1>
+				</l1>
+				<l2>
+				</l2>
+				<ud-speaker-information>
+				</ud-speaker-information>
+				<comment>
+				</comment>
+			</speaker>
+			<speaker id="s003">
+				<abbreviation>s003</abbreviation>
+				<sex value="m"/>
+				<languages-used>
+				</languages-used>
+				<l1>
+				</l1>
+				<l2>
+				</l2>
+				<ud-speaker-information>
+				</ud-speaker-information>
+				<comment>
+				</comment>
+			</speaker>
+		</speakertable>
+	</head>
+	<basic-body>
+		<common-timeline>
+			<tli id="T0"/>
+			<tli id="T1"/>
+			<tli id="T2"/>
+			<tli id="T3"/>
+			<tli id="T4"/>
+			<tli id="T5"/>
+			<tli id="T6"/>
+		</common-timeline>
+		<tier id="TIE1" speaker="s001" category="v" type="t" display-name="s001 [v]">
+			<event start="T0" end="T1">((question: sur place)) ((comment:avec brio)) Comment • allez ((strong:vous)) ? je ((body:touche)) suis vert</event>
+			<event start="T2" end="T3">((time:10))</event>
+			<event start="T4" end="T5">D'accord. ((directed:vers la fenêtre)) Vous êtes sûr ?</event>
+		</tier>
+		<tier id="TIE4" speaker="s002" category="v" type="t" display-name="s002 [v]">
+			<event start="T1" end="T2">Je ((uncertain:suis)) vraiment ((hesitation)) bien • placé.</event>
+			<event start="T5" end="T6">((interruption)) Tout oui.</event>
+		</tier>
+		<tier id="TIE7" speaker="s003" category="v" type="t" display-name="s003 [v]">
+			<event start="T3" end="T4">Ce qu'il dit ((laugh)), c'est ((comment:au plafond)) beau.</event>
+		</tier>
+	</basic-body>
+	<tierformat-table>
+		<timeline-item-format show-every-nth-numbering="1" show-every-nth-absolute="1" absolute-time-format="time" miliseconds-digits="1"/>
+		<tier-format tierref="TIE7">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">black</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">white</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">12</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="TIE4">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">black</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">white</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">12</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="TIE1">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">black</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">white</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">12</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="EMPTY-EDITOR">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">white</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">lightGray</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">2</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="EMPTY">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">white</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">white</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">2</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="SUB-ROW-LABEL">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">black</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">white</property>
+			<property name="text-alignment">Right</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">8</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="ROW-LABEL">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Bold</property>
+			<property name="font-color">black</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">lightGray</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">10</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+		<tier-format tierref="COLUMN-LABEL">
+			<property name="row-height-calculation">Generous</property>
+			<property name="fixed-row-height">10</property>
+			<property name="font-face">Plain</property>
+			<property name="font-color">black</property>
+			<property name="chunk-border-style">solid</property>
+			<property name="bg-color">lightGray</property>
+			<property name="text-alignment">Left</property>
+			<property name="chunk-border-color">#R00G00B00</property>
+			<property name="chunk-border">
+			</property>
+			<property name="font-size">7</property>
+			<property name="font-name">Times New Roman</property>
+		</tier-format>
+	</tierformat-table>
+</basic-transcription>
