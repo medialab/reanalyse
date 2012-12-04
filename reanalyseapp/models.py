@@ -59,12 +59,27 @@ class SiteContent(models.Model):
 
 
 ##############################################################################		
+# SOLR INSTANCE
+##############################################################################
+#
+# we could store the pid in the db
+# rather search for process using (unique) defined SOLR_PORT
+#
+# class SolrProcess(models.Model):
+# 	# used to keep track of solr process pid
+# 	# (there will only be one object of this type)
+# 	pid = models.CharField(max_length=20)
+
+
+
+##############################################################################		
 # ENQUETE
 ##############################################################################
 class Enquete(models.Model):
 	#connection_name="enquetes"				# todo: one db for each enquete ?
 	name = models.CharField(max_length=250)
-	locationpath = models.CharField(max_length=250)						# path of the uploaded folder
+	uploadpath	 = models.CharField(max_length=250)	# root path of uploaded folder (if we want to remove everything)
+	locationpath = models.CharField(max_length=250)	# root path of the extracted folder (used as base during import)
 	metadata = models.TextField(default='{}') 		# store all metadata as json dict
 	ese = models.TextField()						# ese is not yet included/structured in enquete, let's put all infos from ese.xml into a json dict
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars

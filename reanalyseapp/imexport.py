@@ -109,7 +109,7 @@ def doFiestaToEnquete(e):
 
 
 ###########################################################################
-def importEnqueteUsingMeta(folderPath):
+def importEnqueteUsingMeta(upPath,folderPath):
 	stdPath=folderPath+'_meta/meta_study.csv'
 	docPath=folderPath+'_meta/meta_documents.csv'
 	spkPath=folderPath+'_meta/meta_speakers.csv'
@@ -162,7 +162,7 @@ def importEnqueteUsingMeta(folderPath):
 				study_name = value
 
 	### create enquete object
-	newEnquete = Enquete(name=study_name,locationpath=folderPath,ddi_id=study_ddi_id,status='1')
+	newEnquete = Enquete(name=study_name,uploadpath=upPath,locationpath=folderPath,ddi_id=study_ddi_id,status='1')
 	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
 	newEnquete.save()
 	

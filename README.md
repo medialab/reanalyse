@@ -2,15 +2,19 @@ Reanalyse
 =================================
 ## Installation
 ### git
-$ sudo aptitude install git
+
+	$ sudo aptitude install git
 
 ### source
-$ cd /var/opt
-$ mkdir reanalyse
-$ git clone https://github.com/medialab/reanalyse.git reanalyse
+
+	$ cd /var/opt
+
+	$ mkdir reanalyse
+	$ git clone https://github.com/medialab/reanalyse.git reanalyse
 
 ### java for SOLR
-$ sudo aptitute install default-jre
+
+	$ sudo aptitute install default-jre
 
 
 ### mod xsendfile https://tn123.org/mod_xsendfile/
@@ -43,24 +47,25 @@ $ vi /apache/django.wsgi
 * ./solrdataindex/
 * ./upload/
 
-$ vi settingsprivate.py
-$ mkdir logs upload download solrdataindex
-$ sudo chown -R www-data:www-data solr log upload download
+	$ vi settingsprivate.py
+	
+	$ mkdir logs upload download solrdataindex
+	$ sudo chown -R www-data:www-data solr log upload download
 
 ### Postgresql
 remplacer ident par md5 pour local désactiver les autres host
-$ sudo vi /etc/postgresql/8.4/main/pg_hba.conf
+	$ sudo vi /etc/postgresql/8.4/main/pg_hba.conf
 
 check port 5432 postgresql conf
-$ sudo vi /etc/postgresql/8.4/main/postgresql.conf
+	$ sudo vi /etc/postgresql/8.4/main/postgresql.conf
 
 create db and user
-$ sudo su - postgres
-$ psql
-$ postgres=# create user reanalyse with password 'password';
-$ postgres=# CREATE DATABASE reanalyse WITH OWNER=reanalyse;
-$ postgres=# grant all privileges on database reanalyse to reanalyse;
-$ postgres=# \q
+	$ sudo su - postgres
+	$ psql
+	$ postgres=# create user reanalyse with password 'password';
+	$ postgres=# CREATE DATABASE reanalyse WITH OWNER=reanalyse;
+	$ postgres=# grant all privileges on database reanalyse to reanalyse;
+	$ postgres=# \q
 
 ### sync django db
 $ python manage.py syncdb

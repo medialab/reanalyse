@@ -41,7 +41,9 @@
 					<!-- remove enquete button + action -->
 					<script type="text/javascript">
 						var clicToRemoveEnquete = function() {
-							var r = confirm("You are about to delete this study. Are you sure you want to do this ?");
+							{% comment %}Translators: popup question when clicking delete study{% endcomment %}
+							var message = "{% trans 'You are about to delete this study.\nAre you sure you want to do this ?' %}"
+							var r = confirm(message);
 							if(r==true) {
 								doGetAtUrl("{% url reanalyse.reanalyseapp.views.eDelete e.id %}");
 								$("#e_{{e.id}}").remove();
@@ -50,7 +52,10 @@
 							}
 						};
 					</script>
+					<!-- if enquete loading, 'delete' is disabled ! -->
+					{% if e.status != '1' %}
 					<a href="#" onclick='clicToRemoveEnquete();event.stopPropagation();return false;'>delete</a>
+					{% endif %}
 					
 					</span>
 				{% endif %}

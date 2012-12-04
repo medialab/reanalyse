@@ -70,7 +70,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # for aggregation/annotation
 from django.db.models import Count,Max,Sum
 
-# Threading when launching longtime processes (parsing, styling, ...)
+# Threading for solr process
 import threading
 
 # replacing \n by <br/> when returning speaker.content
@@ -94,56 +94,99 @@ nullhandler = logger.addHandler(NullHandler())
 
 
 
-
-
-
 ###########################################################################
 # SOLR simple process manager
 ###########################################################################
+#
+# currently, to identify solr process, we search for the line looking like:
+#
+# 	"java -jar -Djetty.port=8985 startreanalysesolr.jar"
+#
+# this line is unique, because only one solr instance can run for a given port
+# 
+# we also tried to track solr process PID (seems cleaner), ex.:
+#
+#	solrprocess,isnew = SolrProcess.objects.get_or_create(id=0)
+#	# launching p = subprocess.Popen(...,shell=True,...)
+#	solrprocess.pid = str(p.pid)
+#	solrprocess.save()
+#
+# but, since we use "shell=True" ('cause we use Pipe to keep track of logs)
+# p.pid = PID of shell used to launch command, not PID of "java -jar..."
+#
+###########################################################################
 def checkSolrProcess():
-	tmp = os.popen("ps -Af").read()
-	if settings.SOLR_JARNAME not in tmp[:]:
-		logger.info("solr is not running. Let's restart it")
-		
-		path 	= settings.SOLR_JARFOLDER
-		port 	= str(settings.SOLR_PORT)
-		jar		= settings.SOLR_JARNAME
-		log		= settings.REANALYSELOGSOLR
-		
-		newprocess = "cd %s && nohup java -jar -Djetty.port=%s %s > %s &" % (path,port,jar,log)
-		os.system(newprocess)
-		
-		# todo: log file writing does not work
-		# ... sandbox trying different subprocess techniques ...
-		
-		# we want to launch as a subprocess
-		#java -jar /home/pj/djangos/reanalyse/solr/startreanalysesolr.jar > /home/pj/djangos/reanalyse/logs/reanalyse_solr.log &
-		#subprocess.Popen(["java","-jar","/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar",">","/home/pj/djangos/reanalyse/logs/reanalyse_solr.log","&"],shell=True)
-		#subprocess.Popen(["java","-jar","/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar","/home/pj/djangos/reanalyse/logs/reanalyse_solr.log"],shell=True)
-		#logpath = "/home/pj/djangos/reanalyse/logs/reanalyse_solr.log"
-		#thelogfile = open(logpath,'w+')
-		#thejarpath = settings.REANALYSEPROJECTPATH + "/solr/" + SOLR_JARNAME
-		#thejarpath = "/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar"
-		#newprocess = ["cd","/home/pj/djangos/reanalyse/solr/","&&","java","-jar",thejarpath]
-		# ? rather configure it within jetty.xml in the solr folder
-		#newprocess = "cd %s && nohup java -jar %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME)
-		#subprocess.Popen(newprocess,stdout=thelogfile,shell=True)
-		#subprocess.Popen(newprocess,shell=True)
-		
+	####### looking for the process launced using ps
+	port 	= str(settings.SOLR_PORT)
+	jar		= settings.SOLR_JARNAME
+	linetosearch = "java -jar -Djetty.port=%s %s" % (port,jar)
+	
+	p = subprocess.Popen("ps -Af",shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+	stdout,stderr = p.communicate()
+	
+	if linetosearch not in stdout:
+		startSolrProcess();
 		return True
 	else:
 		return False
-###############################
+###########################################################################
+def solrprocess_watch(p):
+	rc = p.wait()
+	logger.info("solr process result:"+str(rc))
+###########################################################################
+def startSolrProcess():	
+	logger.info("solr is not running. Let's restart it")
+	
+	path 	= settings.SOLR_JARFOLDER
+	port 	= str(settings.SOLR_PORT)
+	jar		= settings.SOLR_JARNAME
+	log		= settings.REANALYSELOGSOLR
+	newprocess = "cd %s && nohup java -jar -Djetty.port=%s %s > %s &" % (path,port,jar,log)
+	
+	p = subprocess.Popen(newprocess,shell=True)
+	t = threading.Thread(target=solrprocess_watch, args=(p))
+	t.daemon = True
+	t.start()
+	
+	logger.info("solr started !")
+###########################################################################
 @login_required
 def killSolrProcess(request):
 	if request.user.is_staff:
-		killcmd = "kill `ps -ef | grep "+settings.SOLR_JARNAME+" | grep -v grep | awk '{print $2}'`"
-		os.system(killcmd)
+		####### looking for the process launced using ps
+		port 	= str(settings.SOLR_PORT)
+		jar		= settings.SOLR_JARNAME
+		linetosearch = '"java -jar -Djetty.port=%s %s"' % (port,jar)
+
+		killcmd = "kill `ps -ef | grep "+linetosearch+" | grep -v grep | awk '{print $2}'`"
+		p = subprocess.Popen(killcmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+		stdout,stderr = p.communicate()
+		
 		res = {'status':"solr killed"}
 	else:
 		res = {'status':"nothing done. you need rights to do it"}
 	return HttpResponse(simplejson.dumps(res,indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
+#os.system(newprocess)
+
+# todo: log file writing does not work
+# ... sandbox trying different subprocess techniques ...
+
+# we want to launch as a subprocess :
+#java -jar /home/pj/djangos/reanalyse/solr/startreanalysesolr.jar > /home/pj/djangos/reanalyse/logs/reanalyse_solr.log &
+#
+#subprocess.Popen(["java","-jar","/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar",">","/home/pj/djangos/reanalyse/logs/reanalyse_solr.log","&"],shell=True)
+#subprocess.Popen(["java","-jar","/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar","/home/pj/djangos/reanalyse/logs/reanalyse_solr.log"],shell=True)
+#logpath = "/home/pj/djangos/reanalyse/logs/reanalyse_solr.log"
+#thelogfile = open(logpath,'w+')
+#thejarpath = settings.REANALYSEPROJECTPATH + "/solr/" + SOLR_JARNAME
+#thejarpath = "/home/pj/djangos/reanalyse/solr/startreanalysesolr.jar"
+#newprocess = ["cd","/home/pj/djangos/reanalyse/solr/","&&","java","-jar",thejarpath]
+# ? rather configure it within jetty.xml in the solr folder
+#newprocess = "cd %s && nohup java -jar %s &" % (settings.REANALYSEPROJECTPATH+"/solr/",SOLR_JARNAME)
+#subprocess.Popen(newprocess,stdout=thelogfile,shell=True)
+#subprocess.Popen(newprocess,shell=True)
+
 
 
 
@@ -215,8 +258,18 @@ def updateCtxWithSearchForm(ctx):
 ###########################################################################
 # MAIN VIEWS (static pages + login/register views)
 ###########################################################################
+def deleteThis(path):
+	# verify we are either within 'upload' or 'download' folders
+	if path.startswith(settings.REANALYSEUPLOADPATH) or path.startswith(REANALYSEDOWNLOADPATH):
+		cmd = "rm -rf "+path
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+		stdout,stderr = p.communicate()
+		#logger.info("removing result: "+stdout+"/"+stderr)
+	else:
+		logger.info("weird file path ! not removing: "+path)
+###########################################################################
 @login_required
-def eDelete(request,eid):
+def eDelete(request,eid):	
 	if request.user.is_staff:
 		e = Enquete.objects.get(id=eid)
 		
@@ -224,18 +277,16 @@ def eDelete(request,eid):
 		e.status = '4'
 		e.save()
 		
-		# remove uploaded/decompressed files
-		eqPath = e.locationpath
-		if eqPath.endswith('/extracted/'):
-			eqPath = '/'.join(eqPath.split('/')[:-2])
-		os.system("rm -R "+eqPath)
-		logger.info("["+str(eid)+"] removing study: "+eqPath)
+		# remove whole uploaded folder
+		eqPath = e.uploadpath
+		logger.info("["+str(eid)+"] removing whole study: "+eqPath)
+		deleteThis(eqPath)
 		
 		# remove graph files if there is
 		for vtyp in GRAPHTYPES:
 			for v in e.visualization_set.filter(viztype=vtyp):
 				logger.info("["+str(eid)+"] removing graph file: "+v.locationpath)
-				os.system("rm -R "+v.locationpath)
+				deleteThis(v.locationpath)
 		e.delete()
 		
 		# update index to avoid outdated data in lucene
@@ -583,7 +634,7 @@ def eParse(request):
 					enqueterootpath = upPath+"extracted/"+f+"/"
 		if enqueterootpath!="":
 			# make object and fetch _meta.csv files 
-			e = importEnqueteUsingMeta(enqueterootpath)
+			e = importEnqueteUsingMeta(upPath,enqueterootpath)
 			# parse docs, make viz, blabla...
 			doFiestaToEnquete(e)
 		else:
@@ -1921,6 +1972,7 @@ def eSolrIndexUpdate(request):
 	d={'status':'solr index updated'}
 	return HttpResponse(simplejson.dumps(d,indent=4,ensure_ascii=False), mimetype="application/json")
 ###########################################################################
+
 
 
 
