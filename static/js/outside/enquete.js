@@ -39,12 +39,10 @@ oo.enq.d3layer = function() {
 
       feature.attr("d", path)
       	.attr('lon', function(d, i) {
-      		var coordinates = collection.features[i].geometry.coordinates[0];
-      		return coordinates;
+      		return collection.features[i].geometry.coordinates[0];
       	})
       	.attr('lat', function(d, i) {
-      		var coordinates = collection.features[i].geometry.coordinates[1];
-      		return coordinates;
+      		return collection.features[i].geometry.coordinates[1];
       	});
     };
 
@@ -54,20 +52,21 @@ oo.enq.d3layer = function() {
         feature = g.selectAll("path")
             .data(collection.features)
             .enter().append("path")
+            
+            // On-click event
             .on("click", function(d,i) {
-            	// console.log('f.map.extent()', f.map.extent())
-            	var position = {
+            	
+            	f.map.center({
             		'lat' : d3.select(this).attr('lat'),
             		'lon' : d3.select(this).attr('lon')
-            	};
-            	f.map.center(position, true);
+            	}, true);
 
-            	// console.log('f.map.extent() - start', f.map.extent())
 				setTimeout( function() {
-	        		// console.log('f.map.extent() - end  ', f.map.extent())
-	        		oo.filt.trigger( oo.filt.events.add, {'extent':f.map.extent()} );
+	        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
 	        	}, 1000 );
+
             });
+
         return f;
     };
 
@@ -80,14 +79,17 @@ oo.enq.d3layer = function() {
     return f;
 };
 
+
+
 oo.enq.init = function(){
 
 	oo.log("[oo.enq.init]")
 	
 	d3.json( oo.api.urlfactory( oo.urls.get_enquete_data, 88 ), function(collection) {
 
-
+		//
 		// Geojson building
+		//
 
 		var result = [];
 		for (var i in collection.documents) {
@@ -97,37 +99,28 @@ oo.enq.init = function(){
 		collectionGeo = JSON.parse(jsonObj);
 
 
+		//
 		// Map
+		//
 
 	    var map = mapbox.map('map');
-	    map.addLayer(mapbox.layer().id('examples.map-vyofok3q'));
+	    map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
 
 	    layer = oo.enq.d3layer().data(collectionGeo);
 		map.addLayer(layer);
 		map.extent(layer.extent());
 
-		// map.ui.zoomer.add();
-  //   	map.ui.zoombox.add();
-
-
-    	// Behaviors
-			
+		map.ui.zoomer.add();
+		//  Behaviors
 		map.addCallback('panned', function(map, panOffset) {
-			// This is a stream of several extent
-			// console.log('f.map.extent()', map.extent())
 			oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
 		});
 
 		map.addCallback('zoomed', function(map, zoomOffset) {
-			// console.log('f.map.extent() - start', map.extent())
 			setTimeout( function() {
-        		// console.log('f.map.extent() - end  ', f.map.extent())
         		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
         	}, 1000 );
 		});
-
-
-
 		
 
 		// Timeline
@@ -150,12 +143,15 @@ oo.enq.init = function(){
 			minY = d3.min(data, function (d) { return d.y }),
 			maxY = d3.max(data, function (d) { return d.y }),
 			scaleX = d3.scale.linear().domain([minX, maxX]).range([ 0, width - margin.right*2 ]),
-			scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]);
+			scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
 
-		var timeline = d3.select('#timeline').append('svg').append("g")
-			.attr("transform", "translate(" + margin.right + "," + margin.top + ")");
+		var timeline = d3.select('#timeline').append('svg'),
+			brush = timeline.append('g'),
+			circles = timeline.append('g')
 
-		timeline.selectAll(".dot")
+		d3.selectAll('#timeline g').attr("transform", "translate(" + margin.right + "," + margin.top + ")");
+
+		circles.selectAll(".dot")
 			.data(data)
 			.enter().append("circle")
 			.attr('class', 'dot')
@@ -166,39 +162,56 @@ oo.enq.init = function(){
 
 		// Behaviors
 
-		// $('#timeline').on('click', 'circle', function() {
-		// 	var time = $(this).attr('data-time');
-		// 	oo.filt.trigger( oo.filt.events.add, {'time':[time]} );
-		// });
+		
 
+		$('#timeline').on('click', 'circle', function() {
 
+			
+			oo.log('range', range, 'width', width)
 
-		var brush = d3.svg.brush()
-		    .x(scaleX)
-		    .on("brush", onBrush);
+			// Missing right circle position
 
-		timeline.append("g")
-	      .attr("class", "x brush")
-	      .call(brush)
-	      .selectAll("rect")
-	      .attr("y", -margin.top)
-	      .attr("height", $('#timeline').height());
+			var time = $(this).attr('data-time');
+
+			var formattedTime = format.parse(time);
+
+			var circleX = scaleX(formattedTime);
+
+			oo.log('width/10', widthExtent, 'circleX', circleX)
+
+			var left = circleX - widthExtent / 2;
+			var right = circleX + widthExtent / 2;
+
+			brushObj.extent([left, right]);
+			brush.call(brushObj);
+
+		});
+
+		
+		var brushObj = d3.svg.brush()
+			.x(scaleX)
+			.extent(scaleX.domain())
+			.on("brushend", onBrush);
+
+		brush.attr("class", "x brush")
+			.call(brushObj)
+			.selectAll("rect")
+			.attr("y", - margin.top - 1 )
+			.attr("height", $('#timeline').height() +1);
+
+		var range = brushObj.extent();
+
+		var widthExtent = ( range[1] - range[0] ) / 10;
 
 		function onBrush() {
-			// this will return a date range to pass into the chart object 
 
-			var b = brush.empty() ? scaleX.domain() : brush.extent();
+			// this returns a period of time
 
-			oo.log(b)
- 
-		    // for(var i = 0; i < countriesCount; i++){
-		    //     charts[i].showOnly(b);
-		    // }
-			    
-		  // scaleX.domain(brush.extent());
-		  focus.select("path").attr("d", area);
-		  // focus.select(".x.axis");
+			var b = brushObj.empty() ? scaleX.domain() : brushObj.extent();
+			oo.filt.trigger( oo.filt.events.replace, {'period': b } );
 		}
+
+		
 
 	});
 }

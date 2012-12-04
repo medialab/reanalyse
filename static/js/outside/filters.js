@@ -119,7 +119,7 @@ oo.filt.add = function( eventType, data ){
 	example oo.filt.trigger( oo.filt.events.replace, {'type':replacement} )
 */
 oo.filt.replace = function( eventType, data ){
-	oo.log("[oo.filt.remove] received", eventType, data);
+	oo.log("[oo.filt.replace] received", eventType, data);
 	for (var f in data){
 		oo.filt.filters[f] = data[f];
 	}

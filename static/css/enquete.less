@@ -1,24 +1,12 @@
-@path_fill: white;
 @path_stroke: #333;
-@path_opacity: .2;
+@path_opacity: .6;
+@path_opacity_hover: .8;
+@cyan: #0299CC;
 
 #map {
 
 	.d3_layer {
 		position:absolute;
-	}
-
-	path {
-		fill: @path_fill;
-		fill-opacity: @path_opacity;
-		stroke: @path_stroke;
-		stroke-width: 1.5px;
-		cursor: pointer;
-		
-		&:hover {
-			fill: brown;
-			fill-opacity: .7;
-		}
 	}
 
 	.zoomer {
@@ -37,20 +25,32 @@
 		}
 	}
 
+	path {
+		stroke: @path_stroke;
+		stroke-width: 1.5px;
+		cursor: pointer;
+
+		fill: @cyan;
+		fill-opacity: @path_opacity;
+		
+		&:hover {
+			fill-opacity: @path_opacity_hover;	
+		}
+	}
 }
 
 #timeline {
 
 	circle.dot {
-		fill: @path_fill;
+		fill: white;
 		fill-opacity: @path_opacity;
 		stroke: @path_stroke;
 		stroke-width: 1.5px;
 		cursor: pointer;
 
 		&:hover {
-			fill: brown;
-			fill-opacity: .7;
+			fill: @cyan;
+			fill-opacity: @path_opacity_hover;
 			cursor: pointer;
 		}
 	}
