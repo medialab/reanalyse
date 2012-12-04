@@ -9,6 +9,7 @@ oo.filt.data = {}; // data, filtered according to oo.filt.filters
 
 oo.filt.events = {
 	'change':'oo.filt.events.change',
+	'init':'oo.filt.events.init',
 	'clean':'oo.filt.events.clean',
 	'add':'oo.filt.events.add',
 	'replace':'oo.filt.events.replace',
@@ -51,11 +52,14 @@ oo.filt.init = function(){
 oo.filt.listen = function( result ){
 	oo.log("[oo.filt.listen]", result);
 	oo.data = result;
+
 	oo.filt.on( oo.filt.events.add, oo.filt.add );
 	oo.filt.on( oo.filt.events.remove, oo.filt.remove );
 	oo.filt.on( oo.filt.events.reset, oo.filt.reset );
 	oo.filt.on( oo.filt.events.clean, oo.filt.clean );
 	oo.filt.on( oo.filt.events.replace, oo.filt.replace );
+
+	oo.filt.trigger( oo.filt.events.init, oo.data );
 };
 
 /*

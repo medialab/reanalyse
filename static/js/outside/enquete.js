@@ -4,22 +4,83 @@ oo.enq = {};
 
 // plugin filters
 oo.filt.cross.extent = function( item, ExtentObject ){
+
+
 	// if item is in ExtentObject
     //	return true
     return false;
 }
 
-oo.enq.d3layer = function() {
+oo.filt.cross.extent = function( item, ExtentObject ){
+	
 
-	oo.log("[oo.enq.d3layer]")
-    
+	// if item is in ExtentObject
+    //	return true
+    return false;
+}
+
+
+
+oo.enq.timeline = {};
+oo.enq.timeline.init = function(){
+	
+};
+oo.enq.timeline.update = function(){
+
+};
+
+
+// Map
+
+oo.enq.geo = {};
+
+oo.enq.geo.init = function(){
+	
+	oo.filt.on( oo.filt.events.change, function(e, filters){
+		oo.log(e, filters, oo.filt.data );
+	});
+};
+
+oo.enq.geo.update = function ( objects ){
+
+	oo.enq.geo.data = { type: "FeatureCollection", features:[]};
+
+	for( var i in objects ){
+		oo.enq.geo.data.features.push( objects[i].coordinates );
+	}
+
+	// Viz
+
+	oo.enq.geo.map = mapbox.map('map');
+    oo.enq.geo.map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
+
+    layer = oo.enq.geo.d3layer().data(oo.enq.geo.data);
+	oo.enq.geo.map.addLayer(layer);
+	oo.enq.geo.map.extent(layer.extent());
+
+	oo.enq.geo.map.ui.zoomer.add();
+	
+	oo.enq.geo.map.addCallback('panned', function(map, panOffset) {
+		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
+	});
+
+	oo.enq.geo.map.addCallback('zoomed', function(map, zoomOffset) {
+		setTimeout( function() {
+    		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
+    	}, 1000 );
+	});
+
+	oo.log('[oo.enq.geo]', oo.enq.geo)	
+
+}
+
+oo.enq.geo.d3layer = function() {
+
     var f = {}, bounds, feature, collection;
 
-    var div = d3.select(document.body)
-        .append("div")
-        .attr('class', 'd3_layer'),
+    var div = d3.select(document.body).append("div").attr('class', 'd3_layer'),
         svg = div.append('svg'),
-        g = svg.append("g");
+          g = svg.append("g");
 
     f.parent = div.node();
 
@@ -38,12 +99,8 @@ oo.enq.d3layer = function() {
       path = d3.geo.path().projection(f.project);
 
       feature.attr("d", path)
-      	.attr('lon', function(d, i) {
-      		return collection.features[i].geometry.coordinates[0];
-      	})
-      	.attr('lat', function(d, i) {
-      		return collection.features[i].geometry.coordinates[1];
-      	});
+      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
+      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; });
     };
 
     f.data = function(x) {
@@ -52,19 +109,14 @@ oo.enq.d3layer = function() {
         feature = g.selectAll("path")
             .data(collection.features)
             .enter().append("path")
-            
-            // On-click event
             .on("click", function(d,i) {
-            	
             	f.map.center({
             		'lat' : d3.select(this).attr('lat'),
             		'lon' : d3.select(this).attr('lon')
             	}, true);
-
 				setTimeout( function() {
 	        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
 	        	}, 1000 );
-
             });
 
         return f;
@@ -81,47 +133,24 @@ oo.enq.d3layer = function() {
 
 
 
+
+
+
+
 oo.enq.init = function(){
 
-	oo.log("[oo.enq.init]")
-	
+	oo.filt.on( oo.filt.events.init, function( event, data ){
+		oo.log("[oo.enq.init]");
+
+		oo.enq.geo.update( data.objects );
+		oo.enq.timeline.update( data.objects );
+	});
+
+
+	return;
+
 	d3.json( oo.api.urlfactory( oo.urls.get_enquete_data, 88 ), function(collection) {
 
-		//
-		// Geojson building
-		//
-
-		var result = [];
-		for (var i in collection.documents) {
-			result.push(JSON.stringify(collection.documents[i].coordinates));
-		}
-		var jsonObj = '{"type": "FeatureCollection", "features": [' + result.toString() + ']}';
-		collectionGeo = JSON.parse(jsonObj);
-
-
-		//
-		// Map
-		//
-
-	    var map = mapbox.map('map');
-	    map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
-
-	    layer = oo.enq.d3layer().data(collectionGeo);
-		map.addLayer(layer);
-		map.extent(layer.extent());
-
-		map.ui.zoomer.add();
-		//  Behaviors
-		map.addCallback('panned', function(map, panOffset) {
-			oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
-		});
-
-		map.addCallback('zoomed', function(map, zoomOffset) {
-			setTimeout( function() {
-        		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
-        	}, 1000 );
-		});
-		
 
 		// Timeline
 
