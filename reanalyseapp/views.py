@@ -260,7 +260,7 @@ def updateCtxWithSearchForm(ctx):
 ###########################################################################
 def deleteThis(path):
 	# verify we are either within 'upload' or 'download' folders
-	if path.startswith(settings.REANALYSEUPLOADPATH) or path.startswith(REANALYSEDOWNLOADPATH):
+	if path.startswith(settings.REANALYSEUPLOADPATH) or path.startswith(settings.REANALYSEDOWNLOADPATH):
 		cmd = "rm -rf "+path
 		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 		stdout,stderr = p.communicate()
@@ -521,6 +521,12 @@ def eAdmin(request):
 		users['rows'].append(uTab)
 	ctx.update({'users':users})
 	
+	### upload of available studies
+	serverAvailableStudies = []
+	for foldername in os.listdir(settings.REANALYSESAMPLE_STUDIES_FILES):
+		#logger.info("Listing existing study folder: "+foldername)
+		serverAvailableStudies.append({'foldername':foldername})
+	ctx.update({'serverAvailableStudies':serverAvailableStudies})
 	return render_to_response('bq_admin.html', ctx , context_instance=RequestContext(request))
 ################################################################################
 
@@ -600,9 +606,23 @@ def save_upload( uploaded, foldname, filename, raw_data ):
 	return False
 #################################################
 
+
+################################################################################
+@login_required
+def eParseFolder(request,fold):
+	# parsing of existing enquete folder
+	
+	logger.info("PARSING SERVER STUDY: "+fold)
+	completePath = settings.REANALYSESAMPLE_STUDIES_FILES + fold + '/'
+	# uploaded path is set to fictive location to avoid deleting files
+	upPath = completePath + '/inexistent_folder/'
+	e = importEnqueteUsingMeta(upPath,completePath)
+	doFiestaToEnquete(e)
 ################################################################################
 @login_required
 def eParse(request):
+	# parsing of .zip file
+	
 	d={}
 	folname = request.GET.get('foldname','')	
 	upPath = settings.REANALYSEUPLOADPATH+folname+"/"

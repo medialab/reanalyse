@@ -52,9 +52,10 @@
 							}
 						};
 					</script>
-					<!-- if enquete loading, 'delete' is disabled ! -->
-					{% if e.status != '1' %}
+					<!-- if enquete loading, we may want to disable 'delete'... ! -->
 					<a href="#" onclick='clicToRemoveEnquete();event.stopPropagation();return false;'>delete</a>
+					{% if e.status != '1' %}
+					<!--<a href="#" onclick='clicToRemoveEnquete();event.stopPropagation();return false;'>delete</a>-->
 					{% endif %}
 					
 					</span>

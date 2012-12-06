@@ -191,7 +191,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				doc_public = 		True # ...could be based on categories...
 				doc_description = 	row['*description']
 				doc_location = 		row['*location']
-				logger.info(eidstr+"found doc: "+doc_mimetype+" | "+row['*file'])
+				logger.info(eidstr+"doc ref: "+doc_mimetype+" | "+row['*file'])
 				#except:
 				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
 				
