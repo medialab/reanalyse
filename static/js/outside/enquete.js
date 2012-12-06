@@ -182,7 +182,7 @@ oo.enq.timeline.update = function( objects ){
 		maxX = d3.max(oo.enq.timeline.data, function (d) { return d.x }),
 		minY = d3.min(oo.enq.timeline.data, function (d) { return d.y }),
 		maxY = d3.max(oo.enq.timeline.data, function (d) { return d.y }),
-		scaleX = d3.scale.linear().domain([minX, maxX]).range([ 0, width - margin.right*2 ]),
+		scaleX = d3.time.scale().domain([minX, maxX]).range([ 0, width - margin.right*2 ]),
 		scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
 
 	var container = d3.select('#timeline').append('svg');
@@ -204,21 +204,19 @@ oo.enq.timeline.update = function( objects ){
 	// Circles behavior
 
 	$('#timeline').on('click', 'circle', function() {
-		
-		oo.log('range', range, 'width', width)
 
-		// Missing right circle position
+		var domain = scaleX.domain();
+		var oneTenthDomain = ( domain[1] - domain[0] ) / 8;
+		var extent = brushObj.extent();
+		var circleTime = new Date( $(this).attr('data-time') );
+		var left = circleTime.getTime() - oneTenthDomain / 2;
+		var right = circleTime.getTime() + oneTenthDomain / 2;
 
-		var time = $(this).attr('data-time');
-
-		var formattedTime = format.parse(time);
-
-		var circleX = scaleX(formattedTime);
-
-		oo.log('width/10', widthExtent, 'circleX', circleX)
-
-		var left = circleX - widthExtent / 2;
-		var right = circleX + widthExtent / 2;
+		oo.log('domain', domain)
+		oo.log('oneTenthDomain', oneTenthDomain)
+		oo.log('extent', extent)
+		oo.log('circleTime', circleTime)
+		oo.log('left', left, 'right', right)
 
 		brushObj.extent([left, right]);
 		oo.enq.timeline.brush.call(brushObj);
@@ -230,7 +228,7 @@ oo.enq.timeline.update = function( objects ){
 	var brushObj = d3.svg.brush()
 		.x(scaleX)
 		.extent(scaleX.domain())
-		.on("brushend", onBrush);
+		.on("brushend", brushMove);
 
 	oo.enq.timeline.brush.attr("class", "x brush")
 		.call(brushObj)
@@ -238,11 +236,9 @@ oo.enq.timeline.update = function( objects ){
 		.attr("y", - margin.top - 1 )
 		.attr("height", $('#timeline').height() +1);
 
-	var range = brushObj.extent();
+	d3.select('rect.extent').attr("class", "extent transition");
 
-	var widthExtent = ( range[1] - range[0] ) / 10;
-
-	function onBrush() {
+	function brushMove() {
 
 		// this returns a period of time
 		// To check

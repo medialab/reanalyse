@@ -3,6 +3,8 @@
 @path_opacity_hover: .8;
 @cyan: #0299CC;
 
+
+
 #map {
 
 	.d3_layer {
@@ -57,11 +59,19 @@
 
 	.brush .extent {
 		stroke: #fff;
-		fill-opacity: .125;
+		fill: black;
+		fill-opacity: .2;
 		shape-rendering: crispEdges;
+
+		-webkit-transition-property: all;
+		-webkit-transition-duration: 3s;
+		-webkit-transition-timing-function: linear;
 	}
 
+
 }
+
+
 
 
 
