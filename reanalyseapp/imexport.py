@@ -3,6 +3,10 @@
 import settings
 import os,re
 
+# for time measurement
+from time import time
+from datetime import timedelta
+
 # for ese json
 import simplejson
 
@@ -70,17 +74,27 @@ def doFiestaToEnquete(e):
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
 	docsCur = 0
 	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
+		if e.status != '1': # if not "loading", break
+			logger.info("["+str(e.id)+"] EXCEPT enquete no more loading : breaking !")
+			break
 		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id)+" ...")
-		t.parseXml()
-		logger.info("["+str(e.id)+"] texte parsed, now updating solr index: texteid="+str(t.id) )
-		update_index.Command().handle(verbosity=0)
-		logger.info("["+str(e.id)+"] solr index updated")
+		t_start = time()
+		try:
+			t.parseXml()
+		except:
+			logger.info("["+str(e.id)+"] EXCEPT parsing texte: "+str(t.id))
+		t_end = time()
+		s = t_end-t_start
+		m = s // 60
+		diffstr = str(m)+" min "+str(int(s-60*m))+" s"
+		logger.info("["+str(e.id)+"] parsing text "+str(t.id)+" took "+diffstr)
+		if m>5:
+			logger.info("["+str(e.id)+"] EXCEPT please note that more than 5min is really bad !")
 		docsCur+=1
-		e.statuscomplete = int(docsCur*100/docsTotal)
+		e.statuscomplete = int(docsCur*96/docsTotal)
 		e.save()
 		
 		# let's make stream timeline viz for each text
-		#logger.info("make streamtimeline viz")
 		try:
 			makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
@@ -88,19 +102,31 @@ def doFiestaToEnquete(e):
 		
 	logger.info("["+str(e.id)+"] all TEI files were sucessfully parsed")
 	
+	####### UPDATE SOLR INDEX
+	logger.info("["+str(e.id)+"] now updating solr index ...")
+	update_index.Command().handle(verbosity=0)
+	logger.info("["+str(e.id)+"] solr index updated")
+		
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
 	makeAllTfidf(e)
 	
 	if e.speaker_set.count()>0:
 		makeViz(e,'Cloud_SolrSpeakerTagCloud')
+		e.statuscomplete = 97
+		e.save()
 		makeViz(e,'Graph_SpeakersSpeakers')
+		e.statuscomplete = 98
+		e.save()
 		makeViz(e,'Graph_SpeakersWords')
+		e.statuscomplete = 99
+		e.save()
 		makeViz(e,'Graph_SpeakersAttributes')
-				
+		
+	e.statuscomplete = 100		
 	e.status='0'
 	e.save()
-	logger.info("["+str(e.id)+"] IMPORT PROCESS DONE !")
+	logger.info("["+str(e.id)+"] IMPORT PROCESS DONE SUCCESSFULLY !")
 ###########################################################################
 
 
@@ -191,7 +217,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				doc_public = 		True # ...could be based on categories...
 				doc_description = 	row['*description']
 				doc_location = 		row['*location']
-				logger.info(eidstr+"doc ref: "+doc_mimetype+" | "+row['*file'])
+				#logger.info(eidstr+"doc ref: "+doc_mimetype+" | "+row['*file'])
 				#except:
 				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
 				

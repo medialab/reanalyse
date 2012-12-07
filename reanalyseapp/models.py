@@ -519,6 +519,7 @@ def splitElemListByTimeAnchor(elemList,initTime):
 	yield [anchorTime, elemList[j:k+1]]
 ######################################################################## manage list of all <div>
 def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
+	e = texte.enquete
 	# init speakerContentDict which will store all text for one speaker
 	speakerContentDict = dict((theid,'') for theid in speakersArray)
 		
@@ -529,7 +530,7 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 	divNodesCur=0
 	# here we note the complete %, based on the total number of interventions
 	for node in nodes:
-		if node.tag==XMLTEINMS+'div':
+		if node.tag==XMLTEINMS+'div' and e.status=='1':
 			unode = node.findall(XMLTEINMS+'u')[0]
 			ddiid = unode.attrib['who']
 			if ddiid.startswith('#'): # means that the real ddi_id is in the header

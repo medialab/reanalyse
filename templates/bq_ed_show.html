@@ -525,32 +525,6 @@
 
 {% comment %}
 
-
-
-<!-- CTX was for CAQDAS files, deprecated man -->
-<!-- ======================================================= -->
-{% if texte.doctype == 'CTX' %}
-	<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.edStylizeContent texte.id %}");//window.location.reload(true);'>> Refresh Texte contenthtml from TXT and QUOTATIONS</a>
-	<h1>Texte: {{ texte.name }}</h1>
-	<!--<div class="textdiv">-->
-		{% autoescape off %}
-		{{texte.contenthtml}}
-		{% endautoescape %}
-	<!--</div>-->
-
-{% endif %}
-<!-- ======================================================= -->
-{% if texte.doctype == 'CTX' %}
-	<!-- jquery plugin scrollTo -->
-	</br>
-	<a href="#" onclick="$.scrollTo( {top:'0', left:'0'}, 500 );return false;">Scroll to Top</a>
-	<!-- Scriptaculous smooth scroll to top -->
-	<!--<a href="#" onclick="Effect.ScrollTo('topanchor', { duration:'0.5', offset:-10 });return false;">Scroll to Top</a>-->
-{% endif %}
-<!-- ======================================================= -->
-
-
-
 <!--
 	DEPRECATED: B.C. we used pagination to navigate through verbatim
 	<span class="document-pagination">

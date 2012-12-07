@@ -107,7 +107,7 @@
 	
 	{% comment %}
 		<!-- if you want to set random colors for all spks -->
-		<a href='#' onclick='doGetAtUrlAndRefresh("{% url reanalyse.reanalyseapp.views.resetColors enquete.id %}");return false;'>
+		<a href='#' onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.resetColors enquete.id %}",function(){location.reload(true);});return false;'>
 		set random colors on all speakers and refresh...
 		</a>
 	{% endcomment %}

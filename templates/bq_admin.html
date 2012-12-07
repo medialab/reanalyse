@@ -117,9 +117,9 @@
 		<h1>Solr & Logs</h1>
 		<h3>Solr {{solrstatus}}</h3>
 			<ul>
-				<li>make sure <a href="{{solr_url}}/solr/admin/">solr</a> is online if you need documents to be indexed (you could <a href="{% url reanalyse.reanalyseapp.views.killSolrProcess %}">kill the process</a> and refresh this page to relauch it)</li>
+				<li>make sure <a href="{{solr_url}}/solr/admin/">solr</a> is online if you need documents to be indexed (you could <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.killSolrProcess %}");return false;'>kill the process</a> and refresh this page to relauch it)</li>
 				<li>if you like to discover new things, you can <a href="{{solr_url}}/solr/admin/schema.jsp">browse the index</a></li>
-				<li>you could - for all studies - <a href="{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}">clear_index</a>, then <a href="{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}">update_index</a> if you know what that means</li>
+				<li>you could - for all studies - <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}");return false;'>clear_index</a>, then <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}");return false;'>update_index</a> if you know what that means</li>
 				<li>you could re-fetch ngrams from index for enquête: (could take a while)
 					<ul>
 					{% if enquetes %}
@@ -131,11 +131,13 @@
 					{% endif %}
 					</ul>
 				</li>
-				<li>you could <a href="{% url reanalyse.reanalyseapp.views.clearLogFile %}">clear log file</a></li>
+				<li>you could <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.clearLogFile %}",function(){location.reload(true);});return false;'>clear log file</a> (will refresh page)</li>
 			</ul>
 		<h3>Log Django</h3>
 		<ul class="logconsole">
+			{% autoescape off %}
 			{% for l in log_django %}<li>{{l}}</li>{% endfor %}
+			{% endautoescape %}
 		</ul>
 		<a href="?page=advanced&log=700">show me more log lines, 'cause i like it ...</a>
 		{% endif %}

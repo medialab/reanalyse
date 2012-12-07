@@ -259,22 +259,27 @@ def updateCtxWithSearchForm(ctx):
 # MAIN VIEWS (static pages + login/register views)
 ###########################################################################
 def deleteThis(path):
-	# verify we are either within 'upload' or 'download' folders
-	if path.startswith(settings.REANALYSEUPLOADPATH) or path.startswith(settings.REANALYSEDOWNLOADPATH):
-		cmd = "rm -rf "+path
-		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-		stdout,stderr = p.communicate()
-		#logger.info("removing result: "+stdout+"/"+stderr)
-	else:
-		logger.info("weird file path ! not removing: "+path)
+	try:
+		# verify we are either within 'upload' or 'download' folders - we don't want to touch other folders
+		if path.startswith(settings.REANALYSEUPLOADPATH) or path.startswith(settings.REANALYSEDOWNLOADPATH):
+			cmd = "rm -rf "+path
+			p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+			stdout,stderr = p.communicate()
+			#logger.info("removing result: "+stdout+"/"+stderr)
+		else:
+			logger.info("weird file path ! not removing: "+path)
+	except:
+		logger.info("["+str(eid)+"] EXCEPT trying to remove: "+path)
 ###########################################################################
 @login_required
 def eDelete(request,eid):	
 	if request.user.is_staff:
 		e = Enquete.objects.get(id=eid)
+		eidstr = str(eid)
 		
 		# status flag = 4 = deleting... (to hide enquete from the list)
 		e.status = '4'
+		e.statuscomplete = 0
 		e.save()
 		
 		# remove whole uploaded folder
@@ -287,8 +292,24 @@ def eDelete(request,eid):
 			for v in e.visualization_set.filter(viztype=vtyp):
 				logger.info("["+str(eid)+"] removing graph file: "+v.locationpath)
 				deleteThis(v.locationpath)
-		e.delete()
-		
+		try:
+			# deleting one by one then enquete, to display progress
+			curt = 0
+			totalt = e.texte_set.count()
+			for t in e.texte_set.all():
+				try:
+					logger.info("["+eidstr+"] deleting django text: "+str(t.id)+" ... (meanwhile being parsed ?)")
+					t.delete()
+				except:
+					logger.info("["+eidstr+"] EXCEPT deleting django text")
+				curt += 1
+				e.statuscomplete = int(curt/totalt)
+				e.save()
+			e.delete()
+			logger.info("["+eidstr+"] deletion done")
+		except:
+			logger.info("["+eidstr+"] EXCEPT deleting django enquete id: "+eidstr+" (please try again)")
+				
 		# update index to avoid outdated data in lucene
 		update_index.Command().handle(verbosity=0)
 		logger.info("SOLR INDEX UPDATED")
@@ -681,7 +702,8 @@ def eParse(request):
 def eBrowse(request):
 	enquetesandmeta=[]
 	# all except those in process of being removed
-	enquetes = Enquete.objects.all().exclude(status='4').order_by('-id')
+	#enquetes = Enquete.objects.all().exclude(status='4').order_by('-id')
+	enquetes = Enquete.objects.all().order_by('-id')
 	return render_to_response('bq_e_browse.html', {'bodyid':'e' ,'enquetes':enquetes}, context_instance=RequestContext(request))
 ################################################################################	
 
@@ -874,7 +896,10 @@ def edBrowse(request,eid):
 		if t.filesize==0:
 			sizeStr = '-'
 		else:
-			sizeStr = str(t.filesize)+" Ko"
+			if t.filesize==-1:
+				sizeStr = "not found"
+			else:
+				sizeStr = str(t.filesize)+" Ko"
 		
 		# DATA / STATUS / ACTIONS
 		dataStr=""
@@ -1653,18 +1678,21 @@ def eSearch(request,eid):
 	 			#for tup in fieldCounts['texteid']:
 				## get speakers facet_counts
 				for tup in fieldCounts['speakerid']:
-					s=Speaker.objects.get(id=tup[0])
-					nres=tup[1]
-					#ntotal = s.sentence_set.count()
-					#sFacets.append([ nres, ntotal , s, tup[0] in inSpeakersIds.split(',') ])
-					overviewStats[s.id]=nres
-					if nres>0:
-						involvedSpeakers.append(s)
-	# 						for t in s.textes.all():
-	# 							if t in involvedTextes:
-	# 								linkT=involvedTextes.index(t)
-	# 								linkS=involvedSpeakers.index(s)
-	# 								dLinks.append([linkT,linkS])
+					try:
+						s=Speaker.objects.get(id=tup[0])
+						nres=tup[1]
+						#ntotal = s.sentence_set.count()
+						#sFacets.append([ nres, ntotal , s, tup[0] in inSpeakersIds.split(',') ])
+						overviewStats[s.id]=nres
+						if nres>0:
+							involvedSpeakers.append(s)
+		# 						for t in s.textes.all():
+		# 							if t in involvedTextes:
+		# 								linkT=involvedTextes.index(t)
+		# 								linkS=involvedSpeakers.index(s)
+		# 								dLinks.append([linkT,linkS])
+					except:
+						logger.info("["+str(eid)+"] solr search results - speaker does not exist: "+tup[0])
 			
 			ctx['overviewStats']=overviewStats
 			#ctx['textes']=involvedTextes

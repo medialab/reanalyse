@@ -856,26 +856,13 @@ function produceIntroMenu(htmlurl) {
 }
 
 ////////////////////////////////////////////////
-
-function doGetAtUrl(theurl) {
+function doGetAtUrl(theurl,func) {
 	$.ajax({
 		type: "GET",
 		dataType: "json",
 		url: theurl,
 		cache: false,
-		success: function processAnswer(indata) {}
-	});
-}
-function doGetAtUrlAndRefresh(theurl) {
-	$.ajax({
-		type: "GET",
-		dataType: "json",
-		url: theurl,
-		cache: false,
-		success: function processAnswer(indata) {
-			console.log("json received");
-			location.reload(true);
-		}
+		success: func
 	});
 }
 
