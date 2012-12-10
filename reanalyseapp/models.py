@@ -375,7 +375,7 @@ def parseXmlDocument(texte):
 	
 	######################### XML TXM		## Built using Formatted .txt > TXM
 	if roottag=='Trans':
-		logger.info("["+str(e.id)+"] parsing type: TXM")
+		logger.info("["+str(e.id)+"] parsing text "+str(texte.id)+" with type: TXM ...")
 		persons = root.findall('Speakers/Speaker')
 		for n,p in enumerate(persons):
 			speakersArray.append( p.attrib['id'] )
@@ -385,7 +385,7 @@ def parseXmlDocument(texte):
 	
 	######################### XML TEI		## Built using: Formatted .txt > Exmaralda .exb > TEI Drop
 	elif roottag==XMLTEINMS+'TEI':
-		logger.info("["+str(e.id)+"] parsing type: Exmaralda TEI")
+		logger.info("["+str(e.id)+"] parsing text "+str(texte.id)+" with type: Exmaralda TEI ...")
 		persons = root.findall(XMLTEINMS+'teiHeader/'+XMLTEINMS+'profileDesc/'+XMLTEINMS+'particDesc/'+XMLTEINMS+'person')
 		# putting speakers ddi_id from TEI header in a dict to access them (if the <who> tags contains #references to that header)
 		speakersDDIDict={}

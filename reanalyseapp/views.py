@@ -298,12 +298,12 @@ def eDelete(request,eid):
 			totalt = e.texte_set.count()
 			for t in e.texte_set.all():
 				try:
-					logger.info("["+eidstr+"] deleting django text: "+str(t.id)+" ... (meanwhile being parsed ?)")
+					#logger.info("["+eidstr+"] deleting django text: "+str(t.id)+" ...")
 					t.delete()
 				except:
-					logger.info("["+eidstr+"] EXCEPT deleting django text")
+					logger.info("["+eidstr+"] EXCEPT deleting django text (meanwhile being parsed ?)")
 				curt += 1
-				e.statuscomplete = int(curt/totalt)
+				e.statuscomplete = int(curt*100/totalt)
 				e.save()
 			e.delete()
 			logger.info("["+eidstr+"] deletion done")
@@ -1868,7 +1868,8 @@ def evBrowse(request,eid):
 	#visualizations = e.visualization_set.order_by('viztype','-id')
 	visualizations = e.visualization_set.exclude(viztype='Overview').order_by('viztype','-id')
 	
-	ctx={'bodyid':'e','pageid':'visualizations','enquete':e,'visualizations':visualizations,'speakersColors':speakersColors,'viztypes':VIZTYPES}
+	ctx={'bodyid':'e',
+	'pageid':'visualizations','enquete':e,'visualizations':visualizations,'speakersColors':speakersColors,'viztypes':VIZTYPES,'graphviztypes':GRAPHTYPES}
 	
 	try:
 		overviewViz=e.visualization_set.filter(viztype='Overview')[0]

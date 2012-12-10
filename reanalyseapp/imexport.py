@@ -73,11 +73,10 @@ def doFiestaToEnquete(e):
 	# we look at '5'='Waiting' TEI Documents...
 	docsTotal = e.texte_set.filter(doctype='TEI',status='5').count()
 	docsCur = 0
-	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('name'):
+	for t in e.texte_set.filter(doctype='TEI',status='5').order_by('id'):
 		if e.status != '1': # if not "loading", break
 			logger.info("["+str(e.id)+"] EXCEPT enquete no more loading : breaking !")
 			break
-		logger.info("["+str(e.id)+"] now parsing text: "+str(t.id)+" ...")
 		t_start = time()
 		try:
 			t.parseXml()
@@ -88,7 +87,7 @@ def doFiestaToEnquete(e):
 		m = s // 60
 		diffstr = str(m)+" min "+str(int(s-60*m))+" s"
 		logger.info("["+str(e.id)+"] parsing text "+str(t.id)+" took "+diffstr)
-		if m>5:
+		if m>=5:
 			logger.info("["+str(e.id)+"] EXCEPT please note that more than 5min is really bad !")
 		docsCur+=1
 		e.statuscomplete = int(docsCur*96/docsTotal)
@@ -96,32 +95,38 @@ def doFiestaToEnquete(e):
 		
 		# let's make stream timeline viz for each text
 		try:
-			makeViz(e,"TexteStreamTimeline",textes=[t])
+			dontohing = 1
+			#makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
 			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz: texteid="+str(t.id))
 		
 	logger.info("["+str(e.id)+"] all TEI files were sucessfully parsed")
 	
 	####### UPDATE SOLR INDEX
-	logger.info("["+str(e.id)+"] now updating solr index ...")
+	logger.info("["+str(e.id)+"] solr index updating ...")
 	update_index.Command().handle(verbosity=0)
 	logger.info("["+str(e.id)+"] solr index updated")
 		
 	####### UPDATE ALL TFIDF
 	# ie fetch ngrams from solr and store them in django model (easier then to make viz using thoses objects rather than fetching ngrams everytime)
+	logger.info("["+str(e.id)+"] fetching ngrams from solr ...")
 	makeAllTfidf(e)
+	logger.info("["+str(e.id)+"] fetching done")
 	
 	if e.speaker_set.count()>0:
-		makeViz(e,'Cloud_SolrSpeakerTagCloud')
-		e.statuscomplete = 97
-		e.save()
-		makeViz(e,'Graph_SpeakersSpeakers')
-		e.statuscomplete = 98
-		e.save()
-		makeViz(e,'Graph_SpeakersWords')
-		e.statuscomplete = 99
-		e.save()
-		makeViz(e,'Graph_SpeakersAttributes')
+		try:
+			makeViz(e,'Cloud_SolrSpeakerTagCloud')
+			e.statuscomplete = 97
+			e.save()
+			makeViz(e,'Graph_SpeakersSpeakers')
+			e.statuscomplete = 98
+			e.save()
+			makeViz(e,'Graph_SpeakersWords')
+			e.statuscomplete = 99
+			e.save()
+			makeViz(e,'Graph_SpeakersAttributes')
+		except:
+			logger.info("["+str(e.id)+"] EXCEPT making Cloud or Graphs")
 		
 	e.statuscomplete = 100		
 	e.status='0'

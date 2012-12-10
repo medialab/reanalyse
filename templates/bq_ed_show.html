@@ -154,11 +154,13 @@
 <!-- =================================== NAME -->
 <div id="topAnchor" class="introHtml">
 	<h1>{{texte.name}}</h1>
+	{% comment %}
 	{% if perms.reanalyseapp.can_make %}
 	<ul>
 		<li><a href="{% url reanalyse.reanalyseapp.views.edXmlShow enquete.id texte.id %}">see XSLT'ed HTML</a></li>
 	</ul>
 	{% endif %}
+	{% endcomment %}
 </div>
 
 <!-- ===================================================================================================================================== -->
