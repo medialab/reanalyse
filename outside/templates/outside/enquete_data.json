@@ -15,11 +15,7 @@
 					"organization" : "Marine nationale française"
 				}
 			],
-			"types" : [
-				{
-					"type" : "2"
-				}
-			],
+			"type" : "doc",
 			"phases" : [
 				{
 					"phase" : "1"
@@ -58,11 +54,7 @@
 					"organization" : "Marine nationale française"
 				}
 			],
-			"types" : [
-				{
-					"type" : "3"
-				}
-			],
+			"type" : "doc",
 			"phases" : [
 				{
 					"phase" : "1"
@@ -101,11 +93,7 @@
 					"organization" : "Marine nationale française"
 				}
 			],
-			"types" : [
-				{
-					"type" : "3"
-				}
-			],
+			"type" : "doc",
 			"phases" : [
 				{
 					"phase" : "2"
@@ -144,11 +132,7 @@
 					"organization" : "Marine américaine"
 				}
 			],
-			"types" : [
-				{
-					"type" : "3"
-				}
-			],
+			"type" : "xml",
 			"phases" : [
 				{
 					"phase" : "3"

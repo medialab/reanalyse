@@ -48,14 +48,11 @@
 		<div class="pins filters">
 			<div class="child">
 				<div class="title">{% trans "file type" %}</div>
+				<ul class="content" id="types"></ul>
 			</div>
 			<div class="child">
 				<div class="title">{% trans "file list" %}</div>
-				<ul class="content">
-					<li>zap.xml</li>
-					<li>zap.entretien.annuel.xml</li>
-					<li>zap.babourg.dj.2001020.xml</li>
-				</ul>
+				<ul class="content" id="documents"></ul>
 			</div>
 		</div>
 		<div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>

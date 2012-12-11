@@ -1,6 +1,6 @@
 @path_stroke: #333;
 @path_opacity: .6;
-@path_opacity_hover: .8;
+@path_opacity_hover: 1;
 @cyan: #0299CC;
 
 
@@ -30,13 +30,20 @@
 	path {
 		stroke: @path_stroke;
 		stroke-width: 1.5px;
-		cursor: pointer;
-
-		fill: @cyan;
 		fill-opacity: @path_opacity;
+		cursor: pointer;
 		
 		&:hover {
 			fill-opacity: @path_opacity_hover;	
+		}
+
+		&.active {
+			fill: @cyan;
+			
+		}
+
+		&.inactive {
+			fill: white;
 		}
 	}
 }
@@ -44,16 +51,23 @@
 #timeline {
 
 	circle.dot {
-		fill: white;
-		fill-opacity: @path_opacity;
 		stroke: @path_stroke;
 		stroke-width: 1.5px;
+		fill-opacity: @path_opacity;
 		cursor: pointer;
 
 		&:hover {
 			fill: @cyan;
 			fill-opacity: @path_opacity_hover;
 			cursor: pointer;
+		}
+
+		&.active {
+			fill: @cyan;
+		}
+
+		&.inactive {
+			fill: white;
 		}
 	}
 
@@ -63,14 +77,49 @@
 		fill-opacity: .2;
 		shape-rendering: crispEdges;
 
-		-webkit-transition-property: all;
-		-webkit-transition-duration: 3s;
-		-webkit-transition-timing-function: linear;
 	}
-
 
 }
 
+#documents {
+
+	li {
+
+		white-space: nowrap;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&.active {
+			display: block;
+		}
+
+		&.inactive {
+			display: none;
+		}
+	}
+
+}
+
+#types {
+
+	li {
+
+		white-space: nowrap;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&.active {
+			display: block;
+		}
+
+		&.inactive {
+			display: none;
+		}
+	}
+
+}
 
 
 

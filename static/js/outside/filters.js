@@ -7,112 +7,149 @@ oo.data = {}; // the json completed
 oo.filt.data = {}; // data, filtered according to oo.filt.filters
 
 
+// Events Types
+
 oo.filt.events = {
-	'change':'oo.filt.events.change',
-	'init':'oo.filt.events.init',
-	'clean':'oo.filt.events.clean',
-	'add':'oo.filt.events.add',
+	    'add':'oo.filt.events.add',
+	 'change':'oo.filt.events.change',
+	  'clean':'oo.filt.events.clean',
+	   'init':'oo.filt.events.init',
 	'replace':'oo.filt.events.replace',
-	'remove':'oo.filt.events.remove',
-	'reset':'oo.filt.events.reset'
+	 'remove':'oo.filt.events.remove',
+	  'reset':'oo.filt.events.reset'
 };
+
 
 oo.filt.parser = {
 	datetime: d3.time.format("%Y-%m-%d")
-}
+}; // Parsers
+
+
+// Filters plug-in
 
 oo.filt.cross = oo.filt.cross || {
-	'extent': function( item, filter ){ return false; },
+	'extent': function( item, filter ){
+		var bounds = filter,
+			 point = item.coordinates.geometry.coordinates;
+		return point[1] < bounds.north && point[1] > bounds.south && point[0] < bounds.east && point[0] > bounds.west;
+	},
 	'period': function( item, filter ){
 		var item_time = oo.filt.parser.datetime.parse( item.times[0].time ).getTime();
 		return item_time > filter[0] && item_time < filter[1];
-	},
-	'type': function( item, filter ){ return true; }
+	}
 };
+
+
+/*
+	On / Trigger
+*/
 
 oo.filt.on = function( eventType, callback ){
 	$(window).on( eventType, callback );
-}
+};
 
 oo.filt.trigger = function ( eventType, data ){
 	$(window).trigger( eventType, data );
-}
+};
+
 
 /*
-	Add listeners for add / remove / reset;
-	format the response and trigger oo.filt.events.change.
-
+	Load data
 */
+
 oo.filt.init = function(){
+
 	oo.log("[oo.filt.init]");
-	// ask for data
+	
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.get_enquete_data,
-		data: {}, 
-		success:function(result){
-			oo.log( "[oo.filt.init] get_enquete_data result:", result );
+		data: {},
+		success:function( result ){
+			oo.log( "[oo.filt.init]", result );
 			oo.api.process( result, oo.filt.listen );
 		}
 	}));
-	
-}
+};
+
+
+/*
+	Add listeners for add / clean / remove / replace / reset;
+*/
 
 oo.filt.listen = function( result ){
-	oo.log("[oo.filt.listen]", result);
+
+	oo.log("[oo.filt.listen]");
+	
 	oo.data = result;
+	oo.filt.trigger( oo.filt.events.init, oo.data );
 
 	oo.filt.on( oo.filt.events.add, oo.filt.add );
-	oo.filt.on( oo.filt.events.remove, oo.filt.remove );
-	oo.filt.on( oo.filt.events.reset, oo.filt.reset );
 	oo.filt.on( oo.filt.events.clean, oo.filt.clean );
+	oo.filt.on( oo.filt.events.remove, oo.filt.remove );
 	oo.filt.on( oo.filt.events.replace, oo.filt.replace );
+	oo.filt.on( oo.filt.events.reset, oo.filt.reset );
 
-	oo.filt.trigger( oo.filt.events.init, oo.data );
 };
+
+
+
+
 
 /*
 	Call the oo.filt.execute function after a predefined delay
 */
+
 oo.filt.push = function(){
-	oo.log("[oo.filt.push]");
+	
+	// oo.log("[oo.filt.push]");
+
 	clearTimeout( oo.filt.timer );
 	oo.filt.timer = setTimeout( oo.filt.execute, 1000 );	
-}
+};
+
 
 /*
-	Run through oo.data
-	and filter according to oo.filt.filters.
+	Run through oo.data and filter according to oo.filt.filters.
 	Selected items will be available inside oo.filt.data.
+	Format the response and trigger oo.filt.events.change.
 */
+
 oo.filt.execute = function(){
-	oo.log("[oo.filt.execute]");
 
 	oo.filt.data = {};
 
 	for( var i in oo.data.objects ){
 		oo.filt.data[ i ] = oo.data.objects[ i ];
-	};
+	}; // copy original data
 
-	// progressive filtering
 	for( var type in oo.filt.filters ){
 		for ( var i in oo.filt.data ){
 			if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
 				delete oo.filt.data[ i ]
 			};
 		}
-	};
+	}; // progressive filtering
+
+	oo.log("[oo.filt.execute]", oo.filt.filters, oo.filt.data);
 
 	oo.filt.trigger( oo.filt.events.change, oo.filt.filters );
 
-}
+};
+
+
+
+
 
 
 
 /*
-	example oo.filt.trigger( oo.filt.events.add, {'place':['Paris','New York']} )
+	This will add a filter.
+	ex. oo.filt.trigger( oo.filt.events.add, {'place':['Paris','New York']} )
 */
+
 oo.filt.add = function( eventType, data ){
-	oo.log("[oo.filt.add] received", eventType, data);
+
+	oo.log("[oo.filt.add] received");
 	
 	for (var f in data){
 		oo.log( f, data[f]);
@@ -127,50 +164,71 @@ oo.filt.add = function( eventType, data ){
 	oo.filt.push();
 };
 
+
 /*
-	example oo.filt.trigger( oo.filt.events.replace, {'type':replacement} )
+	This will empty filters.
+	ex. oo.filt.trigger( oo.filt.events.clean, {} )
 */
-oo.filt.replace = function( eventType, data ){
-	oo.log("[oo.filt.replace] received", eventType, data);
-	for (var f in data){
-		oo.filt.filters[f] = data[f];
-	}
+
+oo.filt.clean = function( eventType, data ){
+
+	oo.log("[oo.filt.clean]");
+
+	oo.filt.filters = {};
 	oo.filt.push();
 };
 
+
 /*
-	example oo.filt.trigger( oo.filt.events.remove, {'place':['Paris','New York']} )
+	This will remove filter item/s.
+	ex. oo.filt.trigger( oo.filt.events.remove, {'place':['Paris','New York']} )
 */
+
 oo.filt.remove = function( eventType, data ){
-	oo.log("[oo.filt.remove] received", eventType, data);
+
+	oo.log("[oo.filt.remove]");
+	
 	for (var f in data){
 		if( typeof oo.filt.filters[f] != "undefined" ){
 			// which data?
 		}
 	}
-		
 	oo.filt.push();
 };
 
+
 /*
-	example oo.filt.trigger( oo.filt.events.reset, {'type':[]} )
-	This will delete the type field from the stored filters.
+	This will replace the type field.
+	ex. oo.filt.trigger( oo.filt.events.replace, {'type':replacement} )
 */
+
+oo.filt.replace = function( eventType, data ){
+
+	oo.log("[oo.filt.replace]");
+
+	for (var f in data) {
+		oo.filt.filters[f] = data[f];
+	};
+	oo.filt.push();
+};
+
+
+/*
+	This will delete the type field.
+	ex. oo.filt.trigger( oo.filt.events.reset, {'type':[]} )
+*/
+
 oo.filt.reset = function( eventType, data ){
-	for (var f in data){
+
+	oo.log("[oo.filt.reset]");
+
+	for (var f in data) {
 		delete oo.filt.filters[f];
 	};
 	oo.filt.push();
 };
 
-/*
-	example oo.filt.trigger( oo.filt.events.clean, {} )
-	This will delete the type field from the stored filters.
-*/
-oo.filt.clean = function( eventType, data ){
-	oo.filt.filters = {};
-	oo.filt.push();
-};
+
 
 
 
