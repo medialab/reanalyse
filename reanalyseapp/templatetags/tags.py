@@ -12,7 +12,7 @@ register = template.Library()
 
 
 
-###########################################################################    
+###########################################################################	
 # simple counts (for left main menu)
 @register.filter
 def vizTotalCount(e):
@@ -28,12 +28,31 @@ def docPublicCount(e):
 @register.filter
 def spkPublicCount(e):
 	return e.speaker_set.filter(public=True).count()
-###########################################################################    
+###########################################################################	
+@register.filter
+def vizTypeCount(e,typ):
+	que = Q(viztype=typ)
+	if typ == 'Graph':
+		# to create Q(type=typ)|Q(type=typ)|Q(type=typ)|...
+		# we could do : reduce(operator.or_, Q(**{key + '__icontains': val}) for (key, val) in D.iteritems())
+		que = None
+		for gtyp in GRAPHTYPES:
+			if que is None:
+				que = Q(viztype=gtyp)
+			else:
+				que |= Q(viztype=gtyp)
+	return e.visualization_set.filter(que).count()
+###########################################################################	
+	
+	
+	
+	
+###########################################################################	
 # to get speaker description ON THE LEFT
 @register.filter
 def speakerDescription(s):
 	try:
-	    return s.attributes.get(attributetype__name='description').name
+		return s.attributes.get(attributetype__name='description').name
 	except:
 	   	return 'error fetching description'
 ###########################################################################

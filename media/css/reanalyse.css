@@ -358,6 +358,14 @@ ul#eList {
 #eList li {
 	border-bottom:1px solid lightgray;
 }
+/* 1 = Loading ... see globalvars.py */
+.eStatus_1  { 
+	background:#FFCC99;
+}
+/* 4 = Deleting ... see globalvars.py */
+.eStatus_4  {
+	background:#CCCCCC;
+}
 .eBrowseEnquete {
 	margin:7px;
 	padding:10px;

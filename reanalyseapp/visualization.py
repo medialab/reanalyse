@@ -132,7 +132,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 					newVizu.status = '0'
 					newVizu.save()
 				else:
-					logger.info("["+str(e.id)+"] No speaker for TagCloud in text: "+str(t.id))
+					logger.info("["+str(e.id)+"] Not making TagCloud 'cause no speaker in text: "+t.name)
 		####### one cloud for group of speaker
 		else:
 			newVizu = makeVisualizationObject(e,typ,descr)
@@ -757,28 +757,29 @@ def visMakeStreamTimeline(e,param):
 # SOLR RAW QUERIES
 ########################################################################### SOLR RAW QUERIES DO GET SIMILAR SPEAKERS
 def getSolrSimilarArray(speaker,maxcount):
+	eid=str(speaker.enquete.id)
+	sid=str(speaker.id)
+	
 	if maxcount==0:
 		maxcount = speaker.enquete.speaker_set.count()
 	p = {'fq':'django_ct:(reanalyseapp.speaker)','mlt':'true','mlt.fl':'ngrams','mlt.mindf':1,'mlt.mintf':1,'fl':'score','mlt.count':maxcount}
-	q = 'speakerid:'+str(speaker.id)
+	q = 'speakerid:'+sid+' AND enqueteid:'+eid
 	conn = pythonsolr.Solr( settings.HAYSTACK_SOLR_URL )
 	r = conn.search(q,**p)
 	array=[]
 	speakerkey = r.result['moreLikeThis'].keys()[0]
 
-	eid=str(speaker.enquete.id)
-	sid=str(speaker.id)
 	for res in r.result['moreLikeThis'][speakerkey]['docs']:
 		try:
+			similId = int(res['speakerid'])
 			try:
-				sId = int(res['speakerid'])
+				similSpk = Speaker.objects.get(id=similId)
+				array.append( [res['score'],similId,similSpk.name] )
 			except:
-				logger.info("["+eid+"] EXCEPT getSolrSimilarArray (no solr result for spk: "+sid+")")
-			similSpk = Speaker.objects.get(id=sId)
-			array.append( [res['score'],similSpk.id,similSpk.name] )
+				logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+sid+"), unknown spk: "+str(similId))
 		except:
-			eidc=res['speakerid']
-			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (of spk "+str(sid)+"), unknown spk: "+str(eidc))
+			logger.info("["+eid+"] EXCEPT getSolrSimilarArray (no res['speakerid']) for spk: "+sid+")")
+			
 	return array
 ########################################################################### SOLR RAW QUERIES DO GET WORD LIST (used in graph,tagcloud,...)
 def getSolrTermVectorsDict(speakers,field,mintn): # field = 'text'/'ngrams'
@@ -864,13 +865,16 @@ def getSolrTermVectorsDict(speakers,field,mintn): # field = 'text'/'ngrams'
 def makeAllTfidf(e):
 	logger.info("["+str(e.id)+"] now updating tfidf ...")
 	for s in e.speaker_set.all():
-		#logger.info("now reseting tfidf ngrams for speaker:"+str(s.id))
-		s.ngramspeaker_set.all().delete()
-		termd = getSolrTermVectorsDict([s],'ngrams',mintn=2)
-		for w in termd.keys():
-			d=termd[w]
-			newNgram,isnew = Ngram.objects.get_or_create(enquete=e,content=w,df=d['df'])	
-			newNgramSpeaker,isnew = NgramSpeaker.objects.get_or_create(enquete=e,ngram=newNgram,speaker=s,tf=d['tf'],tn=d['tn'],tfidf=d['tfidf'])
+		try:
+			#logger.info("now reseting tfidf ngrams for speaker:"+str(s.id))
+			s.ngramspeaker_set.all().delete()
+			termd = getSolrTermVectorsDict([s],'ngrams',mintn=2)
+			for w in termd.keys():
+				d=termd[w]
+				newNgram,isnew = Ngram.objects.get_or_create(enquete=e,content=w,df=d['df'])	
+				newNgramSpeaker,isnew = NgramSpeaker.objects.get_or_create(enquete=e,ngram=newNgram,speaker=s,tf=d['tf'],tn=d['tn'],tfidf=d['tfidf'])
+		except:
+			logger.info("["+str(e.id)+"] EXCEPT fetching tfidf ngrams for spk: "+str(s.id))
 	logger.info("["+str(e.id)+"] tfidf sucessfully updated")
 ####################################################################
 

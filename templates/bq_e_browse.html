@@ -28,34 +28,37 @@
 {% block content %}
 
 <!-- ================================================= -->
+
+<!-- remove enquete button + action -->
+<script type="text/javascript">
+	var clicToRemoveEnquete = function(eid,url) {
+		{% comment %}Translators: popup question when clicking delete study{% endcomment %}
+		var message = "{% trans 'You are about to delete this study.\nAre you sure you want to do this ?' %}"
+		var r = confirm(message);
+		if(r==true) {
+			doGetAtUrl(url,function(){location.reload(true);});
+			// we don't remove element anymore, because we want to know precisely when deletion is finished
+			//$("#e_"+eid).remove();
+		} else {
+			// ok, 'atta boy.
+		}
+	};
+</script>
+
 {% if enquetes %}
 	<ul id="eList">
 	{% for e in enquetes %}
 		<li id="e_{{e.id}}">
-			<div class="eBrowseEnquete" onclick='window.location.href="{% url reanalyse.reanalyseapp.views.eShow e.id %}"'>
+			<div class="eBrowseEnquete eStatus_{{e.status}}" onclick='window.location.href="{% url reanalyse.reanalyseapp.views.eShow e.id %}"'>
 			
 				{% if perms.reanalyseapp.is_admin %}
 					<span class="eBrowseEnqueteStatus">	
 					{{e.date}} - [{{ e.get_status_display }}{% if e.status != '0' %} <span class="eProblem">{{e.statuscomplete}}%</span>{% endif %}]
 
-					<!-- remove enquete button + action -->
-					<script type="text/javascript">
-						var clicToRemoveEnquete = function() {
-							{% comment %}Translators: popup question when clicking delete study{% endcomment %}
-							var message = "{% trans 'You are about to delete this study.\nAre you sure you want to do this ?' %}"
-							var r = confirm(message);
-							if(r==true) {
-								doGetAtUrl("{% url reanalyse.reanalyseapp.views.eDelete e.id %}");
-								$("#e_{{e.id}}").remove();
-							} else {
-								// ok, 'atta boy
-							}
-						};
-					</script>
-					<!-- if enquete loading, 'delete' is disabled ! -->
-					{% if e.status != '1' %}
-					<a href="#" onclick='clicToRemoveEnquete();event.stopPropagation();return false;'>delete</a>
-					{% endif %}
+					<!-- dev - if enquete loading, we may want to disable 'delete'... ! -->
+					{% if e.status != '1' %}{% endif %}
+					<!-- we are on dev, allow deleting anyway... -->
+					<a href="#" onclick='clicToRemoveEnquete({{e.id}},"{% url reanalyse.reanalyseapp.views.eDelete e.id %}");event.stopPropagation();return false;'>delete</a>
 					
 					</span>
 				{% endif %}

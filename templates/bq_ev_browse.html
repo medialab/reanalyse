@@ -1,6 +1,7 @@
 {% extends "bq_e_base.html" %}
 
 {% load i18n %}
+{% load tags %}
 
 {% block enqueteheadmore %}
 	
@@ -80,10 +81,10 @@
 		<!--<h2>Show only Types</h2>-->
 		<h1>Show only ...</h1>
 		<ul id="vizFacetType">
-			<li><a href="" id="butAllOnly_Cloud_SolrSpeakerTagCloud" title="">Tagcloud</a></li>
-			<li><a href="" id="butAllOnly_Graph_SpeakersSpeakers">Graph</a></li>
-			<li><a href="" id="butAllOnly_TexteStreamTimeline">Dynamic</a></li>
-			<li><a href="" id="butAllOnly_Attributes">Attributes</a></li>
+			<li><a href="" id="butAllOnly_Cloud_SolrSpeakerTagCloud" title="">{{enquete|vizTypeCount:'Cloud_SolrSpeakerTagCloud'}} Tagcloud</a></li>
+			<li><a href="" id="butAllOnly_Graphs">{{enquete|vizTypeCount:'Graph'}} Graph</a></li>
+			<li><a href="" id="butAllOnly_TexteStreamTimeline">{{enquete|vizTypeCount:'TexteStreamTimeline'}} Dynamic</a></li>
+			<li><a href="" id="butAllOnly_Attributes">{{enquete|vizTypeCount:'Attributes'}} Attributes</a></li>
 		</ul>
 	</div>
 {% endblock %}
@@ -281,7 +282,18 @@
 				return false;
 			});
 			{% endfor %}
-
+			
+			// also for graphs
+			$("#butAllOnly_Graphs").click( function(event) {
+				toggleShow(false,false,false);
+				{% for typ in graphviztypes %}
+				$(".viztype_{{typ}} .vizHeader").toggle(true);
+				$(".viztype_{{typ}} .descrContainer").toggle(false);
+				$(".viztype_{{typ}} .vizContainer").toggle(true);
+				{% endfor %}
+				return false;
+			});
+			
 			$("#butStory").click( function(event) {
 				toggleShow(false,true,true);
 				return false;

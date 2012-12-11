@@ -173,6 +173,9 @@ def getTailOfFile(filepath,count):
 	try:
 		logFile = open(filepath,'r')
 		res = logFile.readlines()[-count:]
+		for i,line in enumerate(res):
+			if "EXCEPT" in line:
+				res[i]='<span style="color:red;">'+res[i]+'</span>'
 		logFile.close()
 	except:
 		res = ['no log file found']
