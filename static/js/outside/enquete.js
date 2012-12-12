@@ -6,6 +6,16 @@ oo.enq.timeline = {};
 oo.enq.types = {};
 oo.enq.docs = {};
 
+var circleSize = {
+	'small' : 5,
+	'medium' : 20,
+	'big' : 50
+};
+
+oo.log(circleSize.small)
+oo.log(circleSize.medium)
+oo.log(circleSize.big)
+
 // 
 // 
 // Enquête
@@ -32,13 +42,49 @@ oo.enq.map.update = function( event, filters ){
 
 	oo.log("[oo.enq.map.update]");
 
-	d3.selectAll('#map path').attr('class', 'inactive'); // Reset
+	var items = d3.selectAll('#map circle').each(function() {
+		var item = d3.select(this);
+		item.attr('data-status-old', item.attr('data-status'));
+	});
+
+	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		d3.select('#map path[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'active');
+		d3.select('#map circle[data-id="' + oo.filt.data[i].id + '"]')
+			.attr('data-status', 'active');
 	}
+
+	items.each(function() {
+
+		var item = d3.select(this);
+
+		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
+			item.transition()
+				.duration(1000)
+				.attr('r', circleSize.small);
+		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
+			item.transition()
+				.duration(500)
+				.attr('r', circleSize.big)
+				.transition()
+				.delay(500)
+				.duration(500)
+				.attr('r', circleSize.medium);
+		} 
+	})
 	
 };
+
+for (var i=0, link; i<5; i++) {
+	link = document.createElement("a");
+	link.innerHTML = "Link " + i;
+	link.onclick = function (num) {
+		return function () {
+			alert(num);
+		};
+	}(i);
+document.body.appendChild(link);
+}
 
 oo.enq.map.init = function ( objects ){
 
@@ -98,30 +144,33 @@ oo.enq.map.d3layer = function() {
           .style("margin-left", "0px")
           .style("margin-top", "0px") && (first = false);
 
-      path = d3.geo.path().projection(f.project);
-
-      feature.attr("d", path)
-      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
-      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; });
+      circle.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
+            .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
+	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
+	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; })
+        	.attr('r', circleSize.medium);
     };
 
     f.data = function(x) {
         collection = x;
         bounds = d3.geo.bounds(collection);
-        feature = g.selectAll("path")
+
+        circle = g.selectAll("circle")
             .data(collection.features)
-            .enter().append("path")
-            .attr('class', 'active')
-            .attr('data-id', function(d) { return d.id })
-            .on("click", function(d,i) {
-            	f.map.center({
-            		'lat' : d3.select(this).attr('lat'),
-            		'lon' : d3.select(this).attr('lon')
-            	}, true);
-				setTimeout( function() {
-	        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
-	        	}, 1000 );
-            });
+            .enter().append("circle")
+            .attr('data-status', 'active')
+            .attr('data-id', function(d) { return d.id });
+        
+        circle.on("click", function(d,i) {
+        	f.map.center({
+        		'lat' : d3.select(this).attr('lat'),
+        		'lon' : d3.select(this).attr('lon')
+        	}, true);
+			setTimeout( function() {
+        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
+        	}, 1000 );
+        });
+
         return f;
     };
 

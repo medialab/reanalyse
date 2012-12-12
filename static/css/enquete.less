@@ -6,120 +6,112 @@
 
 
 #map {
-
 	.d3_layer {
 		position:absolute;
 	}
-
 	.zoomer {
-
 		&.zoomin {
 			width: 25px;
 			height: 25px;
 			background-position: -34px -3px;
 			left: 34px;
 		}
-
 		&.zoomout {
 			width: 25px;
 			height: 25px;
 			background-position: -64px -3px;
 		}
 	}
-
-	path {
+	circle {
 		stroke: @path_stroke;
 		stroke-width: 1.5px;
+		fill: @cyan;
 		fill-opacity: @path_opacity;
 		cursor: pointer;
-		
-		&:hover {
-			fill-opacity: @path_opacity_hover;	
-		}
-
-		&.active {
-			fill: @cyan;
+		// fill:none;
+		// &:hover {
+		// 	fill: @cyan;
+		// 	fill-opacity: @path_opacity_hover;
+		// 	cursor: pointer;
+		// }
+		// &.active {
+		// 	fill: @cyan;
 			
-		}
-
-		&.inactive {
-			fill: white;
-		}
+		// }
+		// &.inactive {
+		// 	fill: white;
+		// }
 	}
 }
 
 #timeline {
-
 	circle.dot {
 		stroke: @path_stroke;
 		stroke-width: 1.5px;
 		fill-opacity: @path_opacity;
 		cursor: pointer;
-
 		&:hover {
 			fill: @cyan;
 			fill-opacity: @path_opacity_hover;
 			cursor: pointer;
 		}
-
 		&.active {
 			fill: @cyan;
 		}
-
 		&.inactive {
 			fill: white;
 		}
 	}
-
 	.brush .extent {
 		stroke: #fff;
 		fill: black;
 		fill-opacity: .2;
 		shape-rendering: crispEdges;
-
 	}
-
 }
 
 #documents {
-
 	li {
-
 		white-space: nowrap;
 		width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
-
 		&.active {
 			display: block;
 		}
-
 		&.inactive {
 			display: none;
 		}
 	}
-
 }
 
 #types {
-
 	li {
-
 		white-space: nowrap;
 		width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
-
 		&.active {
 			display: block;
 		}
-
 		&.inactive {
 			display: none;
 		}
 	}
-
 }
+
+
+@property: all;
+@duration: 1s;
+@ease: cubic-bezier(0,0,1,1);
+
+.transition {
+  -webkit-transition: @property @duration @ease;
+  -moz-transition: @property @duration @ease;
+  -o-transition: @property @duration @ease;
+  transition: @property @duration @ease;
+}
+
 
 
 
