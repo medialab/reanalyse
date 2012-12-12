@@ -12,10 +12,6 @@ var circleSize = {
 	'big' : 50
 };
 
-oo.log(circleSize.small)
-oo.log(circleSize.medium)
-oo.log(circleSize.big)
-
 // 
 // 
 // Enquête
@@ -45,14 +41,13 @@ oo.enq.map.update = function( event, filters ){
 	var items = d3.selectAll('#map circle').each(function() {
 		var item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
-	});
+	}); // Copy new status to old status
 
 	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		d3.select('#map circle[data-id="' + oo.filt.data[i].id + '"]')
-			.attr('data-status', 'active');
-	}
+		d3.select('#map circle[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+	} // Set active
 
 	items.each(function() {
 
@@ -64,11 +59,11 @@ oo.enq.map.update = function( event, filters ){
 				.attr('r', circleSize.small);
 		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
 			item.transition()
-				.duration(500)
+				.duration(400)
 				.attr('r', circleSize.big)
 				.transition()
-				.delay(500)
-				.duration(500)
+				.delay(400)
+				.duration(600)
 				.attr('r', circleSize.medium);
 		} 
 	})
@@ -139,16 +134,24 @@ oo.enq.map.d3layer = function() {
 
     var first = true;
     f.draw = function() {
-      first && svg.attr("width", f.map.dimensions.x)
+        
+        if (first) circle.attr('r', circleSize.medium);
+
+      	first && svg.attr("width", f.map.dimensions.x)
           .attr("height", f.map.dimensions.y*2)
           .style("margin-left", "0px")
           .style("margin-top", "0px") && (first = false);
 
-      circle.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
+
+      	circle.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
             .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
 	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
-	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; })
-        	.attr('r', circleSize.medium);
+	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; });
+        	
+
+        oo.log('first', first)
+
+       	// oo.enq.map.update;
     };
 
     f.data = function(x) {
@@ -170,6 +173,7 @@ oo.enq.map.d3layer = function() {
         		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
         	}, 1000 );
         });
+
 
         return f;
     };
