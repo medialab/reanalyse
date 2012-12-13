@@ -157,6 +157,45 @@
 				}
 			],
 			"text" : "TEXT"
+		},
+
+		{
+			"id" : "5",
+			"title" : "La conquête de la mer",
+			"abstract" : "Le physicien Auguste Piccard (1884-1962) - qui inspira à Hergé le personnage du professeur Tournesol -, son fils Jacques (1922-2008) et son petit-fils Bertrand (né en 1958) forment à eux trois une dynastie unique en son genre. Depuis plus d'un siècle, cette étonnante famille suisse s'emploie à repousser les limites du connu et du possible, dans un subtil alliage de rigueur scientifique, de goût de l'innovation et de soif d'exploration. Une ambition qui nécessite l'engagement du corps autant que celui de l'esprit et a fait des Piccard des personnages dignes de Jules Verne. Auguste et ses vols stratosphériques en ballon, Jacques et ses plongées abyssales, Bertrand et son projet de tour du monde en avion solaire... Ces trois hommes ont, l'un après l'autre, préfiguré les grands défis de leur temps. Raconter leur histoire, c'est évoquer le siècle de la conquête du ciel et des abysses. C'est aussi pénétrer au coeur d'une famille portée par un bel humanisme et très tôt sensibilisée à la nécessité de préserver la planète.",
+			"authors" : [
+				{
+					"id" : "3",
+					"name" : "Jacques",
+					"surname" : "« Piccard",
+					"organization" : "Marine américaine"
+				}
+			],
+			"type" : "doc",
+			"phases" : [
+				{
+					"phase" : "2"
+				}
+			],
+			"articles" : [
+				{
+					"article" : "1"
+				}
+			],
+			"coordinates" : {
+				"type": "Feature",
+      			"geometry": {
+      				"type": "Point",
+      				"coordinates": [-0.12768, 51.50733]
+      			},
+      			"properties": {"prop0": "value0"}
+      		},
+			"times" : [
+				{
+					"time" : "2007-05-10"
+				}
+			],
+			"text" : "TEXT"
 		}
 	]
 }

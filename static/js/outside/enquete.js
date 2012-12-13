@@ -139,16 +139,11 @@ oo.enq.map.d3layer = function() {
           .style("margin-left", "0px")
           .style("margin-top", "0px") && (first = false);
 
-
       	circle.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
             .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
 	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
 	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; });
-        	
 
-        oo.log('first', first)
-
-       	// oo.enq.map.update;
     };
 
     f.data = function(x) {
@@ -212,11 +207,13 @@ oo.enq.timeline.init = function( objects ){
 
 	oo.enq.timeline.data = d3.range(objects.length).map(function(i) {
 		return {
-			 x: format.parse(objects[i].times[0].time),
-			 y: Math.floor(Math.random()*5),
-			id: objects[i].id
+			 x : format.parse(objects[i].times[0].time),
+			 y : Math.floor(Math.random()*5),
+			id : objects[i].id,
+	 frequency : 1
 		};
 	});
+
 
 	var width = $('#map').width(),
 		height = $('#map').height(),
@@ -226,8 +223,26 @@ oo.enq.timeline.init = function( objects ){
 		offset = ( maxX - minX ) / 15, // This circles' left/right margins
 		minY = 0,
 		maxY = d3.max(oo.enq.timeline.data, function (d) { return d.y }),
-		scaleX = d3.time.scale().domain([minX.getTime() - offset, maxX.getTime() + offset]).range([ 0, width ]),
+		scaleX = d3.time.scale()
+				.domain([minX.getTime() - offset, maxX.getTime() + offset])
+				.range([ 0, width ]),
 		scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
+
+	
+
+	// Make ticks to divate time in equal spaces
+	// Probably it coulbe be fine to choice between years and months
+
+	// oo.log(scaleX.ticks(d3.time.years, 5))
+	
+	// oo.enq.timeline.data.forEach(function(d) {
+	//     d.frequency = +d.frequency;
+	// 	oo.log(d)
+	//   });
+
+
+
+
 
 	oo.enq.timeline.brush = d3.select('#timeline').append('svg').append('g');
 	oo.enq.timeline.circles = d3.select('#timeline svg').append('g');
@@ -299,11 +314,33 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
-	d3.selectAll('#documents li').attr('class', 'inactive'); // Reset
+	var items = d3.selectAll('#documents li').each(function() {
+		var item = d3.select(this);
+		item.attr('data-status-old', item.attr('data-status'));
+	}); // Copy new status to old status
+
+	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		d3.select('#documents li[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'active');
-	}
+		d3.select('#documents li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+	} // Set active
+
+	items.each(function() {
+
+		var item = d3.select(this);
+
+		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
+			item.transition()
+				.duration(1000)
+				.style('opacity', '0')
+				.style('height', '0px');
+		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
+			item.transition()
+				.duration(1000)
+				.style('opacity', '1')
+				.style('height', '19px');
+		} 
+	})
 	
 };
 
@@ -318,6 +355,7 @@ oo.enq.docs.init = function ( objects ){
 		.enter().append("li")
 		.attr('class', 'active')
 		.attr('data-id', function(d) { return d.id; })
+		.attr('data-status', 'active')
 		.html(function(d) { return d.title; });
 
 };
@@ -332,10 +370,28 @@ oo.enq.types.update = function( event, filters ){
 
 	oo.log("[oo.enq.types.update]");
 
-	d3.selectAll('#types li').attr('class', 'inactive'); // Reset
+	// d3.selectAll('#types li').attr('class', 'inactive'); // Reset
 	
-	for( var i in oo.filt.data ){
-		d3.select('#types li[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'active');
+	// for( var i in oo.filt.data ){
+	// 	d3.select('#types li[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'active');
+	// }
+
+	d3.selectAll('#types li').remove();
+
+	var map = {};
+	for (var i in oo.filt.data) {
+		j = oo.filt.data[i].type;
+		if(map.hasOwnProperty(j)) { 
+		    map[j]++;
+		} else {
+			map[j] = 1;
+		}
+	}
+
+	var types = d3.selectAll('#types');
+
+	for (var i in map) {
+		types.append('li').html(map[i] + ' ' + i);
 	}
 	
 };
@@ -344,16 +400,21 @@ oo.enq.types.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.types.update );
 
-	// oo.log( objects )
+	var map = {};
+	for (var i in objects) {
+		j = objects[i].type;
+		if(map.hasOwnProperty(j)) { 
+		    map[j]++;
+		} else {
+			map[j] = 1;
+		}
+	}
 
-	var types = d3.select('#types');
+	var types = d3.selectAll('#types');
 
-	types.selectAll("li")
-		.data(objects)
-		.enter().append("li")
-		.attr('class', 'active')
-		.attr('data-id', function(d) { return d.id; })
-		.html(function(d) { return d.type; });
+	for (var i in map) {
+		types.append('li').html(map[i] + ' ' + i);
+	}
 
 };
 
