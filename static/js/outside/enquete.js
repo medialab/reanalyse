@@ -8,7 +8,7 @@ oo.enq.docs = {};
 
 var circleSize = {
 	'small' : 5,
-	'medium' : 20,
+	'medium' : 10,
 	'big' : 50
 };
 
@@ -59,11 +59,8 @@ oo.enq.map.update = function( event, filters ){
 				.attr('r', circleSize.small);
 		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
 			item.transition()
-				.duration(400)
-				.attr('r', circleSize.big)
-				.transition()
-				.delay(400)
-				.duration(600)
+				.duration(1500)
+				.ease('elastic', 7, .8)
 				.attr('r', circleSize.medium);
 		} 
 	})
@@ -281,7 +278,9 @@ oo.enq.timeline.init = function( objects ){
 		.attr("y", - margin.top - 1 )
 		.attr("height", $('#timeline').height() +1);
 
-	d3.select('rect.extent').attr("class", "extent transition");
+	d3.select('rect.extent').attr("class", "extent transition")
+							.attr('rx', '10')
+							.attr('ry', '10');
 
 	function brushMove() {
 		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
