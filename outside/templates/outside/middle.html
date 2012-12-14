@@ -231,15 +231,17 @@
 {% endblock %}
 
 {% block api_urls %}
-	
+	{% if edit_mode %}
 	oo.urls = {
 		add_page:"{% url glue_api_pages %}",
 		add_pin:"{% url glue_api_pins %}",
+		add_enquiry:"{% url outside_api_enquiries %}",
 		edit_pin:"{% url glue_api_pin 0 %}",
-		get_pin:"{% url glue_api_pin 0 %}",
-		get_enquete_data:"{% url outside_enquete_data 0 %}"
+		get_pin:"{% url glue_api_pin 0 %}"
+		
 	};
-
+	{% endif %}
+	oo.urls.get_enquete_data = "{% url outside_enquete_data 0 %}";
 {% endblock %}
 
 

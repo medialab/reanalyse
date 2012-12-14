@@ -5,6 +5,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import login, logout, authenticate
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
+from outside.forms import AddEnquiryForm
 
 
 from reanalyseapp.models import Enquete
@@ -37,6 +38,8 @@ def page( request, page_slug ):
 def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
+
+
 
 	return render_to_response('outside/enquete.html', RequestContext(request, data ) )
 
@@ -131,6 +134,7 @@ def load_edit_mode( request, d ):
 		d['add_page_form'] = AddPageForm( auto_id="id_add_page_%s" )
 		d['add_pin_form'] = AddPinForm( auto_id="id_add_pin_%s" )
 		d['edit_pin_form'] = EditPinForm( auto_id="id_edit_pin_%s" )
+		d['add_enquiry_form'] = AddEnquiryForm( auto_id="id_add_enquiry_%s" )
 		
 		#d['pageaddform'] = PageAddForm(auto_id="id_page_%s")
 

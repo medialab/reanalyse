@@ -3,7 +3,9 @@ from django.template import RequestContext
 from django.conf import settings
 from glue.models import Pin
 from outside.models import Enquiry
-from glue.misc import Epoxy
+from outside.forms import AddEnquiryForm
+from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY
+from django.db import IntegrityError
 from reanalyse.reanalyseapp.models import Enquete
 
 
@@ -18,6 +20,38 @@ def is_editor(user):
 
 def enquiries( request ):
 	response = Epoxy( request )
+	if response.method =='POST':
+		form = AddEnquiryForm( request.REQUEST )
+		if not form.is_valid():
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+
+
+		try:
+			enquete = Enquete.objects.get(id=form.cleaned_data['enquete'])
+
+			enquiry_en = Enquiry(
+				title=form.cleaned_data['title_en'], language='EN', slug=form.cleaned_data['slug'], enquete = enquete
+			)
+
+			enquiry_fr = Enquiry(
+				title=form.cleaned_data['title_fr'], language='FR', slug=form.cleaned_data['slug'], enquete = enquete
+			)
+
+			enquiry_en.save()
+			enquiry_fr.save()
+
+		#try:
+			#e_en = Page( title=form.cleaned_data['title_en'], language='EN', slug=form.cleaned_data['slug'])
+			#e_en.save()
+
+			#p_fr = Page( title=form.cleaned_data['title_fr'], language='FR', slug=form.cleaned_data['slug'])
+			#p_fr.save() 
+		except IntegrityError, e:
+			return response.throw_error( error="%s" % e, code=API_EXCEPTION_INTEGRITY).json()
+
+		# response.add('object',[ p_en.json(), p_fr.json() ])
+
+
 	response.queryset( Enquiry.objects )
 	return response.json()
 

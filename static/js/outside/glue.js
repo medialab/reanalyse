@@ -16,7 +16,7 @@ oo.magic.page = oo.magic.page || {};
 
 oo.magic.page.add = function( result ){
 	oo.log("[oo.magic.page.add]", result);
-	// window.location.reload();
+	window.location.reload();
 }
 
 oo.magic.pin = oo.magic.pin || {};
@@ -135,7 +135,7 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 
 	// html5 pin editor
 	try{
-		var editor = new wysihtml5.Editor("id_edit_pin_content", { // id of textarea element
+		var editor = new wysihtml5.Editor("id_edit_pin_content", { 		// id of textarea element
 			toolbar:      "wysihtml5-toolbar", // id of toolbar element
 			parserRules:  wysihtml5ParserRules // defined in parser rules set 
 		});

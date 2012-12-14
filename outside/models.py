@@ -8,9 +8,22 @@ from reanalyseapp.models import Enquete
 # This model inherit an abstract class even it is a very different object.
 
 class Enquiry( PageAbstract ):
-	enquete = models.ForeignKey( Enquete )
-	pins = models.ManyToManyField( Pin, null=True, blank=True, related_name="enquiry")
+	enquete = models.ForeignKey( Enquete, related_name="enquiry" )
+	pins = models.ManyToManyField( Pin, null=True, blank=True)
 
 	class Meta( PageAbstract.Meta ):
 		unique_together = ( "enquete", "language" )
+
+	def __unicode__(self):
+		return "%s (%s) a.k.a. %s" % (self.slug, self.language, self.title)
+	def json( self ):
+		return{
+			'id': self.id,
+			'slug':self.slug,
+			'title': self.title,
+			'abstract': self.abstract,
+			'content': self.content,
+			'language': self.language,
+			'enquete': self.enquete.id
+		}
 	
