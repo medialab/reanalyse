@@ -12,6 +12,16 @@ class Geo( models.Model): # geo spot, with zoom
 	content = models.TextField( default="", blank=True, null=True ) # textual GEO description
 	
 class Pin( models.Model ):
+	PUBLISHED = 'P'
+	DRAFT = 'D'
+	REVIEW = 'R'
+
+	PIN_STATUS_CHOICES = (
+		( PUBLISHED, 'Published' ),
+		( DRAFT, 'Draft' ),
+		( REVIEW, 'To be reviewed')
+	)
+
 	slug = models.SlugField()
 	title = models.CharField( max_length=160, default="", blank=True, null=True )
 	abstract = models.TextField( default="", blank=True, null=True )
@@ -32,6 +42,8 @@ class Pin( models.Model ):
 
 	geos = models.ManyToManyField( Geo, blank=True, null=True ) # add geographic point
 
+	status = models.CharField( max_length=1, default=DRAFT, choices=PIN_STATUS_CHOICES ) # DRAFT (D), PUBLISHED (P), REVIEW (R)
+
 	class Meta:
 		unique_together = ( "slug", "language" )
 		ordering = ('sort','id')
@@ -51,6 +63,16 @@ class Pin( models.Model ):
 		}
 
 class PageAbstract( models.Model ):
+	PUBLISHED = 'P'
+	DRAFT = 'D'
+	REVIEW = 'R'
+
+	PAGE_STATUS_CHOICES = (
+		( PUBLISHED, 'Published' ),
+		( DRAFT, 'Draft' ),
+		( REVIEW, 'To be reviewed')
+	)
+
 	slug = models.SlugField()
 	title = models.CharField( max_length=160, default="", blank=True, null=True )
 	abstract = models.TextField( default="", blank=True, null=True )
@@ -58,6 +80,11 @@ class PageAbstract( models.Model ):
 	
 	language =  models.CharField( max_length=2, default='EN', choices=LANGUAGE_CHOICES ) # magic admin features: create a pin for the same language
 	
+	sort =  models.IntegerField( default=0 )
+	
+	status = models.CharField( max_length=1, default=DRAFT, choices=PAGE_STATUS_CHOICES ) # DRAFT (D), PUBLISHED (P), REVIEW (R)
+
+
 	class Meta:
 		unique_together = ( "slug", "language" )
 		abstract = True

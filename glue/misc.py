@@ -159,7 +159,7 @@ class Epoxy:
 			self.response['meta']['total_count'] = sum( 1 for r in queryset )
 			qs = queryset
 		else:
-			qs = queryset.filer()
+			qs = queryset.filter()
 			
 		# apply limits
 		qs = qs[ self.offset : self.offset + self.limit ]

@@ -1,4 +1,4 @@
-@import "boilerplate";
+@import "../fonts.less";
 
 @the-background: #484E5C;
 @header-background: #C9C9C9;
@@ -56,9 +56,7 @@ html,body{
 
 body{
 	background: @the-background;
-	font-family: 'Open sans', serif;
-	font-size: 13px;
-	line-height: 1.617em;
+	.sans-serif(12px);
 }
 
 a{
@@ -139,9 +137,7 @@ h3{
 }
 
 header{
-	font-family: 'MisoRegular', sans-serif;
-	font-size:1.25em;
-	text-transform: uppercase;
+	.sans-serif( 11px,uppercase);
 	#header-inner{
 		background: @page-background;	
 	}
@@ -322,7 +318,7 @@ header{
 		}
 		
 		li{
-			font-size:0.8em;
+			font-size:0.9em;
 			
 			a{
 				&:hover{
@@ -441,12 +437,15 @@ footer{
 
 section{
 	#logomoto{
-		text-transform: uppercase;	
+		.serif-slant(12px);
+
 		border-top: 1px solid @line-color;
 		padding-top: @grid-padding;
 		text-align: center;
 	}
-	
+	.leftmenublock{
+
+	}
 	#view{
 		
 	}
