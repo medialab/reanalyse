@@ -23,10 +23,23 @@
 
 {% block sidebar %}
 	<ul class="nav">
-		<li class="active"><a href="#description">{% trans "description" %}</a></li>
+		<li class="active"><a href="#visualization">{% trans "documents" %}</a></li>
+		<li class="active"><a href="#content">{% trans "description" %}</a></li>
+		{% if enquete.enquiry %}
 		<li><a href="#">{% trans "enquete sur l'enquete" %}</a></li>
+		
+		{% endif %}
+
 	</ul>
 	
+{% endblock %}
+
+{% block sidebar_add_section %}
+	{% if not enquete.enquiry and edit_mode %}
+		<div class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
+				</div>
+
+	{% endif %}
 {% endblock %}
 
 {% block page_title %}
@@ -34,7 +47,7 @@
 {% endblock %}
 
 {% block page %}
-	<a id="description"></a>
+	<a id="visualization"></a>
 	
 	<section class="alpha">
 		
@@ -72,8 +85,34 @@
 		</div>
 
 		<div class="content">
-			content
+			{% for abstract  in enquete.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}
 			
 		</div>
 	</section>
+
+
+{% endblock %}
+
+{% block modals %}
+	{{ block.super }}
+	{% if edit_mode %}
+	<div class="modal fade" id="add-enquiry-modal">
+		<form method="POST">{% csrf_token %}
+
+		<div class="modal-header">
+		<!-- button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button -->
+		<h3>{% trans "add enquiry" %}</h3>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
+
+			
+			{{ add_enquiry_form.as_p }}
+		</div>
+		<div class="modal-footer">
+		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
+		<input type="submit" href="#" id="add-page" value="{% trans "add page" %}"/>
+		</div>
+	</div>
+	{% endif %}
 {% endblock %}

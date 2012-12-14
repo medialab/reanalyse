@@ -117,7 +117,7 @@
 	</footer>
 
 	<!-- the login modal -->
-
+	{% block modals %}
 	<div class="modal fade hide" id="login-modal" style="display:none">
 		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
 			<div class="modal-header">
@@ -227,6 +227,7 @@
 
 
 	{% endif %}
+	{% endblock %}
 {% endblock %}
 
 {% block api_urls %}
