@@ -190,11 +190,11 @@ oo.enq.timeline.update = function( event, filters ){
 
 	oo.log("[oo.enq.timeline.update]");
 	
-	d3.selectAll('#timeline .dot').attr('class', 'dot inactive');
+	// d3.selectAll('#timeline .dot').attr('class', 'dot inactive');
 	
-	for( var i in oo.filt.data ){
-		d3.select('#timeline .dot[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'dot active');
-	}
+	// for( var i in oo.filt.data ){
+	// 	d3.select('#timeline .dot[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'dot active');
+	// }
 
 	
 };
@@ -205,40 +205,72 @@ oo.enq.timeline.init = function( objects ){
 
 	var format = d3.time.format("%Y-%m-%d");
 
-	oo.enq.timeline.data = d3.range(objects.length).map(function(i) {
+	var collection = d3.range(objects.length).map(function(i) {
 		return {
-			 x : format.parse(objects[i].times[0].time),
-			 y : Math.floor(Math.random()*5),
-			id : objects[i].id,
-	 frequency : 1
+		  // time : format.parse(objects[i].times[0].time),
+		  time : format.parse(objects[i].times[0].time).getTime(),
+			id : objects[i].id
 		};
 	});
 
-
-	var width = $('#map').width(),
+	var width = $('#map').width();
 		height = $('#map').height(),
-		margin = {top: 20, right: 20},
-		minX = d3.min(oo.enq.timeline.data, function (d) { return d.x }),
-		maxX = d3.max(oo.enq.timeline.data, function (d) { return d.x }),
-		offset = ( maxX - minX ) / 15, // This circles' left/right margins
-		minY = 0,
-		maxY = d3.max(oo.enq.timeline.data, function (d) { return d.y }),
-		scaleX = d3.time.scale()
-				.domain([minX.getTime() - offset, maxX.getTime() + offset])
-				.range([ 0, width ]),
-		scaleY = d3.scale.linear().domain([minY, maxY]).range([0, 20]); // Set a proper height
+		margin = {top: 20, right: 20}
+		steps = 10;
 
+	var minX = d3.min(collection, function (d) { return d.time }),
+	    maxX = d3.max(collection, function (d) { return d.time }),
+		offset = ( maxX - minX ) / ( steps * 2 ), // This circles' left/right margins
+		unit = ( maxX - minX ) / steps;
+
+	scaleX = d3.time.scale().domain([ minX - offset, maxX + offset ]).range([ 0, width ]);
 	
 
-	// Make ticks to divate time in equal spaces
-	// Probably it coulbe be fine to choice between years and months
+	oo.log('offset ', offset)
+	oo.log('minX  ', minX)
+	oo.log('maxX ', maxX)
+	oo.log('unit  ', unit)
 
-	// oo.log(scaleX.ticks(d3.time.years, 5))
-	
-	// oo.enq.timeline.data.forEach(function(d) {
-	//     d.frequency = +d.frequency;
-	// 	oo.log(d)
-	//   });
+	var ticks = [];
+	for (var i=0; i <= steps; i++) {
+		ticks.push(minX + unit * i);
+	};
+
+
+	var map = {};
+	map = [];
+	for (var j = 0; j < steps; j++) {
+
+		if ( !map[j] ) {
+			map[j] = {};
+			map[j].freq = 0;
+			map[j].id = [];
+			map[j].time = ticks[j] + (ticks[j+1] - ticks[j] ) / 2;
+			oo.log(map[j].time)
+		}
+		
+		for (var i in collection) {
+			if (ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1]) {
+				map[j].freq++;
+				map[j].id.push(collection[i].id);
+			}
+		}
+	}
+	oo.log(map)
+
+
+
+	var minY = 0,
+		maxY = d3.max(map, function (d) { return d.freq });
+
+	// oo.log('maxY', maxY) // Correct
+
+	scaleY = d3.scale.linear().domain([minY, maxY]).range([20, 0]); // Set a proper height
+		
+	oo.enq.timeline.data = map;
+
+
+
 
 
 
@@ -253,10 +285,12 @@ oo.enq.timeline.init = function( objects ){
 		.data(oo.enq.timeline.data)
 		.enter().append("circle")
 		.attr('class', 'dot active')
-		.attr("cx", function(d) { return scaleX(d.x); })
-		.attr("cy", function(d) { return scaleY(d.y); })
-		.attr("data-id", function(d) { return d.id; })
-		.attr("r", 4);
+		.attr("cx", function(d) { return scaleX(d.time); })
+		.attr("cy", 0)
+		.attr("r", function(d) { return d.freq * 4 });
+		// .attr("data-id", function(d) { return d.id; })
+		// function(d) { return scaleY(d.freq) };
+
 
 	// Brush behavior
 
@@ -283,7 +317,7 @@ oo.enq.timeline.init = function( objects ){
 
 	// Brush
 	
-	var brushObj = d3.svg.brush()
+	var brushObj = d3.svg.brush();
 
 	oo.enq.timeline.brush.attr("class", "x brush")
 		.call(brushObj.x(scaleX)
