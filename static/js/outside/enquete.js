@@ -203,117 +203,85 @@ oo.enq.timeline.init = function( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.timeline.update );
 
-	var format = d3.time.format("%Y-%m-%d");
+	var format = d3.time.format("%Y-%m-%d"),
+		width = $('#map').width();
+		height = $('#map').height(),
+		margin = {top: 20, right: 20}
+		steps = 10;
+
+	// Collect useful fields
 
 	var collection = d3.range(objects.length).map(function(i) {
 		return {
-		  // time : format.parse(objects[i].times[0].time),
 		  time : format.parse(objects[i].times[0].time).getTime(),
 			id : objects[i].id
 		};
 	});
 
-	var width = $('#map').width();
-		height = $('#map').height(),
-		margin = {top: 20, right: 20}
-		steps = 10;
+	// X Axes set up
 
-	var minX = d3.min(collection, function (d) { return d.time }),
-	    maxX = d3.max(collection, function (d) { return d.time }),
-		offset = ( maxX - minX ) / ( steps * 2 ), // This circles' left/right margins
-		unit = ( maxX - minX ) / steps;
+	var   minX = d3.min(collection, function (d) { return d.time }),
+	      maxX = d3.max(collection, function (d) { return d.time }),
+	     delta = maxX - minX,
+		  unit = delta / steps,
+		 ticks = [],
+	   density = {};
 
-	scaleX = d3.time.scale().domain([ minX - offset, maxX + offset ]).range([ 0, width ]);
-	
+	scaleX = d3.time.scale()
+		.domain([ minX, maxX ])
+		.range([ 0, width ]);
 
-	oo.log('offset ', offset)
-	oo.log('minX  ', minX)
-	oo.log('maxX ', maxX)
-	oo.log('unit  ', unit)
-
-	var ticks = [];
 	for (var i=0; i <= steps; i++) {
 		ticks.push(minX + unit * i);
 	};
 
+	// Density[] is the structure for timeline
 
-	var map = {};
-	map = [];
 	for (var j = 0; j < steps; j++) {
 
-		if ( !map[j] ) {
-			map[j] = {};
-			map[j].freq = 0;
-			map[j].id = [];
-			map[j].time = ticks[j] + (ticks[j+1] - ticks[j] ) / 2;
-			oo.log(map[j].time)
+		if ( j == 0 ) density = []; // Initialize array
+
+		if ( !density[j] ) {
+			density[j] = {};
+			density[j].freq = 0;
+			density[j].id = [];
+			density[j].time = ticks[j] + (ticks[j+1] - ticks[j] ) / 2;
 		}
 		
 		for (var i in collection) {
 			if (ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1]) {
-				map[j].freq++;
-				map[j].id.push(collection[i].id);
+				density[j].freq++;
+				density[j].id.push(collection[i].id);
 			}
 		}
 	}
-	oo.log(map)
 
-
+	// Y Axes set up
 
 	var minY = 0,
-		maxY = d3.max(map, function (d) { return d.freq });
+		maxY = d3.max(density, function (d) { return d.freq });
 
-	// oo.log('maxY', maxY) // Correct
+	scaleY = d3.scale.linear()
+		.domain([minY, maxY])
+		.range([ 0, 0 ]); // Set a proper height
 
-	scaleY = d3.scale.linear().domain([minY, maxY]).range([20, 0]); // Set a proper height
-		
-	oo.enq.timeline.data = map;
+	// Draw
 
-
-
-
-
-
-
-
-	oo.enq.timeline.brush = d3.select('#timeline').append('svg').append('g');
-	oo.enq.timeline.circles = d3.select('#timeline svg').append('g');
-	
-	d3.selectAll('#timeline g').attr("transform", "translate(" + 0 + "," + margin.top + ")");
+	oo.enq.timeline.brush = d3.select('#timeline').append('svg').append('g')
+		.attr("transform", "translate(" + 0 + "," + margin.top + ")");
+	oo.enq.timeline.circles = d3.select('#timeline svg').append('g')
+		.attr("transform", "translate(" + 0 + "," + margin.top + ")");
 
 	oo.enq.timeline.circles.selectAll(".dot")
-		.data(oo.enq.timeline.data)
+		.data(density)
 		.enter().append("circle")
 		.attr('class', 'dot active')
 		.attr("cx", function(d) { return scaleX(d.time); })
 		.attr("cy", 0)
-		.attr("r", function(d) { return d.freq * 4 });
-		// .attr("data-id", function(d) { return d.id; })
-		// function(d) { return scaleY(d.freq) };
+		.attr("r", function(d) { return 2 + d.freq * 2 })
+		.attr("data-id", function(d) { return d.id; });
 
-
-	// Brush behavior
-
-	$('#timeline').on('click', 'circle', function() {
-
-		var domain = scaleX.domain();
-		var oneTenthDomain = ( domain[1] - domain[0] ) / 10;
-		var circleTime = scaleX.invert( d3.select(this).attr('cx') ).getTime();
-		var brushStart = circleTime - oneTenthDomain / 2;
-		var brushEnd = circleTime + oneTenthDomain / 2;
-		var brushWidth = scaleX(brushEnd) - scaleX(brushStart);
-
-		d3.select("rect.extent").transition()
-			.duration(1000)
-			.attr('x', scaleX(brushStart) )
-			.attr('width', brushWidth ); // Width is fixed
-
-		setTimeout( function() {
-    		oo.enq.timeline.brush.call(brushObj.extent([brushStart, brushEnd]));
-    		oo.filt.trigger( oo.filt.events.replace, { 'period': [brushStart, brushEnd] } );
-    	}, 1000 );
-
-	});
+	oo.enq.timeline.data = density;
 
 	// Brush
 	
@@ -321,18 +289,78 @@ oo.enq.timeline.init = function( objects ){
 
 	oo.enq.timeline.brush.attr("class", "x brush")
 		.call(brushObj.x(scaleX)
-					  .extent(scaleX.domain())
-					  .on("brushend", brushMove))
+			.extent(scaleX.domain())
+			.on("brushend", brushMove))
 		.selectAll("rect")
-		.attr("y", - margin.top - 1 )
-		.attr("height", $('#timeline').height() +1);
+		.attr("y", - margin.top )
+		.attr("height", $('#timeline').height());
 
-	d3.select('rect.extent').attr("class", "extent transition")
-							.attr('rx', '10')
-							.attr('ry', '10');
+	d3.select('rect.extent').attr("class", "extent transition");
+
+	// Brush behavior
+
+	$('#timeline').on('click', 'circle', function() {
+
+		var domain = scaleX.domain(),
+			circleTime = scaleX.invert( d3.select(this).attr('cx') ).getTime(),
+			brushStart = circleTime - unit / 2,
+			brushEnd = circleTime + unit / 2,
+			brushWidth = scaleX(brushEnd) - scaleX(brushStart);
+
+		d3.select("rect.extent").transition()
+			.duration(1000)
+			.attr('x', scaleX(brushStart) )
+			.attr('width', brushWidth ); // Width is fixed
+
+		setTimeout( function() {
+
+    		oo.enq.timeline.brush.call(brushObj.extent([brushStart, brushEnd]));
+
+    		oo.log('brushStart', brushStart, 'brushEnd', brushEnd)
+
+    		for ( var i = ticks.length; i >= 0; i-- ) {
+				if ( brushStart[0] + unit / 2 > ticks[i] ) {
+					brushStart[0] = ticks[i]; break;
+				}
+			}
+			for ( var i = 0; i <= ticks.length; i++ ) {
+				if ( brushEnd[1] - unit / 2 < ticks[i] ) {
+					brushEnd[1] = ticks[i]; break;
+				}
+			}
+
+			brushStart--;
+			brushEnd++;
+
+			oo.log('brushStart', brushStart, 'brushEnd', brushEnd)
+
+    		oo.filt.trigger( oo.filt.events.replace, { 'period': [brushStart, brushEnd] } );
+
+    	}, 1000 );
+
+	});
 
 	function brushMove() {
+
 		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
+
+		b[0] = b[0].getTime();
+		b[1] = b[1].getTime();
+
+		for ( var i = ticks.length; i >= 0; i-- ) {
+			if ( b[0] + unit / 2 >= ticks[i] ) {
+				b[0] = ticks[i]; break;
+			}
+		}
+		for ( var i = 0; i <= ticks.length; i++ ) {
+			if ( b[1] - unit / 2 <= ticks[i] ) {
+				b[1] = ticks[i]; break;
+			}
+		}
+
+		b[0]--;
+		b[1]++;
+
 		oo.filt.trigger( oo.filt.events.replace, {'period': b } );
 	}
 
