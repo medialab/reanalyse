@@ -295,7 +295,7 @@ oo.enq.timeline.init = function( objects ){
 
 	d3.select('rect.extent').attr("class", "extent transition");
 
-	// Brush behavior
+	// Brush on Click
 
 	$('#timeline').on('click', 'circle', function() {
 
@@ -312,49 +312,39 @@ oo.enq.timeline.init = function( objects ){
 		setTimeout( function() {
 
     		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
-
-    		for ( var i = ticks.length; i >= 0; i-- ) {
-				if ( b[0] + unit / 2 > ticks[i] ) {
-					b[0] = ticks[i]; break;
-				}
-			}
-			for ( var i = 0; i <= ticks.length; i++ ) {
-				if ( b[1] - unit / 2 < ticks[i] ) {
-					b[1] = ticks[i]; break;
-				}
-			}
-
-			b[0]--;
-			b[1]++;
-
-    		oo.filt.trigger( oo.filt.events.replace, { 'period': b } );
+    		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
 
     	}, 1000 );
 
 	});
 
+	// Brush on Move
+
 	function brushEnd() {
 
 		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
-
 		b = [ b[0].getTime(), b[1].getTime() ];
+		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
+	}
+
+	// To round bounds limit according to ticks[]
+
+	function normBounds( bounds ) {
 
 		for ( var i = ticks.length; i >= 0; i-- ) {
-			if ( b[0] + unit / 2 >= ticks[i] ) {
-				b[0] = ticks[i]; break;
+			if ( bounds[0] + unit / 2 >= ticks[i] ) {
+				bounds[0] = ticks[i] - 1;
+				break;
 			}
 		}
 		for ( var i = 0; i <= ticks.length; i++ ) {
-			if ( b[1] - unit / 2 <= ticks[i] ) {
-				b[1] = ticks[i]; break;
+			if ( bounds[1] - unit / 2 <= ticks[i] ) {
+				bounds[1] = ticks[i] + 1;
+				break;
 			}
 		}
-
-		b[0]--;
-		b[1]++;
-
-		oo.filt.trigger( oo.filt.events.replace, {'period': b } );
-	}
+		return bounds;
+	};
 
 };
 
