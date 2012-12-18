@@ -205,7 +205,7 @@ oo.enq.timeline.init = function( objects ){
 
 	var format = d3.time.format("%Y-%m-%d"),
 		size = { width: $('#map').width() },
-		margin = { top: 20, right: 20 }
+		margin = { top: $('#timeline').height() / 2 }
 		steps = 10;
 
 	// Collect useful fields
