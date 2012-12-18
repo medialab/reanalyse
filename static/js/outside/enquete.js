@@ -204,9 +204,8 @@ oo.enq.timeline.init = function( objects ){
 	oo.filt.on( oo.filt.events.change, oo.enq.timeline.update );
 
 	var format = d3.time.format("%Y-%m-%d"),
-		width = $('#map').width();
-		height = $('#map').height(),
-		margin = {top: 20, right: 20}
+		size = { width: $('#map').width() },
+		margin = { top: 20, right: 20 }
 		steps = 10;
 
 	// Collect useful fields
@@ -222,14 +221,13 @@ oo.enq.timeline.init = function( objects ){
 
 	var   minX = d3.min(collection, function (d) { return d.time }),
 	      maxX = d3.max(collection, function (d) { return d.time }),
-	     delta = maxX - minX,
-		  unit = delta / steps,
+		  unit = ( maxX - minX ) / steps,
 		 ticks = [],
 	   density = {};
 
 	scaleX = d3.time.scale()
 		.domain([ minX, maxX ])
-		.range([ 0, width ]);
+		.range([ 0, size.width ]);
 
 	for (var i=0; i <= steps; i++) {
 		ticks.push(minX + unit * i);
@@ -245,11 +243,11 @@ oo.enq.timeline.init = function( objects ){
 			density[j] = {};
 			density[j].freq = 0;
 			density[j].id = [];
-			density[j].time = ticks[j] + (ticks[j+1] - ticks[j] ) / 2;
+			density[j].time = ( ticks[j] + ticks[j+1] ) * .5;
 		}
 		
 		for (var i in collection) {
-			if (ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1]) {
+			if ( ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1] ) {
 				density[j].freq++;
 				density[j].id.push(collection[i].id);
 			}
@@ -290,7 +288,7 @@ oo.enq.timeline.init = function( objects ){
 	oo.enq.timeline.brush.attr("class", "x brush")
 		.call(brushObj.x(scaleX)
 			.extent(scaleX.domain())
-			.on("brushend", brushMove))
+			.on("brushend", brushEnd))
 		.selectAll("rect")
 		.attr("y", - margin.top )
 		.attr("height", $('#timeline').height());
@@ -303,49 +301,43 @@ oo.enq.timeline.init = function( objects ){
 
 		var domain = scaleX.domain(),
 			circleTime = scaleX.invert( d3.select(this).attr('cx') ).getTime(),
-			brushStart = circleTime - unit / 2,
-			brushEnd = circleTime + unit / 2,
-			brushWidth = scaleX(brushEnd) - scaleX(brushStart);
+			b = [circleTime - unit / 2, circleTime + unit / 2],
+			brushWidth = scaleX(b[1]) - scaleX(b[0]);
 
 		d3.select("rect.extent").transition()
 			.duration(1000)
-			.attr('x', scaleX(brushStart) )
+			.attr('x', scaleX(b[0]) )
 			.attr('width', brushWidth ); // Width is fixed
 
 		setTimeout( function() {
 
-    		oo.enq.timeline.brush.call(brushObj.extent([brushStart, brushEnd]));
-
-    		oo.log('brushStart', brushStart, 'brushEnd', brushEnd)
+    		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
 
     		for ( var i = ticks.length; i >= 0; i-- ) {
-				if ( brushStart[0] + unit / 2 > ticks[i] ) {
-					brushStart[0] = ticks[i]; break;
+				if ( b[0] + unit / 2 > ticks[i] ) {
+					b[0] = ticks[i]; break;
 				}
 			}
 			for ( var i = 0; i <= ticks.length; i++ ) {
-				if ( brushEnd[1] - unit / 2 < ticks[i] ) {
-					brushEnd[1] = ticks[i]; break;
+				if ( b[1] - unit / 2 < ticks[i] ) {
+					b[1] = ticks[i]; break;
 				}
 			}
 
-			brushStart--;
-			brushEnd++;
+			b[0]--;
+			b[1]++;
 
-			oo.log('brushStart', brushStart, 'brushEnd', brushEnd)
-
-    		oo.filt.trigger( oo.filt.events.replace, { 'period': [brushStart, brushEnd] } );
+    		oo.filt.trigger( oo.filt.events.replace, { 'period': b } );
 
     	}, 1000 );
 
 	});
 
-	function brushMove() {
+	function brushEnd() {
 
 		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
 
-		b[0] = b[0].getTime();
-		b[1] = b[1].getTime();
+		b = [ b[0].getTime(), b[1].getTime() ];
 
 		for ( var i = ticks.length; i >= 0; i-- ) {
 			if ( b[0] + unit / 2 >= ticks[i] ) {
