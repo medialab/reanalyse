@@ -366,6 +366,10 @@ ul#eList {
 .eStatus_4  {
 	background:#CCCCCC;
 }
+/* 6 = Reparsing ... see globalvars.py */
+.eStatus_6  {
+	background:#FFCC99;
+}
 .eBrowseEnquete {
 	margin:7px;
 	padding:10px;

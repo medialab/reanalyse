@@ -118,7 +118,7 @@
 		<h3>Solr {{solrstatus}}</h3>
 			<ul>
 				<li>make sure <a href="{{solr_url}}/solr/admin/">solr</a> is online if you need documents to be indexed (you could <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.killSolrProcess %}");return false;'>kill the process</a> and refresh this page to relauch it)</li>
-				<li>if you like to discover new things, you can <a href="{{solr_url}}/solr/admin/schema.jsp">browse the index</a></li>
+				<li>if you like to discover new things, you can <a href="{{solr_url}}/solr/admin/schema.jsp">browse the index</a> on the solr server page</li>
 				<li>you could - for all studies - <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}");return false;'>clear_index</a>, then <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}");return false;'>update_index</a> if you know what that means</li>
 				<li>you could re-fetch ngrams from index for enquête: (could take a while)
 					<ul>
@@ -131,6 +131,7 @@
 					{% endif %}
 					</ul>
 				</li>
+				<li>note: ... means that django will ask solr-index for ngrams, and store some (based on tfidf) of them in db for easiest further access (complex queries) when making viz</li>
 				<li>you could <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.clearLogFile %}",function(){location.reload(true);});return false;'>clear log file</a> (will refresh page)</li>
 			</ul>
 		<h3>Log Django</h3>
