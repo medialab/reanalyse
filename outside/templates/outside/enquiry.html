@@ -14,6 +14,15 @@
 
 {% endblock %}
 
+{% block document_ready %}
+	{{ block.super }}
+	{% if edit_mode %}
+		oo.enquiry.upload.enquiry_id = {{ enquiry.id }};
+		oo.enquiry.upload.init();
+	
+	{% endif %}
+{% endblock %}
+
 {% block page_title %}
 	{{ enquiry.title }}
 {% endblock %}
@@ -61,6 +70,15 @@
 
 
 	</section>
-
-
+	{% if edit_mode %}
+	<section>
+	
+		<div id="drag-over-me">
+			<form action="#">
+				<input type="file" name="files[]" multiple id="fileupload"/>
+			</form>
+			<div class="message">why don't you drag some file directly here?</div>
+		</div>
+</section>
+	{% endif %}
 {% endblock %}	

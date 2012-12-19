@@ -174,4 +174,26 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 		});
 		oo.log("eeee");
 	});
+
+	
+
 };
+
+/*
+
+
+    UPLOAD via ajax
+    ===============
+
+*/
+oo.glue.upload = { is_dragging:false }
+oo.glue.upload.enable = function()
+{
+	oo.log("[oo.glue.upload.enable]");
+	$('#fileupload').fileupload('enable');
+}
+
+oo.glue.upload.disable = function(){
+	oo.log("[oo.glue.upload.disable]");
+	$('#fileupload').fileupload('disable');
+}

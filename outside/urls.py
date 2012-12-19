@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 	# api
 	url(r'^api/enquiry/$', 'outside.api.enquiries', name='outside_api_enquiries'), # get list, post single page
 	url(r'^api/enquiry/(?P<enquiry_id>\d+)/$', 'outside.api.enquiry', name='outside_api_enquiry'), 
-	
+	url(r'^api/enquiry/(?P<enquiry_id>\d+)/upload$', 'outside.api.enquiry_upload_pin', name='outside_api_enquiry_upload_pin'),
 
 	url(r'^(?P<page_slug>[a-z0-9-]+)/$','outside.views.page', name='outside_page'),
 

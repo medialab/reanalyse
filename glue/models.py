@@ -15,6 +15,7 @@ class Pin( models.Model ):
 	PUBLISHED = 'P'
 	DRAFT = 'D'
 	REVIEW = 'R'
+	XOUT = 'X' # VIEW VIA BIN ? 
 
 	PIN_STATUS_CHOICES = (
 		( PUBLISHED, 'Published' ),
@@ -55,6 +56,7 @@ class Pin( models.Model ):
 		return{
 			'id': self.id,
 			'slug':self.slug,
+			'status':self.status,
 			'title': self.title,
 			'abstract': self.abstract,
 			'content': self.content,

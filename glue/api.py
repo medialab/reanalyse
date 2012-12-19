@@ -4,7 +4,7 @@ from django.db.models.loading import get_model
 from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 
-from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_DOESNOTEXIST
+from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_FIELDERROR
 from glue.models import Page, Pin
 from glue.forms import AddPageForm, AddPinForm, EditPinForm
 
@@ -64,8 +64,8 @@ def pins( request ):
 			try:
 				page_en = Page.objects.get( slug=form.cleaned_data['page_slug'],language='EN')
 				page_fr = Page.objects.get( slug=form.cleaned_data['page_slug'],language='FR')
-			except Page.DoesNotExist:
-				return response.throw_error( error=_("selected page does not exists"), code=API_EXCEPTION_FORMERRORS).json()
+			except Page.DoesNotExist, e:
+				return response.throw_error( error="%s" % e, code=API_EXCEPTION_FORMERRORS).json()
 
 			response.add('page', [ page_en.json(), page_fr.json() ] )
 
@@ -124,6 +124,15 @@ def pin( request, pin_id ):
 				return response.throw_error( error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST).json()
 		else:
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+
+	elif response.method == 'DELETE':
+		try:
+			pin = Pin.objects.get( id=pin_id )
+			pins = Pin.objects.filter( pin.slug ).update( status=Pin.XOUT )
+		except Pin.DoesNotExist, e:
+			return response.throw_error( error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST).json()
+		except FieldError, e:
+			return response.throw_error( error="%s" % e, code=API_EXCEPTION_FIELDERROR).json()
 
 	return response.single( Pin, {'id':pin_id} ).json()
 

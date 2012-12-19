@@ -19,8 +19,8 @@ from outside.models import Enquiry
 def index( request ):
 	data = shared_context( request, tags=[ "index" ] )
 	
-	if Page.objects.filter( slug="project", language=data['language'] ).count() > 0:
-		return page( request, "project")
+	#if Page.objects.filter( slug="project", language=data['language'] ).count() > 0:
+	#	return page( request, "project")
 	
 	
 	# load all pins without page, without Enquete
@@ -39,7 +39,7 @@ def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 
-
+	data['has_enquiry'] = data['enquete'].enquiry.count()
 
 	return render_to_response('outside/enquete.html', RequestContext(request, data ) )
 

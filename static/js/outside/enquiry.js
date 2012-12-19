@@ -58,4 +58,52 @@ oo.enquiry.init = function(){ oo.log("[oo.enquiry.init]");
 		});
 	});
 
+
+
 };
+
+
+
+oo.enquiry.upload = { enquiry_id:0 };
+
+oo.enquiry.upload.init = function(){
+	oo.log("[oo.glue.upload.init]");
+	// blueimp upload for bulk attachments
+	$('#fileupload').fileupload({
+		url: oo.api.urlfactory( oo.urls.upload_enquiry_pin, oo.enquiry.upload.enquiry_id ),
+		dataType: 'json',
+		sequentialUploads: true,
+		dragover: function(e,data){
+			if (oo.glue.upload.is_dragging)
+				return;
+			oo.log("[oo.glue.upload] dragover");
+			oo.glue.upload.is_dragging = true;
+		},
+		drop:function(e,data){
+			oo.log("[oo.glue.upload] drop");
+			oo.glue.upload.is_dragging = false;
+		},
+		done: function (e, data) {
+			oo.log( e, data.result);
+			oo.toast("uploaded finished", { stayTime: 2000,cleanup:true });
+			if( data.result.status == "ok"){
+				oo.toast( "COMPLETED GUY!:!!!" );
+			} else{
+				oo.toast( data.result.error, ds.i18n.translate("error"), { stayTime: 2000, cleanup:true });	
+			}
+		},
+		start: function (e, data) {
+			oo.toast(oo.i18n.translate("start uploading"), { stayTime: 2000 });
+		},
+		fail: function( e, data){
+			oo.log(e, data);
+			oo.fault( e.type);
+		},
+		progressall: function (e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+			$('#progress .bar').width( progress + '%');
+		}
+	});
+	// disabled by default
+	// oo.glue.upload.disable();
+}

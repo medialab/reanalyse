@@ -27,8 +27,8 @@
 {% block sidebar %}
 	<ul class="nav">
 		<li class="active"><a href="#visualization">{% trans "documents" %}</a></li>
-		<li ><a href="#content">{% trans "description" %}</a></li>
-		{% if enquete.enquiry %}
+		<li ><a href="#content">{% trans "description" %}{{ enquete.enquiry.id }}</a></li>
+		{% if has_enquiry %}
 		<li><a href="{% url outside_enquiry enquete.id %}">{% trans "enquete sur l'enquete" %}</a></li>
 		
 		{% endif %}
@@ -38,7 +38,8 @@
 {% endblock %}
 
 {% block sidebar_add_section %}
-	{% if not enquete.enquiry and edit_mode %}
+	{% if not has_enquiry and edit_mode %}
+
 		<div class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
 				</div>
 
@@ -99,7 +100,7 @@
 {% block modals %}
 	{{ block.super }}
 	{% if edit_mode %}
-	<div class="modal fade" id="add-enquiry-modal">
+	<div class="modal fade" style="display:none" id="add-enquiry-modal">
 		<form method="POST">{% csrf_token %}
 
 		<div class="modal-header">

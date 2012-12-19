@@ -5,6 +5,7 @@
 	
 	<header>
 		<div id="header-inner" class="container_12">
+			<a href="{% url outside_index %}"><div id="creep"></div></a>
 			<ul>
 				
 	{% if not request.user.is_authenticated %}
@@ -237,7 +238,9 @@
 		add_pin:"{% url glue_api_pins %}",
 		add_enquiry:"{% url outside_api_enquiries %}",
 		edit_pin:"{% url glue_api_pin 0 %}",
-		get_pin:"{% url glue_api_pin 0 %}"
+		get_pin:"{% url glue_api_pin 0 %}",
+		upload_enquiry_pin:"{% url outside_api_enquiry_upload_pin 0 %}",
+		
 		
 	};
 	{% endif %}
