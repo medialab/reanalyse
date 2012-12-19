@@ -1455,6 +1455,7 @@ div.text_silence:after {
 }
 #theTextTooltip .tipBody {
 	text-align: left;
+	width:auto;
     background-color:white;
     padding:5px;
     -moz-border-radius: 5px;

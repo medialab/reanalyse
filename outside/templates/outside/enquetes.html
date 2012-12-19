@@ -1,15 +1,27 @@
 {% extends "outside/middle.html" %}
 {% load i18n %}
 
+{% block outside_scripts %}
+	{{ block.super }}
+	<script src="{{STATIC_URL}}/js/outside/list.js" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block head %}
+	{{ block.super }}
+	<script src="{{STATIC_URL}}/js/jquery.masonry.min.js" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block document_ready %}
+	{{ block.super }}
+	oo.list.init();
+{% endblock %}
 
 {% block sidebar %}
 	<ul class="nav">
 		<li><a href="#studies">{{ page.title }}</a></li>
-		{% for section in page.accolites.all %}
-			{% ifequal section.language language %}
-			<li><a href="#{{ section.slug }}">{{ section.title }}</a></li>
-			{% endifequal %}
-		{% endfor %}
+		
 
 	</ul>
 	
@@ -22,11 +34,12 @@
 
 {% block page %}
 <a id="enquetes"></a>
-	<section class="alpha" style="padding-right:2px">
+	<section class="alpha items-container" style="padding-right:2px">
 	
 	{% for s in enquetes %}
-	<a href="{% url outside_enquete s.id %}">
+	
 		<div class="enquete big item hover">
+			<a href="{% url outside_enquete s.id %}">
 			<p class="classification">
 			{% for topicclassification  in s.meta.values.general.topicclassification.value %}
 				{{ topicclassification }}
@@ -35,7 +48,7 @@
 			<p class="title">{{s.name }}</p>
 			<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
 			<div class="metadata">
-				<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}{% endfor %},
+				<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
 					{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>
 			
 				<p class="geocover">{% for geogcover in s.meta.values.universe.geogcover.value %}{{ geogcover }}{% endfor %}</p>
@@ -52,8 +65,9 @@
 					</li>
 				</ul -->
 			</div>
+			</a>
 		</div>
-	</a>
+	
 	{% endfor %}
 	
 	{% for s in studies.all %}

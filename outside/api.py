@@ -1,12 +1,16 @@
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
+from django.template.defaultfilters import slugify
 from django.conf import settings
+
 from glue.models import Pin
 from outside.models import Enquiry
 from outside.forms import AddEnquiryForm
-from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY
+from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from django.db import IntegrityError
 from reanalyse.reanalyseapp.models import Enquete
+from datetime import datetime
+import os, mimetypes
 
 
 #
@@ -59,6 +63,58 @@ def enquiry( request, enquiry_id ):
 	response = Epoxy( request )
 	# check user permissions
 	return response.single( Enquiry, {'pk':enquiry_id} ).json()
+
+def enquiry_upload_pin( request, enquiry_id ):
+	response = Epoxy( request )
+	d = datetime.now()
+	try:
+		enquiry = Enquiry.objects.get(id=enquiry_id)
+
+		enquiry_en = Enquiry.objects.get( language="EN", slug=enquiry.slug )
+		enquiry_fr = Enquiry.objects.get( language="FR", slug=enquiry.slug )
+	except Enquiry.DoesNotExist, e:
+		return response.throw_error( error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST ).json()
+	response.add('enquiries', [ enquiry_en.json(), enquiry_fr.json() ] )
+
+	pin_path = response.add('path', "pins/%s-%s" % ( d.year, ( d.month if d.month >10 else "0%s" % d.month ) ) )
+	absolute_pin_path = os.path.join( settings.MEDIA_ROOT, pin_path )
+
+	try:
+		if not os.path.exists( absolute_pin_path ): 
+			os.makedirs( absolute_pin_path ) # throw an OS ERROR if exists... OR if it is not writable
+	except OSError, e:
+		return response.throw_error( error="%s" % e, code=API_EXCEPTION_OSERROR ).json()
+
+	for f in request.FILES.getlist('files[]'):
+		if f.size == 0:
+			return response.throw_error( error="uploaded file is empty", code=API_EXCEPTION_EMPTY ).json()
+
+		filename = os.path.join( absolute_pin_path, f.name)
+		pinup = open( filename , 'w' )
+
+		for chunk in f.chunks():
+			pinup.write( chunk )
+
+		pinup.close()
+
+		# guess mimetype
+		pin_mimetype = mimetypes.guess_type( filename )[0]
+
+		try:
+			p_en = Pin( title=f.name, language='EN', slug=slugify( f.name ), mimetype=pin_mimetype, local=os.path.join( pin_path, os.path.basename( filename ) ) )
+			p_fr = Pin( title=f.name, language='FR', slug=slugify( f.name ), mimetype=pin_mimetype, local=os.path.join( pin_path, os.path.basename( filename ) ) )
+			p_en.save()
+			p_fr.save()
+
+		except IntegrityError, e:
+			return response.throw_error( error="%s" % e, code=API_EXCEPTION_INTEGRITY ).json()
+
+		enquiry_en.pins.add( p_en )
+		enquiry_fr.pins.add( p_fr )
+		enquiry_en.save()
+		enquiry_fr.save()
+
+	return response.json()
 
 #
 #    API AUTH VIEWS
