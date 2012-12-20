@@ -479,17 +479,13 @@ oo.enq.types.init = function ( objects ){
 		.html(map[i] + ' ' + i);
 	}
 
-	// var docs = d3.select('#types');
-
-	// docs.selectAll("li")
-	// 	.data(objects)
-	// 	.enter().append("li")
-	// 	.attr('class', 'active')
-	// 	.attr('data-id', function(d) { return d.id; })
-	// 	.attr('data-status', 'active')
-	// 	.html(function(d) { return d.type; });
-
 };
+
+
+
+
+
+
 
 
 
