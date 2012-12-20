@@ -7,9 +7,8 @@ oo.enq.types = {};
 oo.enq.docs = {};
 
 var circleSize = {
-	'small' : 5,
-	'medium' : 10,
-	'big' : 50
+	'small' : 0,
+	'medium' : 10
 };
 
 // 
