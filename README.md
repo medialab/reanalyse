@@ -85,7 +85,8 @@ create db and user
 	$ sudo service apache2 reload
 
 ## Static Html Pages
-files are stored within the ‘template/content/‘ dir
+
+files are stored within the `./template/content/` dir
 
 ## django Internationalization how-to
 ### within template
@@ -98,29 +99,33 @@ files are stored within the ‘template/content/‘ dir
 ### within view
 
 	from django.utils.translation import ugettext as _
-
+	...
 	mystring = _('congratulations')
 
 ### translation
-required: sudo apt-get install gettext
+
+	$ sudo apt-get install gettext
+
 from django project root, do:
 
 	$ sudo django-admin.py makemessages --ignore ./upload --ignore ./media --ignore ./solr -a
-	(manually translate file /locale/fr/LC_MESSAGES/django.po)
+	
+manually translate file `./locale/fr/LC_MESSAGES/django.po`
+
 	$ django-admin.py compilemessages
 
 ## solr is based on the default conf (from example), except for
 
 * `./solr/solr/conf/schema.xml` defining how models are indexed
-* `./solr/solr/conf/solrconfig.xml`
- * datadir = ./../solrdataindex/ (temp files)
- * < maxFieldLength >2147483647< /maxFieldLength > (in case of big files)
-* `./solr/etc/jetty.xml` : if you want to change webserver port
-* `./solr/solr/conf/*_fr.txt : stopwords, synonyms, protwords, etc...
+* `./solr/solr/conf/solrconfig.xml` defines:
+ * `datadir = ./../solrdataindex/` (temp files)
+ * `< maxFieldLength > 2147483647 < /maxFieldLength >` (in case of big files)
+* `./solr/etc/jetty.xml` if you want to change webserver port
+* `./solr/solr/conf/*_fr.txt` : stopwords, synonyms, protwords, etc...
 
 ## Normalisation process
 
-![Alt text](https://github.com/medialab/reanalyse/tree/master/media/images/content_overview.png "Normalisation")
+![Alt text](https://raw.github.com/medialab/reanalyse/master/media/images/content_overview.png "Normalisation")
 
 ### more about icons for paraverbal
 
@@ -128,6 +133,6 @@ the normalisation process is described within the "Method" page in the website `
 
 but if need to add icons, please refer to the comments within the `./reanalyseapp/globalvars.py` file
 
-
 ## django models & views
-![Alt text](https://github.com/medialab/reanalyse/tree/master/media/images/content_models.png "Django Models")
+
+![Alt text](https://raw.github.com/medialab/reanalyse/master/media/images/content_models.png "Django Models")
