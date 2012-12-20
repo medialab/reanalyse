@@ -112,7 +112,7 @@ ATTRIBUTE_PUBLICY_CHOICES = (
 	('7', 'for Spok'),
 )
 
-################################################################################ VERBATIM
+################################################################################ VERBATIM PUNCTUATION
 ########## PONCTUATION
 SENTENCE_UTT_SYMBOLS = {}
 SENTENCE_UTT_SYMBOLS['exclamative']='! '
@@ -121,29 +121,31 @@ SENTENCE_UTT_SYMBOLS['interrogative']='? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
 
+################################################################################ VERBATIM CODES
+#
+# if you need to support more codes and icons in the reanalyse site, here is what you need to know:
+#
+# a TEI code is written within a transcription .txt as:
+#
+#	speakerid: bla bla bla (mycode:value of code) bla bla bla
+#
+# after processing by (Exmaralda > TEI Drop), it appears in the TEI .xml as:
+#
+#	<incident> <desc> mycode:value of code </desc> </incident>
+#
+# when uploading a study, those tags are parsed and translated as html tags
+#
+# the TEI codes need to be declared in the CODES DEFINITION section below (depending on type) to be parsed
+# ... and maybe defined in CODES ACTIVATED, if you want them to be available in certain views
+#
+#################### CODES DEFINITION
 
-########## CODES ACTIVATED (every code need to be declared in CODES DEFINITIONS TOO ! see below )
-# ACTIVATED CODES = those in TextStreamTimeline viz (in order) - nb: if there is not code in texte, it will not show on viz !
-STREAMVIZCODES={}
-STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible','break','comment','time']
-# deprecated colors, now all set in reanalyse.css
-#STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
 
-# ACTIVATED CODES = displayed IN edShow to show/hide, with categories
-PARVBCODES={}
-PARVBCODES['Transcription'] = 	['break','comment','inaudible','question','time']
-PARVBCODES['Verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
+############ 1) THOSE who require
+# an image		/media/images/text_comment.png
+# a css class 	.text_comment { display:inline-block; height:18px;width:18px; background:url('../images/text_comment.png') no-repeat; }
 
-
-
-# THOSE YOU WANT TO PUT SPECIALLY on the margin (will add a css class)
-PARVBMARGL = ['comment','break']	# left margin
-PARVBMARGR = ['time']				# right margin
-
-
-
-########## CODES DEFINITION
-# SIMPLE IMAGE
+## IMAGE ONLY					aka (hesitation)
 CODES_IMAGE={}
 CODES_IMAGE['hesitation']=				'hesitation'
 CODES_IMAGE['inaudible']=				'inaudible'
@@ -151,9 +153,9 @@ CODES_IMAGE['interruption']=			'interruption'
 CODES_IMAGE['part:echo']=				'interruption'
 CODES_IMAGE['laugh']=					'laugh'
 CODES_IMAGE['silence']=					'silence'
-CODES_IMAGE['points de suspension']=	'hesitation'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
+CODES_IMAGE['points de suspension']=	'hesitation' # (soon deprecated) more mapping, because some verb of test-studies may contain thoses
 
-# IMAGE WITH TOOLTIP (ie with content)
+## IMAGE WITH TOOLTIP 			aka (comment:le commentaire)
 CODES_IMAGE_TOOLTIP={}
 CODES_IMAGE_TOOLTIP['break:']=			'break'
 CODES_IMAGE_TOOLTIP['body:']=			'body'
@@ -161,18 +163,41 @@ CODES_IMAGE_TOOLTIP['comment:']=		'comment'
 CODES_IMAGE_TOOLTIP['directed:']=		'directed'
 CODES_IMAGE_TOOLTIP['question:']=		'question'
 CODES_IMAGE_TOOLTIP['time:']=			'time'
-CODES_IMAGE_TOOLTIP['to:']=				'directed'	# (soon deprecated) more mapping, because some verb of test-studies may contain thoses
+CODES_IMAGE_TOOLTIP['to:']=				'directed' # (soon deprecated) more mapping, because some verb of test-studies may contain thoses
 
-# TEXT STYLING
-CODES_TEXT={} # text styling (no image no tooltip)
-CODES_TEXT['strong:']=			'strong'
 
-# TEXT STYLING WITH TOOLTIP (ie with content)
-CODES_TEXT_TOOLTIP={} # text styling (with tooltip)
-CODES_TEXT_TOOLTIP['sic:']=				'sic'
-CODES_TEXT_TOOLTIP['uncertain:']=		'uncertain'
+############ 2) THOSE who require
+# a css class	.text_strong { ... }
 
-########## ALL CODES TO CSS CLASSES
+## TEXT STYLING ONLY			aka (strong:le texte a appuyer)
+CODES_TEXT={}
+CODES_TEXT['strong:']=	'strong'
+
+## TEXT STYLING WITH TOOLTIP 	aka (sic:uncertain)
+CODES_TEXT_TOOLTIP={}
+CODES_TEXT_TOOLTIP['sic:']=			'sic'
+CODES_TEXT_TOOLTIP['uncertain:']=	'uncertain'
+
+
+
+#################### CODES ACTIVATED
+# if you want code to appear in the TextStreamTimeline viz (in order). nb: if there is not code in texte, it will not be shown in the viz !
+STREAMVIZCODES={}
+STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible','break','comment','time']
+# deprecated colors, now all set in reanalyse.css
+#STREAMVIZCODES['colors'] 	= ['#66CCFF','#BFBD9F','#EC993B','#D9FF00','#ED5300','#ED5300','#517368','#66CCFF']
+
+# if you want code to be displayed in edShow as show/hide chackboxes, within categories (Transcription/Verbatim
+PARVBCODES={}
+PARVBCODES['Transcription'] = 	['break','comment','inaudible','question','time']
+PARVBCODES['Verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
+
+# if you want code to be put specially in the margin (will add a css class)
+PARVBMARGL = ['comment','break']	# left margin
+PARVBMARGR = ['time']				# right margin
+
+
+########## CODES TO CSS CLASSES
 CODE_TO_CSS={}
 ALLCODES={}
 ALLCODES.update(CODES_IMAGE)
@@ -183,7 +208,7 @@ for k in ALLCODES.values():
 	CODE_TO_CSS[k]='text_'+k
 
 
-########## TREETAGGER CODES
+################################################################################ TREETAGGER CODES
 # source:
 # http://www.revue-texto.net/Corpus/Publications/Poudat_Taggers.html
 CODES_TREETAGGER={}

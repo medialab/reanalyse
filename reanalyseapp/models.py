@@ -153,12 +153,8 @@ class Texte(models.Model):
 		self.status='2'
 		self.save()
 		if self.doctype=='TEI':
-			#try:
-			# building Structure found in the tei xml
 			parseXmlDocument(self)
 			self.status='0'
-			#except:
-				#self.status='-1'
 		self.save()
 ##############################################################################
 

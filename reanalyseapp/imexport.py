@@ -78,9 +78,12 @@ def doFiestaToEnquete(e):
 			logger.info("["+str(e.id)+"] EXCEPT enquete no more loading : breaking !")
 			break
 		t_start = time()
+		# there is no try/except in the parseXml() function
 		try:
 			t.parseXml()
 		except:
+			t.status='-1'
+			t.save()
 			logger.info("["+str(e.id)+"] EXCEPT parsing texte: "+str(t.id))
 		t_end = time()
 		s = t_end-t_start

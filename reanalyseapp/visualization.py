@@ -120,7 +120,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 		###### one cloud for each text
 		if speakers==[]:
 			if textes==[]:
-				textes = Texte.objects.filter(doctype='TEI')
+				textes = Texte.objects.filter(enquete=e,doctype='TEI')
 			for t in textes:
 				spks = t.speaker_set.filter(public=True)
 				if len(spks)>0:
@@ -169,7 +169,7 @@ def makeViz(e,typ,speakers=[],textes=[],attributetypes=[],count=0):
 		newVizu.save()
 	###################################################			
 	
-	
+	logger.info("["+str(e.id)+"] viz done: "+typ)
 	# NB: if multiple viz are created, only the last one will be returned !
 	return newVizu
 ###########################################################################

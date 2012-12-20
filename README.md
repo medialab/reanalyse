@@ -1,12 +1,15 @@
 Reanalyse
 =================================
+To understand how the reanalyse project works, you'll need to read carefully:
+
+* this `readme.md` file
+* the `./templates/content/method_content_fr.html` page, included in the site
+* the `./reanalyseapp/globalvars.py` file, explaining the technical part of codes
+
 ## Installation
-### git
+### git source
 
 	$ sudo aptitude install git
-
-### source
-
 	$ mkdir /var/opt/reanalyse
 	$ git clone https://github.com/medialab/reanalyse.git reanalyse
 
@@ -19,12 +22,9 @@ Reanalyse
 	$ sudo aptitude install apache2-threaded-dev
 	$ apxs2 -iac mod_xsendfile.c
 
-### haystack
+### haystack + django_tables2 (not used anymore ?)
 
 	$ sudo pip install django-haystack
-
-### django_tables2 (not used anymore ?)
-
 	$ sudo pip install django-tables2
 
 ### lxml
@@ -44,11 +44,11 @@ Reanalyse
 
 ### absent directories
 
-* ‘./settingsprivate.py‘
-* ‘./download/‘
-* ‘./logs/‘
-* ‘./solrdataindex/‘
-* ‘./upload/‘
+* `./settingsprivate.py`
+* `./download/`
+* `./logs/`
+* `./solrdataindex/`
+* `./upload/`
 
 	$ vi settingsprivate.py
 	
@@ -56,7 +56,8 @@ Reanalyse
 	$ sudo chown -R www-data:www-data solr log upload download
 
 ### Postgresql
-	remplacer ident par md5 pour local désactiver les autres host
+
+remplacer ident par md5 pour local désactiver les autres host
 	
 	$ sudo vi /etc/postgresql/8.4/main/pg_hba.conf
 
@@ -95,7 +96,8 @@ files are stored within the ‘template/content/‘ dir
 	<title>{% trans 'Login Page' %}</title>
 	
 ### within view
-from django.utils.translation import ugettext as _
+
+	from django.utils.translation import ugettext as _
 
 	mystring = _('congratulations')
 
@@ -109,15 +111,23 @@ from django project root, do:
 
 ## solr is based on the default conf (from example), except for
 
-* ‘./solr/solr/conf/schema.xml‘ defining how models are indexed
-* ‘./solr/solr/conf/solrconfig.xml‘
+* `./solr/solr/conf/schema.xml` defining how models are indexed
+* `./solr/solr/conf/solrconfig.xml`
  * datadir = ./../solrdataindex/ (temp files)
  * < maxFieldLength >2147483647< /maxFieldLength > (in case of big files)
-* ‘./solr/etc/jetty.xml‘ : if you want to change webserver port
-* ‘./solr/solr/conf/*_fr.txt‘ : stopwords, synonyms, protwords, etc...
+* `./solr/etc/jetty.xml` : if you want to change webserver port
+* `./solr/solr/conf/*_fr.txt : stopwords, synonyms, protwords, etc...
 
-## normalisation
-![Alt text](http://jiminy.medialab.sciences-po.fr/reanalyse/media/images/content_overview.png "Normalisation")
+## Normalisation process
+
+![Alt text](https://github.com/medialab/reanalyse/tree/master/media/images/content_overview.png "Normalisation")
+
+### more about icons for paraverbal
+
+the normalisation process is described within the "Method" page in the website `./templates/content/method_content_fr.html`
+
+but if need to add icons, please refer to the comments within the `./reanalyseapp/globalvars.py` file
+
 
 ## django models & views
-![Alt text](http://jiminy.medialab.sciences-po.fr/reanalyse/media/images/content_models.png "Django Models")
+![Alt text](https://github.com/medialab/reanalyse/tree/master/media/images/content_models.png "Django Models")
