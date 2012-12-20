@@ -382,7 +382,7 @@ oo.enq.docs.update = function( event, filters ){
 			item.transition()
 				.duration(1000)
 				.style('opacity', '1')
-				.style('height', '19px');
+				.style('height', '30px');
 		} 
 	})
 	
