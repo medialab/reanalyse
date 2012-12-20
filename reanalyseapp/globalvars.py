@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ############################################################
 
-# in edBrowse / esBrowse (height is set in css
+# in edBrowse / esBrowse (height is set in css)
 LITTLEFRISEMAXWIDTH = 100
 
 # see settings.py
@@ -15,12 +15,13 @@ STATUS_CHOICES = (
 	('0', 'OK'),
 	('-1', 'Failed'),		# problem
 	('5', 'Waiting'),		# tei waiting to be processed
-	('1', 'Loading'),	
-	('2','Parsing'),		# tei processed
-	('3','Styling'),		# deprecated ?
+	('1', 'Loading'),		# when uploading enquete, all parsing process
+	('2','Parsing'),		# tei processed document
+	('3','Styling'),		# deprecated ? yes
 	('4','Deleting'),		# won't show in lists
-	('55','**Internal use'),
-	('77', '**You won something')
+	('6', 'Re-parsing TEI'),		# state of study when re launching parsing process for a tei document
+	('55','**Internal use'),		# unused
+	('77', '**You won something')	# unused
 )
 
 ############################################################ DOCUMENTS meta_documents.csv

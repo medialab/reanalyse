@@ -902,20 +902,17 @@ def edBrowse(request,eid):
 				sizeStr = str(t.filesize)+" Ko"
 		
 		# DATA / STATUS / ACTIONS
-		dataStr=""
-		#linkParse = reverse(edParseXml,args=eiddid)
-		#parseStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkParse+'");return false;\'>parse</a>&nbsp;'
-		#linkStyle = reverse(edStylizeContent,args=eiddid)
-		#refreshStr='<a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+linkStyle+'");return false;\'>stylize</a>&nbsp;'
-		#if t.doctype=='TEI' or t.doctype=='CTX':
-		#	dataStr += parseStr
-		#if request.user.has_perm('reanalyseapp.can_make') and t.doctype=='TEI':
-		#	dataStr += parseStr
-		#if len(t.contenttxt)>0 and request.user.has_perm('reanalyseapp.can_make'):
-		#	dataStr += vStyle +'parsed' + endStyle
+		dataStr=""		
 		statusStr = t.get_status_display()
-		if t.status!='0' and (t.doctype=='TEI' or t.doctype=='CTX') :
+		if t.status!='0' and (t.doctype=='TEI' or t.doctype=='CTX') : # CTX seems deprecated (for CAQDAS docs ?)
 			statusStr += ' ' + str(t.statuscomplete) + '%'
+		
+		# REPARSE action if type TEI
+		if t.doctype=='TEI':
+			reparseLink = reverse(edParseXml,args=eiddid)
+			reparseStr=' <a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+reparseLink+'");$(this).remove();return false;\'>reparse</a>'
+			statusStr += reparseStr
+			
 		#if t.doctype=='TEI':
 		#	linkDl = reverse(edXmlShow,args=eiddid)
 		#	statusStr += ' <a href="'+linkDl+'">xhtml</a>'
@@ -2057,15 +2054,35 @@ def deleteEnquetes(request):
 # 	def run(self):
 # 		self.texte.parseXml()
 ####################
+# the following parsing is made on demand (not at enquete initial loading), so we need refresh solr index at the end
 def edParseXml(request,eid,did):
+	e = Enquete.objects.get(id=eid)
 	texte = Texte.objects.get(id=did)
-	texte.parseXml()
 #	t = ParseThread()
 #	t.setText(texte)
 #	t.setDaemon(True)
 #	t.start()
+	
+	# enquete status to "reparsing"
+	e.status = '6'
+	e.save()
+		
+	# parsing will erase all existing sentence objects related to that document
+	logger.info("["+str(eid)+"] reparsing TEI document:"+str(did))
+	texte.parseXml()
+	logger.info("["+str(eid)+"] reparsing TEI done:"+str(did))
+	
+	# refresh solr index
+	logger.info("["+str(eid)+"] solr index updating ...")
+	update_index.Command().handle(verbosity=0)
+	logger.info("["+str(eid)+"] solr index updated")
+	
+	# enquete status to ok
+	e.status = '0'
+	e.save()
+	
 	d={}
-	d['stats']={'nsentences':texte.sentence_set.count(),'nspeakers':texte.speaker_set.count()}
+	#d['stats']={'nsentences':texte.sentence_set.count(),'nspeakers':texte.speaker_set.count()}
 	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
 	return HttpResponse(jsondata, mimetype="application/json")
 ###########################################################################
