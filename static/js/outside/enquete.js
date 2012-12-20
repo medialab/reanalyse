@@ -276,7 +276,7 @@ oo.enq.timeline.init = function( objects ){
 		.attr('class', 'dot active')
 		.attr("cx", function(d) { return scaleX(d.time); })
 		.attr("cy", 0)
-		.attr("r", function(d) { return 2 + d.freq * 2 })
+		.attr("r", function(d) { return d.freq * 6 })
 		.attr("data-id", function(d) { return d.id; });
 
 	oo.enq.timeline.data = density;
