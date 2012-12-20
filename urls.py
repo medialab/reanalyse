@@ -19,8 +19,9 @@ urlpatterns = patterns('reanalyse',
 	(r'^stream/(?P<eid>\d+)/(?P<aid>\d+)$', 'reanalyseapp.views.stream'),
 	(r'^getesereport/(?P<eid>\d+)', 'reanalyseapp.views.getEseReport'),		# ESE report download
 	(r'^graph/download/(?P<gid>\d+)', 'reanalyseapp.views.downloadGraph'),
-	(r'^graph/serve/(?P<gid>\d+).gexf', 'reanalyseapp.views.serveGraph'),	# for gexf display (sigma?)
-	(r'^graph/serve/(?P<did>\d+).pdf', 'reanalyseapp.views.servePdf'),		# for simple pdf display
+	(r'^e/serve/gexf/(?P<gid>\d+).gexf', 'reanalyseapp.views.serveGraph'),	# for gexf display (sigma?)
+	(r'^e/serve/pdf/(?P<did>\d+).pdf', 'reanalyseapp.views.servePdf'),		# for simple pdf display
+	(r'^e/serve/img/(?P<did>\d+)', 'reanalyseapp.views.serveImg'),		# for simple img display
 	
 	######################################################################################################
 	########## ENQUETES

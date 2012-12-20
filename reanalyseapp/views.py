@@ -24,6 +24,9 @@ from django.core.mail import send_mail
 import glob
 import os
 
+# to detect file mimetype when serving files (gexf, pdf, img, ...)
+import magic
+
 # solr process
 import subprocess
 
@@ -1274,7 +1277,9 @@ def edShow(request,eid,did):
 				thevals.append([cssClass,row[k]])
 			values.append(thevals)
 		ctx.update({'csvTable':{'columns':columns,'values':values}})
-	#########################################
+	
+	######################################### PDF, IMG
+	# for pdf, img: nothing to do, everything is in the model (filelocation, name, etc...)
 	
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
@@ -1408,6 +1413,14 @@ def servePdf(request,did):
 	d = Texte.objects.get(id=did)
 	fsock = open(d.locationpath,"rb").read()
 	response = HttpResponse(fsock, mimetype="application/pdf")
+	return response
+# serve img
+def serveImg(request,did):
+	d = Texte.objects.get(id=did)
+	mime = magic.Magic(mime=True)
+	filemime = mime.from_file(d.locationpath)
+	fsock = open(d.locationpath,"rb").read()
+	response = HttpResponse(fsock, mimetype=filemime)
 	return response
 ###########################################################################
 

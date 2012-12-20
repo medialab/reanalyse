@@ -267,7 +267,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 							if doc_mimetype=='tei':
 								newDocument.status	= '5' # 'waiting' status
 								newDocument.save()
-							elif doc_mimetype=='pdf' or doc_mimetype=='csv':
+							elif doc_mimetype=='pdf' or doc_mimetype=='csv' or doc_mimetype=='img':
 								newDocument.status	= '0'
 								newDocument.save()
 							elif doc_mimetype=='htm':

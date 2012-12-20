@@ -37,6 +37,10 @@ To understand how the reanalyse project works, you'll need to read carefully:
 	$ hg clone https://bitbucket.org/cogtree/python-solr
 	$ sudo pyton python-solr/setup.py install
 
+### python-magic (used to detect file mimetype)
+
+	$ sudo easy_install python-magic
+	
 ### apache > django conf
 
 	$ vi /apache/reanalyse.conf
@@ -50,8 +54,8 @@ To understand how the reanalyse project works, you'll need to read carefully:
 * `./solrdataindex/`
 * `./upload/`
 
+
 	$ vi settingsprivate.py
-	
 	$ mkdir logs upload download solrdataindex
 	$ sudo chown -R www-data:www-data solr log upload download
 

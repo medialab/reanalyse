@@ -54,16 +54,17 @@ DOC_CAT_2['revis'] 		= 'Reused'
 DOC_CAT_2['transcr'] 	= 'Transcription'
 
 
-# C) meta_documents.csv : COLUMN *mimetype . 
-DOCUMENT_MIMETYPES 	=  ['ese','tei']			# special files (ese is saved as json, tei is parsed)
-DOCUMENT_MIMETYPES 	+= ['link','ref']			# doc without local file (only title/text/description, or link, ...)
-DOCUMENT_MIMETYPES	+= ['pdf','htm','csv']		# normaly displayed docs
+# C) meta_documents.csv : COLUMN *mimetype .
+# be careful ! "mimetype" doesn't mean real mimetype of the file, rather the category for the Texte model (to be renamed in Document)
+DOCUMENT_MIMETYPES 	=  ['ese','tei']				# special files (ese is saved as json, tei is parsed)
+DOCUMENT_MIMETYPES 	+= ['link','ref']				# doc without local file (only title/text/description, or link, ...)
+DOCUMENT_MIMETYPES	+= ['img','pdf','htm','csv']	# normaly displayed docs
 
 # documents are parsed only if they are in A) & B) & C)
 # note that ese is also processed, but in a different way. see importexport.py
 
-# types of document from the django models point of view (ie texte.doctype)
-# NB: this Texte attribute is made using *mimetype.upper()
+# when a Document is processed, the model is made using DOCUMENT_MIMETYPES.upper()
+# ... types of document used by the django models point of view (ie texte.doctype)
 DOCUMENT_TYPE_CHOICES = (
 	('TEI', 'XML TEI'),
 	('LINK', 'External link'),
@@ -71,6 +72,7 @@ DOCUMENT_TYPE_CHOICES = (
 	('PDF', 'PDF'),
 	('HTM', 'HTML File'),
 	('CSV', 'CSV Table'),
+	('IMG', 'Image'),
 	#('TXT', 'Text File'),
 	#('RTF', 'RTF'),			# rather use htm for the moment, it's simpler
 	#('ATL', 'XML Atlas.Ti'),	# ...forget about it for the moment (data too much unstructured)

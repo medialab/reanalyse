@@ -44,7 +44,7 @@ NB: Page en cours de rédaction...
 		<tr><td class="content_norm_orig">doc, docx</td><td>.txt</td><td class="content_norm_orig">pour les verbatims (fichiers intermédiaires). ces fichiers .txt doivent être ensuite convertis au format TEI .xml (voir plus bas)</td><td>oui</td></tr>
 		<tr><td class="content_norm_orig">rtf</td><td>.htm</td><td class="content_norm_orig">limite la mise en page et le formattage à quelques éléments simples (titres, sous-titres, paragraphes) mais permet l'indexation (recherche dans le texte)</td><td>oui</td></tr>
 		<tr><td class="content_norm_orig">ppt</td><td>.pdf</td><td class="content_norm_orig">pas d'indexation du texte, mais conservation de la mise en page</td><td>oui</td></tr>
-		<tr><td class="content_norm_orig">image</td><td>.jpg</td><td class="content_norm_orig">...</td><td>non</td></tr>
+		<tr><td class="content_norm_orig">image</td><td>.jpg .png .gif</td><td class="content_norm_orig">affichage simple</td><td>oui</td></tr>
 		<tr><td class="content_norm_orig">audio</td><td>.mp3</td><td class="content_norm_orig">...</td><td>non</td></tr>
 	</table>
 	Lorsque le choix de l'encodage est proposé, toujours préférer "UTF-8"<br/>
@@ -161,7 +161,7 @@ NB: Page en cours de rédaction...
 			<tr class="content_norm_expl">
 				<td>*descr</td>
 				<td>emplacement du fichier dans le dossier enquête, ou lien externe</td>
-				<td>/xml /htm /csv /pdf /link /ref</td>
+				<td>/xml /htm /csv /pdf /img /link /ref</td>
 				<td>nom dans le site enquête</td>
 				<td>/preparatory /analyse /verbatim /publication /ese</td>
 				<td>apparaît en infobulle à coté de chaque document</td>
@@ -201,6 +201,12 @@ NB: Page en cours de rédaction...
 				<td class="content_norm_file content_norm_orig">Rapport d'enquête.doc</td>
 				<td class="content_norm_orig">export pdf</td></tr>
 
+			<tr><td>d234</td><td class="content_norm_file">_data/ image.png</td><td>img</td>
+				<td>Mon image</td><td>analyse</td>
+				<td>Photo des chiens de chasse</td><td>00/10/12</td><td></td>
+				<td class="content_norm_file content_norm_orig">image.raw</td>
+				<td class="content_norm_orig">save as png</td></tr>
+				
 			<tr><td>d034</td><td class="content_norm_file">[NP]</td><td>ref</td>
 				<td>Publication journal TEI</td><td>publication</td>
 				<td>Article publié p.34-35 du journal TEI</td><td>15/10/12</td><td></td>
