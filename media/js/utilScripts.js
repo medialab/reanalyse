@@ -169,11 +169,11 @@ function changeVerbatimWordsDisplay(wordsStr,css_prefix,showOnly) {
 // viz involved tooltips
 var closemodalvizdialog;
 function overlaymodalclickclose() {
-    if (closemodalvizdialog) {
-        $('.vizmodal').dialog('close');
-    }
-    //set to one because click on dialog (focus) box sets to zero 
-    closemodalvizdialog = 1;
+ 	if (closemodalvizdialog) {
+  		$('.vizmodal').dialog('close');
+ 	}
+ 	//set to one because click on dialog (focus) box sets to zero 
+ 	closemodalvizdialog = 1;
 }
 function initVizInvolvedModals(getvizhtmlurl) {
 	$(".vizinvolved").click( function(event) {
@@ -193,15 +193,15 @@ function initVizInvolvedModals(getvizhtmlurl) {
 					resizable: false,
 					position: ['center',100],
 					open: function() {
-				        closemodalvizdialog = 1;
-				        $(document).bind('click', overlaymodalclickclose);
-				    },
-				    focus: function() {
-				        closemodalvizdialog = 0;
-				    },
-				    close: function() {
-				        $(document).unbind('click');
-				    },
+				  		closemodalvizdialog = 1;
+				  		$(document).bind('click', overlaymodalclickclose);
+				 	},
+				 	focus: function() {
+				  		closemodalvizdialog = 0;
+				 	},
+				 	close: function() {
+				  		$(document).unbind('click');
+				 	},
 				});
 				//closemodalvizdialog = 0;
 			},
@@ -564,6 +564,40 @@ function initSpeakerTableScrollBar() {
 //////////////////////////////////////////////////////////////////
 // INIT VERBATIM TOOLTIPS
 function initVerbatimTooltips() {
+	$('a[rel=text_tooltip]').each(function() {
+		$(this).qtip({
+			content: $(this).attr("title"),
+			show: 'mouseover',
+			hide: 'mouseout',
+			position: {
+				corner: {
+					target: 'bottomMiddle',
+					tooltip: 'topMiddle'
+				}
+			},
+/*
+			style: { 
+				//width: 200,
+				padding: 5,
+				//background: '#A2D959',
+				//color: 'black',
+				textAlign: 'center',
+				border: {
+					width: 7,
+					radius: 5,
+					color: '#A2D959'
+				},
+				//name: 'dark' // Inherit the rest of the attributes from the preset dark style
+			}
+*/
+		});
+	});
+};
+
+
+/* deprecated manual tooltip */
+/*
+function initVerbatimTooltipsOld() {
 	//console.log("init verbatim tooltips");
 	//Select all anchor tag with rel set to tooltip
 	$('a[rel=text_tooltip]').mouseover(function(e) {
@@ -631,7 +665,6 @@ function initVerbatimTooltips() {
 				}
 			).data('hover', false);
 		}
-
 	})
 	.mousemove(function(e) {
 	 
@@ -648,6 +681,7 @@ function initVerbatimTooltips() {
 		}
 	});
 }
+*/
 //////////////////////////////////////////////////////////////////
 
 

@@ -55,8 +55,11 @@ To understand how the reanalyse project works, you'll need to read carefully:
 * `./upload/`
 
 
+
 	$ vi settingsprivate.py
+	
 	$ mkdir logs upload download solrdataindex
+	
 	$ sudo chown -R www-data:www-data solr log upload download
 
 ### Postgresql
@@ -135,7 +138,7 @@ manually translate file `./locale/fr/LC_MESSAGES/django.po`
 
 the normalisation process is described within the "Method" page in the website `./templates/content/method_content_fr.html`
 
-but if need to add icons, please refer to the comments within the `./reanalyseapp/globalvars.py` file
+to add more icons, please refer to the comments within the `./reanalyseapp/globalvars.py` file
 
 ## django models & views
 
