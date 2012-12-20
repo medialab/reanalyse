@@ -309,10 +309,8 @@ oo.enq.timeline.init = function( objects ){
 			.attr('width', brushWidth ); // Width is fixed
 
 		setTimeout( function() {
-
     		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
     		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
-
     	}, 1000 );
 
 	});
