@@ -430,8 +430,6 @@ oo.enq.types.update = function( event, filters ){
 		}
 	}
 
-	oo.log(map)
-	
 	for( var i in map ){
 		d3.select('#types li[data-id="' + i + '"]')
 			.attr('data-status', 'active')
