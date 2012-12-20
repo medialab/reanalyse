@@ -7,9 +7,8 @@ oo.enq.types = {};
 oo.enq.docs = {};
 
 var circleSize = {
-	'small' : 5,
-	'medium' : 10,
-	'big' : 50
+	'small' : 0,
+	'medium' : 10
 };
 
 // 
@@ -276,7 +275,7 @@ oo.enq.timeline.init = function( objects ){
 		.attr('class', 'dot active')
 		.attr("cx", function(d) { return scaleX(d.time); })
 		.attr("cy", 0)
-		.attr("r", function(d) { return 2 + d.freq * 2 })
+		.attr("r", function(d) { return d.freq * 6 })
 		.attr("data-id", function(d) { return d.id; });
 
 	oo.enq.timeline.data = density;
@@ -310,10 +309,8 @@ oo.enq.timeline.init = function( objects ){
 			.attr('width', brushWidth ); // Width is fixed
 
 		setTimeout( function() {
-
     		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
     		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
-
     	}, 1000 );
 
 	});
@@ -382,7 +379,7 @@ oo.enq.docs.update = function( event, filters ){
 			item.transition()
 				.duration(1000)
 				.style('opacity', '1')
-				.style('height', '19px');
+				.style('height', '30px');
 		} 
 	})
 	
@@ -414,13 +411,12 @@ oo.enq.types.update = function( event, filters ){
 
 	oo.log("[oo.enq.types.update]");
 
-	// d3.selectAll('#types li').attr('class', 'inactive'); // Reset
-	
-	// for( var i in oo.filt.data ){
-	// 	d3.select('#types li[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'active');
-	// }
+	var items = d3.selectAll('#types li').each(function() {
+		var item = d3.select(this);
+		item.attr('data-status-old', item.attr('data-status'));
+	}); // Copy new status to old status
 
-	d3.selectAll('#types li').remove();
+	items.attr('data-status', 'inactive'); // Reset
 
 	var map = {};
 	for (var i in oo.filt.data) {
@@ -432,11 +428,29 @@ oo.enq.types.update = function( event, filters ){
 		}
 	}
 
-	var types = d3.selectAll('#types');
+	for( var i in map ){
+		d3.select('#types li[data-id="' + i + '"]')
+			.attr('data-status', 'active')
+			.html(map[i] + ' ' + i);
+	} // Set active
 
-	for (var i in map) {
-		types.append('li').html(map[i] + ' ' + i);
-	}
+	items.each(function() {
+
+		var item = d3.select(this);
+
+		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
+			item.transition()
+				.duration(1000)
+				.style('opacity', '0')
+				.style('height', '0px');
+		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
+			item.transition()
+				.duration(1000)
+				.style('opacity', '1')
+				.style('height', '30px');
+		}
+
+	})
 	
 };
 
@@ -457,10 +471,19 @@ oo.enq.types.init = function ( objects ){
 	var types = d3.selectAll('#types');
 
 	for (var i in map) {
-		types.append('li').html(map[i] + ' ' + i);
+		types.append('li')
+		.attr('data-id', i)
+		.attr('data-status', 'active')
+		.html(map[i] + ' ' + i);
 	}
 
 };
+
+
+
+
+
+
 
 
 
