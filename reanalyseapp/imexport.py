@@ -78,9 +78,12 @@ def doFiestaToEnquete(e):
 			logger.info("["+str(e.id)+"] EXCEPT enquete no more loading : breaking !")
 			break
 		t_start = time()
+		# there is no try/except in the parseXml() function
 		try:
 			t.parseXml()
 		except:
+			t.status='-1'
+			t.save()
 			logger.info("["+str(e.id)+"] EXCEPT parsing texte: "+str(t.id))
 		t_end = time()
 		s = t_end-t_start
@@ -264,7 +267,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 							if doc_mimetype=='tei':
 								newDocument.status	= '5' # 'waiting' status
 								newDocument.save()
-							elif doc_mimetype=='pdf' or doc_mimetype=='csv':
+							elif doc_mimetype=='pdf' or doc_mimetype=='csv' or doc_mimetype=='img':
 								newDocument.status	= '0'
 								newDocument.save()
 							elif doc_mimetype=='htm':

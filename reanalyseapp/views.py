@@ -24,6 +24,9 @@ from django.core.mail import send_mail
 import glob
 import os
 
+# to detect file mimetype when serving files (gexf, pdf, img, ...)
+import magic
+
 # solr process
 import subprocess
 
@@ -907,8 +910,8 @@ def edBrowse(request,eid):
 		if t.status!='0' and (t.doctype=='TEI' or t.doctype=='CTX') : # CTX seems deprecated (for CAQDAS docs ?)
 			statusStr += ' ' + str(t.statuscomplete) + '%'
 		
-		# REPARSE action if type TEI
-		if t.doctype=='TEI':
+		# REPARSE action if type TEI and OK/Error
+		if t.doctype=='TEI' and (t.status=='0' or t.status=='-1'):
 			reparseLink = reverse(edParseXml,args=eiddid)
 			reparseStr=' <a href="" onclick=\'event.preventDefault();event.stopPropagation();doGetAtUrl("'+reparseLink+'");$(this).remove();return false;\'>reparse</a>'
 			statusStr += reparseStr
@@ -1274,7 +1277,9 @@ def edShow(request,eid,did):
 				thevals.append([cssClass,row[k]])
 			values.append(thevals)
 		ctx.update({'csvTable':{'columns':columns,'values':values}})
-	#########################################
+	
+	######################################### PDF, IMG
+	# for pdf, img: nothing to do, everything is in the model (filelocation, name, etc...)
 	
 	updateCtxWithPerm(ctx,request,e)
 	updateCtxWithSearchForm(ctx)
@@ -1408,6 +1413,14 @@ def servePdf(request,did):
 	d = Texte.objects.get(id=did)
 	fsock = open(d.locationpath,"rb").read()
 	response = HttpResponse(fsock, mimetype="application/pdf")
+	return response
+# serve img
+def serveImg(request,did):
+	d = Texte.objects.get(id=did)
+	mime = magic.Magic(mime=True)
+	filemime = mime.from_file(d.locationpath)
+	fsock = open(d.locationpath,"rb").read()
+	response = HttpResponse(fsock, mimetype=filemime)
 	return response
 ###########################################################################
 
@@ -2068,9 +2081,14 @@ def edParseXml(request,eid,did):
 	e.save()
 		
 	# parsing will erase all existing sentence objects related to that document
-	logger.info("["+str(eid)+"] reparsing TEI document:"+str(did))
-	texte.parseXml()
-	logger.info("["+str(eid)+"] reparsing TEI done:"+str(did))
+	logger.info("["+str(eid)+"] reparsing TEI document: "+str(did))
+	try:
+		texte.parseXml()
+		logger.info("["+str(eid)+"] reparsing TEI done: "+str(did))
+	except:
+		texte.status='-1'
+		texte.save()
+		logger.info("["+str(e.id)+"] EXCEPT parsing texte: "+str(did))
 	
 	# refresh solr index
 	logger.info("["+str(eid)+"] solr index updating ...")
@@ -2082,7 +2100,6 @@ def edParseXml(request,eid,did):
 	e.save()
 	
 	d={}
-	#d['stats']={'nsentences':texte.sentence_set.count(),'nspeakers':texte.speaker_set.count()}
 	jsondata = simplejson.dumps(d,indent=4,ensure_ascii=False)
 	return HttpResponse(jsondata, mimetype="application/json")
 ###########################################################################

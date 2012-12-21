@@ -18,8 +18,12 @@
 	
 	{% if texte.doctype == 'TEI' %}
 		<!-- Dropdownmenu checklist jquery plugin (POS display selection) -->
-		<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
 		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />	
+		<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
+		
+		<!-- qtip tooltips for verbatim -->
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/qtip/jquery.qtip.min.css" />
+		<script type="text/javascript" src="{{ MEDIA_URL }}/qtip/jquery.qtip.min.js"></script>
 	
 		<!-- =============================== FOR VIZ -->
 		<!-- d3.js -->
@@ -274,6 +278,10 @@
 			<a href="{% url reanalyse.reanalyseapp.views.servePdf texte.id %}">{{texte.name}}</a>
 		</embed>
 	</object>
+{% endif %}
+<!-- ===================================================================================================================================== -->
+{% if texte.doctype == 'IMG' %}
+	<img src="{% url reanalyse.reanalyseapp.views.serveImg texte.id %}">
 {% endif %}
 <!-- ===================================================================================================================================== -->
 {% if texte.doctype == 'HTM' %}
