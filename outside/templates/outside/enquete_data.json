@@ -186,7 +186,7 @@
 				"type": "Feature",
       			"geometry": {
       				"type": "Point",
-      				"coordinates": [-0.12768, 51.50733]
+      				"coordinates": [2.35222, 48.85661]
       			},
       			"properties": {"prop0": "value0"}
       		},
