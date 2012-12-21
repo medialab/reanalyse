@@ -189,12 +189,81 @@ oo.enq.timeline.update = function( event, filters ){
 
 	oo.log("[oo.enq.timeline.update]");
 	
-	// d3.selectAll('#timeline .dot').attr('class', 'dot inactive');
+	// // d3.selectAll('#timeline .dot').attr('class', 'dot inactive');
 	
-	// for( var i in oo.filt.data ){
-	// 	d3.select('#timeline .dot[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'dot active');
-	// }
+	// // for( var i in oo.filt.data ){
+	// // 	d3.select('#timeline .dot[data-id="' + oo.filt.data[i].id + '"]').attr('class', 'dot active');
+	// // }
 
+	var format = d3.time.format("%Y-%m-%d"),
+		size = { width: $('#map').width() },
+		margin = { top: $('#timeline').height() / 2 }
+		steps = 10;
+
+	oo.log('oo.filt.data', oo.filt.data)
+
+	// Collect useful fields
+
+	for (i in oo.filt.data) {
+		if ( !collection ) var collection = [];
+		collection.push({
+			time : format.parse(oo.filt.data[i].times[0].time).getTime(),
+			id : oo.filt.data[i].id
+		});		
+	}
+
+	oo.log('collection', collection)
+
+	// X Axes set up
+
+	oo.log('oo.data.objects', oo.data.objects)
+
+	var   minX = d3.min(oo.data.objects, function (d) { return format.parse(d.times[0].time).getTime() }),
+	      maxX = d3.max(oo.data.objects, function (d) { return format.parse(d.times[0].time).getTime() }),
+		  unit = ( maxX - minX ) / steps,
+		 ticks = [],
+	   density = {};
+
+	  oo.log('minX', minX, 'maxX', maxX, 'unit', unit)
+
+	scaleX = d3.time.scale()
+		.domain([ minX, maxX ])
+		.range([ 0, size.width ]);
+
+	for (var i=0; i <= steps; i++) {
+		ticks.push(minX + unit * i);
+	};
+
+	// Density[] is the structure for timeline
+
+	for (var j = 0; j < steps; j++) {
+
+		if ( j == 0 ) density = []; // Initialize array
+
+		if ( !density[j] ) {
+			density[j] = {};
+			density[j].freq = 0;
+			density[j].id = [];
+			density[j].time = ( ticks[j] + ticks[j+1] ) * .5;
+		}
+		
+		for (var i in collection) {
+			if ( ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1] ) {
+				density[j].freq++;
+				density[j].id.push(collection[i].id);
+			}
+		}
+	}
+
+	oo.log('density', density)
+
+	oo.enq.timeline.circles.selectAll(".dot")
+		.data(density)
+		.transition()
+		.duration(1000)
+		.attr('class', 'dot active')
+		.attr("r", function(d) { return d.freq * 6 })
+		.attr("data-id", function(d) { return d.id; });
 	
 };
 
