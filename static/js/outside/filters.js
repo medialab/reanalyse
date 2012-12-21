@@ -206,6 +206,8 @@ oo.filt.replace = function( eventType, data ){
 
 	oo.log("[oo.filt.replace]");
 
+	for (var i in data) oo.filt.type = i; // Set filter type
+
 	for (var f in data) {
 		oo.filt.filters[f] = data[f];
 	};
