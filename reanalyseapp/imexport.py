@@ -99,7 +99,7 @@ def doFiestaToEnquete(e):
 		# let's make stream timeline viz for each text
 		try:
 			dontohing = 1
-			#makeViz(e,"TexteStreamTimeline",textes=[t])
+			makeViz(e,"TexteStreamTimeline",textes=[t])
 		except:
 			logger.info("["+str(e.id)+"] EXCEPT making streamtimeline viz: texteid="+str(t.id))
 		
