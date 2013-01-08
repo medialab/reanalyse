@@ -45,7 +45,9 @@ oo.enq.map.update = function( event, filters ){
 	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		d3.select('#map circle[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+			d3.select('#map circle[data-id="' + oo.filt.data[ i ].id + '"]').attr('data-status', 'active');
+		}
 	} // Set active
 
 	items.each(function() {
@@ -74,7 +76,7 @@ for (var i=0, link; i<5; i++) {
 			alert(num);
 		};
 	}(i);
-document.body.appendChild(link);
+	document.body.appendChild(link);
 }
 
 oo.enq.map.init = function ( objects ){
@@ -191,73 +193,75 @@ oo.enq.timeline.update = function( event, filters ){
 
 	// Here it should work without time filter
 
-	// if (oo.filt.type != "period") {
+	if (oo.filt.type != "period") {
 
-		// oo.log("[oo.enq.timeline.update]");
+		oo.log("[oo.enq.timeline.update]");
 		
-		// var format = d3.time.format("%Y-%m-%d"),
-		// 	size = { width: $('#map').width() },
-		// 	margin = { top: $('#timeline').height() / 2 }
-		// 	steps = 10;
+		var format = d3.time.format("%Y-%m-%d"),
+			size = { width: $('#map').width() },
+			margin = { top: $('#timeline').height() / 2 }
+			steps = 10;
 
-		// // Collect useful fields
+		// Collect useful fields
 
-		// for (i in oo.filt.data) {
-		// 	if ( !collection ) var collection = [];
-		// 	collection.push({
-		// 		time : format.parse(oo.filt.data[i].times[0].time).getTime(),
-		// 		id : oo.filt.data[i].id
-		// 	});		
-		// }
+		for (i in oo.filt.data) {
+			if ( !collection ) var collection = [];
+			if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+				collection.push({
+					time : format.parse(oo.filt.data[i].times[0].time).getTime(),
+					id : oo.filt.data[i].id
+				});
+			}
+		}
 
-		// // X Axes set up
+		// X Axes set up
 
-		// var   minX = d3.min(oo.data.objects, function (d) { return format.parse(d.times[0].time).getTime() }),
-		//       maxX = d3.max(oo.data.objects, function (d) { return format.parse(d.times[0].time).getTime() }),
-		// 	  unit = ( maxX - minX ) / steps,
-		// 	 ticks = [],
-		//    density = {};
+		var   minX = d3.min(oo.data.objects, function (d) { return format.parse(d.times[0].time).getTime() }),
+		      maxX = d3.max(oo.data.objects, function (d) { return format.parse(d.times[0].time).getTime() }),
+			  unit = ( maxX - minX ) / steps,
+			 ticks = [],
+		   density = {};
 
-		// scaleX = d3.time.scale()
-		// 	.domain([ minX, maxX ])
-		// 	.range([ 0, size.width ]);
+		scaleX = d3.time.scale()
+			.domain([ minX, maxX ])
+			.range([ 0, size.width ]);
 
-		// for (var i=0; i <= steps; i++) {
-		// 	ticks.push(minX + unit * i);
-		// };
+		for (var i=0; i <= steps; i++) {
+			ticks.push(minX + unit * i);
+		};
 
-		// // Density[] is the structure for timeline
+		// Density[] is the structure for timeline
 
-		// for (var j = 0; j < steps; j++) {
+		for (var j = 0; j < steps; j++) {
 
-		// 	if ( j == 0 ) density = []; // Initialize array
+			if ( j == 0 ) density = []; // Initialize array
 
-		// 	if ( !density[j] ) {
-		// 		density[j] = {};
-		// 		density[j].freq = 0;
-		// 		density[j].id = [];
-		// 		density[j].time = ( ticks[j] + ticks[j+1] ) * .5;
-		// 	}
+			if ( !density[j] ) {
+				density[j] = {};
+				density[j].freq = 0;
+				density[j].id = [];
+				density[j].time = ( ticks[j] + ticks[j+1] ) * .5;
+			}
 			
-		// 	for (var i in collection) {
-		// 		if ( ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1] ) {
-		// 			density[j].freq++;
-		// 			density[j].id.push(collection[i].id);
-		// 		}
-		// 	}
-		// }
+			for (var i in collection) {
+				if ( ticks[j] <= collection[i].time && collection[i].time <= ticks[j+1] ) {
+					density[j].freq++;
+					density[j].id.push(collection[i].id);
+				}
+			}
+		}
 
-		// // Animate size of objects
+		// Animate size of objects
 
-		// oo.enq.timeline.circles.selectAll(".dot")
-		// 	.data(density)
-		// 	.transition()
-		// 	.duration(1000)
-		// 	.attr('class', 'dot active')
-		// 	.attr("r", function(d) { return d.freq * 6 })
-		// 	.attr("data-id", function(d) { return d.id; });
+		oo.enq.timeline.circles.selectAll(".dot")
+			.data(density)
+			.transition()
+			.duration(1000)
+			.attr('class', 'dot active')
+			.attr("r", function(d) { return d.freq * 6 })
+			.attr("data-id", function(d) { return d.id; });
 
-	// }
+	}
 	
 };
 
@@ -426,7 +430,9 @@ oo.enq.docs.update = function( event, filters ){
 	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		d3.select('#documents li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+			d3.select('#documents li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+		}
 	} // Set active
 
 	items.each(function() {
@@ -484,10 +490,12 @@ oo.enq.types.update = function( event, filters ){
 	var map = {};
 	for (var i in oo.filt.data) {
 		j = oo.filt.data[i].type;
-		if(map.hasOwnProperty(j)) { 
-		    map[j]++;
-		} else {
-			map[j] = 1;
+		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+			if(map.hasOwnProperty(j)) { 
+			    map[j]++;
+			} else {
+				map[j] = 1;
+			}
 		}
 	}
 
