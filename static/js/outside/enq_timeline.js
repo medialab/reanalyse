@@ -9,8 +9,8 @@ var format = d3.time.format("%Y-%m-%d"),
 	size = {
 			  width : $('#map').width(),
 			 height : $('#timeline').height(),
-		chartHeight : $('#timeline').height() * 2 / 3,
-		brushHeight : $('#timeline').height() * 1 / 3
+		chartHeight : $('#timeline').height() * 9 / 10,
+		brushHeight : $('#timeline').height() * 1 / 10
 	},
 	margin = { top: 10 },
 	steps = 7;
@@ -174,17 +174,7 @@ oo.enq.timeline.init = function( objects ){
 
 	// Chart
 
-	oo.enq.timeline.rectangles.selectAll(".dot")
-		.data(density)
-		.enter().append('rect')
-		.attr('class', 'dot active')
-		.attr("x", function(d) { return scaleX(d.time) - rectWidth * .5 ; })
-		.attr("y", function(d) { return - scaleY(d.freq) })
-		.attr("width", rectWidth)
-		.attr("height", function(d) { return scaleY(d.freq) })
-		.attr("data-id", function(d) { return d.id; });
-
-	oo.enq.timeline.background.selectAll(".background")
+	oo.enq.timeline.rectangles.selectAll(".background")
 		.data(density)
 		.enter().append('rect')
 		.attr('class', 'background')
@@ -193,6 +183,36 @@ oo.enq.timeline.init = function( objects ){
 		.attr("width", rectWidth)
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; });
+
+	oo.enq.timeline.rectangles.selectAll(".dot")
+		.data(density)
+		.enter().append('rect')
+		.attr('class', 'dot active')
+		.attr("x", function(d) { return scaleX(d.time) - rectWidth * .5 ; })
+		.attr("y", function(d) { return - scaleY(d.freq) })
+		.attr("width", rectWidth)
+		.attr("height", function(d) { return scaleY(d.freq) })
+		.attr("data-id", function(d) { return d.id; })
+		.on("click", function(d,i) {
+			// alert(d3.select(this).attr('x'))
+
+			var domain = scaleX.domain(),
+				circleTime = scaleX.invert( d3.select(this).attr('x') ).getTime(),
+				b = [circleTime, circleTime + unit],
+				brushWidth = scaleX(b[1]) - scaleX(b[0]);
+
+			d3.select("rect.extent").transition()
+				.duration(1000)
+				.attr('x', scaleX(b[0]) )
+				.attr('width', brushWidth ); // Width is fixed
+
+			setTimeout( function() {
+	    		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
+	    		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
+	    	}, 1000 );
+
+		});
+
 
 	// Brush
 	
@@ -204,30 +224,10 @@ oo.enq.timeline.init = function( objects ){
 			.on("brushend", brushEnd))
 		.selectAll("rect")
 		.attr("y", - size.brushHeight )
-		.attr("height", size.brushHeight);
+		.attr("height", size.brushHeight );
 
 	d3.select('rect.extent').attr("class", "extent transition");
 
-	// Brush on Click
-
-	$('#timeline').on('click', 'circle', function() {
-
-		var domain = scaleX.domain(),
-			circleTime = scaleX.invert( d3.select(this).attr('cx') ).getTime(),
-			b = [circleTime - unit / 2, circleTime + unit / 2],
-			brushWidth = scaleX(b[1]) - scaleX(b[0]);
-
-		d3.select("rect.extent").transition()
-			.duration(1000)
-			.attr('x', scaleX(b[0]) )
-			.attr('width', brushWidth ); // Width is fixed
-
-		setTimeout( function() {
-    		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
-    		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
-    	}, 1000 );
-
-	});
 
 	// Brush on Move
 
@@ -237,6 +237,7 @@ oo.enq.timeline.init = function( objects ){
 		b = [ b[0].getTime(), b[1].getTime() ];
 		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
 	}
+
 
 	// To round bounds limit according to ticks[]
 
