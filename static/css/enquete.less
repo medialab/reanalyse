@@ -32,9 +32,28 @@
 }
 
 #timeline {
-	circle.dot {
+	
+	// circle.dot {
+	// 	stroke: @path_stroke;
+	// 	stroke-width: 1.5px;
+	// 	fill-opacity: @path_opacity;
+	// 	cursor: pointer;
+	// 	&:hover {
+	// 		fill: @cyan;
+	// 		fill-opacity: @path_opacity_hover;
+	// 		cursor: pointer;
+	// 	}
+	// 	&.active {
+	// 		fill: @cyan;
+	// 	}
+	// 	&.inactive {
+	// 		fill: white;
+	// 	}
+	// }
+
+	rect.dot {
 		stroke: @path_stroke;
-		stroke-width: 1.5px;
+		stroke-width: 0px;
 		fill-opacity: @path_opacity;
 		cursor: pointer;
 		&:hover {
@@ -49,6 +68,7 @@
 			fill: white;
 		}
 	}
+
 	.brush .extent {
 		stroke: #fff;
 		fill: black;
