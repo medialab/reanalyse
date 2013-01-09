@@ -11,25 +11,26 @@
 {% block outside_scripts %}
 	{{ block.super }}
 	<script src="{{ STATIC_URL }}js/outside/filters.js" type="text/javascript"></script>
-	<script src="{{ STATIC_URL }}js/outside/enquete.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}js/outside/enq.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}js/outside/enq_map.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}js/outside/enq_timeline.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}js/outside/enq_documents.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}js/outside/enq_types.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block document_ready %}
 	{{ block.super }}
 	oo.filt.init();
 	oo.enq.init();
-	{% if edit_mode %}
-		oo.enquiry.init();
-	{% endif %}
 {% endblock %}
 
 
 {% block sidebar %}
 	<ul class="nav">
 		<li class="active"><a href="#visualization">{% trans "documents" %}</a></li>
-		<li ><a href="#content">{% trans "description" %}{{ enquete.enquiry.id }}</a></li>
-		{% if has_enquiry %}
-		<li><a href="{% url outside_enquiry enquete.id %}">{% trans "enquete sur l'enquete" %}</a></li>
+		<li class="active"><a href="#content">{% trans "description" %}</a></li>
+		{% if enquete.enquiry %}
+		<li><a href="#">{% trans "enquete sur l'enquete" %}</a></li>
 		
 		{% endif %}
 
@@ -38,8 +39,7 @@
 {% endblock %}
 
 {% block sidebar_add_section %}
-	{% if not has_enquiry and edit_mode %}
-
+	{% if not enquete.enquiry and edit_mode %}
 		<div class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
 				</div>
 
@@ -100,7 +100,7 @@
 {% block modals %}
 	{{ block.super }}
 	{% if edit_mode %}
-	<div class="modal fade" style="display:none" id="add-enquiry-modal">
+	<div class="modal fade" id="add-enquiry-modal">
 		<form method="POST">{% csrf_token %}
 
 		<div class="modal-header">
@@ -110,23 +110,13 @@
 		<div class="modal-body">
 			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
 
-			<input type="hidden" name="enquete" id="id_add_enquiry_enquete" value="{{ enquete.id }}" />
 			
-			<p>
-				<label for="id_add_enquiry_title_en">{% trans "english title" %}</label> <input type="text" name="title_en" id="id_add_enquiry_title_en"></p>
-
-			<p>
-				<label for="id_add_enquiry_title_fr">{% trans "french title" %}</label> <input type="text" name="title_fr" id="id_add_enquiry_title_fr"></p>
-
-			<p>
-				<label for="id_add_enquiry_slug">{% trans "slug"%}:</label> <input type="text" name="slug" id="id_add_enquiry_slug"></p>
-			
+			{{ add_enquiry_form.as_p }}
 		</div>
 		<div class="modal-footer">
 		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" id="add-enquiry" value="{% trans "add enquiry" %}"/>
+		<input type="submit" href="#" id="add-page" value="{% trans "add page" %}"/>
 		</div>
 	</div>
 	{% endif %}
 {% endblock %}
-
