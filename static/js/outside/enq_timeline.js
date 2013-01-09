@@ -194,7 +194,6 @@ oo.enq.timeline.init = function( objects ){
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; })
 		.on("click", function(d,i) {
-			// alert(d3.select(this).attr('x'))
 
 			var domain = scaleX.domain(),
 				circleTime = scaleX.invert( d3.select(this).attr('x') ).getTime(),
