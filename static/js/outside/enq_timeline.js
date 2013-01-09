@@ -13,7 +13,7 @@ var format = d3.time.format("%Y-%m-%d"),
 		brushHeight : $('#timeline').height() * 1 / 3
 	},
 	margin = { top: 10 },
-	steps = 10;
+	steps = 7;
 
 
 
@@ -161,17 +161,23 @@ oo.enq.timeline.init = function( objects ){
 	
 	oo.log('ticks', ticks)
 
-	// for (var j = 0; j < ticks; j++) {
-	// 	if ( j == 0 ) ticksTimeFormat = [];
-	// 	ticksTimeFormat[ j ] = ticks[ j ];
+	var ticksTimeFormat = [];
+	var formatTick = d3.time.format("%m-%Y");
 
-	// }
+	for (var j = 0; j < ticks.length; j++) {
+		oo.log('tick', ticks[j]);
+		ticksTimeFormat.push(new Date(ticks[ j ]));
+	}
+
+	oo.log('ticksTimeFormat', ticksTimeFormat)
 
 	var axis = d3.svg.axis()
 	    .scale(scaleX)
-	    .tickFormat(d3.time.format('%Y'))
-	    .tickSubdivide(4);
-	    // .tickValues([1, 2, 3, 5, 8, 13, 21]);
+	    .ticks(ticksTimeFormat.length)
+	    .tickValues(ticksTimeFormat)
+	    .tickFormat(d3.time.format("%m-%Y"));
+	    // .tickFormat(d3.time.format('%Y'))
+	    // .tickSubdivide(4);
 
     oo.enq.timeline.axis.call(axis)
 
