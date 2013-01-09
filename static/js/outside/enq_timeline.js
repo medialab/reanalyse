@@ -151,6 +151,7 @@ oo.enq.timeline.init = function( objects ){
 
 	var svg = d3.select('#timeline').append('svg');
 
+	oo.enq.timeline.background = svg.append('g').attr("transform", "translate(" + 0 + "," + size.chartHeight + ")");
 	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(" + 0 + "," + size.chartHeight + ")");
 	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(" + 0 + "," + size.chartHeight + ")")
 												.attr('class', 'axis');
@@ -158,26 +159,16 @@ oo.enq.timeline.init = function( objects ){
 	
 	// Axis
 
-	
-	oo.log('ticks', ticks)
-
-	var ticksTimeFormat = [];
-	var formatTick = d3.time.format("%m-%Y");
-
 	for (var j = 0; j < ticks.length; j++) {
-		oo.log('tick', ticks[j]);
-		ticksTimeFormat.push(new Date(ticks[ j ]));
-	}
-
-	oo.log('ticksTimeFormat', ticksTimeFormat)
+		if ( j == 0 ) var ticksTime = [];
+		ticksTime.push(new Date(ticks[ j ]));
+	} // Array of date ticks
 
 	var axis = d3.svg.axis()
 	    .scale(scaleX)
-	    .ticks(ticksTimeFormat.length)
-	    .tickValues(ticksTimeFormat)
+	    .ticks(ticksTime.length)
+	    .tickValues(ticksTime)
 	    .tickFormat(d3.time.format("%m-%Y"));
-	    // .tickFormat(d3.time.format('%Y'))
-	    // .tickSubdivide(4);
 
     oo.enq.timeline.axis.call(axis)
 
@@ -187,6 +178,16 @@ oo.enq.timeline.init = function( objects ){
 		.data(density)
 		.enter().append('rect')
 		.attr('class', 'dot active')
+		.attr("x", function(d) { return scaleX(d.time) - rectWidth * .5 ; })
+		.attr("y", function(d) { return - scaleY(d.freq) })
+		.attr("width", rectWidth)
+		.attr("height", function(d) { return scaleY(d.freq) })
+		.attr("data-id", function(d) { return d.id; });
+
+	oo.enq.timeline.background.selectAll(".background")
+		.data(density)
+		.enter().append('rect')
+		.attr('class', 'background')
 		.attr("x", function(d) { return scaleX(d.time) - rectWidth * .5 ; })
 		.attr("y", function(d) { return - scaleY(d.freq) })
 		.attr("width", rectWidth)
