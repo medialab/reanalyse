@@ -2,7 +2,7 @@
 @path_opacity: .6;
 @path_opacity_hover: 1;
 @cyan: #0299CC;
-
+@line_height: 26px;
 
 
 #map {
@@ -88,10 +88,9 @@
 		white-space: nowrap;
 		width: 100%;
 		overflow: hidden;
-		height: 30px;
-		line-height: 30px;
+		height: @line_height;
+		line-height: @line_height;
 		text-overflow: ellipsis;
-		// border-bottom: solid 1px #eee;
 	}
 }
 
@@ -102,10 +101,9 @@
 		white-space: nowrap;
 		width: 100%;
 		overflow: hidden;
-		height: 30px;
-		line-height: 30px;
+		height: @line_height;
+		line-height: @line_height;
 		text-overflow: ellipsis;
-		// border-bottom: solid 1px #eee;
 	}
 
 }
@@ -113,7 +111,7 @@
 #doc_list {
 	overflow: -moz-scrollbars-vertical; 
 	overflow-y: scroll;
-	height: 300px;
+	height: @line_height * 10;
 }
 
 #doc_next {
