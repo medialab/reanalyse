@@ -124,6 +124,9 @@ API_ACCESS_DENIED_URL = "/elipss/panelmanager/api/access-restricted"
 
 
 def enquete_data( request, enquete_id ):
+	data = {}
+	return render_to_response('outside/enquete_data.json', RequestContext(request, data ) )
+	
 	response = Epoxy( request )
 	import random
 	try:

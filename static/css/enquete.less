@@ -41,6 +41,15 @@
 		stroke-width: 0px;
 		fill-opacity: @path_opacity;
 		cursor: pointer;
+
+		@property: all;
+		@duration: 0.5s;
+		@ease: cubic-bezier(0,0,1,1);
+		-webkit-transition: @property @duration @ease;
+		-moz-transition: @property @duration @ease;
+		-o-transition: @property @duration @ease;
+		transition: @property @duration @ease;
+
 		&:hover {
 			fill: @cyan;
 			fill-opacity: @path_opacity_hover;
