@@ -9,32 +9,36 @@
 	.d3_layer {
 		position:absolute;
 	}
+	
 	.zoomer {
+		width: 25px;
+		height: 25px;
 		&.zoomin {
-			width: 25px;
-			height: 25px;
 			background-position: -34px -3px;
 			left: 34px;
 		}
 		&.zoomout {
-			width: 25px;
-			height: 25px;
 			background-position: -64px -3px;
 		}
 	}
+
 	circle {
 		stroke: @path_stroke;
-		stroke-width: 1.5px;
+		stroke-width: 1.2px;
 		fill: @cyan;
 		fill-opacity: @path_opacity;
-		cursor: pointer;
+
+		&[data-status='active'] {
+			cursor: pointer;
+		}
 	}
 }
 
 #timeline {
-	circle.dot {
+	
+	rect.dot {
 		stroke: @path_stroke;
-		stroke-width: 1.5px;
+		stroke-width: 0px;
 		fill-opacity: @path_opacity;
 		cursor: pointer;
 		&:hover {
@@ -49,11 +53,32 @@
 			fill: white;
 		}
 	}
+
+	rect.background {
+		fill: @cyan;
+		stroke: @path_stroke;
+		stroke-width: 0px;
+		fill-opacity: .1;
+		cursor: default;
+	}
+
 	.brush .extent {
 		stroke: #fff;
 		fill: black;
 		fill-opacity: .2;
 		shape-rendering: crispEdges;
+	}
+
+	.axis path,
+	.axis line {
+	    fill: none;
+	    stroke: black;
+	    shape-rendering: crispEdges;
+	}
+
+	.axis text {
+	    font-family: sans-serif;
+	    font-size: 11px;
 	}
 }
 
@@ -66,12 +91,13 @@
 		height: 30px;
 		line-height: 30px;
 		text-overflow: ellipsis;
-		border-bottom: solid 1px #eee;
+		// border-bottom: solid 1px #eee;
 	}
 }
 
 #documents {
 	margin-left: -40px;
+
 	li {
 		white-space: nowrap;
 		width: 100%;
@@ -79,10 +105,24 @@
 		height: 30px;
 		line-height: 30px;
 		text-overflow: ellipsis;
-		border-bottom: solid 1px #eee;
+		// border-bottom: solid 1px #eee;
 	}
+
 }
 
+#doc_list {
+	overflow: -moz-scrollbars-vertical; 
+	overflow-y: scroll;
+	height: 300px;
+}
+
+#doc_next {
+
+}
+
+#doc_prev {
+
+}
 
 
 @property: all;

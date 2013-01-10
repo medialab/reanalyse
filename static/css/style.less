@@ -24,7 +24,6 @@
 
 @toast-width:280px;
 
-
 //
 //    ================
 //    ---- mixins ----
@@ -77,24 +76,6 @@ ul{
 	list-style: none !important;
 
 }
-
-#creep{
-	.spring(14,0);
-	margin-left: -7px;
-	position:absolute;
-	padding: 0 16px;
-	line-height:@header-height;
-	height: @header-height;
-	// height:48px;
-	width: 96px;
-	
-	// font-family: 'MisoRegular';
-	// color: @base-color;
-	color: fade( @text-color, 10%);
-	text-shadow: 1px 1px 1px white;
-	font-size:22px;
-}
-
 #logo{
 	.spring(0,0);
 	position:absolute;
@@ -638,24 +619,6 @@ section{
 	.mini-section{
 		padding:@grid-padding/2 0 0 0
 	}
-
-
-}
-
-
-//
-//   ======
-//   UPLOAD
-//   ======
-#drag-over-me{
-	margin-right: @grid-padding*6;
-	text-align: center;
-	.mono(16px);
-	margin-right: 200px;
-	border: 1px dashed @base-color;
-	padding: @grid-padding;
-
-	
 }
 
 
@@ -1260,7 +1223,7 @@ p.invalid{
 
 @map-width: 598px;
 @map-height: 256px;//@map-width * 9 / 16;
-@timeline-height: 40px;
+@timeline-height: 256px;
 
 
 

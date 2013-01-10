@@ -104,7 +104,7 @@ oo.filt.push = function(){
 	// oo.log("[oo.filt.push]");
 
 	clearTimeout( oo.filt.timer );
-	oo.filt.timer = setTimeout( oo.filt.execute, 1000 );	
+	oo.filt.timer = setTimeout( oo.filt.execute, 300 );	
 };
 
 
@@ -120,15 +120,35 @@ oo.filt.execute = function(){
 
 	for( var i in oo.data.objects ){
 		oo.filt.data[ i ] = oo.data.objects[ i ];
+		var obj = oo.filt.data[ i ];
+		obj.filtered = {
+			extent: 0,
+			period: 0
+		}; // Object added to say
+
+
 	}; // copy original data
 
+	// old progressive filtering
+	// for( var type in oo.filt.filters ){
+	// 	for ( var i in oo.filt.data ){
+	// 		if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
+	// 			delete oo.filt.data[ i ]
+	// 		};
+	// 	}
+	// };
+
+	// new progressive filtering
 	for( var type in oo.filt.filters ){
 		for ( var i in oo.filt.data ){
+			var obj = oo.filt.data[ i ];
 			if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
-				delete oo.filt.data[ i ]
-			};
+				obj.filtered[ type ] = 1;
+			} else {
+				obj.filtered[ type ] = 0;
+			} // Set used filter
 		}
-	}; // progressive filtering
+	}; 
 
 	oo.log("[oo.filt.execute]", oo.filt.filters, oo.filt.data);
 
