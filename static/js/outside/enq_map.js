@@ -29,12 +29,14 @@ oo.enq.map.update = function( event, filters ){
 		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
 			item.transition()
 				.duration(1000)
-				.attr('r', circleSize.small);
+				.attr('r', circleSize.small)
+				.style('stroke-width', '0');
 		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
 			item.transition()
 				.duration(1500)
 				.ease('elastic', 7, .8)
-				.attr('r', circleSize.medium);
+				.attr('r', circleSize.medium)
+				.style('stroke-width', '1.5px');
 		} 
 	})
 	

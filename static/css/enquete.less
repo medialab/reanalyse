@@ -9,48 +9,29 @@
 	.d3_layer {
 		position:absolute;
 	}
+	
 	.zoomer {
+		width: 25px;
+		height: 25px;
 		&.zoomin {
-			width: 25px;
-			height: 25px;
 			background-position: -34px -3px;
 			left: 34px;
 		}
 		&.zoomout {
-			width: 25px;
-			height: 25px;
 			background-position: -64px -3px;
 		}
 	}
+
 	circle {
 		stroke: @path_stroke;
 		stroke-width: 1.5px;
 		fill: @cyan;
 		fill-opacity: @path_opacity;
-		cursor: pointer;
 	}
 }
 
 #timeline {
 	
-	// circle.dot {
-	// 	stroke: @path_stroke;
-	// 	stroke-width: 1.5px;
-	// 	fill-opacity: @path_opacity;
-	// 	cursor: pointer;
-	// 	&:hover {
-	// 		fill: @cyan;
-	// 		fill-opacity: @path_opacity_hover;
-	// 		cursor: pointer;
-	// 	}
-	// 	&.active {
-	// 		fill: @cyan;
-	// 	}
-	// 	&.inactive {
-	// 		fill: white;
-	// 	}
-	// }
-
 	rect.dot {
 		stroke: @path_stroke;
 		stroke-width: 0px;

@@ -7,7 +7,7 @@ oo.enq.types = {};
 oo.enq.docs = {};
 
 var circleSize = {
-	'small' : 0,
+	'small' : 2,
 	'medium' : 10
 };
 
