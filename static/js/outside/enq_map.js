@@ -36,7 +36,7 @@ oo.enq.map.update = function( event, filters ){
 				.duration(1500)
 				.ease('elastic', 7, .8)
 				.attr('r', circleSize.medium)
-				.style('stroke-width', '1.5px');
+				.style('stroke-width', '1.2px');
 		} 
 	})
 	
