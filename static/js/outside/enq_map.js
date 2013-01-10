@@ -27,9 +27,7 @@ oo.enq.map.update = function( event, filters ){
 		var item = d3.select(this);
 
 		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
-			item.transition()
-				.duration(1000)
-				.attr('r', circleSize.small)
+			item.attr('r', circleSize.small)
 				.style('stroke-width', '0');
 		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
 			item.transition()

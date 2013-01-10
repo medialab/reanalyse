@@ -69,7 +69,11 @@
 			</div>
 			<div class="child">
 				<div class="title">{% trans "file list" %}</div>
-				<ul class="content" id="documents"></ul>
+				<!-- <div id="doc_prev">prev</div> -->
+				<div id="doc_list">
+					<ul class="content" id="documents"></ul>
+				</div>
+				<!-- <div id="doc_next">next</div> -->
 			</div>
 		</div>
 		<div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
