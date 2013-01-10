@@ -124,5 +124,26 @@ API_ACCESS_DENIED_URL = "/elipss/panelmanager/api/access-restricted"
 
 
 def enquete_data( request, enquete_id ):
+	response = Epoxy( request )
+	import random
+	try:
+		textes = Enquete.objects.get(id=enquete_id).texte_set
+	except Enquete.DoesNotExist, e:
+		return response.throw_error(error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST).json()
+	
+	response.meta('total_count', textes.count() )
+
+	response.add('objects',[{
+		'id':t.id,
+		'type':t.doctype,
+		'title':t.name,
+		'categories': [{'category':c} for c in t.doccat2.split(",")],
+		'phases': [{'phase' : t.doccat1}],
+		'times':[{'time':t.date.isoformat()} ] if t.date else [],
+		'location': t.locationgeo,
+		'coordinates' : {"type": "Feature","geometry": {"type": "Point","coordinates": [ 360*random.random() - 180, 180*random.random() - 90 ]},"properties": {"name": t.location}},
+		'date':t.date.isoformat() if t.date else None
+	} for t in textes.all() ])	
+	return response.json()
 	data = {}
 	return render_to_response('outside/enquete_data.json', RequestContext(request, data ) )
