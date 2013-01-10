@@ -12,7 +12,7 @@ var format = d3.time.format("%Y-%m-%d"),
 		chartHeight : $('#timeline').height() * 9 / 10,
 		brushHeight : $('#timeline').height() * 1 / 10
 	},
-	margin = { top: 10 },
+	margin = { top: 30 },
 	steps = 7;
 
 
@@ -25,7 +25,7 @@ oo.enq.timeline.update = function( event, filters ){
 
 	for (i in oo.filt.data) {
 		if ( !collection ) var collection = [];
-		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) ) {
+		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
 			collection.push({
 				time : format.parse(oo.filt.data[i].times[0].time).getTime(),
 				id : oo.filt.data[i].id
@@ -145,7 +145,7 @@ oo.enq.timeline.init = function( objects ){
 
 	scaleY = d3.scale.linear()
 		.domain([minY, maxY])
-		.range([ 0, size.chartHeight ]); // Bar chart height
+		.range([ 0, size.chartHeight - margin.top ]); // Bar chart height
 
 	// Draw shape
 
@@ -210,7 +210,24 @@ oo.enq.timeline.init = function( objects ){
 	    		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
 	    	}, 1000 );
 
+		})
+		.on('mouseover', function(d,i) {
+			var d3_this = d3.select(this);
+			var quantity = d3_this.attr('data-id').split(",").length;
+			d3.select(oo.enq.timeline.rectangles.text[0][i]).text(quantity)
+				.style('fill-opacity', 1)
+				.attr('x', d3_this.attr('x'))
+				.attr('y', - d3_this.attr('height') - 2);
+		})
+		.on('mouseout', function(d,i) {
+			d3.select(oo.enq.timeline.rectangles.text[0][i]).style('fill-opacity', 0);
 		});
+
+		oo.enq.timeline.rectangles.text = oo.enq.timeline.rectangles.selectAll("text")
+			.data(density)
+			.enter().append('text')
+			.style('fill-opacity', 0);
+
 
 
 	// Brush
