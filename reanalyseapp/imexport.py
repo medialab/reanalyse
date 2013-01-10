@@ -225,6 +225,13 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				doc_public = 		True # ...could be based on categories...
 				doc_description = 	row['*description']
 				doc_location = 		row['*location']
+				try:
+					doc_location_geo = 	row['*location_geo']
+				except:
+					logger.info( "%s var not found or invalid" % eidstr )
+					doc_location_geo = ""
+
+				
 				#logger.info(eidstr+"doc ref: "+doc_mimetype+" | "+row['*file'])
 				#except:
 				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
@@ -249,7 +256,8 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
 						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
-						
+			
+
 						newDocument.doctype = doc_mimetype.upper()
 						if doc_mimetype in ['link','ref']:
 							newDocument.locationpath 	= row['*file']

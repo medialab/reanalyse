@@ -139,6 +139,8 @@ class Texte(models.Model):
 	# todo
 	date = models.DateField(default=datetime.datetime.today())	# "2011-01-02"
 	location = models.CharField(max_length=30) 					# "Paris" todo: change to gps specific field ?
+	locationgeo = models.CharField(max_length=32)
+	
 	#
 	public = models.BooleanField(default=False)					# visible in edbrowse or not
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
