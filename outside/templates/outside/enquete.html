@@ -5,7 +5,7 @@
 	<!-- specific script / stylesheet -->
 	<script src='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.js'></script>
   	<link href='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.css' rel='stylesheet' />
-	<script src="http://d3js.org/d3.v2.js"></script>
+	<script src="http://d3js.org/d3.v3.js"></script>
 {% endblock %}
 
 {% block outside_scripts %}
@@ -63,23 +63,22 @@
 		<h2>{{ enquete.name }}</h2>
 		
 		<div class="pins filters">
-			<div class="child">
+			<!-- <div class="child">
 				<div class="title">{% trans "file type" %}</div>
 				<ul class="content" id="types"></ul>
-			</div>
+			</div> -->
 			<div class="child">
 				<div class="title">{% trans "file list" %}</div>
-				<!-- <div id="doc_prev">prev</div> -->
 				<div id="doc_list">
 					<ul class="content" id="documents"></ul>
 				</div>
-				<!-- <div id="doc_next">next</div> -->
 			</div>
 		</div>
-		<div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
-		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div>
+		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
+		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
 
 		<div class="map content">
+			<div id="types"></div>
 			<div id="map"></div>
 			<div id="timeline"></div>
 		</div>

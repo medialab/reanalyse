@@ -106,14 +106,21 @@
 }
 
 #types {
-	margin-left: -40px;
-	li {
-		white-space: nowrap;
-		width: 100%;
+
+		height: 30px;
+	div {
+		position: relative;
+		float: left;
+		// color: white;
+		font-family: sans-serif;
+		font-size: 10px;
 		overflow: hidden;
-		height: @line_height;
-		line-height: @line_height;
-		text-overflow: ellipsis;
+		height: 30px;
+
+		div.line {
+			background: @cyan;
+		}
+
 	}
 }
 

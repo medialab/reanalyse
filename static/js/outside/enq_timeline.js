@@ -151,11 +151,10 @@ oo.enq.timeline.init = function( objects ){
 
 	var svg = d3.select('#timeline').append('svg');
 
-	oo.enq.timeline.background = svg.append('g').attr("transform", "translate(" + 0 + "," + size.chartHeight + ")");
-	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(" + 0 + "," + size.chartHeight + ")");
-	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(" + 0 + "," + size.chartHeight + ")")
-												.attr('class', 'axis');
-	oo.enq.timeline.brush      = svg.append('g').attr("transform", "translate(" + 0 + "," + size.height + ")");
+	oo.enq.timeline.background = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")");
+	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")");
+	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")").attr('class', 'axis');
+	oo.enq.timeline.brush      = svg.append('g').attr("transform", "translate(0, " + size.height + ")");
 	
 	// Axis
 
