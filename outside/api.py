@@ -137,6 +137,7 @@ def enquete_data( request, enquete_id ):
 		'id':t.id,
 		'type':t.doctype,
 		'title':t.name,
+		'tags':[ {'name':tag.name, 'type':tag.type} for tag in t.tags.all() ],
 		'categories': [{'category':c} for c in t.doccat2.split(",")],
 		'phases': [{'phase' : t.doccat1}],
 		'times':[{'time':t.date.isoformat()} ] if t.date else [],

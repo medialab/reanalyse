@@ -102,9 +102,31 @@ class Enquete(models.Model):
 			return {'metainfo':'no meta was parsed'}
 ####################################################################
 
+# Metadata Tag for multiple purposes: article type, researchers involved.
+# Attributes are Enquete dependent.
+class Tag(models.Model):
+	AUTHOR = 'AU'
+	ARTICLE = 'AR'
+	INSTITUTION = 'In'
+	RESEARCHER = 'Rs'
+	
+	TYPE_CHOICES = (
+        (AUTHOR, 'Author'),
+        (ARTICLE, 'Article'),
+        (INSTITUTION, 'Institution'),
+        (RESEARCHER, 'Researcher'),
+    )
 
+	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'
+	slug = models.SlugField(max_length=128) # e.g. 'mr-e-smith'
+	type = models.CharField( max_length=2, choices=TYPE_CHOICES ) # e.g. 'author' or 'institution'
 
+	def __unicode__(self):
+		return "%s : %s"% ( self.get_type_display(), self.name)
 
+	class Meta:
+		ordering = ["type", "slug" ]
+		unique_together = ("type", "slug")
 
 ##############################################################################
 class Visualization(models.Model):
@@ -127,6 +149,8 @@ class Visualization(models.Model):
 # 'Texte' model .... ( to rename to 'Document'? )
 class Texte(models.Model):
 	enquete = models.ForeignKey(Enquete)
+	tags = models.ManyToManyField( Tag )
+
 	# file
 	locationpath = models.CharField(max_length=500)
 	filesize = models.BigIntegerField(default=0)
@@ -135,20 +159,20 @@ class Texte(models.Model):
 	doccat1 = models.CharField(max_length=25)	# see globalvars.py
 	doccat2 = models.CharField(max_length=25)	# see globalvars.py
 	name = models.CharField(max_length=100)
-	description = models.TextField()
+	description = models.TextField( blank=True, default="")
 	# todo
 	date = models.DateField(default=datetime.datetime.today())	# "2011-01-02"
 	location = models.CharField(max_length=30) 					# "Paris" todo: change to gps specific field ?
-	locationgeo = models.CharField(max_length=32)
+	locationgeo = models.CharField(max_length=32,  blank=True, null=True)
 	
 	#
 	public = models.BooleanField(default=False)					# visible in edbrowse or not
 	status = models.CharField(max_length=2, choices=STATUS_CHOICES)
 	statuscomplete = models.BigIntegerField(default=0) 			# 0-100%
 	# for verbatims, we store content in DB
-	contenttxt = models.TextField()		# unused ? (full text for indexation)
-	contenthtml = models.TextField()	# styled html for display
-	contentxml = models.TextField()		# original xml TEI
+	contenttxt = models.TextField( blank=True, default="" )		# unused ? (full text for indexation)
+	contenthtml = models.TextField( blank=True, default="" )	# styled html for display
+	contentxml = models.TextField( blank=True, default="")		# original xml TEI
 	def __unicode__(self):
 		return str(self.id)+":"+self.name
 	def parseXml(self):
