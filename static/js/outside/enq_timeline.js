@@ -25,12 +25,12 @@ oo.enq.timeline.update = function( event, filters ){
 
 	for (i in oo.filt.data) {
 		if ( !collection ) var collection = [];
-		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+		// if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
 			collection.push({
 				time : format.parse(oo.filt.data[i].times[0].time).getTime(),
 				id : oo.filt.data[i].id
 			});
-		}
+		// }
 	}
 
 	// X Axes set up

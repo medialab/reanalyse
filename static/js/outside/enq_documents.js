@@ -16,9 +16,9 @@ oo.enq.docs.update = function( event, filters ){
 	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+		// if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
 			d3.select('#documents li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
-		}
+		// }
 	} // Set active
 
 	items.each(function() {

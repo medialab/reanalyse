@@ -27,6 +27,54 @@ oo.enq.init = function(){
 	});
 }
 
+// 
+// 
+// Nest data
+// 
+// 
+
+oo.nest = function( objects, nester, sorter ){
+
+	nested = {};
+
+	for (var d in objects){
+		var index = nester( objects[d] );
+		// oo.log('index', index)
+		if (typeof nested[ index ] == "undefined"){
+			nested[ index ] = { "key": index, "values":[] };
+		}
+		nested[ index ].values.push( objects[d] )
+	}
+
+	// refactoring array
+	var remapped = []; for( var i in nested ){ remapped.push( nested[i] );}
+	return remapped.sort(sorter);
+
+}
+
+//
+// 
+// Count nested data
+// 
+// 
+
+oo.count = function( objects, nester, sorter ){
+
+	nested = {};
+	
+	for (d in objects){
+		var index = nester( objects[d] );
+		if (typeof nested[ index ] == "undefined"){
+			nested[ index ] ={ "key": index, "count":0 };
+		}
+		nested[ index ].count++;
+	}
+
+	// refactoring array
+	var remapped = []; for( var i in nested ){ remapped.push( nested[i] );}
+	return remapped.sort( sorter );
+}
+
 
 
 
