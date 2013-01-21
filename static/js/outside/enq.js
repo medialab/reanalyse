@@ -38,12 +38,16 @@ oo.nest = function( objects, nester, sorter ){
 	nested = {};
 
 	for (var d in objects){
+
 		var index = nester( objects[d] );
-		// oo.log('index', index)
+
 		if (typeof nested[ index ] == "undefined"){
 			nested[ index ] = { "key": index, "values":[] };
 		}
-		nested[ index ].values.push( objects[d] )
+
+		if ( (typeof objects[d].filtered == 'undefined' ) || ( objects[d].filtered == true ) ) {
+			nested[ index ].values.push( objects[d] )
+		}
 	}
 
 	// refactoring array
@@ -63,11 +67,16 @@ oo.count = function( objects, nester, sorter ){
 	nested = {};
 	
 	for (d in objects){
+
 		var index = nester( objects[d] );
+		
 		if (typeof nested[ index ] == "undefined"){
-			nested[ index ] ={ "key": index, "count":0 };
+			nested[ index ] = { "key": index, "count":0 };
 		}
-		nested[ index ].count++;
+
+		if ( (typeof objects[d].filtered == 'undefined' ) || ( objects[d].filtered == true ) ) {
+			nested[ index ].count++;
+		}
 	}
 
 	// refactoring array

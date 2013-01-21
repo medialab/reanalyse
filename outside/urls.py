@@ -3,6 +3,8 @@ from django.conf import settings
 
 urlpatterns = patterns('',
 	url(r'^$','outside.views.index', name='outside_index'),
+	url(r'^index/$','outside.views.index', name='outside_index'),
+	url(r'^news/$','outside.views.news', name='outside_news'),
 	url(r'^login/$','outside.views.login_view', name='outside_login'),
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
 	

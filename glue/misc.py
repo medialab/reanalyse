@@ -21,8 +21,7 @@ API_EXCEPTION_FORMERRORS	=	'FormErrors'
 API_EXCEPTION_INCOMPLETE	=	'Incomplete'
 API_EXCEPTION_EMPTY			=	'Empty'
 API_EXCEPTION_INVALID		=	'Invalid'
-API_EXCEPTION_FIELDERROR	=	'FieldError'
-API_EXCEPTION_OSERROR		=	'OSError'
+API_EXCEPTION_OSERROR		=	'OsError'
 
 #
 #    MISC FUNCTIONS
@@ -88,7 +87,7 @@ class Epoxy:
 	def process( self ):
 		self.response['meta'] = {}
 		self.response['meta']['action'] = whosdaddy(3)
-
+		self.response['meta']['user'] = self.request.user.username
 		# understand method via REQUEST params only if desired.
 		if self.method == 'GUESS':
 
@@ -160,7 +159,7 @@ class Epoxy:
 			self.response['meta']['total_count'] = sum( 1 for r in queryset )
 			qs = queryset
 		else:
-			qs = queryset.filter()
+			qs = queryset.filer()
 			
 		# apply limits
 		qs = qs[ self.offset : self.offset + self.limit ]
@@ -189,10 +188,6 @@ class Epoxy:
 
 	def add( self, key, value, jsonify=False):
 		self.response[ key ] = value.json() if jsonify else value
-		return value
-
-	def meta( self, key, value, jsonify=False):
-		self.response['meta'][ key ] = value.json() if jsonify else value
 		return value
 
 	def throw_error( self, error="", code=API_EXCEPTION ):

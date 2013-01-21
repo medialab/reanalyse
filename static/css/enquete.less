@@ -1,15 +1,36 @@
-@path_stroke: #333;
+@path_stroke: #383838;
 @path_opacity: .6;
 @path_opacity_hover: 1;
 @cyan: #0299CC;
-@line_height: 26px;
+@line_height: 22px;
+@container-width: 717px;
+@map-width: 598px;
+@map-height: 256px;//@map-width * 9 / 16;
+@timeline-height: 140px;
+@padding-left: 50px;
 
+
+//
+//
+//    Map & filters
+//    =============
+//
 
 #map {
+
+	width: @container-width;
+	height: @map-height;
+	position:absolute;
+
 	.d3_layer {
 		position:absolute;
 	}
 	
+	&.content {
+		width: @container-width;
+		border: 0px;
+	}
+
 	.zoomer {
 		width: 25px;
 		height: 25px;
@@ -35,13 +56,13 @@
 }
 
 #timeline {
-	
-	rect.dot {
-		stroke: @path_stroke;
-		stroke-width: 0px;
-		fill-opacity: @path_opacity;
-		cursor: pointer;
 
+	margin-top: @map-height;
+	width: @container-width;
+	height: @timeline-height;
+	position: relative;
+
+	rect {
 		@property: all;
 		@duration: 0.5s;
 		@ease: cubic-bezier(0,0,1,1);
@@ -50,13 +71,18 @@
 		-o-transition: @property @duration @ease;
 		transition: @property @duration @ease;
 
+		stroke-width: 0;
+		fill: @cyan;
+	}
+	
+	rect.dot {
+		fill-opacity: @path_opacity;
+		cursor: pointer;
+
 		&:hover {
-			fill: @cyan;
 			fill-opacity: @path_opacity_hover;
-			cursor: pointer;
 		}
 		&.active {
-			fill: @cyan;
 		}
 		&.inactive {
 			fill: white;
@@ -64,16 +90,17 @@
 	}
 
 	rect.background {
-		fill: @cyan;
-		stroke: @path_stroke;
-		stroke-width: 0px;
 		fill-opacity: .1;
-		cursor: default;
+		cursor: pointer;
+
+		&:hover {
+			fill-opacity: .4;
+		}
 	}
 
 	.brush .extent {
-		stroke: #fff;
-		fill: black;
+		stroke-width: 0px;
+		fill: @cyan;
 		fill-opacity: .2;
 		shape-rendering: crispEdges;
 	}
@@ -81,18 +108,18 @@
 	.axis path,
 	.axis line {
 	    fill: none;
-	    stroke: black;
+	    stroke: @cyan;
 	    shape-rendering: crispEdges;
 	}
 
 	.axis text {
-	    font-family: sans-serif;
+	    font-family: LatinModernSans10Regular, sans-serif;
 	    font-size: 11px;
 	}
 
 	text {
 		fill: @cyan;
-		font-family: sans-serif;
+		font-family: LatinModernSans10Regular, sans-serif;
 	    font-size: 32px;
 
 	    @property: all;
@@ -105,51 +132,62 @@
 	}
 }
 
-#types {
+#types, #categories, #phases {
 
-	height: 30px;
+	padding-left: @padding-left;
+	width: @container-width;
+	height: 50px;
+	position: relative;
 
-	g.backgrounds, g.percentages, g.figures {
+	g {
+		cursor: pointer;
 		position: absolute;
 	}
 
-	rect.background {
+	rect {
+
 		fill: @cyan;
-		fill-opacity: .1;
-		stroke: @path_stroke;
-		stroke-width: 0px;
-		cursor: default;
+		stroke-width: 0;
+
+		@property: all;
+		@duration: 0.5s;
+		@ease: cubic-bezier(0,0,1,1);
+		-webkit-transition: @property @duration @ease;
+		-moz-transition: @property @duration @ease;
+		-o-transition: @property @duration @ease;
+		transition: @property @duration @ease;
+
+		&.background {
+			fill-opacity: .1;
+			&:hover {
+				fill-opacity: .3;
+			}
+		}
+
+		&.percentage {
+			fill-opacity: .6;
+			&:hover {
+				fill-opacity: 1;
+			}
+			
+		}
+
+		&.line {
+			fill-opacity: 1;
+		}
+
 	}
 
-	rect.percentage {
+	text {
 		fill: @cyan;
-		fill-opacity: .6;
-		stroke: @path_stroke;
-		stroke-width: 0px;
-		cursor: default;
+		font-family: LatinModernSans10Regular, sans-serif;
+	    font-size: 11px;
 	}
 	
-	// div.container {
-	// 	position: relative;
-	// 	float: left;
-	// 	// color: white;
-	// 	font-family: sans-serif;
-	// 	font-size: 10px;
-	// 	overflow: hidden;
-	// 	height: 30px;
-	// 	background: @cyan;
-	// 	opacity: .1;
-	// }
-	
-	// div.percentage {
-	// 	background: @cyan;
-	// 	height: 30px;
-	// 	opacity: 1;
-	// }
 }
 
 #documents {
-	margin-left: -40px;
+	margin: 30px 10px 0 -20px;
 
 	li {
 		white-space: nowrap;
@@ -158,6 +196,9 @@
 		height: @line_height;
 		line-height: @line_height;
 		text-overflow: ellipsis;
+		text-shadow: none;
+		font-family: LatinModernSans10Regular, sans-serif;
+	    font-size: 12px;
 	}
 
 }
@@ -165,7 +206,7 @@
 #doc_list {
 	overflow: -moz-scrollbars-vertical; 
 	overflow-y: scroll;
-	height: @line_height * 10;
+	height: @line_height * 20;
 }
 
 #doc_next {

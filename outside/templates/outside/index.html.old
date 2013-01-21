@@ -1,0 +1,49 @@
+{% extends "outside/middle.html" %}
+{% load i18n %}
+
+
+{% block sidebar %}
+	<ul class="nav">
+		{% for pin in pins %}
+		<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+		{% endfor %}
+	</ul>
+	
+{% endblock %}
+
+{% block page_title %}
+	{{ page.title }}
+{% endblock %}
+
+
+{% block page %}
+	<!-- static url: {{ STATIC_URL }} -->
+	<section class="alpha">
+		schema
+	</section>
+	{% for p in pins %}
+		
+	<a id="{{ p.slug }}"></a>
+	<section>
+		<h2>{{ p.title }}</h2>
+		{% if edit_mode %}
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit content" %} id:{{ p.id }} ]</div>
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit slug" %} #{{ p.slug }} ]</div>
+		{% endif %}
+
+		<div class="abstract">
+			{{ p.abstract|safe }}
+		</div>
+
+		<div class="content">
+			{{ p.content|safe }}
+			
+		</div>
+		<div class="clear"></div>
+		
+	</section>
+	
+	
+	{% endfor %}
+
+{% endblock %}

@@ -6,6 +6,8 @@ oo.sidebar.init = function(){
 	oo.sidebar.element = $("sidebar");
 	$("#collapse-menu").click( oo.sidebar.collapse );
 	$("#expand-menu").click( oo.sidebar.expand );
+
+	$("#right-sidebar").height($(".page").first().height());
 }
 
 oo.sidebar.collapse = function(){
@@ -19,3 +21,4 @@ oo.sidebar.expand = function(){
 	$("#collapse-menu").show();
 	$("#expand-menu").hide();
 }
+

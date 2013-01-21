@@ -1,34 +1,56 @@
 {% extends "outside/middle.html" %}
 {% load i18n %}
-
-
-{% block sidebar %}
-	<ul class="nav">
-		{% for pin in pins %}
-		<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
-		{% endfor %}
-	</ul>
-	
-{% endblock %}
-
-{% block page_title %}
-	{{ page.title }}
-{% endblock %}
-
-
-{% block page %}
-	<!-- static url: {{ STATIC_URL }} -->
-	<section class="alpha">
-		schema
-	</section>
-	{% for p in pins %}
+{% load extras %}
+{% block page_header %}
+<div id="introduction">
 		
-	<a id="{{ p.slug }}"></a>
-	<section>
+		<!-- div id="schema"></div -->
+		<div class="grid_6 alpha">Left</div>
+		<div class="grid_6 omega">
+			<h3 style="margin-top:72px;">
+					Le projet, dans son ensemble.
+			</h3>
+
+			right</div>
+		
+		<!--{{ user.username }}-->
+		
+		
+	</div>
+{% endblock %}
+
+	<!-- static url: {{ STATIC_URL }} -->
+
+{% block page_left %}
+	{{ block.super }}
+	{% for p in pins %}
+	<div class="section expand">
+		
+		<div class="marker-wrapper">
+			<div class="marker" >
+				{{ p.date_last_modified|date:"d M." }}
+			</div>
+		</div>
+
+		<a id="{{ p.slug }}"></a>
 		<h2>{{ p.title }}</h2>
+		{% if p.local %}
+			<a href="{% url outside_download p.slug %}">{% trans "download as" %} {{ p.mimetype }}</a>
+		{% endif %}
+
+		<div class="author"><a href="">{% for u in p.users.all %}{{ u.username }}{% endfor %}</a></div>
+
 		{% if edit_mode %}
 			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit content" %} id:{{ p.id }} ]</div>
 			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit slug" %} #{{ p.slug }} ]</div>
+			<div class="edit-mode delete-pin" href="#" data-pin-id="{{ p.id }}" role="button">[ {% trans "delete slug" %} #{{ p.slug }} ]</div>
+
+			{% ifequal p.status 'D' %}
+				<div class="edit-mode publish-pin" href="#" new-status="P" data-pin-id="{{ p.id }}" role="button">[ {% trans "publish" %} ]</div>
+			{% else %}
+				<div class="edit-mode publish-pin" href="#" new-status="D" data-pin-id="{{ p.id }}" role="button">[ {% trans "draftify" %} ]</div>
+			{% endifequal %}
+
 		{% endif %}
 
 		<div class="abstract">
@@ -41,9 +63,9 @@
 		</div>
 		<div class="clear"></div>
 		
-	</section>
-	
+	</div>
 	
 	{% endfor %}
-
 {% endblock %}
+
+

@@ -19,14 +19,31 @@ from outside.models import Enquiry
 def index( request ):
 	data = shared_context( request, tags=[ "index" ] )
 	
-	#if Page.objects.filter( slug="project", language=data['language'] ).count() > 0:
-	#	return page( request, "project")
-	
-	
-	# load all pins without page, without Enquete
-	data['pins'] = Pin.objects.filter(language=data['language'])
+	try:
+		data['page'] = Page.objects.get( slug="index", language=data['language'])
+	except Page.DoesNotExist:
+		p_en = Page( title="Home Page", language='EN', slug="index")
+		p_en.save()
+
+		p_fr = Page( title="Home Page", language='FR', slug="index")
+		p_fr.save()
+
+		data['page'] = p_fr if data['language'] == 'FR' else p_en
+
+	# load all pins without page
+	data['pins'] = Pin.objects.filter(language=data['language'], page__slug="index" ).order_by("-id")
+
+	# get news
+	data['news'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
 
 	return render_to_response('outside/index.html', RequestContext(request, data ) )
+
+def news( request ):
+	data = shared_context( request, tags=[ "index" ] )
+	# load all pins without page
+	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	return render_to_response('outside/page.html', RequestContext(request, data ) )
+
 
 def page( request, page_slug ):
 	data = shared_context( request, tags=[ page_slug ] )
@@ -97,6 +114,7 @@ def shared_context( request, tags=[], previous_context={} ):
 	# startup
 	d = previous_context
 	d['tags'] = tags
+	d['stylesheet'] = "reanalyse"
 
 	# if it is not auth, pull loginform
 	if request.user.is_authenticated():
@@ -109,7 +127,7 @@ def shared_context( request, tags=[], previous_context={} ):
 	load_language( request, d )
 	
 
-	d['pages'] = [ p for p in Page.objects.filter( language=d['language'] ).order_by('id') ] # menu up. type PAGE should be translated via django trans tamplate tags.
+	d['pages'] = [ p for p in Page.objects.filter( language=d['language'] ).order_by('sort','id') ] # menu up. type PAGE should be translated via django trans tamplate tags.
 	
 	return d
 

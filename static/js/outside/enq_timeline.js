@@ -7,10 +7,10 @@
 
 var format = d3.time.format("%Y-%m-%d"),
 	size = {
-			  width : $('#map').width(),
+			  width : $('#timeline').width(),
 			 height : $('#timeline').height(),
-		chartHeight : $('#timeline').height() * 9 / 10,
-		brushHeight : $('#timeline').height() * 1 / 10
+		chartHeight : $('#timeline').height() * 9 / 11,
+		brushHeight : $('#timeline').height() * 2 / 11
 	},
 	margin = { top: 30 },
 	steps = 7;
@@ -25,13 +25,15 @@ oo.enq.timeline.update = function( event, filters ){
 
 	for (i in oo.filt.data) {
 		if ( !collection ) var collection = [];
-		// if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+		if ( oo.filt.data[ i ].filtered == true ) {
 			collection.push({
 				time : format.parse(oo.filt.data[i].times[0].time).getTime(),
 				id : oo.filt.data[i].id
 			});
-		// }
+		}
 	}
+
+	// oo.log('collection', collection)
 
 	// X Axes set up
 
@@ -110,7 +112,7 @@ oo.enq.timeline.init = function( objects ){
 
 	var scaleX = d3.time.scale()
 		.domain([ minX, maxX ])
-		.range([ 0, size.width ]);
+		.range([ 0, size.width - 100 ]);
 
 	for (var i=0; i <= steps; i++) {
 		ticks.push(minX + unit * i);
@@ -141,7 +143,7 @@ oo.enq.timeline.init = function( objects ){
 
 	var minY = 0,
 		maxY = d3.max(density, function (d) { return d.freq }),
-		rectWidth = d3.round( size.width / steps );
+		rectWidth = d3.round( ( size.width - 100 ) / steps );
 
 	scaleY = d3.scale.linear()
 		.domain([minY, maxY])
@@ -152,9 +154,9 @@ oo.enq.timeline.init = function( objects ){
 	var svg = d3.select('#timeline').append('svg');
 
 	oo.enq.timeline.background = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")");
-	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")");
-	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")").attr('class', 'axis');
-	oo.enq.timeline.brush      = svg.append('g').attr("transform", "translate(0, " + size.height + ")");
+	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")");
+	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")").attr('class', 'axis');
+	oo.enq.timeline.brush      = svg.append('g').attr("transform", "translate(50, " + size.height + ")");
 	
 	// Axis
 
@@ -173,6 +175,25 @@ oo.enq.timeline.init = function( objects ){
 
 	// Chart
 
+	var onClick = function(obj) {
+
+		var domain = scaleX.domain(),
+			circleTime = scaleX.invert( d3.select(obj).attr('x') ).getTime(),
+			b = [circleTime, circleTime + unit],
+			brushWidth = scaleX(b[1]) - scaleX(b[0]);
+
+		d3.select("rect.extent").transition()
+			.duration(1000)
+			.attr('x', scaleX(b[0]) )
+			.attr('width', brushWidth ); // Width is fixed
+
+		setTimeout( function() {
+    		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
+    		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
+    	}, 1000 );
+
+	}
+
 	oo.enq.timeline.rectangles.selectAll(".background")
 		.data(density)
 		.enter().append('rect')
@@ -181,7 +202,11 @@ oo.enq.timeline.init = function( objects ){
 		.attr("y", function(d) { return - scaleY(d.freq) })
 		.attr("width", rectWidth)
 		.attr("height", function(d) { return scaleY(d.freq) })
-		.attr("data-id", function(d) { return d.id; });
+		.attr("data-id", function(d) { return d.id; })
+		.on("click", function() {
+			onClick(this);
+		})
+
 
 	oo.enq.timeline.rectangles.selectAll(".dot")
 		.data(density)
@@ -192,25 +217,10 @@ oo.enq.timeline.init = function( objects ){
 		.attr("width", rectWidth)
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; })
-		.on("click", function(d,i) {
-
-			var domain = scaleX.domain(),
-				circleTime = scaleX.invert( d3.select(this).attr('x') ).getTime(),
-				b = [circleTime, circleTime + unit],
-				brushWidth = scaleX(b[1]) - scaleX(b[0]);
-
-			d3.select("rect.extent").transition()
-				.duration(1000)
-				.attr('x', scaleX(b[0]) )
-				.attr('width', brushWidth ); // Width is fixed
-
-			setTimeout( function() {
-	    		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
-	    		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
-	    	}, 1000 );
-
+		.on("click", function() {
+			onClick(this);
 		})
-		.on('mouseover', function(d,i) {
+		.on('mouseover', function() {
 			var d3_this = d3.select(this);
 			var quantity = d3_this.attr('data-id').split(",").length;
 			d3.select(oo.enq.timeline.rectangles.text[0][i]).text(quantity)
@@ -222,10 +232,11 @@ oo.enq.timeline.init = function( objects ){
 			d3.select(oo.enq.timeline.rectangles.text[0][i]).style('fill-opacity', 0);
 		});
 
-		oo.enq.timeline.rectangles.text = oo.enq.timeline.rectangles.selectAll("text")
-			.data(density)
-			.enter().append('text')
-			.style('fill-opacity', 0);
+
+	oo.enq.timeline.rectangles.text = oo.enq.timeline.rectangles.selectAll("text")
+		.data(density)
+		.enter().append('text')
+		.style('fill-opacity', 0);
 
 
 
