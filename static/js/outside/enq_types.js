@@ -14,7 +14,6 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 	var types = d3.select( selector );
 
-
 	this.init = function(){
 
 		var map = oo.nest( objects, 
@@ -215,10 +214,10 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 	};
 
-	oo.log("hello");
-
 	this.init();
+
 	oo.filt.on( oo.filt.events.change, this.update );
+
 };
 
 
