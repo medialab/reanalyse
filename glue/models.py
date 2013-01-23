@@ -10,7 +10,34 @@ class Geo( models.Model): # geo spot, with zoom
 	lon = models.FloatField() # map center LON
 	zoom = models.IntegerField() # start zoom
 	content = models.TextField( default="", blank=True, null=True ) # textual GEO description
+
+# generic tag model
+class Tag( models.Model ):
+	DJANGO_APP = 'DA'
+	AUTHOR = 'AU'
+	ARTICLE = 'AR'
+	INSTITUTION = 'In'
+	RESEARCHER = 'Rs'
 	
+	TYPE_CHOICES = (
+        (AUTHOR, 'Author'),
+        (ARTICLE, 'Article'),
+        (INSTITUTION, 'Institution'),
+        (RESEARCHER, 'Researcher'),
+    )
+
+	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'
+	slug = models.SlugField(max_length=128) # e.g. 'mr-e-smith'
+	type = models.CharField( max_length=2, choices=TYPE_CHOICES ) # e.g. 'author' or 'institution'
+
+	def __unicode__(self):
+		return "%s : %s"% ( self.get_type_display(), self.name)
+
+	class Meta:
+		ordering = ["type", "slug" ]
+		unique_together = ("type", "slug")
+
+
 class Pin( models.Model ):
 	PUBLISHED = 'P'
 	DRAFT = 'D'
@@ -106,5 +133,6 @@ class PageAbstract( models.Model ):
 
 class Page( PageAbstract ):
 	pins = models.ManyToManyField( Pin, null=True, blank=True, related_name="page")
+
 
 	
