@@ -1,0 +1,84 @@
+{% extends "outside/middle.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+	<ul class="nav">
+		{% for pin in pins %}
+		<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+		{% endfor %}
+	</ul>
+	
+{% endblock %}
+
+{% block sidebar_add_section %}
+
+{% endblock %}
+
+{% block document_ready %}
+	{{ block.super }}
+	{% if edit_mode %}
+		oo.enquiry.upload.enquiry_id = {{ enquiry.id }};
+		oo.enquiry.upload.init();
+	
+	{% endif %}
+{% endblock %}
+
+{% block page_title %}
+	{{ enquiry.title }}
+{% endblock %}
+
+{% block page %}
+
+	<a id="description"></a>
+	
+	<section class="alpha">
+		
+		<div>
+			{% trans "an enquiry about"%} <a href="{% url outside_enquete enquiry.enquete.id %}">{{ enquiry.enquete.name }}</a>
+		</div>
+		<h2>{{ enquiry.title }}</h2>
+		{% if edit_mode %}
+				<div class="edit-mode add-enquiry-pin"  href="#add-section-modal" data-enquete-id="{{ enquiry.enquete.id }}" role="button" title="{% trans "edit mode" %}: {% trans "add enquiry content" %}"> [ {% trans "add enquiry content" %} ] </div>
+			{% endif %}
+		<div class="abstract">{{ enquiry.abstract }}</div>
+		<div class="dates" ></div>
+
+		<div class="pin-box">
+			{% for p in enquiry.pins.all %}
+				<div class="pin">
+					<div class="pins">
+						hello related
+					</div>
+					<p class="title">{{ p.title }}</p>
+
+					{% if p.abstract %}
+					<p class="abstract">{{ p.abstract }}</p>{% endif %}
+
+					{% if p.content %}
+					<p class="content">{{ p.content|safe }}</p>{% endif %}
+
+					<p class="dates">
+					added {{ p.date_last_modified }}
+					</p>
+					{% if p.href %}
+					<p class="href"><a href="{{ p.href }}">{{ p.href }}</a></p>
+					{% endif %}
+				</div>
+
+			{% endfor %}
+		</div>
+
+
+	</section>
+	{% if edit_mode %}
+	<section>
+	
+		<div id="drag-over-me">
+			<form action="#">
+				<input type="file" name="files[]" multiple id="fileupload"/>
+			</form>
+			<div class="message">why don't you drag some file directly here?</div>
+		</div>
+</section>
+	{% endif %}
+{% endblock %}	

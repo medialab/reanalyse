@@ -298,3 +298,11 @@ LOGGING = {
 }
 
 
+#
+#
+#    Outside specific settings
+#    =========================
+#
+OUTSIDE_SITE_NAME = "app"
+OUTSIDE_THEME = "app"
+OUTSIDE_TEMPLATE_DIR = "hub"

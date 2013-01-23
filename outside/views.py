@@ -11,7 +11,7 @@ from outside.forms import AddEnquiryForm
 from reanalyseapp.models import Enquete
 from glue.models import Pin, Page
 from outside.models import Enquiry
-
+from outside.sites import OUTSIDE_SITES_AVAILABLE
 #
 #    Outside
 #    =======
@@ -36,13 +36,19 @@ def index( request ):
 	# get news
 	data['news'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
 
-	return render_to_response('outside/index.html', RequestContext(request, data ) )
+	return render_to_response( "%s/index.html" % data['template'], RequestContext(request, data ) )
 
 def news( request ):
-	data = shared_context( request, tags=[ "index" ] )
+	data = shared_context( request, tags=[ "news" ] )
 	# load all pins without page
 	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
-	return render_to_response('outside/page.html', RequestContext(request, data ) )
+	return render_to_response("%s/blog.html" % data['template'], RequestContext(request, data ) )
+
+def contacts( request ):
+	data = shared_context( request, tags=[ "contacts" ] )
+	# load all pins without page (aka news)
+	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	return render_to_response("%s/contacts.html" % data['template'], RequestContext(request, data ) )
 
 
 def page( request, page_slug ):
@@ -58,7 +64,7 @@ def enquete( request, enquete_id ):
 
 	data['has_enquiry'] = data['enquete'].enquiry.count()
 
-	return render_to_response('outside/enquete.html', RequestContext(request, data ) )
+	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
 def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
@@ -70,7 +76,7 @@ def enquetes( request ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquetes'] = Enquete.objects.all() 
 
-	return render_to_response('outside/enquetes.html', RequestContext(request, data ) )
+	return render_to_response("enquete/enquetes.html", RequestContext(request, data ) )
 
 
 def login_view( request ):
@@ -114,7 +120,10 @@ def shared_context( request, tags=[], previous_context={} ):
 	# startup
 	d = previous_context
 	d['tags'] = tags
-	d['stylesheet'] = "reanalyse"
+	d['site'] = settings.OUTSIDE_SITE_NAME
+	d['sites_available'] = OUTSIDE_SITES_AVAILABLE
+	d['stylesheet'] = settings.OUTSIDE_THEME
+	d['template'] = settings.OUTSIDE_TEMPLATE_DIR
 
 	# if it is not auth, pull loginform
 	if request.user.is_authenticated():

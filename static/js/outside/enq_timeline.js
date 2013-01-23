@@ -21,6 +21,17 @@ oo.enq.timeline.update = function( event, filters ){
 
 	oo.log("[oo.enq.timeline.update]");
 
+	
+	// var map = oo.nest( objects, 
+	// 		function( d ){ return format.parse(d.date).getTime() }, 
+	// 		function (a, b){ return a.values.length < b.values.length ? 1 : a.values.length > b.values.length ? -1 : 0 }
+	// 	)
+
+	// oo.log('objects', objects)
+	// oo.log('map', map)
+
+
+
 	// Collect useful fields
 
 	for (i in oo.filt.data) {
