@@ -150,7 +150,7 @@
 					</div>
 				</a>
 				<!-- ////////////////////////////////////////////////////////// TEXT EXTRACT -->
-<a class="res_middle_link" href="" onclick='toggleSentenceExtract("{% url reanalyse.reanalyseapp.views.dGetHtmlAround enquete.id r.object.id %}","sentence_{{r.object.id}}","{{query}}");return false;'> 
+<a class="res_middle_link" href="" onclick='toggleSentenceExtract("{% url reanalyseapp.views.dGetHtmlAround enquete.id r.object.id %}","sentence_{{r.object.id}}","{{query}}");return false;'> 
 					<div class="res_middle" id="sentence_{{r.object.id}}">
 						<div class="res_excerpt_txt" style="display:block;">
 							{% comment %}
@@ -238,7 +238,7 @@
 		
 		// fetch overview viz json, used as facets
 		$.ajax({
-			url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
+			url: "{% url reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
 			success: function(data){
 				//console.log("data received for viz:{{nk}}");
 				$("#theViz_over").html("");

@@ -107,7 +107,7 @@
 	
 	{% comment %}
 		<!-- if you want to set random colors for all spks -->
-		<a href='#' onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.resetColors enquete.id %}",function(){location.reload(true);});return false;'>
+		<a href='#' onclick='doGetAtUrl("{% url reanalyseapp.views.resetColors enquete.id %}",function(){location.reload(true);});return false;'>
 		set random colors on all speakers and refresh...
 		</a>
 	{% endcomment %}
@@ -288,7 +288,7 @@
 
 
 		///////////////////////////////////////////// viz involved modal dialogs
-		initVizInvolvedModals("{% url reanalyse.reanalyseapp.views.getVizHtml enquete.id %}");
+		initVizInvolvedModals("{% url reanalyseapp.views.getVizHtml enquete.id %}");
 	});
 </script>
 <!-- ======================================================= -->
@@ -381,7 +381,7 @@
 		$.ajax({
 			type: "GET",
 			data: dict,
-			url: "{% url reanalyse.reanalyseapp.views.setColor enquete.id %}",
+			url: "{% url reanalyseapp.views.setColor enquete.id %}",
 			success: function(data){
 				console.log("Color was asked to update on server")
 			},

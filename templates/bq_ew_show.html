@@ -29,7 +29,7 @@
 {% block content %}
 
 <!-- ======================================================= -->
-<a href="{% url reanalyse.reanalyseapp.views.eShow word.code.enquete.id %}">< Retour Enquête: {{word.code.enquete.name}}</a></br>
+<a href="{% url reanalyseapp.views.eShow word.code.enquete.id %}">< Retour Enquête: {{word.code.enquete.name}}</a></br>
 <!-- ======================================================= -->
 <!-- Warning : word is in fact a WordEntity object -->
 <h1>Word: {{ word.content }}</h1>

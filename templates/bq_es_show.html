@@ -51,7 +51,7 @@
 	<h1>TEI Documents:</h1>
 	<ul>
 		{% for t in speaker.textes.all %}
-		<li><a href="{% url reanalyse.reanalyseapp.views.edShow enquete.id t.id %}">{{t.name}}</a></li>
+		<li><a href="{% url reanalyseapp.views.edShow enquete.id t.id %}">{{t.name}}</a></li>
 		{% endfor %}
 	</ul>
 	

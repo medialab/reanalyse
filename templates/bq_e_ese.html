@@ -70,7 +70,7 @@
 	
 	<div class="ese_reportdownload">
 	{% comment %}Translators: ESE final report download{% endcomment %}
-	{% trans 'The final report can be downloaded' %}: <a href="{% url reanalyse.reanalyseapp.views.getEseReport enquete.id %}">rapport Enquête sur Enquête</a>
+	{% trans 'The final report can be downloaded' %}: <a href="{% url reanalyseapp.views.getEseReport enquete.id %}">rapport Enquête sur Enquête</a>
 	</div>
 {% else %}
 	<p>No Research on Research was found for this study</p>
@@ -97,7 +97,7 @@
 				{% for subchapter in chapter.subchapters %}
 				{
 				name:"{{subchapter.name|escapejs}}",
-				mp3:"{% url reanalyse.reanalyseapp.views.stream enquete.id subchapter.audioid %}",
+				mp3:"{% url reanalyseapp.views.stream enquete.id subchapter.audioid %}",
 				}
 				{% if not forloop.last %},{% endif %}
 				{% endfor %}

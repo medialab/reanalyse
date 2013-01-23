@@ -52,12 +52,12 @@ from django.utils import simplejson
 from xml.etree.ElementTree import ElementTree
 from lxml import etree
 
-from reanalyse.reanalyseapp.utils import *
-from reanalyse.reanalyseapp.models import *
-from reanalyse.reanalyseapp.imexport import *
-from reanalyse.reanalyseapp.forms import *
-from reanalyse.reanalyseapp.visualization import *
-from reanalyse.reanalyseapp.search import *
+from reanalyseapp.utils import *
+from reanalyseapp.models import *
+from reanalyseapp.imexport import *
+from reanalyseapp.forms import *
+from reanalyseapp.visualization import *
+from reanalyseapp.search import *
 
 # Search with haystack
 from haystack.views import *
@@ -1463,7 +1463,7 @@ class MyFacetedSearchView(FacetedSearchView):
 def eSearch(request,eid):
 	############# To search from the shell you can do ;
 # 	from haystack.query import SearchQuerySet
-# 	from reanalyse.reanalyseapp.models import *
+# 	from reanalyseapp.models import *
 # 	sqs = SearchQuerySet().models(Sentence).filter(content__contains='je ne').highlight()
 # 	res = sqs[0]
 # 	print result.object.content

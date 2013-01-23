@@ -291,7 +291,7 @@
 		{% for row in tTable.values %}
 			{% if row.texte.doctype == 'TEI' and row.texte.status == '0' and row.texte.speaker_set.count > 0 %}
 				$.ajax({
-					url: "{% url reanalyse.reanalyseapp.views.getLittleFriseJson enquete.id row.texte.id %}",
+					url: "{% url reanalyseapp.views.getLittleFriseJson enquete.id row.texte.id %}",
 					success: function(data){
 						buildD3_TexteContentLittleFrise(data,"d3_texte_{{row.texte.id}}");
 					},
@@ -308,7 +308,7 @@
 		
 		
 		///////////////////////////////////////////// viz involved modal dialogs
-		initVizInvolvedModals("{% url reanalyse.reanalyseapp.views.getVizHtml enquete.id %}");
+		initVizInvolvedModals("{% url reanalyseapp.views.getVizHtml enquete.id %}");
 					
 		
 

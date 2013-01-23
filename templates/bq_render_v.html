@@ -2,7 +2,7 @@
 <!-- This is the code appearing in each visualization box, depending on the type -->
 
 {% if v.viztype == 'Graph_SpeakersSpeakers' or v.viztype == 'Graph_SpeakersWords' or v.viztype == 'Graph_SpeakersAttributes' %}
-	download link : <a href="{% url reanalyse.reanalyseapp.views.downloadGraph v.id %}">{{v.name}}.gexf</a><br/>
+	download link : <a href="{% url reanalyseapp.views.downloadGraph v.id %}">{{v.name}}.gexf</a><br/>
 	
 	<!-- ======================================== Seadragon -->
 	<!--<div id="theViz_{{nk}}" style="width:670px;height:400px;"></div>-->
@@ -37,7 +37,7 @@
 			sigma_{{nk}}.resetGraphPosition();
 			sigma_{{nk}}.killForceAtlas();
 			sigma_{{nk}}.deleteGraph();
-			sigma_{{nk}}.updateGraph("{% url reanalyse.reanalyseapp.views.serveGraph v.id %}");
+			sigma_{{nk}}.updateGraph("{% url reanalyseapp.views.serveGraph v.id %}");
 			sigma_{{nk}}.initForceAtlas();
 		};
 		function initviz_{{nk}}() {
@@ -56,7 +56,7 @@
 	
 		function initviz_{{nk}}() {
 			$.ajax({
-				url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id v.id %}",
+				url: "{% url reanalyseapp.views.evGetJson enquete.id v.id %}",
 				success: function(data){
 					//console.log("data received for viz:{{nk}}");
 					$("#theViz_{{nk}}").html("");	
@@ -181,7 +181,7 @@
 		};
 		
 		$.get(
-			"{% url reanalyse.reanalyseapp.views.evGetJson enquete.id visualization.id %}", jsBuildListTagCloud
+			"{% url reanalyseapp.views.evGetJson enquete.id visualization.id %}", jsBuildListTagCloud
 		);
 	</script>
 	-->
@@ -220,9 +220,9 @@
 	{% for k,l in stats.words %}
 	<tr class="{% cycle 'odd' 'even' %}">
 		<td>{{k.tfidf}}</td>
-		<td><a href="{% url reanalyse.reanalyseapp.views.ewShow speaker.enquete.id k.id %}">{{k.word}}</a></td>
+		<td><a href="{% url reanalyseapp.views.ewShow speaker.enquete.id k.id %}">{{k.word}}</a></td>
 		<td>{{l.tfidf}}</td>
-		<td><a href="{% url reanalyse.reanalyseapp.views.ewShow speaker.enquete.id l.id %}">{{l.word}}</a></td>
+		<td><a href="{% url reanalyseapp.views.ewShow speaker.enquete.id l.id %}">{{l.word}}</a></td>
 	</tr>
 	{% endfor %}
 </table>
@@ -287,7 +287,7 @@
 				<script type="text/javascript">
 					function sendData() {
 						$.get(
-							"{% url reanalyse.reanalyseapp.views.makeTagCloud enquete.id %}",
+							"{% url reanalyseapp.views.makeTagCloud enquete.id %}",
 							$("#theForm").serialize(),
 							function(data) {
 								initTagCloudsDeprecated(data);
@@ -321,7 +321,7 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_ParaverbalTimeline.js"></script>
 	<div id="theViz_{{nk}}"></div>
 	<script type="text/javascript">
-		var jsonUrl = "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id visualization.id %}";
+		var jsonUrl = "{% url reanalyseapp.views.evGetJson enquete.id visualization.id %}";
 		$.ajax({
 			url: jsonUrl,
 			success: function(data){

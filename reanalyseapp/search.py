@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###########################################################################
 import re
-from reanalyse.reanalyseapp.models import *
+from reanalyseapp.models import *
 
 # Simple search tool
 from django.db.models import Q

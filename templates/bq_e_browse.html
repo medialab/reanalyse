@@ -20,7 +20,7 @@
 	<!--<div id="leftmenucontent">
 		<div class="leftmenublock">
 			{% comment %}Translators: back to home when looking at studies list{% endcomment %}
-			<a href="{% url reanalyse.reanalyseapp.views.home %}">< {% trans 'Back' %}</a>
+			<a href="{% url reanalyseapp.views.home %}">< {% trans 'Back' %}</a>
 		</div>
 	</div>-->
 {% endblock %}
@@ -49,7 +49,7 @@
 	<ul id="eList">
 	{% for e in enquetes %}
 		<li id="e_{{e.id}}">
-			<div class="eBrowseEnquete eStatus_{{e.status}}" onclick='window.location.href="{% url reanalyse.reanalyseapp.views.eShow e.id %}"'>
+			<div class="eBrowseEnquete eStatus_{{e.status}}" onclick='window.location.href="{% url reanalyseapp.views.eShow e.id %}"'>
 			
 				{% if perms.reanalyseapp.is_admin %}
 					<span class="eBrowseEnqueteStatus">	
@@ -58,7 +58,7 @@
 					<!-- dev - if enquete loading, we may want to disable 'delete'... ! -->
 					{% if e.status != '1' %}{% endif %}
 					<!-- we are on dev, allow deleting anyway... -->
-					<a href="#" onclick='clicToRemoveEnquete({{e.id}},"{% url reanalyse.reanalyseapp.views.eDelete e.id %}");event.stopPropagation();return false;'>delete</a>
+					<a href="#" onclick='clicToRemoveEnquete({{e.id}},"{% url reanalyseapp.views.eDelete e.id %}");event.stopPropagation();return false;'>delete</a>
 					
 					</span>
 				{% endif %}

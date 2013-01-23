@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from reanalyse.reanalyseapp.models import *
-from reanalyse.reanalyseapp.utils import *
+from reanalyseapp.models import *
+from reanalyseapp.utils import *
 
 from django import template
 from django.template.defaultfilters import stringfilter

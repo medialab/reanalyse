@@ -5,7 +5,7 @@
 
 	<!-- ============================================== -->
 	
-	{% block logolink %}{% url reanalyse.reanalyseapp.views.home %}{% endblock logolink %}
+	{% block logolink %}{% url reanalyseapp.views.home %}{% endblock logolink %}
 	
 	{% block logomoto %}{% trans 'a project from' %} <a href="http://cdsp.sciences-po.fr/">CDSP</a> / <a href="http://medialab.sciences-po.fr/">médialab</a> / <a href="http://www.sciences-po.fr/">Sciences-Po</a>{% endblock logomoto %}
 
@@ -14,20 +14,20 @@
 			<li class="menu-project {%if bodyid == 'project'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
 				{% comment %}Translators: Main top menu choices{% endcomment %}
-				<a href="{% url reanalyse.reanalyseapp.views.home %}">{% trans 'Project' %}</a></li>
+				<a href="{% url reanalyseapp.views.home %}">{% trans 'Project' %}</a></li>
 			<li class="menu-methodology {%if bodyid == 'method'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
-				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=method">{% trans 'Methodology' %}</a></li>
+				<a href="{% url reanalyseapp.views.home %}?p=method">{% trans 'Methodology' %}</a></li>
 			<li class="menu-access {%if bodyid == 'access'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
-				<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access">{% trans 'Access' %}</a></li>
+				<a href="{% url reanalyseapp.views.home %}?p=access">{% trans 'Access' %}</a></li>
 			<li class="menu-studies {%if bodyid == 'e'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
-				<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>	
+				<a href="{% url reanalyseapp.views.eBrowse %}">{% trans 'The Studies' %}</a></li>	
 			{% if perms.reanalyseapp.is_admin %}
 			<li class="menu-admin {%if bodyid == 'admin'%}menuCurrent{%endif%}">
 				<div class="icon-outer"><div class="icon"></div></div>
-				<a href="{% url reanalyse.reanalyseapp.views.eAdmin %}">{% trans 'Admin' %}</a></li>
+				<a href="{% url reanalyseapp.views.eAdmin %}">{% trans 'Admin' %}</a></li>
 			{% endif %}
 		</ul>
 	{% endblock %}
@@ -87,15 +87,15 @@
 		
 		<li id="menu-login">
 			{% if user.is_authenticated %}
-				<a id="logout" href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a>
+				<a id="logout" href="{% url reanalyseapp.views.logoutuser %}">logout</a>
 				<!--
 				<span id="menu-login-username">{{ user.username }}</span>
-				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a></div></div>
+				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyseapp.views.logoutuser %}">logout</a></div></div>
 				-->
 				
 			{% else %}
 				<div class="icon-outer"><div class="icon"></div></div>
-				<a  href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login" title="login" >login</a></li>	
+				<a  href="{% url reanalyseapp.views.home %}?p=access&q=login" title="login" >login</a></li>	
 			{% endif %}
 		</li>
 	</ul>
@@ -193,12 +193,12 @@
 			{% if user.is_authenticated %}
 				<!--
 				<span id="menu-login-username">{{ user.username }}</span>
-				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyse.reanalyseapp.views.logoutuser %}">logout</a></div></div>
+				<div id="logout-outer"><div id="logout-inner"><a href="{% url reanalyseapp.views.logoutuser %}">logout</a></div></div>
 				-->
 				
 			{% else %}
 				<div class="icon-outer"><div class="icon"></div></div>
-				<a  href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=login" title="login" >login</a></li>	
+				<a  href="{% url reanalyseapp.views.home %}?p=access&q=login" title="login" >login</a></li>	
 			{% endif %}
 		</li>
 {% endcomment %}

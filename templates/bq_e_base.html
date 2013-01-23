@@ -68,7 +68,7 @@
 	<div id="leftmenucontent">
 	
 		<!--<div class="leftmenublock">
-			<a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">< {% trans 'Back to the studies list' %}</a>
+			<a href="{% url reanalyseapp.views.eBrowse %}">< {% trans 'Back to the studies list' %}</a>
 		</div>-->
 		
 		<div class="leftmenublock">
@@ -77,20 +77,20 @@
 		
 		<!-- ============================ BROWSE -->
 		<div class="leftmenublock">
-<a href="{% url reanalyse.reanalyseapp.views.eShow enquete.id %}">
+<a href="{% url reanalyseapp.views.eShow enquete.id %}">
 <div class="allPage {% if pageid == 'overview' %}currentPage{% endif %}">{% trans 'Overview' %}</div></a>
 
 {% if perms.reanalyseapp.can_browse %}
-<a href="{% url reanalyse.reanalyseapp.views.eseShow enquete.id %}">
+<a href="{% url reanalyseapp.views.eseShow enquete.id %}">
 <div class="allPage {% if pageid == 'ese' %}currentPage{% endif %}">{% trans 'On the Research' %}</div></a>
 {% else %}
 <div class="allPage pageDisabled">{% trans 'On the Research' %}</div>
 {% endif %}
 
 {% if permexplorethis %}
-	<a href="{% url reanalyse.reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|docPublicCount}})</div></a>
-	<a href="{% url reanalyse.reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|spkPublicCount}})</div></a>
-	<a href="{% url reanalyse.reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} ({{enquete|vizPublicCount}}{% if perms.reanalyseapp.can_make %}/{{enquete|vizTotalCount}}{% endif %})</div></a>
+	<a href="{% url reanalyseapp.views.edBrowse enquete.id %}"><div class="allPage {% if pageid == 'documents' %}currentPage{% endif %}"><span class="imDocument"></span> {% trans 'Documents' %} ({{enquete|docPublicCount}})</div></a>
+	<a href="{% url reanalyseapp.views.esBrowse enquete.id %}"><div class="allPage {% if pageid == 'speakers' %}currentPage{% endif %}"><span class="imSpeaker"></span> {% trans 'Speakers' %} ({{enquete|spkPublicCount}})</div></a>
+	<a href="{% url reanalyseapp.views.evBrowse enquete.id %}"><div class="allPage {% if pageid == 'visualizations' %}currentPage{% endif %}"><span class="imVisualisation"></span> {% trans 'Visualizations' %} ({{enquete|vizPublicCount}}{% if perms.reanalyseapp.can_make %}/{{enquete|vizTotalCount}}{% endif %})</div></a>
 
 	{% block enqueteleftmenuviz %}
 	{% endblock %}
@@ -146,7 +146,7 @@
 	</br>
 	{% comment %}Translators: Left menu link to register page{% endcomment %}
 	{% trans 'To consult the entire study, please consult the page' %}
-	<a href="{% url reanalyse.reanalyseapp.views.home %}?p=access&q=register&e={{enquete.id}}">access</a>
+	<a href="{% url reanalyseapp.views.home %}?p=access&q=register&e={{enquete.id}}">access</a>
 
 {% endif %}		
 
@@ -184,7 +184,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
-			initSearchForm('{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}');
+			initSearchForm('{% url reanalyseapp.views.eSearch enquete.id %}');
 			
 			// scroll to fixed blocks
 			$('#leftMenuScrollToFixed').scrollToFixed();

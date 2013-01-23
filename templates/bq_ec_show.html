@@ -24,7 +24,7 @@
 {% block content %}
 
 <!-- ======================================================= -->
-<a href="{% url reanalyse.reanalyseapp.views.eShow code.enquete.id %}">< Retour Enquête: {{code.enquete.name}}</a></br>
+<a href="{% url reanalyseapp.views.eShow code.enquete.id %}">< Retour Enquête: {{code.enquete.name}}</a></br>
 <!-- ======================================================= -->
 <h1>Code: {{code.codetype.name}} > {{code.name}}</h1>
 <!-- ======================================================= -->
@@ -32,7 +32,7 @@
 <ul>
 {% for t in code.textes.all %}
 	<li>
-	<a href="{% url reanalyse.reanalyseapp.views.edShow t.id %}">{{t.name}}</a> ({{t.quotation_set.count}} Quotations)
+	<a href="{% url reanalyseapp.views.edShow t.id %}">{{t.name}}</a> ({{t.quotation_set.count}} Quotations)
 		<!--
 		{% for q in t.quotation_set.all %}
 			<b>{{q.id}}</b> ({{ q.offs }}/{{ q.offe }})
@@ -51,7 +51,7 @@
 	<li>
 	Word: {{ wentity.content }}
 	from Speaker :
-	<a href="{% url reanalyse.reanalyseapp.views.epShow wentity.sentence.intervention.speaker.id %}">{{ wentity.sentence.intervention.speaker.name }}</a> ({{t.quotation_set.count}} times)
+	<a href="{% url reanalyseapp.views.epShow wentity.sentence.intervention.speaker.id %}">{{ wentity.sentence.intervention.speaker.name }}</a> ({{t.quotation_set.count}} times)
 	</li>
 {% endfor %}
 </ul>
@@ -60,7 +60,7 @@
 	<li>
 	Sentence: {{ sent.content }}
 	from Speaker :
-	<a href="{% url reanalyse.reanalyseapp.views.epShow sent.intervention.speaker.id %}">{{sent.intervention.speaker.name}}</a> ({{t.quotation_set.count}} times)
+	<a href="{% url reanalyseapp.views.epShow sent.intervention.speaker.id %}">{{sent.intervention.speaker.name}}</a> ({{t.quotation_set.count}} times)
 	</li>
 {% endfor %}
 </ul>

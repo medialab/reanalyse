@@ -11,7 +11,7 @@ from django.forms.widgets import Textarea
 # haystack forms
 from haystack.forms import *
 
-from reanalyse.reanalyseapp.models import *
+from reanalyseapp.models import *
 ###########################################################################################
 
 

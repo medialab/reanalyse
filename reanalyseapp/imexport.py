@@ -13,9 +13,9 @@ import simplejson
 # csv.Dicteader
 import csv
 
-from reanalyse.reanalyseapp.models import *
-from reanalyse.reanalyseapp.utils import *
-from reanalyse.reanalyseapp.visualization import *
+from reanalyseapp.models import *
+from reanalyseapp.utils import *
+from reanalyseapp.visualization import *
 
 # for enquete permission
 from django.contrib.auth.models import Group,Permission

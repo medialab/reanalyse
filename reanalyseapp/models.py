@@ -1,10 +1,10 @@
 
 # -*- coding: utf-8 -*-
 ################################################
-from reanalyse.reanalyseapp.globalvars import *
+from reanalyseapp.globalvars import *
 
 # for removeSpacesBeforePunctuation()
-from reanalyse.reanalyseapp.utils import *
+from reanalyseapp.utils import *
 
 from django.db import models
 
@@ -1309,7 +1309,7 @@ def getTextContent(texte,fromT,toT):
 ####################################################################
 # class TextTable(tables.Table):
 # 	#name = TextNameColumn()
-# 	name = tables.TemplateColumn('<a href="{% url reanalyse.reanalyseapp.views.edShow record.enquete.id record.id %}">{{ record.name }}</a>',verbose_name='Nom')
+# 	name = tables.TemplateColumn('<a href="{% url reanalyseapp.views.edShow record.enquete.id record.id %}">{{ record.name }}</a>',verbose_name='Nom')
 # 	
 # 	# filesize
 # 	size = tables.TemplateColumn('{{record.filesize}}'+' Ko')
@@ -1320,19 +1320,19 @@ def getTextContent(texte,fromT,toT):
 # 	
 # 	#doctype = tables.Column(verbose_name='Type')
 # 	doctype = tables.TemplateColumn( '{{ record.get_doctype_display }}', verbose_name='Type')
-# 	speakerStr = '{% for p in record.speaker_set.all %}{% if forloop.counter < 99 %}<a href="{% url reanalyse.reanalyseapp.views.esShow record.enquete.id p.id %}">{{p.name}}</a>, {% endif %}{% endfor %}'
+# 	speakerStr = '{% for p in record.speaker_set.all %}{% if forloop.counter < 99 %}<a href="{% url reanalyseapp.views.esShow record.enquete.id p.id %}">{{p.name}}</a>, {% endif %}{% endfor %}'
 # 	speaker = tables.TemplateColumn('---')
 # 	
 # 	########## (txt/xml/html) Data Contents
-# 	linkStr = '<a href="{% url reanalyse.reanalyseapp.views.ecShow c.enquete.id c.id %}">{{c.name}}</a>'
+# 	linkStr = '<a href="{% url reanalyseapp.views.ecShow c.enquete.id c.id %}">{{c.name}}</a>'
 # 	codesStr= '{% for c in record.code_set.all %}{% if forloop.counter < 99 %}'+linkStr+', {% endif %}{% endfor %}'
 # 	codes = tables.TemplateColumn('---')
 # 	
 # 	########## (txt/xml/html) Data Contents
 # 	tStyle='<span style="color:red;">'
 # 	dataStr='{% if record.content|length > 0 %}'+tStyle+'txt</span>&nbsp;{% endif %}{% if record.contenthtml|length > 0 %}'+tStyle+'html</span>&nbsp;{% endif %}{% if record.contentxml|length > 0 %}xml {% endif %}'
-# 	parseStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyse.reanalyseapp.views.edParseXml record.enquete.id record.id %}");return false;\'>parse </a>'
-# 	refreshStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyse.reanalyseapp.views.edStylizeContent record.enquete.id record.id %}");return false;\'>stylize </a>'
+# 	parseStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyseapp.views.edParseXml record.enquete.id record.id %}");return false;\'>parse </a>'
+# 	refreshStr='<a href="" onclick=\'doGetAtUrl("{% url reanalyseapp.views.edStylizeContent record.enquete.id record.id %}");return false;\'>stylize </a>'
 # 	contentavailable = tables.TemplateColumn( dataStr+'{% if record.doctype == "TEI" or record.doctype == "CTX" %}'+parseStr+refreshStr+'{% endif %}' , verbose_name='Data')
 # 	
 # 	########### description of document
@@ -1349,7 +1349,7 @@ def getTextContent(texte,fromT,toT):
 # # For speakers, we can also do it with django-tables...
 # # or do it by hand, building a dictionnary in the view (let's try that for the moment)
 # class SpeakerTable(tables.Table):
-# 	name = tables.TemplateColumn('<a href="{% url reanalyse.reanalyseapp.views.esShow record.id %}">{{ record.name }}</a>',verbose_name='Participant')
+# 	name = tables.TemplateColumn('<a href="{% url reanalyseapp.views.esShow record.id %}">{{ record.name }}</a>',verbose_name='Participant')
 # 	# todo : make it work
 # 	attribute_set = tables.TemplateColumn('{% for a in record.attribute_set.all %}{{a.name}}{% endfor %}',verbose_name="Attributs")
 # 	class Meta:

@@ -52,7 +52,7 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 			$.ajax({
-				url: "{% url reanalyse.reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
+				url: "{% url reanalyseapp.views.evGetJson enquete.id overviewViz.id %}",
 				success: function(data){
 					//console.log("data received for viz:{{nk}}");
 					$("#theViz_over").html("");
@@ -113,7 +113,7 @@
 						<td style="text-align:right;"></td>
 						<td style="text-align:left;">
 							{% if v.speakers.all|length == 1 %}
-<a class="relatedLink" href="{%url reanalyse.reanalyseapp.views.esShow enquete.id v.speakers.all.0.id%}">{{v.speakers.all.0.name}}</a>
+<a class="relatedLink" href="{%url reanalyseapp.views.esShow enquete.id v.speakers.all.0.id%}">{{v.speakers.all.0.name}}</a>
 							{% else %}
 								{% if v.speakers.all|length == 0 %}
 									<span style="color:lightgray;">All Speakers</span>
@@ -127,7 +127,7 @@
 						<td style="text-align:right;"></td>
 						<td style="text-align:left;">
 							{% if v.textes.all|length == 1 %}
-<a class="relatedLink" href="{%url reanalyse.reanalyseapp.views.edShow enquete.id v.textes.all.0.id%}">{{v.textes.all.0.name}}</a>
+<a class="relatedLink" href="{%url reanalyseapp.views.edShow enquete.id v.textes.all.0.id%}">{{v.textes.all.0.name}}</a>
 							{% else %}
 								{% if v.textes.all|length == 0 %}
 									<span style="color:lightgray;">All Textes</span>
@@ -146,9 +146,9 @@
 					
 				<div class="vizActions">
 				{% if perms.reanalyseapp.can_make %}
-				<a href="#" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.evDelete enquete.id v.id %}");$(this).parent().parent().parent().remove();return false;'>delete</a> | 
+				<a href="#" onclick='doGetAtUrl("{% url reanalyseapp.views.evDelete enquete.id v.id %}");$(this).parent().parent().parent().remove();return false;'>delete</a> | 
 				<a class="butSwitchPublicFlag" id="switchPublicFlag_{{v.id}}_{{v.public}}" href=''><span class="vizStatus{%if v.public%}Public{%else%}Private{%endif%}">{%if v.public%}public{%else%}private{%endif%}</span></a> | 
-				<a class="butGetJson" href="{% url reanalyse.reanalyseapp.views.evGetJson enquete.id v.id %}">json</a> | 
+				<a class="butGetJson" href="{% url reanalyseapp.views.evGetJson enquete.id v.id %}">json</a> | 
 				<!-- ==================================================== -->
 				<script type="text/javascript">
 					$("#switchPublicFlag_{{v.id}}_{{v.public}}").click( function() {
@@ -159,7 +159,7 @@
 							type: "GET",
 							dataType: "json",
 							//datz: {'p':vizStatus},
-							url: '{% url reanalyse.reanalyseapp.views.evSetPublic enquete.id v.id %}',
+							url: '{% url reanalyseapp.views.evSetPublic enquete.id v.id %}',
 							cache: false,
 							success: function processAnswer(dat) {
 								var status = dat.status;
@@ -207,7 +207,7 @@
 								$.ajax({
 									type: "POST",
 									data: theparams,
-									url: '{% url reanalyse.reanalyseapp.views.evUpdateDescr enquete.id v.id %}',
+									url: '{% url reanalyseapp.views.evUpdateDescr enquete.id v.id %}',
 									cache: false,
 									success: function processAnswer(dat) {
 										$('#descrContainer_{{forloop.counter}}').html(dat.html);

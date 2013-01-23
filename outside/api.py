@@ -8,7 +8,7 @@ from outside.models import Enquiry
 from outside.forms import AddEnquiryForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from django.db import IntegrityError
-from reanalyse.reanalyseapp.models import Enquete
+from reanalyseapp.models import Enquete
 from datetime import datetime
 import os, mimetypes
 

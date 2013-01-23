@@ -4,8 +4,8 @@
 ###########################################################################
 from django.conf import settings
 
-from reanalyse.reanalyseapp.models import *
-from reanalyse.reanalyseapp.utils import *
+from reanalyseapp.models import *
+from reanalyseapp.utils import *
 
 # to randomly sort an array : random.shuffle(arr)
 import random
@@ -961,7 +961,7 @@ def visMakeTagCloudFromTermVectors(e,param):
 # 	
 # #	to test from ./manage.py shell
 # # 	from haystack.query import SearchQuerySet
-# # 	from reanalyse.reanalyseapp.models import *
+# # 	from reanalyseapp.models import *
 # #	sqs = SearchQuerySet().raw_search(p['q'],**p)
 # 
 # 

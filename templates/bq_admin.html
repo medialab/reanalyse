@@ -68,7 +68,7 @@
 			<ul>
 				{% for s in serverAvailableStudies %}
 				<li id="load_{{s.foldername}}">
-				<a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eParseFolder s.foldername %}");$("#load_{{s.foldername}}").html("study loaded - go look at it");return false;'>{{s.foldername}}</a>
+				<a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.eParseFolder s.foldername %}");$("#load_{{s.foldername}}").html("study loaded - go look at it");return false;'>{{s.foldername}}</a>
 				</li>
 				{% endfor %}
 			</ul>
@@ -94,7 +94,7 @@
 			Enquete was added ! You can
 			<ul>
 			<li>watch <a href="?page=advanced">logs</a> if you fear something wrong</li>
-			<li>go look at it on the <a href="{% url reanalyse.reanalyseapp.views.eBrowse %}">studies list</a></li>
+			<li>go look at it on the <a href="{% url reanalyseapp.views.eBrowse %}">studies list</a></li>
 			<li>or refresh this page to have fun with another study</li>
 		</div>
 		</p>
@@ -117,14 +117,14 @@
 		<h1>Solr & Logs</h1>
 		<h3>Solr {{solrstatus}}</h3>
 			<ul>
-				<li>make sure <a href="{{solr_url}}/solr/admin/">solr</a> is online if you need documents to be indexed (you could <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.killSolrProcess %}");return false;'>kill the process</a> and refresh this page to relauch it)</li>
+				<li>make sure <a href="{{solr_url}}/solr/admin/">solr</a> is online if you need documents to be indexed (you could <a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.killSolrProcess %}");return false;'>kill the process</a> and refresh this page to relauch it)</li>
 				<li>if you like to discover new things, you can <a href="{{solr_url}}/solr/admin/schema.jsp">browse the index</a> on the solr server page</li>
-				<li>you could - for all studies - <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eSolrIndexClear %}");return false;'>clear_index</a>, then <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.eSolrIndexUpdate %}");return false;'>update_index</a> if you know what that means</li>
+				<li>you could - for all studies - <a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.eSolrIndexClear %}");return false;'>clear_index</a>, then <a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.eSolrIndexUpdate %}");return false;'>update_index</a> if you know what that means</li>
 				<li>you could re-fetch ngrams from index for enquête: (could take a while)
 					<ul>
 					{% if enquetes %}
 					{% for e in enquetes %}
-						<li><a href="{% url reanalyse.reanalyseapp.views.resetNgrams e.id %}">refetch ngrams</a> [{{e.id}}] {{e.name}}</li>
+						<li><a href="{% url reanalyseapp.views.resetNgrams e.id %}">refetch ngrams</a> [{{e.id}}] {{e.name}}</li>
 					{% endfor %}
 					{% else %}
 						<li><i>- no study available -</i></li>
@@ -132,7 +132,7 @@
 					</ul>
 				</li>
 				<li>note: ... means that django will ask solr-index for ngrams, and store some (based on tfidf) of them in db for easiest further access (complex queries) when making viz</li>
-				<li>you could <a href="" onclick='doGetAtUrl("{% url reanalyse.reanalyseapp.views.clearLogFile %}",function(){location.reload(true);});return false;'>clear log file</a> (will refresh page)</li>
+				<li>you could <a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.clearLogFile %}",function(){location.reload(true);});return false;'>clear log file</a> (will refresh page)</li>
 			</ul>
 		<h3>Log Django</h3>
 		<ul class="logconsole">
@@ -162,7 +162,7 @@
 	function createUploader(){            
         var uploader = new qq.FileUploader({
             element: $('#file-uploader')[0],
-            action: "{% url reanalyse.reanalyseapp.views.eAddAjax %}",
+            action: "{% url reanalyseapp.views.eAddAjax %}",
             debug: true,
             multiple: true,
 			params: {
@@ -182,7 +182,7 @@
 				// buttons are already made in template in "fileuploader/fileuploader.js"
 				$("#buttCancel").click( function(event) {
 					// create Enquete from uploaded files					
-					doGetAtUrl("{% url reanalyse.reanalyseapp.views.eReset %}?foldname={{foldname}}");
+					doGetAtUrl("{% url reanalyseapp.views.eReset %}?foldname={{foldname}}");
 					$("#uploadActions").remove();
 					createUploader();
 					//event.stopPropagation();
@@ -191,10 +191,10 @@
 				});
 				$("#buttOk").click( function(event) {
 					// create Enquete from uploaded files					
-					doGetAtUrl("{% url reanalyse.reanalyseapp.views.eParse %}?foldname={{foldname}}");
+					doGetAtUrl("{% url reanalyseapp.views.eParse %}?foldname={{foldname}}");
 					//event.stopPropagation();
 					//event.preventDefault();
-					//window.location.href="{% url reanalyse.reanalyseapp.views.eBrowse %}";
+					//window.location.href="{% url reanalyseapp.views.eBrowse %}";
 					//window.location.reload();
 					$("#eBrowseNewEnquete").html($('#eBrowseNewEnqueteConfirmed').html());
 					return false;

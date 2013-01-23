@@ -2,7 +2,7 @@
 ###########################################################################
 import settings
 import re
-from reanalyse.reanalyseapp.models import *
+from reanalyseapp.models import *
 from django.core import serializers
 from xml.etree.ElementTree import ElementTree
 # to randomly sort an array : random.shuffle(arr)

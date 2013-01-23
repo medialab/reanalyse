@@ -37,7 +37,7 @@ function launchSearch(searchurl,extraParam) {
 /*
 	$.ajax({
 		type: "GET",
-		url: '{% url reanalyse.reanalyseapp.views.eSearch enquete.id %}?'+paramlist ,
+		url: '{% url reanalyseapp.views.eSearch enquete.id %}?'+paramlist ,
 		cache: false,
 		success: function processAnswer(html) {
 			//console.log('Search results received!');
