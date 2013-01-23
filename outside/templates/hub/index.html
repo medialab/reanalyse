@@ -1,0 +1,59 @@
+{% extends "hub/middle.html" %}
+{% load i18n %}
+{% load extras %}
+{% block page_header %}
+{{ block.super}}
+<div id="schema"></div>
+{% endblock %}
+
+	<!-- static url: {{ STATIC_URL }} -->
+
+{% block page_left %}
+
+	{{ block.super }}
+	{% for p in pins %}
+	<div class="section expand alpha">
+		{% comment %}
+		<div class="marker-wrapper">
+			<div class="marker" >
+				{{ p.date_last_modified|date:"d M." }}
+			</div>
+		</div>
+		{% endcomment %}
+		<a id="{{ p.slug }}"></a>
+		<h2>{{ p.title }}</h2>
+		{% if p.local %}
+			<a href="{% url outside_download p.slug %}">{% trans "download as" %} {{ p.mimetype }}</a>
+		{% endif %}
+
+		<div class="author"><a href="">{% for u in p.users.all %}{{ u.username }}{% endfor %}</a></div>
+
+		{% if edit_mode %}
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit content" %} id:{{ p.id }} ]</div>
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit slug" %} #{{ p.slug }} ]</div>
+			<div class="edit-mode delete-pin" href="#" data-pin-id="{{ p.id }}" role="button">[ {% trans "delete slug" %} #{{ p.slug }} ]</div>
+
+			{% ifequal p.status 'D' %}
+				<div class="edit-mode publish-pin" href="#" new-status="P" data-pin-id="{{ p.id }}" role="button">[ {% trans "publish" %} ]</div>
+			{% else %}
+				<div class="edit-mode publish-pin" href="#" new-status="D" data-pin-id="{{ p.id }}" role="button">[ {% trans "draftify" %} ]</div>
+			{% endifequal %}
+
+		{% endif %}
+
+		<div class="abstract">
+			{{ p.abstract|safe }}
+		</div>
+
+		<div class="content">
+			{{ p.content|safe }}
+			
+		</div>
+		<div class="clear"></div>
+		
+	</div>
+	
+	{% endfor %}
+{% endblock %}
+
+

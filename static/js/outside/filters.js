@@ -36,6 +36,15 @@ oo.filt.cross = oo.filt.cross || {
 	'period': function( item, filter ){
 		var item_time = oo.filt.parser.datetime.parse( item.times[0].time ).getTime();
 		return item_time > filter[0] && item_time < filter[1];
+	},
+	'type': function( item, filter ){
+		return item.type == filter
+	},
+	'category': function( item, filter ){
+		return item.categories[0].category == filter
+	},
+	'phase': function( item, filter ){
+		return item.phases[0].phase == filter
 	}
 };
 
@@ -118,39 +127,24 @@ oo.filt.execute = function(){
 
 	oo.filt.data = {};
 
+	// old modified progressive filtering (added filtered field - true for visible)
+
 	for( var i in oo.data.objects ){
 		oo.filt.data[ i ] = oo.data.objects[ i ];
-		var obj = oo.filt.data[ i ];
-		obj.filtered = {
-			extent: 0,
-			period: 0
-		}; // Object added to say
-
-
+		oo.filt.data[ i ].filtered = true;
 	}; // copy original data
 
-	// old progressive filtering
-	// for( var type in oo.filt.filters ){
-	// 	for ( var i in oo.filt.data ){
-	// 		if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
-	// 			delete oo.filt.data[ i ]
-	// 		};
-	// 	}
-	// };
-
-	// new progressive filtering
 	for( var type in oo.filt.filters ){
 		for ( var i in oo.filt.data ){
-			var obj = oo.filt.data[ i ];
 			if ( ! oo.filt.cross[ type ]( oo.data.objects[ i ], oo.filt.filters[type] ) ){
-				obj.filtered[ type ] = 1;
+				// delete oo.filt.data[ i ]
+				oo.filt.data[ i ].filtered = false;
 			} else {
-				obj.filtered[ type ] = 0;
-			} // Set used filter
+			}
 		}
-	}; 
+	};
 
-	oo.log("[oo.filt.execute]", oo.filt.filters, oo.filt.data);
+	// oo.log("[oo.filt.execute]", oo.filt.filters, oo.filt.data);
 
 	oo.filt.trigger( oo.filt.events.change, oo.filt.filters );
 
@@ -204,17 +198,17 @@ oo.filt.clean = function( eventType, data ){
 	ex. oo.filt.trigger( oo.filt.events.remove, {'place':['Paris','New York']} )
 */
 
-oo.filt.remove = function( eventType, data ){
+// oo.filt.remove = function( eventType, data ){
 
-	oo.log("[oo.filt.remove]");
+// 	oo.log("[oo.filt.remove]");
 	
-	for (var f in data){
-		if( typeof oo.filt.filters[f] != "undefined" ){
-			// which data?
-		}
-	}
-	oo.filt.push();
-};
+// 	for (var f in data){
+// 		if( typeof oo.filt.filters[f] != "undefined" ){
+// 			// which data?
+// 		}
+// 	}
+// 	oo.filt.push();
+// };
 
 
 /*

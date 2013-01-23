@@ -72,6 +72,10 @@ DATABASES = {
 		'HOST': '',  					# Set to empty string for localhost. Not used with sqlite3.
 		'PORT': '',  					# Set to empty string for default. Not used with sqlite3.
 	},
+	# TODO, maybe. 'glue': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': REANALYSEPROJECTPATH + "sqlite/glue.db"
+    #}
 # 	'default': {
 # 		'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 # 		'NAME': '',  					# Or path to database file if using sqlite3.
@@ -92,6 +96,7 @@ DATABASES = {
 
 # Added to allow multiple database routing
 #DATABASE_ROUTERS = ['reanalyseapp.databases.ReanalyseRouter',]
+# DATABASE_ROUTERS = ['glue.router.GlueRouter']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -293,3 +298,11 @@ LOGGING = {
 }
 
 
+#
+#
+#    Outside specific settings
+#    =========================
+#
+OUTSIDE_SITE_NAME = "app"
+OUTSIDE_THEME = "app"
+OUTSIDE_TEMPLATE_DIR = "hub"

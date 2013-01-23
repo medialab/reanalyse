@@ -1,0 +1,70 @@
+{% extends "outside/middle.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+	<ul class="nav">
+		{% for pin in pins %}
+		<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+		{% endfor %}
+	</ul>
+	
+{% endblock %}
+
+{% block page_title %}
+	{{ page.title }}
+{% endblock %}
+
+{% block page %}
+
+
+
+	{% for section in pins %}
+	<a id="{{ section.slug }}"></a>
+	<section {% if forloop.first %}class="alpha"{% endif %}>
+		<!-- textarea id="input" name="input">This is the fixed size demo.</textarea>
+	<script>
+		 $(document).ready(function() {
+        $("#input").cleditor()[0].focus();
+      });
+
+	</script -->
+		<h2>{{ section.title }} {% if edit_mode %} {% comment %}<a class="edit-mode delete" href="{% url admin:glue_pin_delete section.id %}">{% trans "delete section" %}</a>
+		 <a class="edit-mode" data-slug='{{ section.slug }}' data-language='{{ section.language }}' href="{% url admin:glue_bean_change section.id %}">^ {% trans "edit section" %} ^</a>{% endcomment %} {% endif %}</h2>
+		{% if edit_mode %}
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ section.id }}" role="button">[ {% trans "edit content" %} id:{{ section.id }} ]</div>
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ section.id }}" role="button">[ {% trans "edit slug" %} #{{ section.slug }} ]</div>
+		{% endif %}
+		
+
+		<div class="pins">
+			{% for subpin in section.children.all %}
+			<div class="child">
+				<div class="media">
+					<img src="http://newspaper.li/static/2afd1d3af4e4361b12ad8e0330d5ca33.jpg" style="width:100%">
+				</div>
+				<div class="title">{{ subpin.title }}</div>
+				{% if edit_mode %}
+					<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ subpin.id }}" role="button">[ {% trans "edit content" %} id:{{ subpin.id }} ]</div>
+				{% endif %}
+				<div class="abstract">{{ subpin.abstract|safe }}</div>
+				<div class="content">{{ subpin.content|safe }}</div>
+			</div>
+			{% endfor %}
+			{% if edit_mode %}
+				<div class="edit-mode add-pin"  href="#add-section-modal" data-page-slug="{{ page.slug }}" data-parent-pin-slug="{{ section.slug }}" role="button" title="{% trans "edit mode" %}: {% trans "add pin" %}"> [ {% trans "add pin" %} ] </div>
+			{% endif %}
+		</div>
+
+		<div class="abstract">
+			{{ section.abstract|safe }}
+		</div>
+
+		<div class="content">
+			{{ section.content|safe }}
+			
+		</div>
+		<div class="clear"></div>
+		
+	</section>
+	{% endfor %}
+{% endblock %}	

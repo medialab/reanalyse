@@ -8,16 +8,18 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
-	var items = d3.selectAll('#documents li').each(function() {
-		var item = d3.select(this);
+	var docs = d3.select('#documents');
+
+	var items = docs.selectAll('li').each(function() {
+		item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
 	}); // Copy new status to old status
 
-	items.attr('data-status', 'inactive'); // Reset
-	
 	for( var i in oo.filt.data ){
-		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
-			d3.select('#documents li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+		if ( oo.filt.data[ i ].filtered == true ) {
+			docs.select('li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+		} else {
+			docs.select('li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'inactive');
 		}
 	} // Set active
 
@@ -34,7 +36,7 @@ oo.enq.docs.update = function( event, filters ){
 			item.transition()
 				.duration(1000)
 				.style('opacity', '1')
-				.style('height', '30px');
+				.style('height', '22px');
 		} 
 	})
 	

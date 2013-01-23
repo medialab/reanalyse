@@ -17,7 +17,7 @@ oo.enq.map.update = function( event, filters ){
 	items.attr('data-status', 'inactive'); // Reset
 	
 	for( var i in oo.filt.data ){
-		if ( ( oo.filt.data[ i ].filtered.extent == 0 ) && ( oo.filt.data[ i ].filtered.period == 0 ) ) {
+		if ( oo.filt.data[ i ].filtered == true ) {
 			d3.select('#map circle[data-id="' + oo.filt.data[ i ].id + '"]').attr('data-status', 'active');
 		}
 	} // Set active
@@ -41,17 +41,6 @@ oo.enq.map.update = function( event, filters ){
 	})
 	
 };
-
-for (var i=0, link; i<5; i++) {
-	link = document.createElement("a");
-	link.innerHTML = "Link " + i;
-	link.onclick = function (num) {
-		return function () {
-			alert(num);
-		};
-	}(i);
-	document.body.appendChild(link);
-}
 
 oo.enq.map.init = function ( objects ){
 

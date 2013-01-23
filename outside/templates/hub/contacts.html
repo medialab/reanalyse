@@ -1,0 +1,55 @@
+{% extends "hub/middle.html" %}
+{% load i18n %}
+{% load extras %}
+{% block page_header %}
+{{ block.super}}
+<div id="schema"></div>
+{% endblock %}
+
+	<!-- static url: {{ STATIC_URL }} -->
+
+{% block page_left %}
+	<div id="subscription">
+		<h2>{% trans "fill contact form" %}</h2>
+
+		<div class="subscription-wrapper">
+			
+
+			<p>Vous pouvez avec peu de problemem
+
+			</p>
+			<label for="first_name">{% trans "first name" %}</label>
+			{{ subscriber_form.first_name }}
+
+			<label for="first_name">{% trans "last name" %}</label>
+			{{ subscriber_form.last_name }}
+
+			<label for="email">{% trans "email" %}</label>
+			{{ subscriber_form.email }}
+
+			<label for="affiliation">{% trans "status" %}
+				
+			</label>
+			<p>{{ subscriber_form.status }}</p>
+
+			<label for="affiliation">{% trans "affiliation" %}
+				<div class="specification">{% trans "university or institution" %}</div>
+			</label>
+			{{ subscriber_form.affiliation }}
+			
+			<label for="affiliation">{% trans "message" %}
+				<div class="specification">{% trans "message" %}</div>
+			</label>
+			{{ subscriber_form.description }}
+
+			
+
+			<label for="accepted_terms">{% trans "accepted terms" %}
+				<div class="specification">{% trans "accept terms" %}</div>
+			</label>
+			{{ subscriber_form.accepted_terms }}
+			{{ subscriber_form.captcha }}
+			<input type="button" id="add-subscriber" value="{% trans "send" %}"/>
+		</div>
+	</div>
+{% endblock %}

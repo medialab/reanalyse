@@ -1,4 +1,4 @@
-{% extends "outside/middle.html" %}
+{% extends "enquete/middle.html" %}
 {% load i18n %}
 
 {% block outside_scripts %}
@@ -32,9 +32,9 @@
 	{% trans "enquetes" %}
 {% endblock %}
 
-{% block page %}
+{% block page_left %}
 <a id="enquetes"></a>
-	<section class="alpha items-container" style="padding-right:2px">
+	<section class="alpha expand items-container" style="padding-right:2px">
 	
 	{% for s in enquetes %}
 	

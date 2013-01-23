@@ -15,4 +15,6 @@ urlpatterns = patterns('',
 	url(r'^api/pin/$', 'glue.api.pins', name='glue_api_pins'), # get list, post single page
 	url(r'^api/pin/(?P<pin_id>\d+)/$', 'glue.api.pin', name='glue_api_pin'), 
 	url(r'^api/pin/(?P<pin_slug>[a-zA-Z\d\-]+)/(?P<pin_language>[a-zA-Z]{2})/$', 'glue.api.pin_by_slug', name='glue_api_pin_by_slug'), 
+	url(r'^api/pin/(?P<pin_id>\d+)/publish/$', 'glue.api.publish_pin', name='glue_api_publish_pin'), 
+	url(r'^api/pin/upload/$', 'glue.api.pin_upload', name='glue_api_pin_upload'), 
 )
