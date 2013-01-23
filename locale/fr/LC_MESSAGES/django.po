@@ -365,6 +365,9 @@ msgid ""
 "Your request was sent ! You will soon receive information in your mailbox."
 msgstr ""
 
+msgid "Home Page"
+msgstr "Accueil"
+
 #, fuzzy
 #~ msgid "You can explore the whole site"
 #~ msgstr ""
