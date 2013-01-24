@@ -24,8 +24,6 @@ oo.enq.map.update = function( event, filters ){
 
 	var zoom = oo.enq.map.map.coordinate.zoom;
 
-	oo.log('zoom', zoom)
-
 	items.each(function() {
 
 		var item = d3.select(this);
@@ -94,7 +92,7 @@ oo.enq.map.init = function ( objects ){
 
 oo.enq.map.d3layer = function() {
 
-    var f = {}, bounds, feature, collection,
+    var f = {}, feature, collection,
       div = d3.select(document.body).append("div").attr('class', 'd3_layer'),
       svg = div.append('svg'),
         g = svg.append("g");
@@ -107,19 +105,18 @@ oo.enq.map.d3layer = function() {
     };
 
     var first = true;
+
     f.draw = function() {
 
     	var zoom = oo.enq.map.map.coordinate.zoom;
         
-        if (first) {
-        	circle.attr('r', (zoom + 1) * 3)
-        		.style('stroke-width', (zoom + .4) * 3);
-        }
+        first && circle.attr('r', (zoom + 1) * 3)
+        	.style('stroke-width', (zoom + .4) * 3);
 
       	first && svg.attr("width", f.map.dimensions.x)
-          .attr("height", f.map.dimensions.y*2)
-          .style("margin-left", "0px")
-          .style("margin-top", "0px") && (first = false);
+        	.attr("height", f.map.dimensions.y * 2)
+			.style("margin-left", "0px")
+			.style("margin-top", "0px") && (first = false);
 
       	circle.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
             .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
