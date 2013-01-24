@@ -54,7 +54,7 @@ oo.enq.docs.init = function ( objects ){
 		.attr('class', 'active')
 		.attr('data-id', function(d) { return d.id; })
 		.attr('data-status', 'active')
-		.html(function(d) { return d.title; });
+		.html(function(d) { return d.title.split('_').join(' ').split('/').join(' '); });
 
 };
 
