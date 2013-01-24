@@ -133,17 +133,21 @@ oo.enq.map.d3layer = function() {
             .data(collection.features)
             .enter().append("circle")
             .attr('data-status', 'active')
-            .attr('data-id', function(d) { return d.id });
-        
-        circle.on("click", function(d,i) {
-        	f.map.center({
-        		'lat' : d3.select(this).attr('lat'),
-        		'lon' : d3.select(this).attr('lon')
-        	}, true);
-			setTimeout( function() {
-        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
-        	}, 1000 );
-        });
+            .attr('data-id', function(d) { return d.id })
+
+            .on("click", function(d, i) {
+            	
+            	var item = d3.select(this);
+	        	
+	        	f.map.center({
+	        		'lat' : item.attr('lat'),
+	        		'lon' : item.attr('lon')
+	        	}, true);
+
+				setTimeout( function() {
+	        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
+	        	}, 1000 );
+	        });
 
 
         return f;
