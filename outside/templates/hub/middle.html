@@ -85,7 +85,21 @@
 
 			
 			{% block page_header %}
+			
 			<div id="introduction">
+				{% block schema %}
+				<div id="schema">
+
+					</div>
+				<div id="schema-wrapper">
+					
+					{% for s in sites_available %}
+					<a href="{{ s.url }}" data-content="{{ s.content }}" title="{{ s.title }}" class="link {{ s.name }} {% if s.name in tags %}selected{% endif %}">
+						
+					</a>
+					{% endfor %}
+				</div>
+				{% endblock %}
 				<ul id="pages">
 					{% for p in pages %}
 					<li{% if p.slug in tags %} class="selected"{% endif %}>
@@ -105,19 +119,7 @@
 
 			</div>	
 			
-				{% block schema %}
-				<div id="schema">
-
-					</div>
-				<div id="schema-wrapper">
-					
-					{% for s in sites_available %}
-					<a href="{{ s.url }}" data-content="{{ s.content }}" title="{{ s.title }}" class="link {{ s.name }} {% if s.name in tags %}selected{% endif %}">
-						
-					</a>
-					{% endfor %}
-				</div>
-				{% endblock %}
+				
 			{% endblock %}
 		
 
