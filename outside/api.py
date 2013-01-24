@@ -132,6 +132,7 @@ def enquete_data( request, enquete_id ):
 	try:
 		textes = Enquete.objects.get(id=enquete_id).texte_set
 	except Enquete.DoesNotExist, e:
+		response.meta('enquete_id', enquete_id )
 		return response.throw_error(error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST).json()
 	
 	response.meta('total_count', textes.count() )
