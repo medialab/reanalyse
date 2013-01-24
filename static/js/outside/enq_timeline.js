@@ -231,16 +231,22 @@ oo.enq.timeline.init = function( objects ){
 		.on("click", function() {
 			onClick(this);
 		})
-		.on('mouseover', function() {
-			var d3_this = d3.select(this);
-			var quantity = d3_this.attr('data-id').split(",").length;
-			d3.select(oo.enq.timeline.rectangles.text[0][i]).text(quantity)
+
+		.on('mouseover', function(d, i) {
+			
+			var d3_this = d3.select(this),
+				quantity = d3_this.attr('data-id').split(",").length;
+			
+			d3.select(oo.enq.timeline.rectangles.text[0][i])
+				.text(quantity)
 				.style('fill-opacity', 1)
 				.attr('x', d3_this.attr('x'))
 				.attr('y', - d3_this.attr('height') - 2);
 		})
-		.on('mouseout', function(d,i) {
-			d3.select(oo.enq.timeline.rectangles.text[0][i]).style('fill-opacity', 0);
+
+		.on('mouseout', function(d, i) {
+			d3.select(oo.enq.timeline.rectangles.text[0][i])
+				.style('fill-opacity', 0);
 		});
 
 

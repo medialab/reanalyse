@@ -113,7 +113,7 @@ oo.filt.push = function(){
 	// oo.log("[oo.filt.push]");
 
 	clearTimeout( oo.filt.timer );
-	oo.filt.timer = setTimeout( oo.filt.execute, 300 );	
+	oo.filt.timer = setTimeout( oo.filt.execute, 100 );	
 };
 
 
