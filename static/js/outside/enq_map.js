@@ -33,18 +33,20 @@ oo.enq.map.update = function( event, filters ){
 		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
 			item.transition()
 				.duration(1000)
-				.attr('r', zoom * 3 * .5)
-				.style('stroke-width', '0');
+				.attr('r', (zoom + 1) * 3 * .2);
 		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
 			item.transition()
 				.duration(1500)
 				.ease('elastic', 7, .8)
-				.attr('r', zoom * 3 * 2)
-				.style('stroke-width', '1.2px');
+				.attr('r', (zoom + 1) * 3);
+		} else if (item.attr('data-status') == 'inactive') {
+			item.transition()
+				.duration(1000)
+				.attr('r', (zoom + 1) * 3 * .2);
 		} else {
 			item.transition()
 				.duration(1000)
-				.attr('r', zoom * 3)			
+				.attr('r', (zoom + 1) * 3);
 		}
 
 
@@ -106,8 +108,13 @@ oo.enq.map.d3layer = function() {
 
     var first = true;
     f.draw = function() {
+
+    	var zoom = oo.enq.map.map.coordinate.zoom;
         
-        if (first) circle.attr('r', circleSize.medium);
+        if (first) {
+        	circle.attr('r', (zoom + 1) * 3)
+        		.style('stroke-width', (zoom + .4) * 3);
+        }
 
       	first && svg.attr("width", f.map.dimensions.x)
           .attr("height", f.map.dimensions.y*2)
