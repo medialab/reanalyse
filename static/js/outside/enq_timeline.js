@@ -208,10 +208,10 @@ oo.enq.timeline.init = function( objects ){
 	var onMouseOver = function(d, i, obj) {
 
 		var d3_this = d3.select(obj),
-			quantity = d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('data-id').split(",").length;
-		
+			quantity = d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('data-id').split(",");
+
 		d3.select(oo.enq.timeline.rectangles.text[0][i])
-			.text(quantity)
+			.text((quantity == "") ? 0 : quantity.length)
 			.style('fill-opacity', 1)
 			.attr('x', d3_this.attr('x'))
 			.attr('y', - d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('height') - 2);
