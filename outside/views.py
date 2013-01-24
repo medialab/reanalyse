@@ -56,7 +56,7 @@ def page( request, page_slug ):
 	data['page'] = get_object_or_404(Page, slug=page_slug, language=data['language'] )
 	data['pins'] = Pin.objects.filter( page__slug=page_slug, language=data['language'], parent=None)
 
-	return render_to_response('outside/page.html', RequestContext(request, data ) )
+	return render_to_response("%s/page.html" % data['template'], RequestContext(request, data ) )
 
 def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
