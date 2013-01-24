@@ -22,6 +22,10 @@ oo.enq.map.update = function( event, filters ){
 		}
 	} // Set active
 
+	var zoom = oo.enq.map.map.coordinate.zoom;
+
+	oo.log('zoom', zoom)
+
 	items.each(function() {
 
 		var item = d3.select(this);
@@ -29,15 +33,22 @@ oo.enq.map.update = function( event, filters ){
 		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
 			item.transition()
 				.duration(1000)
-				.attr('r', circleSize.small)
+				.attr('r', zoom * 3 * .5)
 				.style('stroke-width', '0');
 		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
 			item.transition()
 				.duration(1500)
 				.ease('elastic', 7, .8)
-				.attr('r', circleSize.medium)
+				.attr('r', zoom * 3 * 2)
 				.style('stroke-width', '1.2px');
-		} 
+		} else {
+			item.transition()
+				.duration(1000)
+				.attr('r', zoom * 3)			
+		}
+
+
+
 	})
 	
 };
