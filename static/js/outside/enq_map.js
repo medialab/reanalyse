@@ -9,45 +9,49 @@ oo.enq.map.update = function( event, filters ){
 
 	oo.log("[oo.enq.map.update]");
 
-	var items = d3.selectAll('#map circle').each(function() {
+	var map = d3.select('#map');
+
+	var items = map.selectAll('circle').each(function() {
 		var item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
 	}); // Copy new status to old status
 
 	items.attr('data-status', 'inactive'); // Reset
 	
-	for( var i in oo.filt.data ){
-		if ( oo.filt.data[ i ].filtered == true ) {
-			d3.select('#map circle[data-id="' + oo.filt.data[ i ].id + '"]').attr('data-status', 'active');
-		}
+	for ( var i in oo.filt.data ) {
+		oo.filt.data[ i ].filtered &&
+			map.select('circle[data-id="' + oo.filt.data[ i ].id + '"]')
+				.attr('data-status', 'active');
 	} // Set active
 
-	var zoom = oo.enq.map.map.coordinate.zoom;
+	var zoom = oo.enq.map.map.coordinate.zoom,
+		inactiveSize = (zoom + 1) * 3 * .2,
+		activeSize = (zoom + 1) * 3;
 
 	items.each(function() {
 
-		var item = d3.select(this);
+		var item = d3.select(this),
+			oldStatus = item.attr('data-status-old'),
+			newStatus = item.attr('data-status');
 
-		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
+		if ( ( oldStatus == 'active' ) && ( newStatus == 'inactive' ) ) {
 			item.transition()
 				.duration(1000)
-				.attr('r', (zoom + 1) * 3 * .2);
-		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
+				.attr('r', inactiveSize);
+		} else if ( ( oldStatus == 'inactive') && ( newStatus == 'active') ) {
 			item.transition()
 				.duration(1500)
 				.ease('elastic', 7, .8)
-				.attr('r', (zoom + 1) * 3);
+				.attr('r', activeSize);
 		} else if (item.attr('data-status') == 'inactive') {
 			item.transition()
 				.duration(1000)
-				.attr('r', (zoom + 1) * 3 * .2);
+				.attr('r', inactiveSize);
 		} else {
 			item.transition()
-				.duration(1000)
-				.attr('r', (zoom + 1) * 3);
+				.duration(1500)
+				.attr('r', activeSize);
 		}
-
-
 
 	})
 	
