@@ -205,6 +205,24 @@ oo.enq.timeline.init = function( objects ){
 
 	}
 
+	var onMouseOver = function(d, i, obj) {
+
+		var d3_this = d3.select(obj),
+			quantity = d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('data-id').split(",").length;
+		
+		d3.select(oo.enq.timeline.rectangles.text[0][i])
+			.text(quantity)
+			.style('fill-opacity', 1)
+			.attr('x', d3_this.attr('x'))
+			.attr('y', - d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('height') - 2);
+
+	}
+
+	var onMouseOut = function(d, i) {
+		d3.select(oo.enq.timeline.rectangles.text[0][i])
+			.style('fill-opacity', 0);
+	}
+
 	oo.enq.timeline.rectangles.selectAll(".background")
 		.data(density)
 		.enter().append('rect')
@@ -214,12 +232,11 @@ oo.enq.timeline.init = function( objects ){
 		.attr("width", rectWidth)
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; })
-		.on("click", function() {
-			onClick(this);
-		})
+		.on("click", function() { onClick(this); })
+		.on('mouseover', function(d, i) { onMouseOver(d, i, this); })
+		.on('mouseout', function(d, i) { onMouseOut(d, i); });
 
-
-	oo.enq.timeline.rectangles.selectAll(".dot")
+	oo.enq.timeline.rectangles.dots = oo.enq.timeline.rectangles.selectAll(".dot")
 		.data(density)
 		.enter().append('rect')
 		.attr('class', 'dot active')
@@ -228,27 +245,9 @@ oo.enq.timeline.init = function( objects ){
 		.attr("width", rectWidth)
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; })
-		.on("click", function() {
-			onClick(this);
-		})
-
-		.on('mouseover', function(d, i) {
-			
-			var d3_this = d3.select(this),
-				quantity = d3_this.attr('data-id').split(",").length;
-			
-			d3.select(oo.enq.timeline.rectangles.text[0][i])
-				.text(quantity)
-				.style('fill-opacity', 1)
-				.attr('x', d3_this.attr('x'))
-				.attr('y', - d3_this.attr('height') - 2);
-		})
-
-		.on('mouseout', function(d, i) {
-			d3.select(oo.enq.timeline.rectangles.text[0][i])
-				.style('fill-opacity', 0);
-		});
-
+		.on("click", function() { onClick(this); })
+		.on('mouseover', function(d, i) { onMouseOver(d, i, this); })
+		.on('mouseout', function(d, i) { onMouseOut(d, i); });
 
 	oo.enq.timeline.rectangles.text = oo.enq.timeline.rectangles.selectAll("text")
 		.data(density)
