@@ -116,9 +116,63 @@ ul{
 }
 
 #schema{
-	.spring(2,4,25,9);
+	.spring(2,4,25,8);
 	margin:0 auto;
 	// border-top: 1px solid #dbdbdb;
+
+}
+#schema-wrapper{
+	position:absolute;
+	> .link{
+		position:absolute;
+		display:block;
+		&.archipolis{
+			.spring(7,12,3,4);
+			top: -150px;
+			left: 195px;
+			&:hover{
+				.spring-position(7,16,3,4);
+			}
+		}
+		&.quali2{
+			.spring(11,12,3,4);
+			top: -198px;
+			left: 671px;
+			&:hover{
+				.spring-position(11,16,3,4);
+			}
+		}
+		&.reanalyse{
+			.spring(0,12,3,4);
+			top: -130px;
+			left:739px;
+			&:hover{
+				.spring-position(0,16,3,4);
+			}
+		}
+		&.app{
+			.spring(3,12,3,3.5);
+			// z-index:4;
+			top: -98px;
+			left: 442px;
+			background-position: -72px -298px;
+
+			&:hover{
+				background-position: -72px -394px;
+				// .spring-position(3,16,3,4);
+				// 
+			}
+		}
+		&.bequali{
+			.spring(15,12,3,3.4);
+			z-index:5;
+			top: -188px;
+			left: 480px;
+			&:hover{
+				.spring-position(15,16,3,3.4);
+			}
+		}
+	}
 }
 
 
@@ -572,11 +626,11 @@ html{
 	}
 }
 .map{
-	//.box-shadow( 1px 1px 2px darken( @background-color, 3%) );
-	//border-top: 1px solid darken( @page-color, 10% );
-	//border-left: 1px solid darken( @background-color, 8% );
-	//border-right: 1px solid darken( @page-color, 20% );
-	//border-bottom: 1px solid darken( @page-color, 23% );	
+	.box-shadow( 1px 1px 2px darken( @background-color, 3%) );
+	border-top: 1px solid darken( @page-color, 10% );
+	border-left: 1px solid darken( @background-color, 8% );
+	border-right: 1px solid darken( @page-color, 20% );
+	border-bottom: 1px solid darken( @page-color, 23% );	
 	&.big{
 		height:240px;
 		margin:@grid-padding @grid-padding @grid-padding*2 @grid-padding*4;
@@ -1691,7 +1745,6 @@ p.invalid{
   border-left-color: #ffffff;
   border-right-width: 0;
 }
-
 
 
 //
