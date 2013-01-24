@@ -2,48 +2,52 @@
 # -*- coding: utf8 -*-
 
 # context variables
+
+
+
 OUTSIDE_SITES_AVAILABLE = [
 	{
 		'name':'bequali',
-		'url':'http://quali.dime-shs.sciences-po.fr',
+		'url':'/',
 		'label':'<span class="cyan">beQ</span>uali',
 		'title':'Le Portail',
-		'content':'banque d’enquêtes qualitatives, instrument de l’equipex DIME-SHS',
+		'content':'Équipe de recherche méthodologique qualitative du CDSP',
 		'template':'hub'
 	},
-	
-	{
-		'name':'reanalyse',
-		'url':'http://quali.dime-shs.sciences-po.fr/reanalyse-blog/',
-		'label':'<span class="cyan">reA</span>nalyse',
-		'title':'Le site Ressource',
-		'content':'projet ANR d’expérimentation de l’analyse secondaire des données qualitatives',
-		'template':'hub'
-	},
-	{
-		'name':'quali2',
-		'url':'http://quali.dime-shs.sciences-po.fr/quali2/',
-		'label':'quali<span class="cyan">2</span>',
-		'title':'Le site Ressource',
-		'content':'a very long content, indeed !dsdsdsds',
-		'template':'hub'
-	},
-	
-	
 	{
 		'name':'archipolis',
-		'url':'http://quali.dime-shs.sciences-po.fr/archipolis/',
+		'url':'/archipolis/',
 		'label':'<span class="cyan">archiP</span>olis',
-		'title':'archipolis',
-		'content':'a very long content, indeed !',
+		'title':'le consortium IR Corpus',
+		'content':'Archives des sciences sociales du politique',
 		'template':'hub'
 	},
 	{
 		'name':'app',
-		'url':'http://quali.dime-shs.sciences-po.fr/app/',
-		'label':'<span class="cyan">Enqueto</span>polis',
-		'title':'Le site Ressource',
-		'content':'a very long content, indeed !',
+		'url':'/app/',
+		'label':'<span class="cyan">EnQ</span>uêtes</span>',
+		'title':'l’instrument de DIME-SHS',
+		'content':'La banque d’enquêtes qualitatives',
 		'template':'hub'
-	}
+	},
+	{
+		'name':'reanalyse',
+		'url':'/reanalyse-blog/',
+		'label':'<span class="cyan">reA</span>nalyse',
+		'title':'le projet ANR',
+		'content':'Projets d’expérimentation de l’analyse secondaire des données qualitatives',
+		'template':'hub'
+	},
+	{
+		'name':'quali2',
+		'url':'/quali2/',
+		'label':'quali<span class="cyan">2</span>',
+		'title':'le site ressource',
+		'content':'documents et débats sur les méthodes qualitatives',
+		'template':'hub'
+	},
+	
+	
+	
+	
 ]
