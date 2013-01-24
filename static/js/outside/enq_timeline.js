@@ -182,40 +182,34 @@ oo.enq.timeline.init = function( objects ){
 	    .tickValues(ticksTime)
 	    .tickFormat(d3.time.format("%m-%Y"));
 
-    oo.enq.timeline.axis.call(axis)
+    oo.enq.timeline.axis.call(axis);
 
 	// Chart
 
 	var onClick = function(obj) {
-
 		var domain = scaleX.domain(),
 			circleTime = scaleX.invert( d3.select(obj).attr('x') ).getTime(),
 			b = [circleTime, circleTime + unit],
 			brushWidth = scaleX(b[1]) - scaleX(b[0]);
-
-		d3.select("rect.extent").transition()
+		d3.select("rect.extent")
+			.transition()
 			.duration(1000)
 			.attr('x', scaleX(b[0]) )
 			.attr('width', brushWidth ); // Width is fixed
-
 		setTimeout( function() {
     		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
     		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
     	}, 1000 );
-
 	}
 
 	var onMouseOver = function(d, i, obj) {
-
 		var d3_this = d3.select(obj),
 			quantity = d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('data-id').split(",");
-
 		d3.select(oo.enq.timeline.rectangles.text[0][i])
 			.text((quantity == "") ? 0 : quantity.length)
 			.style('fill-opacity', 1)
 			.attr('x', d3_this.attr('x'))
 			.attr('y', - d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('height') - 2);
-
 	}
 
 	var onMouseOut = function(d, i) {
@@ -274,7 +268,6 @@ oo.enq.timeline.init = function( objects ){
 	// Brush on Move
 
 	function brushEnd() {
-
 		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
 		b = [ b[0].getTime(), b[1].getTime() ];
 		oo.filt.trigger( oo.filt.events.replace, { 'period': normBounds(b) } );
