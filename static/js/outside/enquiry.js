@@ -54,7 +54,7 @@ oo.enquiry.init = function(){ oo.log("[oo.enquiry.init]");
 			title_en:$("#id_add_enquiry_title_en").val(),
 			title_fr:$("#id_add_enquiry_title_fr").val(),
 			slug:$("#id_add_enquiry_slug").val(),
-			enquete: $("#id_add_enquiry_enquete").val()
+			enquete: $(this).attr("data-enquete-id")
 		});
 	});
 

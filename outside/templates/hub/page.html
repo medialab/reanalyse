@@ -1,11 +1,6 @@
 {% extends "hub/middle.html" %}
 {% load i18n %}
 {% load extras %}
-{% block page_header %}
-{{ block.super}}
-<div id="schema"></div>
-{% endblock %}
-
 	<!-- static url: {{ STATIC_URL }} -->
 
 {% block page_left %}
@@ -19,6 +14,7 @@
 				{{ p.date_last_modified|date:"d M." }}
 			</div>
 		</div>
+		
 		{% endcomment %}
 		<a id="{{ p.slug }}"></a>
 		<h2>{{ p.title }}</h2>

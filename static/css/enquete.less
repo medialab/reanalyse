@@ -16,6 +16,13 @@
 //    =============
 //
 
+.map {
+	border: solid 0;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
 #map {
 
 	width: @container-width;
@@ -71,56 +78,45 @@
 		-o-transition: @property @duration @ease;
 		transition: @property @duration @ease;
 
+		shape-rendering: crispEdges;
+
 		stroke-width: 0;
 		fill: @cyan;
+
+		cursor: pointer;
+
+		&.dot {
+			fill-opacity: @path_opacity;
+
+			&:hover {
+				fill-opacity: @path_opacity_hover;
+			}
+			&.active {
+			}
+			&.inactive {
+				fill: white;
+			}
+		}
+
+		&.background {
+			fill-opacity: .1;
+
+			&:hover {
+				fill-opacity: .4;
+			}
+		}
+
+		&.line {
+			fill-opacity: 1;
+		}
 	}
 	
-	rect.dot {
-		fill-opacity: @path_opacity;
-		cursor: pointer;
 
-		&:hover {
-			fill-opacity: @path_opacity_hover;
-		}
-		&.active {
-		}
-		&.inactive {
-			fill: white;
-		}
-	}
-
-	rect.background {
-		fill-opacity: .1;
-		cursor: pointer;
-
-		&:hover {
-			fill-opacity: .4;
-		}
-	}
-
-	.brush .extent {
-		stroke-width: 0px;
-		fill: @cyan;
-		fill-opacity: .2;
-		shape-rendering: crispEdges;
-	}
-
-	.axis path,
-	.axis line {
-	    fill: none;
-	    stroke: @cyan;
-	    shape-rendering: crispEdges;
-	}
-
-	.axis text {
-	    font-family: LatinModernSans10Regular, sans-serif;
-	    font-size: 11px;
-	}
-
+	
 	text {
 		fill: @cyan;
 		font-family: LatinModernSans10Regular, sans-serif;
-	    font-size: 32px;
+	    font-size: 14px;
 
 	    @property: all;
 		@duration: 0.5s;
@@ -130,6 +126,31 @@
 		-o-transition: @property @duration @ease;
 		transition: @property @duration @ease;
 	}
+
+
+
+	.brush .extent {
+		stroke-width: 0px;
+		fill: @cyan;
+		fill-opacity: .2;
+		shape-rendering: crispEdges;
+	}
+
+	.axis {
+
+		path, line {
+		    fill: none;
+		    stroke: @cyan;
+		    shape-rendering: crispEdges;
+		}
+
+		text {
+		    font-family: LatinModernSans10Regular, sans-serif;
+		    font-size: 11px;
+		}
+	}
+
+
 }
 
 #types, #categories, #phases {
@@ -148,6 +169,8 @@
 
 		fill: @cyan;
 		stroke-width: 0;
+
+		shape-rendering: crispEdges;
 
 		@property: all;
 		@duration: 0.5s;
@@ -186,35 +209,56 @@
 	
 }
 
-#documents {
-	margin: 30px 10px 0 -20px;
 
-	li {
-		white-space: nowrap;
-		width: 100%;
-		overflow: hidden;
-		height: @line_height;
-		line-height: @line_height;
-		text-overflow: ellipsis;
-		text-shadow: none;
+#right-sidebar {
+
+	#counter {
+		// position: absolute;
+		margin-top: 30px;
+		margin-left: 20px;
 		font-family: LatinModernSans10Regular, sans-serif;
-	    font-size: 12px;
+	    font-size: 24px;
 	    color: white;
+	    padding-bottom: 3px;
+	    width: 200px;
+	    border-bottom: solid 1px white;
 	}
 
-}
+	#documents {
+		
+		overflow: -moz-scrollbars-vertical; 
+		overflow-y: scroll;
+		height: @line_height * 20;
+		margin-left: 20px;
+		padding-bottom: 2px;
+	    width: 200px;
+	    border-bottom: solid 1px white;
 
-#doc_list {
-	overflow: -moz-scrollbars-vertical; 
-	overflow-y: scroll;
-	height: @line_height * 20;
-}
+		li {
+			white-space: nowrap;
+			width: 100%;
+			overflow: hidden;
+			height: @line_height;
+			line-height: @line_height;
+			text-overflow: ellipsis;
+			text-shadow: none;
+			font-family: LatinModernSans10Regular, sans-serif;
+		    font-size: 12px;
+		    color: white;
+		    margin-left: -20px;
+		}
+	}
 
-#doc_next {
+	#doc_list {
+	}
 
-}
+	#doc_next {
 
-#doc_prev {
+	}
+
+	#doc_prev {
+
+	}
 
 }
 

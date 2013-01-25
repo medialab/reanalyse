@@ -5,5 +5,5 @@ from django.utils.translation import ugettext as _
 class AddEnquiryForm(forms.Form):
 	title_fr = forms.CharField( label=_("french title"),required=True )
 	title_en = forms.CharField( label=_("english title"), required=True )
-	enquete = forms.IntegerField( label=_("enquete id"), required=True )
+	enquete = forms.IntegerField( label=_("enquete id"), required=True, widget=forms.HiddenInput )
 	slug = forms.SlugField( required=True )

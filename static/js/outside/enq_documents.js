@@ -8,37 +8,56 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
-	var docs = d3.select('#documents');
+	var	docs = d3.select('#documents ul'),
+		counter = d3.select('#counter p'),
+		meter = 0;
 
-	var items = docs.selectAll('li').each(function() {
+	var items = docs.selectAll('li').each(function(d, i) {
 		item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
 	}); // Copy new status to old status
 
-	for( var i in oo.filt.data ){
-		if ( oo.filt.data[ i ].filtered == true ) {
-			docs.select('li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'active');
+	for ( var i in oo.filt.data ) {
+		var item = docs.select('li[data-id="' + oo.filt.data[i].id + '"]');
+		if ( oo.filt.data[ i ].filtered ) {
+			item.attr('data-status', 'active');
+			meter++;
 		} else {
-			docs.select('li[data-id="' + oo.filt.data[i].id + '"]').attr('data-status', 'inactive');
+			item.attr('data-status', 'inactive');	
 		}
 	} // Set active
 
+
 	items.each(function() {
 
-		var item = d3.select(this);
+		var item = d3.select(this),
+			oldStatus = item.attr('data-status-old'),
+			newStatus = item.attr('data-status');
 
-		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
+		if ( oldStatus == 'active' && newStatus == 'inactive' ) {
 			item.transition()
 				.duration(1000)
 				.style('opacity', '0')
 				.style('height', '0px');
-		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
+		} else if ( oldStatus == 'inactive' && newStatus == 'active' ) {
 			item.transition()
 				.duration(1000)
 				.style('opacity', '1')
 				.style('height', '22px');
 		} 
 	})
+
+
+	counter
+		.transition()
+			.duration(500)
+			.style('opacity', '0')
+			.attr('y', 100)
+		.transition()
+			.text(meter)
+			.delay(500)
+			.duration(500)
+			.style('opacity', '1');
 	
 };
 
@@ -46,15 +65,18 @@ oo.enq.docs.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.docs.update );
 
-	var docs = d3.select('#documents');
+	var counter = d3.select('#counter p'),
+		docs = d3.select('#documents ul');
 
-	docs.selectAll("li")
+	var li = docs.selectAll("li")
 		.data(objects)
 		.enter().append("li")
 		.attr('class', 'active')
 		.attr('data-id', function(d) { return d.id; })
 		.attr('data-status', 'active')
-		.html(function(d) { return d.title; });
+		.html(function(d) { return d.title.split('_').join(' ').split('/').join(' '); });
 
+	counter.html(li[0].length);
+	
 };
 

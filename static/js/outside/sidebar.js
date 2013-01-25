@@ -8,6 +8,11 @@ oo.sidebar.init = function(){
 	$("#expand-menu").click( oo.sidebar.expand );
 
 	$("#right-sidebar").height($(".page").first().height());
+	$("#navbar").on('click','li',function(){
+		$("#navbar li").removeClass('active')
+		$(this).addClass('active');
+	});
+
 }
 
 oo.sidebar.collapse = function(){

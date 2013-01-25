@@ -7,6 +7,8 @@
 	
 {% endblock %}
 
+
+
 {% block head %}
 	<!-- specific script / stylesheet -->
 	<script src='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.js'></script>
@@ -22,12 +24,14 @@
 	<script src="{{ STATIC_URL }}js/outside/enq_timeline.js" type="text/javascript"></script>
 	<script src="{{ STATIC_URL }}js/outside/enq_types.js" type="text/javascript"></script>
 	<script src="{{ STATIC_URL }}js/outside/enq_documents.js" type="text/javascript"></script>
+	<script src="{{ STATIC_URL }}js/outside/enquiry.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block document_ready %}
 	{{ block.super }}
 	oo.filt.init();
 	oo.enq.init();
+	oo.enquiry.init();
 {% endblock %}
 
 
@@ -44,6 +48,27 @@
 	
 {% endblock %}
 
+
+{% block navbar %}	
+
+						<div id="navbar" style="position:static;">
+
+							<ul class="nav navbar" style="border-bottom: 1px solid #3d3d3d">
+								{% if enquiry %} 
+								<li><a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "autour de cette enquête" %} : <h3>&laquo;	 {{  enquiry.title }} &raquo;	</h3></a></li>
+							{% else %}
+								{%if edit_mode %}
+		<li class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
+				</li>
+
+								{% endif %}
+							{% endif %}
+								
+								
+							</ul>
+						</div>
+{% endblock %}
+
 {% block sidebar_add_section %}
 	{% if not enquete.enquiry and edit_mode %}
 		<div class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
@@ -58,29 +83,7 @@
 
 {% block page_header %}
 	{{ block.super }}
-	<div>
-		
-		<!-- div id="schema"></div -->
-		<div class="grid_6 alpha">
-		<p class="classification">
-			{% for topicclassification  in enquete.meta.values.general.topicclassification.value %}
-				{{ topicclassification }}
-			{% endfor %}
-		</p>
-
-		<h2>{{ enquete.name }}</h2>
-		</div>
-		<div class="grid_6 omega">
-			<h3 style="margin-top:72px;">
-					<!-- Le projet, dans son ensemble. -->
-			</h3>
-
-			</div>
-		
-		<!--{{ user.username }}-->
-		<div class="clear"></div>
-		
-	</div>
+	
 {% endblock %}
 
 {% block page_left %}
@@ -93,9 +96,10 @@
 		
 		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
 		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
-
+		<h3>{{ enquete.name }}</h3>
+		<p class="author" >{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
 		<div class="map content">
-			<div id="types"></div>
+			<!-- <div id="types"></div> -->
 			<div id="categories"></div>
 			<div id="phases"></div>
 			<div id="map"></div>
@@ -125,9 +129,12 @@
 		</div>
 	{% endif %}
 
-	<div id="doc_list">
-					<ul class="content" id="documents"></ul>
-				</div>
+	<div id="counter">
+		<p></p>
+	</div>
+	<div id="documents">
+		<ul></ul>
+	</div>
 
 	
 	<div class="clear"></div>
@@ -148,13 +155,23 @@
 		<div class="modal-body">
 			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
 
-			
 			{{ add_enquiry_form.as_p }}
 		</div>
 		<div class="modal-footer">
 		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" id="add-page" value="{% trans "add page" %}"/>
+		<input type="submit" href="#" id="add-enquiry" data-enquete-id="{{ enquete.id }}" value="{% trans "add enquiry" %}"/>
 		</div>
 	</div>
 	{% endif %}
+{% endblock %}
+
+
+{% block api_urls %}
+	
+	
+	{{ block.super }}
+	
+	oo.urls.get_enquete_data = "{% url outside_enquete_data enquete.id %}";
+
+
 {% endblock %}

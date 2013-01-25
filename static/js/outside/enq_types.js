@@ -225,7 +225,7 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 
 oo.enq.types.init = function(objects) {
-	var categor1 = new oo.Gummy(objects, '#types', function( d ){ return d.type }, 'type');
+	// var categor1 = new oo.Gummy(objects, '#types', function( d ){ return d.type }, 'type');
 	var categor2 = new oo.Gummy(objects, '#categories', function( d ){ return d.categories[0].category }, 'category');
 	var categor2 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
 }

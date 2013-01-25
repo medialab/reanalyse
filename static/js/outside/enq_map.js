@@ -9,35 +9,50 @@ oo.enq.map.update = function( event, filters ){
 
 	oo.log("[oo.enq.map.update]");
 
-	var items = d3.selectAll('#map circle').each(function() {
+	var map = d3.select('#map');
+
+	var items = map.selectAll('circle').each(function() {
 		var item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
 	}); // Copy new status to old status
 
 	items.attr('data-status', 'inactive'); // Reset
 	
-	for( var i in oo.filt.data ){
-		if ( oo.filt.data[ i ].filtered == true ) {
-			d3.select('#map circle[data-id="' + oo.filt.data[ i ].id + '"]').attr('data-status', 'active');
-		}
+	for ( var i in oo.filt.data ) {
+		oo.filt.data[ i ].filtered &&
+			map.select('circle[data-id="' + oo.filt.data[ i ].id + '"]')
+				.attr('data-status', 'active');
 	} // Set active
+
+	var zoom = oo.enq.map.map.coordinate.zoom,
+		inactiveSize = (zoom + 1) * 3 * .2,
+		activeSize = (zoom + 1) * 3;
 
 	items.each(function() {
 
-		var item = d3.select(this);
+		var item = d3.select(this),
+			oldStatus = item.attr('data-status-old'),
+			newStatus = item.attr('data-status');
 
-		if ( (item.attr('data-status-old') == 'active') && (item.attr('data-status') == 'inactive') ) {
+		if ( ( oldStatus == 'active' ) && ( newStatus == 'inactive' ) ) {
 			item.transition()
 				.duration(1000)
-				.attr('r', circleSize.small)
-				.style('stroke-width', '0');
-		} else if ( (item.attr('data-status-old') == 'inactive') && (item.attr('data-status') == 'active') ) {
+				.attr('r', inactiveSize);
+		} else if ( ( oldStatus == 'inactive') && ( newStatus == 'active') ) {
 			item.transition()
 				.duration(1500)
 				.ease('elastic', 7, .8)
-				.attr('r', circleSize.medium)
-				.style('stroke-width', '1.2px');
-		} 
+				.attr('r', activeSize);
+		} else if (item.attr('data-status') == 'inactive') {
+			item.transition()
+				.duration(1000)
+				.attr('r', inactiveSize);
+		} else {
+			item.transition()
+				.duration(1500)
+				.attr('r', activeSize);
+		}
+
 	})
 	
 };
@@ -81,7 +96,7 @@ oo.enq.map.init = function ( objects ){
 
 oo.enq.map.d3layer = function() {
 
-    var f = {}, bounds, feature, collection,
+    var f = {}, feature, collection,
       div = d3.select(document.body).append("div").attr('class', 'd3_layer'),
       svg = div.append('svg'),
         g = svg.append("g");
@@ -94,14 +109,18 @@ oo.enq.map.d3layer = function() {
     };
 
     var first = true;
+
     f.draw = function() {
+
+    	var zoom = oo.enq.map.map.coordinate.zoom;
         
-        if (first) circle.attr('r', circleSize.medium);
+        first && circle.attr('r', (zoom + 1) * 3)
+        	.style('stroke-width', (zoom + .4) * 3);
 
       	first && svg.attr("width", f.map.dimensions.x)
-          .attr("height", f.map.dimensions.y*2)
-          .style("margin-left", "0px")
-          .style("margin-top", "0px") && (first = false);
+        	.attr("height", f.map.dimensions.y * 2)
+			.style("margin-left", "0px")
+			.style("margin-top", "0px") && (first = false);
 
       	circle.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
             .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
@@ -118,17 +137,21 @@ oo.enq.map.d3layer = function() {
             .data(collection.features)
             .enter().append("circle")
             .attr('data-status', 'active')
-            .attr('data-id', function(d) { return d.id });
-        
-        circle.on("click", function(d,i) {
-        	f.map.center({
-        		'lat' : d3.select(this).attr('lat'),
-        		'lon' : d3.select(this).attr('lon')
-        	}, true);
-			setTimeout( function() {
-        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
-        	}, 1000 );
-        });
+            .attr('data-id', function(d) { return d.id })
+
+            .on("click", function(d, i) {
+            	
+            	var item = d3.select(this);
+	        	
+	        	f.map.center({
+	        		'lat' : item.attr('lat'),
+	        		'lon' : item.attr('lon')
+	        	}, true);
+
+				setTimeout( function() {
+	        		oo.filt.trigger( oo.filt.events.replace, {'extent': f.map.extent()} );
+	        	}, 1000 );
+	        });
 
 
         return f;

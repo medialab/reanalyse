@@ -85,7 +85,21 @@
 
 			
 			{% block page_header %}
+			
 			<div id="introduction">
+				{% block schema %}
+				<div id="schema">
+
+					</div>
+				<div id="schema-wrapper">
+					
+					{% for s in sites_available %}
+					<a href="{{ s.url }}" data-content="{{ s.long_content }}" title="{{ s.title }}" class="link {{ s.name }} {% if s.name in tags %}selected{% endif %}">
+						
+					</a>
+					{% endfor %}
+				</div>
+				{% endblock %}
 				<ul id="pages">
 					{% for p in pages %}
 					<li{% if p.slug in tags %} class="selected"{% endif %}>
@@ -104,6 +118,8 @@
 				</ul>
 
 			</div>	
+			
+				
 			{% endblock %}
 		
 
@@ -220,7 +236,7 @@
 	</footer>
 
 	<!-- the login modal -->
-
+	{% block modals %}
 	<div class="modal fade hide" id="login-modal" style="display:none">
 		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
 			<div class="modal-header">
@@ -239,7 +255,7 @@
 	</div>
 
 	
-	{% if edit_mode %}
+		{% if edit_mode %}
 
 	<!-- add page! -->
 	<div class="modal fade hide" id="add-page-modal" style="display:none">
@@ -330,6 +346,7 @@
 
 
 	{% endif %}
+	{% endblock %}
 {% endblock %}
 
 {% block api_urls %}
