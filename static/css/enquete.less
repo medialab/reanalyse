@@ -197,20 +197,26 @@
 #right-sidebar {
 
 	#counter {
-		position: absolute;
-		margin-top: -@line_height * 20 + 30;
+		// position: absolute;
+		margin-top: 30px;
 		margin-left: 20px;
 		font-family: LatinModernSans10Regular, sans-serif;
 	    font-size: 24px;
 	    color: white;
-	    padding-bottom: 2px;
+	    padding-bottom: 3px;
 	    width: 200px;
 	    border-bottom: solid 1px white;
 	}
 
 	#documents {
-		padding-top: 60px;
-		margin: 0 10px 0 -20px;
+		
+		overflow: -moz-scrollbars-vertical; 
+		overflow-y: scroll;
+		height: @line_height * 20;
+		margin-left: 20px;
+		padding-bottom: 2px;
+	    width: 200px;
+	    border-bottom: solid 1px white;
 
 		li {
 			white-space: nowrap;
@@ -223,17 +229,11 @@
 			font-family: LatinModernSans10Regular, sans-serif;
 		    font-size: 12px;
 		    color: white;
+		    margin-left: -20px;
 		}
 	}
 
 	#doc_list {
-		overflow: -moz-scrollbars-vertical; 
-		overflow-y: scroll;
-		height: @line_height * 20;
-		margin-left: 20px;
-		padding-bottom: 2px;
-	    width: 200px;
-	    border-bottom: solid 1px white;
 	}
 
 	#doc_next {

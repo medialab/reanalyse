@@ -103,9 +103,6 @@
 						<a href="{% url outside_contacts %}">{% trans "contacts"%}</a>
 					</li>
 
-					<li{% if 'enquetes' in tags %} class="selected"{% endif %}>
-						<a href="{% url outside_enquetes %}">{% trans "enquetes"%}</a>
-					</li>
 				</ul>
 
 			</div>	
@@ -113,6 +110,7 @@
 		
 
 			<div class="page" data-page-slug="{{ page.slug }}">
+				
 				
 				<sidebar class="navbar">
 					<a href="{% url outside_index %}">
@@ -141,6 +139,7 @@
 				{{ warnings }}
 				{{ available_languages }}
 				
+
 				{% block page %}
 
 					<div class="grid_9 alpha omega">
@@ -156,6 +155,17 @@
 
 
 					<div id="right-sidebar" >
+						{% block navbar %}	
+							<ul class="nav">
+								{% for pin in pins %}
+								<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+								{% endfor %}
+								<li><a href="#{{ pin.slug }}">ye</a></li>
+							</ul>
+						{% endblock %}
+
+
+
 						{% block page_right %}	
 							
 							{% if edit_mode %}

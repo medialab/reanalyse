@@ -8,20 +8,20 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
-	var docs = d3.select('#documents');
+	var	docs = d3.select('#documents ul'),
+		counter = d3.select('#counter p'),
+		meter = 0;
 
 	var items = docs.selectAll('li').each(function(d, i) {
 		item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
 	}); // Copy new status to old status
 
-	var counter = 0;
-
 	for ( var i in oo.filt.data ) {
 		var item = docs.select('li[data-id="' + oo.filt.data[i].id + '"]');
 		if ( oo.filt.data[ i ].filtered ) {
 			item.attr('data-status', 'active');
-			counter++;
+			meter++;
 		} else {
 			item.attr('data-status', 'inactive');	
 		}
@@ -47,7 +47,16 @@ oo.enq.docs.update = function( event, filters ){
 		} 
 	})
 
-	d3.select('#counter').html(counter);
+
+	counter
+		.transition()
+			.duration(500)
+			.style('opacity', '0')
+		.transition()
+			.text(meter)
+			.delay(500)
+			.duration(500)
+			.style('opacity', '1');
 	
 };
 
@@ -55,8 +64,8 @@ oo.enq.docs.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.docs.update );
 
-	var container = d3.select('#right-sidebar'),
-		docs = container.select('#documents');
+	var counter = d3.select('#counter p'),
+		docs = d3.select('#documents ul');
 
 	var li = docs.selectAll("li")
 		.data(objects)
@@ -66,7 +75,7 @@ oo.enq.docs.init = function ( objects ){
 		.attr('data-status', 'active')
 		.html(function(d) { return d.title.split('_').join(' ').split('/').join(' '); });
 
-	var counter = container.append('div').attr('id', 'counter').html(li[0].length);
+	counter.html(li[0].length);
 	
 };
 
