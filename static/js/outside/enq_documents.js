@@ -52,6 +52,7 @@ oo.enq.docs.update = function( event, filters ){
 		.transition()
 			.duration(500)
 			.style('opacity', '0')
+			.attr('y', 100)
 		.transition()
 			.text(meter)
 			.delay(500)

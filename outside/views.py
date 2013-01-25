@@ -62,7 +62,12 @@ def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 
-	data['has_enquiry'] = data['enquete'].enquiry.count()
+	try:
+		data['enquiry'] = Enquiry.objects.get( enquete=enquete_id, language=data['language'] )
+	except Enquiry.DoesNotExist,e:
+		pass
+		# data['enquiry'] = None
+
 
 	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
@@ -70,11 +75,13 @@ def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
 
-	return render_to_response('outside/enquiry.html', RequestContext(request, data ) )
+	return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 
 def enquetes( request ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquetes'] = Enquete.objects.all() 
+	data['page'] = get_object_or_404(Page, slug="enquetes", language=data['language'] )
+	data['pins'] = Pin.objects.filter( page__slug="enquetes", language=data['language'], parent=None)
 
 	return render_to_response("enquete/enquetes.html", RequestContext(request, data ) )
 

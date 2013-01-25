@@ -111,7 +111,7 @@
 
 			<div class="page" data-page-slug="{{ page.slug }}">
 				
-				
+				{% comment %}
 				<sidebar class="navbar">
 					<a href="{% url outside_index %}">
 
@@ -138,7 +138,7 @@
 				</sidebar>
 				{{ warnings }}
 				{{ available_languages }}
-				
+				{% endcomment %}
 
 				{% block page %}
 
@@ -156,18 +156,7 @@
 
 					<div id="right-sidebar" >
 						{% block navbar %}	
-						<div id="navbar">
-
 						
-							<ul class="nav">
-								{% for pin in pins %}
-								<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
-								{% endfor %}
-								<li><a href="#{{ pin.slug }}">ye</a></li>
-							</ul>
-					
-
-						</div>
 						{% endblock %}
 
 						{% block page_right %}	
@@ -238,118 +227,12 @@
 		
 	</footer>
 
-	<!-- the login modal -->
-
-	<div class="modal fade hide" id="login-modal" style="display:none">
-		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
-			<div class="modal-header">
-				<h3>{% trans "login" %}</h3>
-			</div>
-			<div class="modal-body">
-				<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
-				{{ request.get_full_path }}
-				{{ login_form.as_p }}
-			</div>
-			<div class="modal-footer">
-				<input type="button" class="bad" value="{% trans "discard" %}" data-dismiss="modal"/>
-				<input type="submit" value="{% trans "login"%}"/>
-			</div>
-		</form>
-	</div>
-
-	
-	{% if edit_mode %}
-
-	<!-- add page! -->
-	<div class="modal fade hide" id="add-page-modal" style="display:none">
-		<form method="POST">{% csrf_token %}
-
-		<div class="modal-header">
-		<!-- button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button -->
-		<h3>{% trans "add page" %}</h3>
-		</div>
-		<div class="modal-body">
-			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
-
-			
-			{{ add_page_form.as_p }}
-		</div>
-		<div class="modal-footer">
-		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" id="add-page" value="{% trans "add page" %}"/>
-		</div>
-	</div>
-
-	<!-- the add section/pin modal -->
-	<div class="modal fade hide" id="add-pin-modal" style="display:none">
-		<form action="" method="POST">{% csrf_token %}
-
-		<div class="modal-header">
-			<h3>{% if page %} {% trans "add section into" %} &rarr; {{ page.title }} {% else %} {% trans "add section"%} {% endif %} <span id="parent-pin-slug" data-parent-pin="0"></span></h3>
-		</div>
-		<div class="modal-body">
-			{% trans "add section rules" %}
-			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
-			{{ add_pin_form.as_p }}
-		</div>
-		<div class="modal-footer">
-		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" id="add-pin" value="{% trans "add section" %}"/>
-		
-		</div>
-	</form>
-	</div>
-
-	<!-- the edit section modal -->
-	<div class="modal fade hide" id="edit-pin-modal" style="display:none; width:640px; height:540px; overflow:hidden;margin-left: -320px">
-		<form action="" method="POST">{% csrf_token %}
-
-		<div class="modal-header">
-			<h3>{% trans "edit section" %}</h3>
-		</div>
-		<div class="modal-body" style="max-height:400px; overflow:hidden">
-			{{ edit_pin_form.title }}
-			<p>
-				{{ edit_pin_form.abstract.label_tag }}
-				<textarea id="id_edit_pin_abstract" rows="15" style="height:36px" cols="40" name="abstract"></textarea>
-			</p>
-
-			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
-			<div id="wysihtml5-toolbar" style="display: none;">
-			<a data-wysihtml5-command="bold">bold</a>
-			<a data-wysihtml5-command="italic">italic</a>
-
-			<!-- Some wysihtml5 commands require extra parameters -->
-			<a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="red">red</a>
-			<a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="green">green</a>
-			<a data-wysihtml5-command="foreColor" data-wysihtml5-command-value="blue">blue</a>
-
-			<!-- Some wysihtml5 commands like 'createLink' require extra paramaters specified by the user (eg. href) -->
-			<a data-wysihtml5-command="createLink">insert link</a>
-			<div data-wysihtml5-dialog="createLink" style="display: none;">
-			<label>
-			Link:
-			<input data-wysihtml5-dialog-field="href" value="http://" class="text">
-			</label>
-			<a data-wysihtml5-dialog-action="save">OK</a> <a data-wysihtml5-dialog-action="cancel">Cancel</a>
-			</div>
-			</div>
-
-			<textarea id="id_edit_pin_content" style="height:306px" cols="40" name="content"></textarea>
-		</div>
-		<div class="modal-footer">
-		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" id="edit-pin" data-pin-id="0" value="{% trans "edit section" %}"/>
-		
-		</div>
-	</form>
-	</div>
-
-	<!-- the edit section modal -->
-
-
-	{% endif %}
+	{% block modals %}
+		{{ block.super }}
+	{% endblock %}
 {% endblock %}
+
+
 
 {% block api_urls %}
 	

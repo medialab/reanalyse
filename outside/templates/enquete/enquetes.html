@@ -29,15 +29,7 @@
 {% endblock %}
 
 
-{% block page_right %}
-	<ul class="menu">
-		<li>content ineer</li>
-		
-		<li>content ineer</li>
 
-	</ul>
-	{% trans "enquetes" %}
-{% endblock %}
 
 
 {% block page_title %}
@@ -45,8 +37,11 @@
 {% endblock %}
 
 {% block page_left %}
+
+<div class="edit-mode add-pin" data-page-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add pin" %} ]</div>
+
 <a id="enquetes"></a>
-	<section class="alpha expand items-container" style="padding-right:2px">
+	<section id="list-of-enquetes" class="alpha expand items-container" style="padding-right:2px">
 	
 	{% for s in enquetes %}
 	
@@ -114,37 +109,64 @@
 		<div class="clear"></div>
 	</section>
 
-	<!-- automatic pages -->
-	{% for section in page.accolites.all %}
-	{% ifequal section.language language %}
-	<a id="{{ section.slug }}"></a>
-	<section {% if forloop.first %}class="alpha"{% endif %}>
+	{% for p in pins %}
+	<div class="section expand">
+		{% comment %}
+		<div class="marker-wrapper">
+			<div class="marker" >
+				{{ p.date_last_modified|date:"d M." }}
+			</div>
+		</div>
+		{% endcomment %}
+		<a id="{{ p.slug }}"></a>
+		<h2>{{ p.title }}</h2>
+		{% if p.local %}
+			<a href="{% url outside_download p.slug %}">{% trans "download as" %} {{ p.mimetype }}</a>
+		{% endif %}
 
-		<h2>{{ section.title }}
-			{% if edit_mode %} 
-				<a  class="edit-mode" href="{% url admin:glue_bean_change section.id %}">{% trans "edit section" %}</a>
-				<a class="edit-mode delete" href="{% url admin:glue_bean_delete section.id %}">ss{% trans "delete section" %}</a>
-			{% endif %}
-		</h2>
-		
+		<div class="author"><a href="">{% for u in p.users.all %}{{ u.username }}{% endfor %}</a></div>
+
+		{% if edit_mode %}
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit content" %} id:{{ p.id }} ]</div>
+			<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit slug" %} #{{ p.slug }} ]</div>
+			<div class="edit-mode delete-pin" href="#" data-pin-id="{{ p.id }}" role="button">[ {% trans "delete slug" %} #{{ p.slug }} ]</div>
+
+			{% ifequal p.status 'D' %}
+				<div class="edit-mode publish-pin" href="#" new-status="P" data-pin-id="{{ p.id }}" role="button">[ {% trans "publish" %} ]</div>
+			{% else %}
+				<div class="edit-mode publish-pin" href="#" new-status="D" data-pin-id="{{ p.id }}" role="button">[ {% trans "draftify" %} ]</div>
+			{% endifequal %}
+
+		{% endif %}
+
 		<div class="abstract">
-			{{ section.abstract|safe }}
+			{{ p.abstract|safe }}
 		</div>
 
-		<p>
-		{{ section.content|safe }}
-		</p>
-		
-		{% for paragraph in section.accolites.all %}
-		<div class="paragraph">
-			<a id="{{ paragraph.slug }} ">&nbsp;</a>
-			<h3>{{ paragraph.title|safe }}</h3>
-			<blockquote>{{ paragraph.abstract|safe }}</blockquote>
-			<p>{{ paragraph.content|safe }}</p>
+		<div class="content">
+			{{ p.content|safe }}
+			
 		</div>
-		{% endfor %}
-	</section>
-	{% endifequal %}
+		<div class="clear"></div>
+		
+	</div>
+	
 	{% endfor %}
 	
 {% endblock %}	
+
+
+
+
+
+{% block navbar %}	
+						<div id="navbar">
+							<ul class="nav navbar">
+								<li class="active"><a href="#list-of-enquetes">{% trans "list of studies"%}</a></li>
+								{% for pin in pins %}
+								<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+								{% endfor %}
+								
+							</ul>
+						</div>
+{% endblock %}
