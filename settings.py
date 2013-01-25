@@ -29,9 +29,9 @@ REANALYSEUPLOADPATH 		= REANALYSEPROJECTPATH + 'upload/'					# needs to be acces
 REANALYSEDOWNLOADPATH 		= REANALYSEPROJECTPATH + 'download/'				# needs to be accessible by www-data
 REANALYSESITECONTENTPATH 	= REANALYSEPROJECTPATH + 'templates/content/'
 
-BASE_URL = '/reanalyse/'
+BASE_URL = '/app/'
 LOGIN_REDIRECT_URL = BASE_URL
-LOGIN_URL = '/reanalyse/?p=access&q=login'
+LOGIN_URL = '/app/?p=access&q=login'
 
 ######## SOLR
 SOLR_JARFOLDER = REANALYSEPROJECTPATH + "solr/"
@@ -39,11 +39,11 @@ SOLR_JARNAME = "startreanalysesolr.jar"
 # SOLR_PORT = was 8983 by default, defined in solr/et/jetty.xml
 # from now on, we launch solr (in views.py) with -Djetty.port=SOLR_PORT to allow custom PORT
 # (avoids conflicts between multiple reanalyse instances)
-SOLR_PORT = 8985
+SOLR_PORT = 8986
 
 ######## HAYSTACK
 # Required and specific to where you place the file.
-HAYSTACK_SITECONF = 'reanalyse.search_sites'
+HAYSTACK_SITECONF = 'app.search_sites'
 
 # Optional Haystack settings.
 # See `docs/settings.rst` for a complete list.
@@ -137,7 +137,7 @@ MEDIA_ROOT = REANALYSEPROJECTPATH +'media/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = '/reanalyse/media/'
+MEDIA_URL = '/app/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -147,7 +147,7 @@ STATIC_ROOT = REANALYSEPROJECTPATH +'static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/reanalyse/static/'
+STATIC_URL = '/app/static/'
 
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 #ENQUETE_FILES = os.path.join(PROJECT_PATH, 'files/')
@@ -155,7 +155,7 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/reanalyse/media/admin/'
+ADMIN_MEDIA_PREFIX = '/app/media/admin/'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
@@ -190,7 +190,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'reanalyse.urls'
+ROOT_URLCONF = 'app.urls'
 
 TEMPLATE_DIRS = (
 	os.path.join(REANALYSEPROJECTPATH, 'templates'),
