@@ -83,9 +83,9 @@ oo.enq.timeline.update = function( event, filters ){
 		}
 	}
 
-	// Animate size of objects
+	// Animate objects
 
-	oo.enq.timeline.rectangles.selectAll(".dot")
+	oo.enq.timeline.rectangles.dots
 		.data(density)
 		.transition()
 		.duration(1000)
@@ -93,6 +93,22 @@ oo.enq.timeline.update = function( event, filters ){
 		.attr("y", function(d) { return - scaleY(d.freq) })
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; });
+
+	oo.enq.timeline.rectangles.lines
+		.data(density)
+		.transition()
+		.duration(1000)
+		.attr("y", function(d) { return - scaleY(d.freq) - 3; })
+		.attr("data-id", function(d) { return d.id; });
+
+
+	oo.enq.timeline.rectangles.texts
+		.data(density)
+		.text( function (d) { return d.freq } )
+		.attr("data-id", function(d) { return d.id; })
+		.transition()
+		.duration(1000)
+		.attr("y", function(d) { return - scaleY(d.freq) - 5; });
 
 };
 
@@ -164,7 +180,7 @@ oo.enq.timeline.init = function( objects ){
 
 	var svg = d3.select('#timeline').append('svg');
 
-	oo.enq.timeline.background = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")");
+	// oo.enq.timeline.background = svg.append('g').attr("transform", "translate(0, " + size.chartHeight + ")");
 	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")");
 	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")").attr('class', 'axis');
 	oo.enq.timeline.brush      = svg.append('g').attr("transform", "translate(50, " + size.height + ")");
@@ -202,22 +218,7 @@ oo.enq.timeline.init = function( objects ){
     	}, 1000 );
 	}
 
-	var onMouseOver = function(d, i, obj) {
-		var d3_this = d3.select(obj),
-			quantity = d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('data-id').split(",");
-		d3.select(oo.enq.timeline.rectangles.text[0][i])
-			.text((quantity == "") ? 0 : quantity.length)
-			.style('fill-opacity', 1)
-			.attr('x', d3_this.attr('x'))
-			.attr('y', - d3.select(oo.enq.timeline.rectangles.dots[0][ i ]).attr('height') - 2);
-	}
-
-	var onMouseOut = function(d, i) {
-		d3.select(oo.enq.timeline.rectangles.text[0][i])
-			.style('fill-opacity', 0);
-	}
-
-	oo.enq.timeline.rectangles.selectAll(".background")
+	oo.enq.timeline.rectangles.backgrounds = oo.enq.timeline.rectangles.selectAll(".background")
 		.data(density)
 		.enter().append('rect')
 		.attr('class', 'background')
@@ -227,8 +228,6 @@ oo.enq.timeline.init = function( objects ){
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; })
 		.on("click", function() { onClick(this); })
-		.on('mouseover', function(d, i) { onMouseOver(d, i, this); })
-		.on('mouseout', function(d, i) { onMouseOut(d, i); });
 
 	oo.enq.timeline.rectangles.dots = oo.enq.timeline.rectangles.selectAll(".dot")
 		.data(density)
@@ -240,13 +239,26 @@ oo.enq.timeline.init = function( objects ){
 		.attr("height", function(d) { return scaleY(d.freq) })
 		.attr("data-id", function(d) { return d.id; })
 		.on("click", function() { onClick(this); })
-		.on('mouseover', function(d, i) { onMouseOver(d, i, this); })
-		.on('mouseout', function(d, i) { onMouseOut(d, i); });
 
-	oo.enq.timeline.rectangles.text = oo.enq.timeline.rectangles.selectAll("text")
+	oo.enq.timeline.rectangles.texts = oo.enq.timeline.rectangles.selectAll("text")
 		.data(density)
 		.enter().append('text')
-		.style('fill-opacity', 0);
+		.text( function (d) { return d.freq } )
+		.attr("x", function(d) { return scaleX(d.time) - rectWidth * .5 + 2; })
+		.attr("y", function(d) { return - scaleY(d.freq) - 5})
+		.on("click", function() { onClick(this); });
+
+	oo.enq.timeline.rectangles.lines = oo.enq.timeline.rectangles.selectAll(".line")
+		.data(density)
+		.enter().append('rect')
+		.attr('class', 'line')
+		.attr("x", function(d) { return scaleX(d.time) - rectWidth * .5 ; })
+		.attr("y", function(d) { return - scaleY(d.freq) - 3})
+		.attr("width", rectWidth)
+		.attr("height", '1')
+		.on("click", function() { onClick(this); });
+
+
 
 
 
@@ -263,9 +275,6 @@ oo.enq.timeline.init = function( objects ){
 		.attr("height", size.brushHeight );
 
 	d3.select('rect.extent').attr("class", "extent transition");
-
-
-	// Brush on Move
 
 	function brushEnd() {
 		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
