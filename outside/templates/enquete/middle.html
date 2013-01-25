@@ -156,15 +156,19 @@
 
 					<div id="right-sidebar" >
 						{% block navbar %}	
+						<div id="navbar">
+
+						
 							<ul class="nav">
 								{% for pin in pins %}
 								<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
 								{% endfor %}
 								<li><a href="#{{ pin.slug }}">ye</a></li>
 							</ul>
+					
+
+						</div>
 						{% endblock %}
-
-
 
 						{% block page_right %}	
 							

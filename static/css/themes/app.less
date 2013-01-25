@@ -1920,13 +1920,16 @@ p.invalid{
 #introduction{
 	padding-top: 24px;
 }
+
 #logo{
 	z-index:10;
 	height:94px;
 }
+
 #schema{
 	z-index:1;	
 }
+
 #pages{
 	padding: 0 @grid-padding * 2/3 0;
 	li:last-child{
@@ -1938,4 +1941,18 @@ p.invalid{
 		border-left: 0px solid transparent;
 	}
 
+}
+
+#right-sidebar #navbar{
+	position:fixed;
+	width:236px;
+	background: @page-color;
+	.box-shadow( 0px 0px 1px fade( black, 20%) );
+	border-left: 1px solid darken( @page-color, 12%);
+	border-right: 1px solid darken( @page-color, 14%);
+	
+	ul.nav{
+		position:absolute;
+		background: @base-color;
+	}
 }
