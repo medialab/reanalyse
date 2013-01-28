@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# the directory name where you installed the django project
+ROOT_DIRECTORY_NAME='reanalyse' # 'reanalyse' is default when doing a default clone
+
 REANALYSEURL = 'your app url'
 REANALYSEPROJECTPATH = 'full path to your app'
 REANALYSEESE_FILES = 'full path to ESE files'
