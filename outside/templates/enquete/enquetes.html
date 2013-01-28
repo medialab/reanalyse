@@ -36,12 +36,12 @@
 	{% trans "enquetes" %}
 {% endblock %}
 
-{% block page_left %}
+{% block page %}
 
-<div class="edit-mode add-pin" data-page-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add pin" %} ]</div>
+
 
 <a id="enquetes"></a>
-	<section id="list-of-enquetes" class="alpha expand items-container" style="padding-right:2px">
+	<section id="list-of-enquetes" class="alpha expand items-container" style="width:auto; padding:36px">
 	
 	{% for s in enquetes %}
 	

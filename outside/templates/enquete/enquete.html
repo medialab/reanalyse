@@ -89,7 +89,7 @@
 {% block page_left %}
 	<a id="visualization"></a>
 	
-	<section class="alpha" style="padding-left: 0px">
+	<section class="alpha wide">
 		
 		
 		
@@ -98,7 +98,7 @@
 		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
 		<h3>{{ enquete.name }}</h3>
 		<p class="author" >{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
-		<div class="map content">
+		<div class="map content" style="margin-left:0px">
 			<!-- <div id="types"></div> -->
 			<div id="categories"></div>
 			<div id="phases"></div>

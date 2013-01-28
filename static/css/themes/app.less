@@ -1771,7 +1771,7 @@ p.invalid{
 	line-height:14px*1.414;
 
 	&.big{
-		width:280px;
+		width:272px;
 	
 	}
 	.title, .author{
@@ -1951,7 +1951,7 @@ p.invalid{
 
 #right-sidebar #navbar{
 
-	position:fixed;
+	// position:fixed;
 	width:256px;
 	margin-left: -4px;
 	// .box-shadow( 0px 0px 1px fade( black, 20%) );
@@ -1996,5 +1996,44 @@ p.invalid{
 		a, a:visited{
 			color: #d4d1cd;
 		}
+	}
+}
+
+
+section, .section{
+	&.wide{
+		padding:0px;
+		margin:0px;
+		padding-top: @grid-padding;
+		> h3, > .content, >.abstract, >.author{
+			padding: 0;
+			margin-left:@grid-padding;
+			margin-right: @grid-padding;
+
+		}
+		>h3{
+			margin-bottom: @grid-padding / 2;
+		}
+		>.author{
+			.serif-italic(18px);
+			padding-bottom: @grid-padding;
+		}
+	}
+
+
+}
+
+.pin-box{
+	border-top: 1px solid darken(@page-color, 14%);
+}
+.chapter{
+	background: darken(@page-color, 5%);
+	border-top: 1px solid @page-color;//: darken(@page-color, 4%);
+	border-bottom: 1px solid darken(@page-color, 14%);
+	padding-left: @grid-padding * 2;
+
+	> h2 {
+		.serif(18px);
+		color: #383838;
 	}
 }

@@ -2,7 +2,7 @@
 #   Import script for .csv files.
 #	Note: manifest a strong printaholism.
 #
-import sys, os, csv
+import sys, os, csv, re
 from optparse import OptionParser
 
 
@@ -41,12 +41,11 @@ def update( textes, enquete, csvdict ):
 			print "        keys: %s" % row.keys()
 			# normally, the second meta_documents csv file line is a field description header.
 			continue
-		if 
-		print
 		print "        %s." % counter
 		try:
+			texte_url = row['*file']
 			texte_name = row['*name']
-			locationgeo = row['*locationgeo']
+			locationgeo = re.sub( r'[^0-9\.,]', '', row['*locationgeo'])
 			researcher = row['*researcher']
 
 		except KeyError, e:
@@ -54,15 +53,32 @@ def update( textes, enquete, csvdict ):
 			break
 
 		# print row['*name']doc_name = 			row['*name']
-
+		
 		try:
-			texte = Texte.objects.get( enquete=enquete, name=row['*name'] )
+			texte = Texte.objects.get( enquete=enquete, name=row['*name'], locationpath__regex=( ".?%s" % os.path.basename( texte_url ) ) )
+
 		except Texte.DoesNotExist, e:
 			print "            No texte found with : \"%s\", %s " % ( texte_name, e )
+			
+			foo=raw_input('\n            Skip this line and go on ? [ Y / N ] : ')
+			
+			if foo.upper() == 'N':
+				print "            Script stopped !"
+				break
 			continue
+		except Texte.MultipleObjectsReturned, e:
+			print "            More than one texte found with : \"%s\", %s, %s " % ( texte_name, os.path.basename( texte_url ), e )
+			foo=raw_input('\n            Skip this line and go on ? [ Y / N ] : ')
+			
+			if foo.upper() == 'N':
+				print "            Script stopped !"
+				break
+			
 		print "            %s \"%s\": %s" % ( texte.id, texte_name, locationgeo )
-
 		
+		# save location geo
+		texte.locationgeo = locationgeo
+		texte.save()
 		#try
 
 

@@ -39,7 +39,10 @@ oo.nest = function( objects, nester, sorter ){
 
 	for (var d in objects){
 
+
 		var index = nester( objects[d] );
+
+		// oo.log(index)
 
 		if (typeof nested[ index ] == "undefined"){
 			nested[ index ] = { "key": index, "values":[] };
@@ -52,6 +55,7 @@ oo.nest = function( objects, nester, sorter ){
 
 	// refactoring array
 	var remapped = []; for( var i in nested ){ remapped.push( nested[i] );}
+	// return remapped;
 	return remapped.sort(sorter);
 
 }
