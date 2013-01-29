@@ -240,7 +240,7 @@
 	{{ block.super }}
 	
 	{% if edit_mode %}
-		oo.urls.upload_enquiry_pin = "{% url outside_api_enquiry_upload_pin 0 0 %}";
+		oo.urls.upload_enquiry_pin = "{% url outside_api_enquiry_upload_pin 0 %}";
 		oo.urls.add_enquiry = "{% url outside_api_enquiries %}";
 	
 	{% endif %}

@@ -2,8 +2,9 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
+import settings
 
-urlpatterns = patterns('app',
+urlpatterns = patterns(settings.ROOT_DIRECTORY_NAME,
 	# set langage redirect view
 	(r'^i18n/', include('django.conf.urls.i18n')),
 	url(r'^admin/', include(admin.site.urls)),
