@@ -75,6 +75,9 @@ class Pin( models.Model ):
 	def __unicode__(self):
 		return "%s (%s) a.k.a. %s" % (self.slug, self.language, self.title)
 
+	def mime( self ):
+		return self.mimetype.split("/")[0] if self.mimetype else ""
+
 	def json( self ):
 		return{
 			'id': self.id,

@@ -91,7 +91,7 @@ urlpatterns = patterns(settings.ROOT_DIRECTORY_NAME,
 	url(r'^glue/', include('glue.urls')),
 
 	# outside, new reanalyse/bequali app for content exploration, vizs...
-	url(r'^o/', include('outside.urls')),
+	url(r'^', include('outside.urls')),
 
 	################### DEPRECATED
  	#(r'^e/(?P<eid>\d+)/i/(?P<iid>\d+)$', 'reanalyseapp.views.eiGetExtractHtml'),			# Get JSON with html of intervention (for extracts in search results)

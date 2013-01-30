@@ -368,6 +368,40 @@ msgstr ""
 msgid "Home Page"
 msgstr "Accueil"
 
+msgid "fill contact form"
+msgstr "Nous contacter"
+
+msgid "all fields compelled"
+msgstr "Nous contacter"
+
+msgid "back to home page"
+msgstr "revenir à l'accueil"
+
+
+msgid "message sent"
+msgstr "Votre message à bien été envoyé"
+
+msgid "status"
+msgstr "votre statut"
+
+msgid "I have read and accepted the"
+msgstr "J'ai lu et j'accepte les"
+
+msgid "legal notices"
+msgstr "conditions d'utilisation"
+
+msgid "send"
+msgstr "envoyer"
+
+msgid "affiliation"
+msgstr "votre etablissement d'affiliation"
+
+msgid "university or institution"
+msgstr "université, instituion ..."
+
+msgid "legal notice description"
+msgstr "Les informations recueillies font l'objet d'un traitement informatique destiné à la gestion du portail BeQuali. Conformément à la loi &laquo; Informatique et Libertés &raquo; du 6 janvier 1978 modifiée en 2004, vous bénéficiez d'un droit d'accès et de rectification aux informations qui vous concernent." 
+
 #, fuzzy
 #~ msgid "You can explore the whole site"
 #~ msgstr ""
