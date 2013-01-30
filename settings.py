@@ -43,7 +43,7 @@ SOLR_PORT = 8986
 
 ######## HAYSTACK
 # Required and specific to where you place the file.
-HAYSTACK_SITECONF = 'reanalyse.search_sites'
+HAYSTACK_SITECONF = ROOT_DIRECTORY_NAME + '.search_sites'
 
 # Optional Haystack settings.
 # See `docs/settings.rst` for a complete list.
@@ -190,7 +190,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'reanalyse.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
 	os.path.join(REANALYSEPROJECTPATH, 'templates'),
