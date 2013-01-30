@@ -12,6 +12,8 @@ from reanalyseapp.models import Enquete
 from glue.models import Pin, Page
 from outside.models import Enquiry
 from outside.sites import OUTSIDE_SITES_AVAILABLE
+from outside.forms import SubscriberForm
+
 #
 #    Outside
 #    =======
@@ -34,20 +36,23 @@ def index( request ):
 	data['pins'] = Pin.objects.filter(language=data['language'], page__slug="index" ).order_by("-id")
 
 	# get news
-	data['news'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	data['news'] = _get_news( data )
 
 	return render_to_response( "%s/index.html" % data['template'], RequestContext(request, data ) )
 
 def news( request ):
 	data = shared_context( request, tags=[ "news" ] )
 	# load all pins without page
-	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	data['pins'] = _get_news( data )
 	return render_to_response("%s/blog.html" % data['template'], RequestContext(request, data ) )
+
+def _get_news( data ):
+	return  Pin.objects.filter(language=data['language'], page__isnull=True, enquiry__isnull=True, parent__isnull=True ).order_by("-id")
 
 def contacts( request ):
 	data = shared_context( request, tags=[ "contacts" ] )
 	# load all pins without page (aka news)
-	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True, parent__isnull=True ).order_by("-id")
 	return render_to_response("%s/contacts.html" % data['template'], RequestContext(request, data ) )
 
 
@@ -56,7 +61,7 @@ def page( request, page_slug ):
 	data['page'] = get_object_or_404(Page, slug=page_slug, language=data['language'] )
 	data['pins'] = Pin.objects.filter( page__slug=page_slug, language=data['language'], parent=None)
 
-	return render_to_response("%s/page.html" % data['template'], RequestContext(request, data ) )
+	return render_to_response("%s/page.html" % 'enquete', RequestContext(request, data ) )
 
 def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
@@ -85,6 +90,26 @@ def enquetes( request ):
 	data['pins'] = Pin.objects.filter( page__slug="enquetes", language=data['language'], parent=None)
 
 	return render_to_response("enquete/enquetes.html", RequestContext(request, data ) )
+
+def download_view( request, pin_slug ):
+	data = shared_context( request )
+	pin = get_object_or_404(Pin, slug=pin_slug, language=data['language'] )
+	data['root'] = settings.MEDIA_ROOT
+	from mimetypes import guess_extension
+	import urllib, os
+	
+	try:
+		extension = guess_extension( pin.mimetype )
+		content_type = pin.mimetype
+	except AttributeError, e:
+		filetitle, extension = os.path.splitext( pin.local.url )
+		content_type = "application/octet-stream"
+
+	response = HttpResponse( open( os.path.join( settings.MEDIA_ROOT, urllib.unquote( pin.local.url ) ), 'r' ) , content_type=content_type  )
+	response['Content-Description'] = "File Transfer";
+	response['Content-Disposition'] = "attachment; filename=%s%s" % ( pin_slug, extension ) 
+	
+	return response
 
 
 def login_view( request ):
@@ -133,6 +158,8 @@ def shared_context( request, tags=[], previous_context={} ):
 	d['stylesheet'] = settings.OUTSIDE_THEME
 	d['template'] = settings.OUTSIDE_TEMPLATE_DIR
 
+	d['subscriber_form'] = SubscriberForm( auto_id="id_subscriber_%s")
+
 	# if it is not auth, pull loginform
 	if request.user.is_authenticated():
 		load_edit_mode( request, d )
@@ -178,7 +205,16 @@ def load_edit_mode( request, d ):
 #	d is context dictionary
 #
 def load_language( request, d ):
+
+	from django.utils.translation import activate
+
 	language = request.GET.get('lang', None)
+
+	# default: FR, hack
+	d['language'] = language = 'FR'
+	activate(language)
+	return language
+
 
 	if language is None:
 		# load from somewhere
@@ -190,7 +226,7 @@ def load_language( request, d ):
 			request.session['django_language'] = language
 		else:
 			#response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
-			translation.activate(language)
+			activate(language)
 	else:
 		d['warnings'] = _('language not found')
 		language = 'fr'

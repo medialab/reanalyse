@@ -1,21 +1,20 @@
 {% extends "hub/middle.html" %}
 {% load i18n %}
 {% load extras %}
-{% block page_header %}
-{{ block.super}}
-<div id="schema"></div>
-{% endblock %}
+
 
 	<!-- static url: {{ STATIC_URL }} -->
 
 {% block page_left %}
 	<div id="subscription">
 		<h2>{% trans "fill contact form" %}</h2>
-
+		<noscript>
+			Note: Javascript sould be enabled in your browser in order to fill this contact form
+		</noscript>
 		<div class="subscription-wrapper">
 			
 
-			<p>Vous pouvez avec peu de problemem
+			<p>
 
 			</p>
 			<label for="first_name">{% trans "first name" %}</label>
@@ -38,18 +37,39 @@
 			{{ subscriber_form.affiliation }}
 			
 			<label for="affiliation">{% trans "message" %}
-				<div class="specification">{% trans "message" %}</div>
+				
 			</label>
 			{{ subscriber_form.description }}
 
-			
-
-			<label for="accepted_terms">{% trans "accepted terms" %}
-				<div class="specification">{% trans "accept terms" %}</div>
+			{% comment %}
+			<label for="recaptcha">{% trans "Recaptcha" %}
+				<div class="specification">{% trans "Recaptcha" %}</div>
 			</label>
-			{{ subscriber_form.accepted_terms }}
 			{{ subscriber_form.captcha }}
+			{% endcomment %}
+
+		
+			<label for="accepted_terms">{% trans "legal notices" %}
+				<div class="specification">
+					{% trans "legal notice description"  %}
+				</div>
+
+				<div class="specification"><b>{% trans "I have read and accepted the" %} {% trans "legal notices" %}</b> {{ subscriber_form.accepted_terms }}</div>
+			</label>
+			
+			
 			<input type="button" id="add-subscriber" value="{% trans "send" %}"/>
 		</div>
+	
+	</div>
+
+	<div id="subscription-accepted" style="display:none">
+		<h2>{% trans "Merci !"%}</h2>
+
+		{% trans "message sent" %}
+
+		<p>
+			<a href="{% url outside_index %}">{% trans "back to home page"%}</a>
+		</p>
 	</div>
 {% endblock %}

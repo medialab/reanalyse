@@ -1,36 +1,38 @@
-{% extends "hub/middle.html" %}
+{% extends "enquete/middle.html" %}
 {% load i18n %}
-
-{% block sidebar %}
-	<ul class="nav">
-		{% for pin in pins %}
-		<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
-		{% endfor %}
-	</ul>
-	
+{% load extras %}
+	<!-- static url: {{ STATIC_URL }} -->
+{% block navbar %}	
+	<div id="navbar">
+		<ul class="nav navbar">
+			{% for pin in pins %}
+			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+			{% endfor %}
+			
+		</ul>
+	</div>
 {% endblock %}
 
-{% block page_title %}
-	{{ page.title }}
-{% endblock %}
 
-{% block page %}
-	
-		{% if edit_mode %}
-					
-				<div class="edit-mode add-pin" data-page-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add section" %}">[ {% trans "add pin" %} ]</div>
+{% block page_left %}
 
-					{% endif %}
-
+	{{ block.super }}
 	{% for p in pins %}
-	<div class="section">
+	<div class="section expand alpha">
+		{% comment %}
 		<div class="marker-wrapper">
 			<div class="marker" >
 				{{ p.date_last_modified|date:"d M." }}
 			</div>
 		</div>
+		
+		{% endcomment %}
 		<a id="{{ p.slug }}"></a>
-		<h2>{{ p.title|safe }}</h2>
+		<h2>{{ p.title }}</h2>
+		{% if p.local %}
+			<a href="{% url outside_download p.slug %}">{% trans "download as" %} {{ p.mimetype }}</a>
+		{% endif %}
+
 		<div class="author"><a href="">{% for u in p.users.all %}{{ u.username }}{% endfor %}</a></div>
 
 		{% if edit_mode %}
@@ -57,5 +59,8 @@
 		<div class="clear"></div>
 		
 	</div>
+	
 	{% endfor %}
-{% endblock %}	
+{% endblock %}
+
+

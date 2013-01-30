@@ -55,7 +55,8 @@
 
 							<ul class="nav navbar" style="border-bottom: 1px solid #3d3d3d">
 								{% if enquiry %} 
-								<li><a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "autour de cette enquête" %} : <h3>&laquo;	 {{  enquiry.title }} &raquo;	</h3></a></li>
+
+								<li><a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "acceder aux documents de cette enquête" %}</a></li>
 							{% else %}
 								{%if edit_mode %}
 		<li class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
@@ -97,7 +98,20 @@
 		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
 		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
 		<h3>{{ enquete.name }}</h3>
-		<p class="author" >{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
+		<p class="author" >{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+		</p>
+		<p class="tags">
+			{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+					{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+
+		</p>
+
+		{% if enquiry %} 
+		<div class="ese">
+			<a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "voir l'enquête sur l'enquête" %} : &laquo;	 {{  enquiry.title }} &raquo;	</a>
+		</div>
+		{% endif %}
+
 		<div class="map content" style="margin-left:0px">
 			<!-- <div id="types"></div> -->
 			<div id="categories"></div>

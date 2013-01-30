@@ -88,6 +88,7 @@
 			
 			<div id="introduction">
 				{% block schema %}
+				{% comment %}
 				<div id="schema">
 
 					</div>
@@ -99,6 +100,7 @@
 					</a>
 					{% endfor %}
 				</div>
+				{% endcomment %}
 				{% endblock %}
 				<ul id="pages">
 					{% for p in pages %}
@@ -213,8 +215,14 @@
 		{% block footer %}
 		<div class="container_12">
 			<div id="footer-inner">
-				
+
 				<ul>
+					<li>
+						<a href="http://sciences-po.fr" >
+					<img src="{{ STATIC_URL }}/img/scpo.png"/>
+				</a>
+					</li>
+
 					{% comment %}<li style="float:right" {% ifequal language "EN" %} class="selected"{% endifequal %}>
 						<a href="{{  request.path }}?lang=en">{% trans "english" %}</a>
 					</li>

@@ -5,8 +5,8 @@ from django.conf import settings
 from django.db.models import Q 
 
 from glue.models import Pin
-from outside.models import Enquiry
-from outside.forms import AddEnquiryForm
+from outside.models import Enquiry, Subscriber
+from outside.forms import AddEnquiryForm, SubscriberForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError

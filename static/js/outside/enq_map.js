@@ -132,57 +132,35 @@ oo.enq.map.init = function ( objects ){
     oo.enq.map.map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
 	oo.enq.map.map.ui.zoomer.add();
 	
-	// Data
-
-	// oo.enq.map.data = { type : "FeatureCollection", features : [] };
-
-	// for( var i in objects ){
-	// 	if ( objects[i].location == null ) continue
-	// 	objects[i].coordinates.id = objects[i].id;
-	// 	oo.enq.map.data.features.push( objects[i].coordinates )
-	// }
-
 	var nest = { type : "FeatureCollection", features : [] };
 
 	for (var i in objects){
 
-		var exist = false, j;
+		var exist = false,
+			j;
 
 		if ( objects[i].location == null) continue;
 
 		for ( j = 0; j <= nest.features.length; j++ ) {
-
 			if ( typeof nest.features[j] == 'undefined' ) break;
-
-			if ( nest.features[j].location == objects[i].location ) {
-				exist = true;
-				break
-			}
-
+			if ( nest.features[j].location == objects[i].location ) { exist = true; break; }
 		};
 
 		if ( exist == false ) {
 			nest.features[j] = objects[i].coordinates;
 			nest.features[j].counter = 0;
 			nest.features[j].location = objects[i].location;
+			nest.features[j].name = objects[i].coordinates.properties.name;
+			// oo.log(i, objects[i].location, objects[i].coordinates.properties.name)
 		}
-
 		nest.features[j].counter++;
-
-		// if ( typeof nest.features[ objects[i].location ] == "undefined" ){
-		// 	nest.features[ objects[i].location ] = objects[i].coordinates;
-		// 	nest.features[ objects[i].location ].counter = 0;
-		// }
-		// nest.features[ objects[i].location ].counter++;
-
 	}
+
 
 	oo.enq.map.data = nest;
 
-
-	// oo.log('objects', objects)
-	// oo.log('nest', nest)
-	// oo.log('oo.enq.map.data', oo.enq.map.data)
+	oo.log('objects', objects)
+	oo.log('oo.enq.map.data', oo.enq.map.data)
 
     // return
 
@@ -235,7 +213,12 @@ oo.enq.map.d3layer = function() {
             .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
 	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
 	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; })
-	      	.attr('data-location', function(d, i) { return collection.features[i].location; });
+	      	.attr('data-location', function(d, i) { return collection.features[i].location; })
+	      	.attr('title', function(d, i) { return collection.features[i].name; })
+	      	.attr('rel', 'tooltip');
+
+
+	      	$('#map circle').tooltip().attr('style', 'position: relative; margin-left: 100px; margin-top: 100px;');
 
     };
 

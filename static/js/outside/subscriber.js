@@ -11,7 +11,9 @@ oo.magic = oo.magic || {};
 oo.magic.subscriber = {};
 oo.magic.subscriber.add = function(){
 	oo.log("[oo.magic.subscriber.add]");
-	$("#subscription").hide();
+	$("#subscription").empty().hide();
+	$("#subscription-accepted").show();
+	$("#right-sidebar").height($("#subscription-accepted").height());
 };
 
 /*
@@ -23,6 +25,11 @@ oo.magic.subscriber.add = function(){
 */
 oo.api.subscriber = {};
 oo.api.subscriber.add = function( params ){
+	if( params.accepted_terms == false){
+		oo.toast( oo.i18n.translate("please check accepted terms"), oo.i18n.translate("form errors"));
+		return;
+	}
+
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_subscriber,
 		data: params, 

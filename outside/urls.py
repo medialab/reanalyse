@@ -8,7 +8,10 @@ urlpatterns = patterns('',
 	url(r'^login/$','outside.views.login_view', name='outside_login'),
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
 	url(r'^contacts/$','outside.views.contacts', name='outside_contacts'),
-	
+
+	url(r'^download/(?P<pin_slug>[a-z0-9-_]+)/$','outside.views.download_view', name='outside_download'),
+
+
 	url(r'^enquetes/$','outside.views.enquetes', name='outside_enquetes'),
 	url(r'^enquete/(?P<enquete_id>\d+)/$','outside.views.enquete', name='outside_enquete'),
 	url(r'^enquiry/(?P<enquete_id>\d+)/$','outside.views.enquiry', name='outside_enquiry'), # foreign key to enquete for model Oustide_Enquiry

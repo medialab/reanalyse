@@ -190,6 +190,8 @@ oo.i18n.dict = {
 		"sms invalid message":"Le texte du SMS est invalide.",
 		"sms invalid phone numbers":"Numéro(s) de téléphone invalide(s)",
 		"list numbers sms failure":"Certains SMS n'ont pu être envoyés.",
-		"to change password": "Veuillez changer votre <br/> <b>mot de passe</b>"
+		"to change password": "Veuillez changer votre <br/> <b>mot de passe</b>",
+		"please check accepted terms": "Veuillez accepter les conditions d'utilisation",
+
 	}
 };
