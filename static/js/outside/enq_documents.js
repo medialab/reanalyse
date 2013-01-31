@@ -9,7 +9,8 @@ oo.enq.docs.update = function( event, filters ){
 	oo.log("[oo.enq.docs.update]");
 
 	var	docs = d3.select('#documents ul'),
-		counter = d3.select('#counter p'),
+		counter = d3.select('#counter span.docNumber')
+		container = d3.select('#counter p'),
 		meter = 0;
 
 	var items = docs.selectAll('li').each(function(d, i) {
@@ -47,26 +48,31 @@ oo.enq.docs.update = function( event, filters ){
 		} 
 	})
 
+	var delay = 500;
 
-	counter
-		.transition()
-			.duration(500)
-			.style('opacity', '0')
-			.attr('y', 100)
-		.transition()
-			.text(meter)
-			.delay(500)
-			.duration(500)
-			.style('opacity', '1');
-	
+	container.transition()
+		.duration(delay)
+		.style('margin-top', '24px');
+
+	counter.transition()
+		.duration(1)
+		.delay(delay)
+		.text(meter);
+		
+	container.transition()
+		.delay(delay)
+		.duration(1000)
+		.style('margin-top', '0px');
+
 };
 
 oo.enq.docs.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.docs.update );
 
-	var counter = d3.select('#counter p'),
-		docs = d3.select('#documents ul');
+	var counter = d3.select('#counter span.docNumber'),
+		docs = d3.select('#documents ul'),
+		container = d3.select('#counter p');
 
 	var li = docs.selectAll("li")
 		.data(objects)
@@ -77,6 +83,10 @@ oo.enq.docs.init = function ( objects ){
 		.html(function(d) { return d.title.split('_').join(' ').split('/').join(' '); });
 
 	counter.html(li[0].length);
+
+	container.transition()
+		.duration(500)
+		.style('margin-top', '0px');
 	
 };
 
