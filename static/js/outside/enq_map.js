@@ -216,10 +216,6 @@ oo.enq.map.d3layer = function() {
 	      	.attr('data-location', function(d, i) { return collection.features[i].location; })
 	      	.attr('title', function(d, i) { return collection.features[i].name; })
 	      	.attr('rel', 'tooltip');
-
-
-	      	$('#map circle').tooltip().attr('style', 'position: relative; margin-left: 100px; margin-top: 100px;');
-
     };
 
     f.data = function(x) {
