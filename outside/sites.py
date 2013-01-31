@@ -30,7 +30,7 @@ OUTSIDE_SITES_AVAILABLE = [
 	},
 	{
 		'name':'app',
-		'url':'/reanalyse/index/',
+		'url':'/app',
 		'label':'enQ<span class="cyan">uêtes</span>',
 		'title':'l’instrument de DIME-SHS',
 		'content':'La banque d’enquêtes qualitatives',
@@ -40,7 +40,7 @@ OUTSIDE_SITES_AVAILABLE = [
 	},
 	{
 		'name':'reanalyse',
-		'url':'/reanalyse-blog/',
+		'url':'/reanalyse-blog',
 		'label':'réA<span class="cyan">nalyse</span>',
 		'title':'le projet ANR',
 		'content':'Projets d’expérimentation de l’analyse secondaire des données qualitatives',
@@ -49,7 +49,7 @@ OUTSIDE_SITES_AVAILABLE = [
 	},
 	{
 		'name':'quali2',
-		'url':'/quali2/',
+		'url':'/quali2',
 		'label':'quali<span class="cyan">2</span>',
 		'title':'le site ressource',
 		'content':'documents et débats sur les méthodes qualitatives',
