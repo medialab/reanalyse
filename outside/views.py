@@ -79,7 +79,7 @@ def enquete( request, enquete_id ):
 def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
-	data['sections'] = data['enquiry'].pins.order_by("-id")
+	data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
 
 	return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 

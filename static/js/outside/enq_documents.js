@@ -60,7 +60,7 @@ oo.enq.docs.update = function( event, filters ){
 		.text(meter);
 		
 	container.transition()
-		.delay(delay)
+		.delay(delay + 300)
 		.duration(1000)
 		.style('margin-top', '0px');
 
