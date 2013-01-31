@@ -4,12 +4,12 @@ from django.contrib import admin
 admin.autodiscover()
 import settings
 
-urlpatterns = patterns(settings.ROOT_DIRECTORY_NAME,
+urlpatterns = patterns( settings.ROOT_DIRECTORY_NAME,
 	# set langage redirect view
 	(r'^i18n/', include('django.conf.urls.i18n')),
 	url(r'^admin/', include(admin.site.urls)),
 
-	(r'^$', 'reanalyseapp.views.home'),
+	(r'^old$', 'reanalyseapp.views.home'),
 	
 	#(r'^account/login/$', 'reanalyseapp.views.home'), # deprecated : loginview is set in settings.py
 	(r'^account/logout/$', 'reanalyseapp.views.logoutuser'),
@@ -91,7 +91,8 @@ urlpatterns = patterns(settings.ROOT_DIRECTORY_NAME,
 	url(r'^glue/', include('glue.urls')),
 
 	# outside, new reanalyse/bequali app for content exploration, vizs...
-	url(r'^o/', include('outside.urls')),
+	url(r'^$', 'outside.views.index' ),
+	url(r'^', include('outside.urls')),
 
 	################### DEPRECATED
  	#(r'^e/(?P<eid>\d+)/i/(?P<iid>\d+)$', 'reanalyseapp.views.eiGetExtractHtml'),			# Get JSON with html of intervention (for extracts in search results)
