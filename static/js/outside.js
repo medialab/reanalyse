@@ -116,6 +116,9 @@ oo.invalidate = function( errors, namespace ){ if (!namespace){ namespace = "id"
 		} else if( i.indexOf("_hours") != -1 || i.indexOf("_minutes") != -1  ) {
 			$("#"+namespace+"_"+i).parent().addClass("invalid");
 			continue;	
+		} else if(i.indexOf("captcha") != -1 ) {
+			$("#recaptcha_response_field").addClass("invalid");
+			continue;
 		}
 		$("#"+namespace+"_"+i).addClass("invalid");
 	}

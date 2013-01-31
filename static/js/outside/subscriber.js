@@ -50,7 +50,9 @@ oo.subscriber.init = function(){
 		description:$("#id_subscriber_description").val(),
 		accepted_terms:$("#id_subscriber_accepted_terms").prop("checked"),
 		status:$("#id_subscriber_status").val(),
-		email:$("#id_subscriber_email").val()  
+		email:$("#id_subscriber_email").val(),
+		recaptcha_challenge_field:$('#recaptcha_challenge_field').val(),
+		recaptcha_response_field:$('#recaptcha_response_field').val(),
 	})});
 	//$("").click()
 };

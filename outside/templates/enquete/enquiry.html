@@ -168,6 +168,10 @@
 				{% for pc in p.children.all %}
 					<div class="child {% if forloop.first %}alpha{% endif %}">
 						<h4>{{ pc.title }}</h4>
+						{% if edit_mode %}
+							<a href="{% url admin:glue_pin_change pc.id %}">[ edit pin ]</a>
+
+						{% endif %}
 						{% ifequal pc.mime "audio" %}
 							<div id='audio-{{ pc.slug }}'></div>
 							<audio src="{{ pc.local.url }}" preload="auto" />

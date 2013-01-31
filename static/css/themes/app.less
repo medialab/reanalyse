@@ -13,7 +13,7 @@
 
 @header-height:45px; // 32px;
 @header-color: darken( #f1f1f1, 3% );
-@footer-height: 122px;
+@footer-height: 89px;
 @footer-bottom: 12px;
 
 @page-color: #f4f4f4;
@@ -2112,9 +2112,44 @@ section, .section{
 
 
 b{
-			.serif-bold(14px);
+	.serif-bold(14px);
+}
+
+#footer-inner{
+	height: @footer-height - @grid-padding;
+	background: @base-color;
+	margin-top: @grid-padding;
+	
+	.box-shadow( 0px 0px 1px fade( black, 20%) );
+	border-top: 1px solid darken( @base-color, 8%);
+	border-left: 1px solid darken( @base-color, 12%);
+	border-right: 1px solid darken( @base-color, 14%);
+	border-bottom: 1px solid darken( @base-color, 18%);
+
+	ul{
+		padding: 16px 18px;
+		margin: 0;
+		// border-top: 4px solid fade(#2e2e2e,25%);
+		
+
+	}
+
+	a.footer-link{
+		display:block;
+		float:left;
+		height: @footer-height - @grid-padding - 2;
+		.sans-serif( 13px );
+		color: white;
+		line-height: @footer-height - @grid-padding - 2;
+		margin: 0 @grid-padding/2 0 0;
+		&.right{
+			float:right;
+			margin: 0 0 0 @grid-padding/2;
 		}
-
-
+		&:hover{
+			text-decoration: underline;
+		}
+	}
+}
 
 

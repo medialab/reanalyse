@@ -212,11 +212,18 @@ INSTALLED_APPS = (
 	'reanalyseapp',
 	'django_tables2',
 	'haystack',
+	'captcha',
 	'glue', # content management via json api
 	'outside', # currently there is no model
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
 )
+
+# Captcha - google.com/recaptcha
+RECAPTCHA_PUBLIC_KEY = '6Lfy9dsSAAAAAEaeHvXIqHSIWgRy0AOtYM7IIPqr'
+RECAPTCHA_PRIVATE_KEY = '6Lfy9dsSAAAAALKyXZsa_lAzavDaNzlewMAe1W-y'
+
+
 
 # Needed by django-tables2
 TEMPLATE_CONTEXT_PROCESSORS = (

@@ -1,17 +1,15 @@
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
+from captcha.fields import ReCaptchaField
+from outside.models import Subscriber
+
 
 class AddEnquiryForm(forms.Form):
 	title_fr = forms.CharField( label=_("french title"),required=True )
 	title_en = forms.CharField( label=_("english title"), required=True )
 	enquete = forms.IntegerField( label=_("enquete id"), required=True, widget=forms.HiddenInput )
 	slug = forms.SlugField( required=True )
-
-
-from outside.models import Subscriber
-
-
 
 
 class SubscriberForm (forms.Form):
@@ -22,6 +20,8 @@ class SubscriberForm (forms.Form):
 	status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES))
 	accepted_terms = forms.BooleanField()
 	description = forms.CharField( widget=forms.Textarea) # personal description
+	captcha = ReCaptchaField(attrs={'theme':'clean'})
+
 	# captcha = ReCaptchaField(attrs={'theme' : 'custom',  'custom_theme_widget': 'recaptcha_widget'})
 	# captcha = ReCaptchaField(attrs={'theme':'clean'})
     

@@ -215,28 +215,31 @@
 		{% block footer %}
 		<div class="container_12">
 			<div id="footer-inner">
+				<a href="http://sciences-po.fr" class="footer-link"><img src="{{ STATIC_URL }}img/scpo-blanc.png"/></a>
 
+				<a href="{% url outside_legal %}" class="footer-link">mentions légales</a>
+
+				<a href="{% url outside_contacts %}" class="footer-link">nous contacter</a>
+
+				{% comment %}
 				<ul>
-					<li>
-						<a href="http://sciences-po.fr" >
-					<img src="{{ STATIC_URL }}/img/scpo.png"/>
-				</a>
-					</li>
 
-					{% comment %}<li style="float:right" {% ifequal language "EN" %} class="selected"{% endifequal %}>
+					<li style="float:right" {% ifequal language "EN" %} class="selected"{% endifequal %}>
 						<a href="{{  request.path }}?lang=en">{% trans "english" %}</a>
 					</li>
 					<li style="float:right" {% ifequal language "FR" %} class="selected"{% endifequal %}>
 						<a href="{{  request.path }}?lang=fr">{% trans "french" %}</a>
 					</li>
-					{% endcomment %}
-
 					
+
+					<li></li>
 		
 				</ul>
+				{% endcomment %}
 			</div>
 			<div class="clear"></div>
 		</div>
+		
 		
 
 		{% endblock %}	

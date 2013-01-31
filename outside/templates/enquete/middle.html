@@ -203,25 +203,7 @@
 	<!-- the footer -->
 	<footer>
 		{% block footer %}
-		<div class="container_12">
-			<div id="footer-inner">
-				
-				<ul>
-					{% comment %}<li style="float:right" {% ifequal language "EN" %} class="selected"{% endifequal %}>
-						<a href="{{  request.path }}?lang=en">{% trans "english" %}</a>
-					</li>
-					<li style="float:right" {% ifequal language "FR" %} class="selected"{% endifequal %}>
-						<a href="{{  request.path }}?lang=fr">{% trans "french" %}</a>
-					</li>
-					{% endcomment %}
-
-					
-		
-				</ul>
-			</div>
-			<div class="clear"></div>
-		</div>
-		
+		{{ block.super }}
 
 		{% endblock %}	
 		

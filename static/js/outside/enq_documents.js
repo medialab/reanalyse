@@ -8,6 +8,9 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
+	d3.select("#reset")
+        .on("click", oo.filt.clean );
+
 	var	docs = d3.select('#documents ul'),
 		counter = d3.select('#counter span.docNumber')
 		container = d3.select('#counter p'),

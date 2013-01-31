@@ -33,6 +33,8 @@ class Enquiry( PageAbstract ):
 		}
 
 
+# class Message( models.Model ):
+
 
 # a profile for the given user
 class Subscriber( models.Model ):

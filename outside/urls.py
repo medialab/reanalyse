@@ -8,7 +8,8 @@ urlpatterns = patterns('',
 	url(r'^login/$','outside.views.login_view', name='outside_login'),
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
 	url(r'^contacts/$','outside.views.contacts', name='outside_contacts'),
-
+	url(r'^legal-notice/$','outside.views.legal', name='outside_legal'),
+	
 	url(r'^download/(?P<pin_slug>[a-z0-9-_]+)/$','outside.views.download_view', name='outside_download'),
 
 
