@@ -190,7 +190,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'reanalyse.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
 	os.path.join(REANALYSEPROJECTPATH, 'templates'),
