@@ -36,7 +36,7 @@
 {% block navbar %}	
 	<div id="navbar">
 		<ul class="nav navbar">
-			<li><a href="{% url outside_enquete enquiry.enquete.id %}">&larr; {% trans "revenir à l'enquête" %} : <h3>&laquo;	 {{  enquiry.enquete.name }} &raquo;	</h3></a></li>
+			<li><h3>&laquo;	 {{  enquiry.title }} &raquo;	</h3></li>
 
 			{% for pin in sections %}
 			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
@@ -46,25 +46,43 @@
 	</div>
 {% endblock %}
 
+
+{% block page_hook %}
+	<div class="hook">
+		<div class="nav">
+			<div class="back floating"  rel="tooltip" title="{% trans "back to enquetes list" %}" data-tooltip-placement="top">
+				<a href="{% url outside_enquetes %}"> &larr;</a>
+			</div>
+			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+			<div class="ese floating">
+				<a href="{% url outside_enquete enquiry.enquete.id %}">{% trans "retour à l'enquête" %} #{{ enquiry.enquete.id }} : &laquo;	 {{  enquiry.enquete.name }} &raquo;	&rarr; </a>
+			</div>
+		
+		<div class="clear"></div>
+		</div>
+		
+		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
+		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
+		 <h3>{{ enquiry.title }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquiry.enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquiry.enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
+	</div>
+{% endblock %}
+
+
 {% block page_right %}	
 	{% if edit_mode %}
 		<div class="edit-mode add-enquiry-pin" data-enquiry-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add news" %}">[ {% trans "add section" %} ]
 		</div>
 	{% endif %}
 
-							{% for p in news %}
-								<div class="pin">
-									<a href="{% url outside_news %}#{{ p.slug }}">
-									<div class="date-wrapper">
-										<div class="date">{{ p.date_last_modified|date:"d M." }}</div>
-									</div>
-									<h2>{{ p.title }}</h2>
-									<!-- div class="date">{{ p.date_last_modified|date:"d M. Y" }}</div -->
-									<div class="abstract">{% if p.abstract %}{{ p.abstract }}{% else %}an abstract ici{% endif %}{% for u in p.users.all %}{{ u.username }}{% endfor %}</div>
-									</a>
-								</div>
-							{% endfor %}
-							
 							<div class="clear"></div>
 					{% endblock %}
 
@@ -75,8 +93,7 @@
 	<section class="alpha wide" >
 		
 		
-		<h3>{{ enquiry.enquete.name }} : <span class="cyan">enquête sur l'enquête</span></h3>
-
+		
 		<div class="abstract">
 			{% trans "an enquiry about"%} <a href="{% url outside_enquete enquiry.enquete.id %}">{{ enquiry.enquete.name }}</a>
 		</div>

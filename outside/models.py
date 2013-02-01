@@ -7,10 +7,25 @@ from glue.models import PageAbstract, Pin
 from reanalyseapp.models import Enquete, Tag
 
 # Create your models here.
-# Enquiry does not extends PAGE, which is actually an extension because of all stuff explaied here:
+
+class Message( models.Model ):
+	date = models.DateField( auto_now=True )
+	content = models.CharField( max_length = 1000 )
+
+	def __unicode__(self):
+		return "%s : %s" % ( self.date, self.content )
+
+	def json( self ):
+		return {
+			'id': self.id,
+			'content':self.content,
+			'date' : self.date.isoformat()
+		}
+
+
+# Enquiry extends PAGEAbstract, cfr
 # http://charlesleifer.com/blog/django-patterns-model-inheritance/
 # This model inherit an abstract class even it is a very different object.
-
 class Enquiry( PageAbstract ):
 	enquete = models.ForeignKey( Enquete, related_name="enquiry" )
 	pins = models.ManyToManyField( Pin, null=True, blank=True )
@@ -68,6 +83,7 @@ class Subscriber( models.Model ):
 	status =     models.CharField( max_length = 3, choices=STATUS_CHOICES )
 	accepted_terms = models.BooleanField()
 	description = models.TextField() # personal description
+	messages = models.ManyToManyField( Message )
 	
 	def __unicode__(self):
 		return "%s %s <%s>" % (self.last_name.upper(), self.first_name, self.email )

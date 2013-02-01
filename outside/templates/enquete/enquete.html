@@ -14,6 +14,9 @@
 	<script src='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.js'></script>
   	<link href='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.css' rel='stylesheet' />
 	<script src="http://d3js.org/d3.v3.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.js"></script>
+	<script src="{{ STATIC_URL }}js/jquery.slimscroll.min.js"></script>
+
 {% endblock %}
 
 {% block outside_scripts %}
@@ -87,33 +90,46 @@
 	
 {% endblock %}
 
-{% block page_left %}
-	<a id="visualization"></a>
-	
-	<section class="alpha wide">
-		
-		
-		
+{% block page_hook %}
+	<div class="hook">
+		<div class="nav">
+			<div class="back floating"  rel="tooltip" title="{% trans "back to enquetes list" %}" data-tooltip-placement="top">
+				<a href="{% url outside_enquetes %}"> &larr;</a>
+			</div>
+			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+		{% if enquiry %} 
+			<div class="ese floating">
+				<a href="{% url outside_enquiry enquete.id %}">{% trans "voir l'enquête sur l'enquête" %} : &laquo;	 {{  enquiry.title }} &raquo;	&rarr; </a>
+			</div>
+		{% endif %}
+		<div class="clear"></div>
+		</div>
 		
 		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
 		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
-		<h3>{{ enquete.name }}</h3>
-		<!-- <p class="author" >
-			{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
-		</p> -->
+		 <h3>{{ enquete.name }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_left %}
+	<a id="visualization"></a>
+	
+	<section class="alpha wide" style="padding-top:0px">
 		
-		<!-- <p class="tags">
-			{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
-			{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
-		</p>
+		
 
-		{% if enquiry %} 
-			<div class="ese">
-				<a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "voir l'enquête sur l'enquête" %} : &laquo;	 {{  enquiry.title }} &raquo;	</a>
-			</div>
-		{% endif %} -->
+		
 
-		<div class="map content" style="margin-left:0px">
+		<div class="map content" style="margin-left:0px; margin-top:18px">
 			<!-- <div id="types"></div> -->
 			<div id="categories"></div>
 			<div id="phases"></div>
@@ -144,23 +160,9 @@
 		</div>
 	{% endif %}
 
-	<div id='author'>
-		by {% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
-	</div>
+	
 
-	<div id='tags'>
-		{% for nation in enquete.meta.values.general.nation.value %}{{ nation }} {% endfor %}
-	</div>
-
-	<div id='years'>
-		{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
-	</div>
-
-	<div id='ese'>
-		<a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "voir l'enquête sur l'enquête" %}</a>
-	</div>
-
-	<input id='reset' type='button'></input>
+	<div class="" id="reset">reetablir les filtres</div>
 
 	<!-- <p><i class="icon-repeat icon-white"></i></p> -->
 
@@ -168,11 +170,13 @@
 	<div id="counter">
 		<p>
 			<span class="docNumber"></span>
-			<span class='docLabel'>Documents</span>
+			<span class='docLabel'>{% trans "documents" %}</span>
 		</p>
 	</div>
 	<div id="documents">
+		<div id="documents-inner">
 		<ul></ul>
+		</div>
 	</div>
 
 	

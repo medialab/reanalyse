@@ -21,7 +21,7 @@
 						
 						{% if user.is_authenticated %}
 						<li style="float:right;">
-							<a href="{% url outside_logout %}"rel="tooltip" title="{% trans "logout" %} {{ user.username }}" data-tooltip-placement="bottom">{% trans "logout" %}
+							<a href="{% url outside_logout %}" rel="tooltip" title="{% trans "logout" %} {{ user.username }}" data-tooltip-placement="bottom">{% trans "logout" %}
 							</a>
 						</li>
 						{% else %}
@@ -29,9 +29,7 @@
 						<li style="float:right;">
 							<a href="#login" data-toggle="modal" data-target="#login-modal">{% trans "login" %}</a>
 						</li>
-						<li style="float:right;">
-							<a href="cont">{% trans "sign up" %}</a>
-						</li>
+						
 						{% endif %}
 
 						{% comment %}
@@ -141,7 +139,7 @@
 				{% endcomment %}
 
 				{% block page %}
-
+					{% block page_hook %}{% endblock %}
 					<div class="grid_9 alpha omega">
 						{% block page_left %}
 							{% if edit_mode %}

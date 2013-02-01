@@ -80,11 +80,32 @@ def enquete( request, enquete_id ):
 	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
 def enquiry( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquetes" ] )
+	data = shared_context( request, tags=[ "enquiries" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
 	data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
 
 	return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
+
+
+	
+def enquiries( request ):
+	data = shared_context( request, tags=[ "enquiries" ] )
+	
+	try:
+		data['page'] = Page.objects.get( slug="enquiries", language=data['language'])
+	except Page.DoesNotExist:
+		p_en = Page( title="studies on studies", language='EN', slug="enquiries")
+		p_en.save()
+
+		p_fr = Page( title="enquêtes sur les enquêtes", language='FR', slug="enquiries")
+		p_fr.save()
+
+		data['page'] = p_fr if data['language'] == 'FR' else p_en
+
+	data['enquiries'] = Enquiry.objects.filter( language=data['language'] )
+
+	return render_to_response('enquete/enquiries.html', RequestContext(request, data ) )
+
 
 def enquetes( request ):
 	data = shared_context( request, tags=[ "enquetes" ] )
@@ -149,7 +170,7 @@ def login_view( request ):
 			if user.is_active:
 				login(request, user)
 				# @todo: Redirect to next page
-				return redirect( 'outside_index' )
+				return redirect( request.REQUEST.get('next', 'outside_index') )
 			else:
 				login_message['error'] = _("user has been disabled")
 		else:

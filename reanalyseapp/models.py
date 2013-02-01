@@ -109,12 +109,18 @@ class Tag(models.Model):
 	ARTICLE = 'AR'
 	INSTITUTION = 'In'
 	RESEARCHER = 'Rs'
-	
+	PLACE = 'Pl'
+	DATE = 'Da'
+	GEOCOVER = 'GC'
+
 	TYPE_CHOICES = (
         (AUTHOR, 'Author'),
         (ARTICLE, 'Article'),
         (INSTITUTION, 'Institution'),
         (RESEARCHER, 'Researcher'),
+        (PLACE, 'Place'),
+        (DATE, 'Date'),
+        (GEOCOVER, 'Geographic coverage'),
     )
 
 	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'

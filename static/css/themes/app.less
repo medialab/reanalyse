@@ -243,7 +243,9 @@ a{
 			padding: 2px 3px;
 			// line-height:35px;
 			display:block;
-			
+			&:hover{
+					color: @base-color;
+				}
 		}
 	}		
 }
@@ -618,6 +620,7 @@ html{
 			border-bottom: 1px solid rgba(1, 77, 103, 0.3);
 		}
 		.title{
+			.serif(28px);
 			border-top:1px solid fade(white,10%);
 		}
 		.abstract, .dates, .geocover{
@@ -1800,8 +1803,7 @@ p.invalid{
 	}
 	.title{
 		padding:@grid-padding/3 @grid-padding/2;
-		font-size:36px;
-		line-height:36px*1.414;
+		.serif(28px);
 		border-top: 1px solid fade( white, 80%);
 		
 	}
@@ -2033,36 +2035,69 @@ section, .section{
 		padding:0px;
 		margin:0px;
 		padding-top: @grid-padding/2;
-		> h3, > .content, >.abstract, >.author, >.tags{
+		> h3, > .content, >.abstract{
 			padding: 0;
 			margin-left:@grid-padding;
 			margin-right: @grid-padding;
 
 		}
-		>h3{
-			margin-bottom: @grid-padding / 2;
-		}
-		>.ese{
-			margin: @grid-padding/2 @grid-padding;
-			
-			a, a:visited{
-				.mono( 16px );
+		
+	}
+
+
+}
+
+.hook{
+background: lighten( @page-color, 2%);
+	border-bottom:1px solid #dbdbdb;
+
+	>h3{
+		margin: @grid-padding/2 @grid-padding @grid-padding/2 @grid-padding;
+		.serif(28px);
+	}
+		
+
+	>.nav{
+		margin: 0 @grid-padding @grid-padding/2 @grid-padding;
+		border-bottom:1px solid #dbdbdb;
+		
+		a,a:visited{
+			display: block;
+			padding: @grid-padding/3;
+			&:hover{
 				color: @base-color;
-				text-decoration: underline;
 			}
+		}
 
+		.sans-serif( 14px);
+		.back{
+			border-right:1px solid #dbdbdb;
+			
+		}
+		.identifier{
+			border-right:1px solid #dbdbdb;
+			
+		}
+		.ese{
 
 		}
+	}
+	>.meta{
+		padding-bottom: @grid-padding/2;
+		margin:0 @grid-padding ;
+		
 		>.author{
 			.serif-italic(19px);
 			
 		}
 		>.tags{
-			padding-top: 12px;
+			
 		}	
 	}
+}
 
-
+.floating{
+	float:left;
 }
 
 .pin-box{

@@ -22,8 +22,6 @@ class SubscriberForm (forms.Form):
 	description = forms.CharField( widget=forms.Textarea) # personal description
 	captcha = ReCaptchaField(attrs={'theme':'clean'})
 
-	# captcha = ReCaptchaField(attrs={'theme' : 'custom',  'custom_theme_widget': 'recaptcha_widget'})
-	# captcha = ReCaptchaField(attrs={'theme':'clean'})
     
 class LoginForm( forms.Form ):
 	username = forms.CharField( max_length=32, widget=forms.TextInput )

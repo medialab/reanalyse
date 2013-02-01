@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 	url(r'^enquetes/$','outside.views.enquetes', name='outside_enquetes'),
 	url(r'^enquete/(?P<enquete_id>\d+)/$','outside.views.enquete', name='outside_enquete'),
 	url(r'^enquiry/(?P<enquete_id>\d+)/$','outside.views.enquiry', name='outside_enquiry'), # foreign key to enquete for model Oustide_Enquiry
-
+	url(r'^enquiries/$','outside.views.enquiries', name='outside_enquiries'),
 
 	url(r'^api/enquete/(?P<enquete_id>\d+)/data/$','outside.api.enquete_data', name='outside_enquete_data'),
 
@@ -25,8 +25,6 @@ urlpatterns = patterns('',
 	url(r'^api/enquiry/(?P<enquiry_id>\d+)/$', 'outside.api.enquiry', name='outside_api_enquiry'), 
 	
 	url(r'^api/enquiry/(?P<enquiry_id>\d+)/(?P<pin_slug>[A-Za-z0-9-]+)/upload/$', 'outside.api.enquiry_upload_pin', name='outside_api_enquiry_upload_pin'),
-
-
 
 	url(r'^api/enquiry/(?P<enquiry_slug>[A-Za-z0-9-]+)/pins/$','outside.api.enquiry_pins', name='outside_enquiry_pins'), # foreign key to enquete for model Oustide_Enquiry
 

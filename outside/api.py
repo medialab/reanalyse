@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models import Q 
 
 from glue.models import Pin
-from outside.models import Enquiry, Subscriber
+from outside.models import Enquiry, Subscriber, Message
 from outside.forms import AddEnquiryForm, SubscriberForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
@@ -14,7 +14,7 @@ from reanalyseapp.models import Enquete
 from datetime import datetime
 import os, mimetypes
 
-version = '0.0.1'
+version = '0.0.2'
 
 #
 #    API CUSTOM DECORATORS
@@ -240,16 +240,35 @@ def subscribers(request):
 		
 		if not form.is_valid():
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+		
 		try:
+			
+			s = Subscriber.objects.get( email=form.cleaned_data['email']  )
+			
+
+		except Subscriber.DoesNotExist, e:
 			s = Subscriber(
 				first_name = form.cleaned_data['first_name'],
 				last_name = form.cleaned_data['last_name'],
 				email = form.cleaned_data['email'],
 				affiliation = form.cleaned_data['affiliation'],
 				accepted_terms = form.cleaned_data['accepted_terms'],
-				description = form.cleaned_data['description']).save()
-		except IntegrityError, e:
-			return response.throw_error( error="%s" % e, code=API_EXCEPTION_INTEGRITY).json()
+				description = form.cleaned_data['description'])
+			s.save()
+
+		
+		if s is None:
+			return response.throw_error( error="", code=API_EXCEPTION_INTEGRITY).json()
+		
+		m = Message(
+			content=form.cleaned_data['description']
+		)
+		m.save()
+
+		s.messages.add( m )
+		s.save()
+
+		response.add("object", m, jsonify=True )
 
 	return response.queryset( Subscriber.objects.filter() ).json()
 	
