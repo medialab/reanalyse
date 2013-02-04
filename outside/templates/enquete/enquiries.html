@@ -33,7 +33,7 @@
 
 
 {% block page_title %}
-	{% trans "enquetes" %}
+	{% trans "enquetes sur les enquetes" %}
 {% endblock %}
 
 {% block page %}
@@ -49,7 +49,7 @@
 		<div class="enquete big item hover">
 			<a href="{% url outside_enquiry e.enquete.id %}">
 			<p class="classification">
-			{% for topicclassification  in s.meta.values.general.topicclassification.value %}
+			{% for topicclassification  in e.enquete.meta.values.general.topicclassification.value %}
 				{{ topicclassification }}
 			{% endfor %}
 			</p>
