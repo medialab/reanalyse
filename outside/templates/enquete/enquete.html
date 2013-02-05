@@ -52,26 +52,7 @@
 {% endblock %}
 
 
-{% block navbar %}	
 
-						<div id="navbar" style="position:static;">
-
-							<ul class="nav navbar" style="border-bottom: 1px solid #3d3d3d">
-								{% if enquiry %} 
-
-								<!-- li><a href="{% url outside_enquiry enquete.id %}">&rarr; {% trans "acceder aux documents de cette enquête" %}</a></li -->
-							{% else %}
-								{%if edit_mode %}
-		<li class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
-				</li>
-
-								{% endif %}
-							{% endif %}
-								
-								
-							</ul>
-						</div>
-{% endblock %}
 
 {% block sidebar_add_section %}
 	{% if not enquete.enquiry and edit_mode %}
@@ -121,9 +102,9 @@
 {% endblock %}
 
 {% block page_left %}
-	<a id="visualization"></a>
 	
-	<section class="alpha wide" style="padding-top:0px">
+	
+	<section id="visualization" class="alpha wide" style="padding-top:0px">
 		
 		
 
@@ -139,8 +120,8 @@
 		<div class="clear"></div>
 	</section>
 
-	<a id="content"></a>
-	<section>
+	<a ></a>
+	<section id="content" class="section expand" >
 		<div class="abstract">
 			{% for abstract  in enquete.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}
 		</div>
@@ -148,40 +129,60 @@
 		<div class="content">
 			{% for abstract  in enquete.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}
 			
+
 		</div>
 	</section>
 
 
 {% endblock %}
 
-{% block page_right %}	
-	{% if edit_mode %}
-		<div class="edit-mode add-pin" data-page-slug="" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add news" %}">[ {% trans "add news" %} ]
-		</div>
-	{% endif %}
+
+{% block right_sidebar %}	
+	<div id="right-sidebar" >
+		{% block page_right %}	
+			{% if edit_mode %}
+				<div class="edit-mode add-pin" data-page-slug="" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add news" %}">[ {% trans "add news" %} ]
+				</div>
+			{% endif %}
 
 	
 
-	<div class="" id="reset">reetablir les filtres</div>
+		<div class="" id="reset">reetablir les filtres</div>
 
-	<!-- <p><i class="icon-repeat icon-white"></i></p> -->
+		<!-- <p><i class="icon-repeat icon-white"></i></p> -->
 
 
-	<div id="counter">
-		<p>
-			<span class="docNumber"></span>
-			<span class='docLabel'>{% trans "documents" %}</span>
-		</p>
-	</div>
-	<div id="documents">
-		<div id="documents-inner">
-		<ul></ul>
+		<div id="counter">
+			<p>
+				<span class="docNumber"></span>
+				<span class='docLabel'>{% trans "documents" %}</span>
+			</p>
 		</div>
-	</div>
+		<div id="documents">
+			<div id="documents-inner">
+				<ul></ul>
+			</div>
+		</div>
+		{% endblock %}
+
+
+		{% block navbar %}	
+		<div id="navbar">
+			<ul class="nav navbar">
+				<li><a href="#visualization">{% trans "document visualization"%}</a></li>
+				<li><a href="#content">{% trans "study metadata"%}</a></li>
+				
+				
+			
+			</ul>
+		</div>	
+		{% endblock %}
 
 	
-	<div class="clear"></div>
+		<div class="clear"></div>
+	</div>				
 {% endblock %}
+
 				
 
 

@@ -140,7 +140,7 @@
 
 				{% block page %}
 					{% block page_hook %}{% endblock %}
-					<div class="grid_9 alpha omega">
+					<div id="left-side" class="grid_9 alpha omega">
 						{% block page_left %}
 							{% if edit_mode %}
 								<input name="files[]" id="fileupload" type="file" size="50" />
@@ -151,7 +151,7 @@
 						<div class="clear"></div>
 					</div>
 
-
+					{% block right_sidebar %}	
 					<div id="right-sidebar" >
 						{% block navbar %}	
 						
@@ -181,7 +181,7 @@
 					{% endblock %}
 						
 					</div>
-
+					{% endblock %}
 					<div class="clear"></div>
 
 					

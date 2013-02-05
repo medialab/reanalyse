@@ -45,34 +45,74 @@
 	
 	{% for s in enquetes %}
 	
-		<div class="enquete big item hover">
-			<a href="{% url outside_enquete s.id %}">
-			<p class="classification">
-			{% for topicclassification  in s.meta.values.general.topicclassification.value %}
-				{{ topicclassification }}
-			{% endfor %}
-			</p>
-			<p class="title">{{s.name }}</p>
-			<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
-			<div class="metadata">
-				<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
-					{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>
-			
-				<p class="geocover">{% for geogcover in s.meta.values.universe.geogcover.value %}{{ geogcover }}{% endfor %}</p>
-				<p class="abstract" >{% for abstract  in s.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}</p>
-				<!-- ul class="statistics">
-					<li>
-						<span class="number">9</span> DOCS
-					</li>
-					<li>
-						<span class="number">7</span> PEOPLE
-					</li>
-					<li>
-						<span class="number">7</span> PEOPLE
-					</li>
-				</ul -->
+		<div class="enquete big item hover"
+			data-enquete-id="{{ s.id }}"
+			data-enquete-href="{% url outside_enquete s.id %}"
+			data-enquiry-href="{% url outside_enquiry s.id %}"
+			data-enquete-title="{{ s.name }}"
+			data-enquete-classement="{% for topicclassification in s.meta.values.general.topicclassification.value %}{{ topicclassification }}{% endfor %}">
+
+			<div class="cover" id="cover-of-item-{{ s.id }}">
+				<p class="classification">Sociologie Politique</p>
+				<div class="title">{{ s.name }}</div>
+
+				<div class="upperside">
+					<a href="{% url outside_enquete_metadata s.id %}">
+						1. accéder aux <b>metadonnees</b> de l'enquête
+					</a>
+					<a href="{% url outside_enquiry s.id %}">
+						2. accéder a l'enquête sur l'enquête
+					</a>
+
+					<a href="{% url outside_enquete s.id %}">
+						3. accéder aux visualisations
+					</a>
+
+
+				</div>
+				<div class="lowerside">
+					Pour accêder aux données de l'enquête vous devez être inscrit
+					<a href="{% url outside_enquete s.id %}">
+						accéder à l'enquête
+					</a>
+					<a href="{% url outside_enquete s.id %}">
+						demander l'accès
+					</a>
+				</div>
 			</div>
-			</a>
+
+			<div class="wrap">
+				<a href="{% url outside_enquete s.id %}">
+
+				<p class="classification">
+				{% for topicclassification  in s.meta.values.general.topicclassification.value %}
+					{{ topicclassification }}
+				{% endfor %}
+				</p>
+				<p class="title">{{s.name }}</p>
+				<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
+				<div class="metadata">
+					<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+						{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>
+				
+					<p class="geocover">{% for geogcover in s.meta.values.universe.geogcover.value %}{{ geogcover }}{% endfor %}</p>
+					<p class="abstract" >{% for abstract  in s.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}</p>
+					<!-- ul class="statistics">
+						<li>
+							<span class="number">9</span> DOCS
+						</li>
+						<li>
+							<span class="number">7</span> PEOPLE
+						</li>
+						<li>
+							<span class="number">7</span> PEOPLE
+						</li>
+					</ul -->
+				</div>
+				
+				</a>
+			</div>
+
 		</div>
 	
 	{% endfor %}

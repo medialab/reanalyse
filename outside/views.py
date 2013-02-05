@@ -79,6 +79,16 @@ def enquete( request, enquete_id ):
 
 	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
+def enquete_metadata( request, enquete_id ):
+	data = shared_context( request, tags=[ "enquetes" ] )
+	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
+
+	try:
+		data['enquiry'] = Enquiry.objects.get( enquete=enquete_id, language=data['language'] )
+	except Enquiry.DoesNotExist,e:
+		pass
+	return render_to_response('enquete/metadata.html', RequestContext(request, data ) )
+
 def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquiries" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
@@ -185,6 +195,19 @@ def login_view( request ):
 
 
 	return render_to_response('outside/login.html', RequestContext(request, data ) )
+
+
+
+def signup( request ):
+	data = shared_context( request, tags=[ "signup" ] )
+	# load all pins without page (aka news)
+	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )
+
+
+
+
+
 
 def logout_view( request ):
 	logout( request )

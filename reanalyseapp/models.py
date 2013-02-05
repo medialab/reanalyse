@@ -71,6 +71,40 @@ class SiteContent(models.Model):
 # 	pid = models.CharField(max_length=20)
 
 
+# Metadata Tag for multiple purposes: article type, researchers involved.
+# Attributes are Enquete dependent.
+class Tag(models.Model):
+	AUTHOR = 'AU'
+	ARTICLE = 'AR'
+	INSTITUTION = 'In'
+	RESEARCHER = 'Rs'
+	PLACE = 'Pl'
+	DATE = 'Da'
+	GEOCOVER = 'GC'
+
+	DISABLE_VISUALIZATION = 'DV'
+
+	TYPE_CHOICES = (
+        (AUTHOR, 'Author'),
+        (ARTICLE, 'Article'),
+        (INSTITUTION, 'Institution'),
+        (RESEARCHER, 'Researcher'),
+        (PLACE, 'Place'),
+        (DATE, 'Date'),
+        (GEOCOVER, 'Geographic coverage'),
+        (DISABLE_VISUALIZATION, 'Disable Visualization'),
+    )
+
+	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'
+	slug = models.SlugField(max_length=128) # e.g. 'mr-e-smith'
+	type = models.CharField( max_length=2, choices=TYPE_CHOICES ) # e.g. 'author' or 'institution'
+
+	def __unicode__(self):
+		return "%s : %s"% ( self.get_type_display(), self.name)
+
+	class Meta:
+		ordering = ["type", "slug" ]
+		unique_together = ("type", "slug")
 
 ##############################################################################		
 # ENQUETE
@@ -86,6 +120,9 @@ class Enquete(models.Model):
 	statuscomplete = models.BigIntegerField(default=0) 					# loading 0-100%
 	date = models.DateTimeField(auto_now_add=True)							# date uploaded
 	ddi_id = models.CharField(max_length=170)
+
+	tags = models.ManyToManyField( Tag )
+
 	#permission = models.ForeignKey(Permission)
 	class Meta: # Users & Groups are initialized in views
 		permissions = (
@@ -102,37 +139,7 @@ class Enquete(models.Model):
 			return {'metainfo':'no meta was parsed'}
 ####################################################################
 
-# Metadata Tag for multiple purposes: article type, researchers involved.
-# Attributes are Enquete dependent.
-class Tag(models.Model):
-	AUTHOR = 'AU'
-	ARTICLE = 'AR'
-	INSTITUTION = 'In'
-	RESEARCHER = 'Rs'
-	PLACE = 'Pl'
-	DATE = 'Da'
-	GEOCOVER = 'GC'
 
-	TYPE_CHOICES = (
-        (AUTHOR, 'Author'),
-        (ARTICLE, 'Article'),
-        (INSTITUTION, 'Institution'),
-        (RESEARCHER, 'Researcher'),
-        (PLACE, 'Place'),
-        (DATE, 'Date'),
-        (GEOCOVER, 'Geographic coverage'),
-    )
-
-	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'
-	slug = models.SlugField(max_length=128) # e.g. 'mr-e-smith'
-	type = models.CharField( max_length=2, choices=TYPE_CHOICES ) # e.g. 'author' or 'institution'
-
-	def __unicode__(self):
-		return "%s : %s"% ( self.get_type_display(), self.name)
-
-	class Meta:
-		ordering = ["type", "slug" ]
-		unique_together = ("type", "slug")
 
 ##############################################################################
 class Visualization(models.Model):

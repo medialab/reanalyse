@@ -36,7 +36,7 @@
 {% block navbar %}	
 	<div id="navbar">
 		<ul class="nav navbar">
-			<li><h3>&laquo;	 {{  enquiry.title }} &raquo;	</h3></li>
+			
 
 			{% for pin in sections %}
 			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
@@ -64,15 +64,22 @@
 		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
 		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
 		 <h3>{{ enquiry.title }}</h3>
+		 {% if edit_mode %}
+			<a href="{% url admin:outside_enquiry_change enquiry.id %}" rel="tooltip" title="{% trans "edit mode" 	%}: {% trans "add news" %}">[ {% trans "add section" %} ]</a>
+		{% endif %}
+
+		{% with tags=enquiry.tags.all %}
 		<div class="meta">
 			<span class="author" >
-				{% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+				{% for t in tags %}{% ifequal t.type "AU" %} {{ t.name }} {% endifequal %}{% endfor %}
 			</span> &dash;
 			<span class="tags">
-				{% for nation in enquiry.enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
-				{% for studydate in enquiry.enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+				{% for t in tags %}{% ifequal t.type "Pl" %} {{ t.name }} {% endifequal %}{% endfor %}
+				{% trans "interview done on the" %}
+				{% for t in tags %}{% ifequal t.type "Da" %} {{ t.name }} {% endifequal %}{% endfor %}
 			</span>
 		</div>
+		{% endwith %}
 	</div>
 {% endblock %}
 
@@ -95,18 +102,22 @@
 		
 		
 		<div class="abstract">
-			{% trans "an enquiry about"%} <a href="{% url outside_enquete enquiry.enquete.id %}">{{ enquiry.enquete.name }}</a>
+			{% trans "Enquête sur l'enquête de" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
+
+			de {% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if forloop.last %}{% else %}, {%endif %} {% endfor %}
+
+			{{ abstract|safe }}
+			
 		</div>
 
 		<div class="content">
-			{% trans "an enquiry about"%} <a href="{% url outside_enquete enquiry.enquete.id %}">{{ enquiry.enquete.name }}</a>
+			{{ enquiry.content|safe }}
 		</div>
 
 		{% if edit_mode %}
 				<div class="edit-mode add-enquiry-pin"  href="#add-section-modal" data-enquete-id="{{ enquiry.enquete.id }}" role="button" title="{% trans "edit mode" %}: {% trans "add enquiry content" %}"> [ {% trans "add enquiry content" %} ] </div>
 			{% endif %}
-		<div class="abstract">{{ enquiry.abstract }}</div>
-		<div class="dates" ></div>
+		
 
 
 		<script>

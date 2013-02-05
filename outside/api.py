@@ -271,7 +271,49 @@ def subscribers(request):
 		response.add("object", m, jsonify=True )
 
 	return response.queryset( Subscriber.objects.filter() ).json()
+
+
+
+def signup( request, subscriber_id ):
+	return Epoxy( request ).single( Signup, {'id':subscriber_id} ).json()
+
+
+def signups(request):
+	# logger.info("Welcome to GLUEBOX api")
+	response = Epoxy( request )
+	if response.method=="GET":
+
+		form = SignupForm( request.REQUEST )
+		
+		if not form.is_valid():
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+		
+		try:
+			#User creation
+			ADDED_USER = User.objects.create(
+				first_name = form.cleaned_data['first_name'],
+				last_name = form.cleaned_data['last_name'],
+				username = form.cleaned_data['username'],
+				email = form.cleaned_data['email'],
+				password = form.cleaned_data['password'],
+			).save()
+			
+			
+			S = Subscriber(
+				user = ADDED_USER,
+				affiliation = form.cleaned_data['affiliation'],
+				accepted_terms = form.cleaned_data['accepted_terms'],
+				description = form.cleaned_data['description']).save()
+				
+			return response.queryset( User.objects.filter() ).json()
+		
+		except :
+			return response.queryset( User.objects.filter() ).json()
+			
 	
+	return response.queryset( User.objects.filter() ).json()
+
+
 
 def subscriber( request, subscriber_id ):
 	return Epoxy( request ).single( Subscriber, {'id':subscriber_id} ).json()

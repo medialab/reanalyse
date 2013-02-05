@@ -528,9 +528,7 @@ html{
 	.classification{
 		padding:@grid-padding/4 @grid-padding/2;
 		border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
-		font-family: 'CallunaSans-Regular';
-		font-size:11px;
-		text-transform: lowercase;
+		.serif(11px);
 
 	}
 
@@ -599,9 +597,7 @@ html{
 	border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
 }
 .enquete{
-	&:hover .title{
-		color: @base-color;
-	}
+
 	&.hoverable:hover{ // , &.hover
 	text-shadow: 1px 1px 2px darken(@base-color,36%);
 		.box-shadow( 1px 1px 2px darken( @background-color, 3%) );
@@ -893,13 +889,20 @@ section, .section{
 		}
 	}
 	>.abstract{
-		.serif( 20px, normal);
+		.serif( 18px );
 		color: lighten( @text-color, 10%);
 		margin-bottom: @grid-padding / 2;
 		padding-left: @grid-padding;
 		margin-right: @grid-padding*5;
 		i{
 			.serif-italic( 20px );
+		}
+		a, a:visited{
+			.mono(18px);
+			color: @base-color;
+			&:hover{
+				text-decoration: underline;
+			}
 		}
 	}
 
@@ -934,12 +937,13 @@ section, .section{
 	>.content{
 		text-align:justify;
 		margin-right: @grid-padding*6;
-		.serif( 16px );
+		.serif( 16px, normal );
 		a, a:visited{
 			.mono( 16px );
 			color: @base-color;
 			text-decoration: underline;
 		}
+		margin-bottom: @grid-padding*2/3;
 		p{
 			margin-bottom: @grid-padding / 3;
 		}
@@ -1803,7 +1807,7 @@ p.invalid{
 	}
 	.title{
 		padding:@grid-padding/3 @grid-padding/2;
-		.serif(28px);
+		.serif(21px);
 		border-top: 1px solid fade( white, 80%);
 		
 	}
@@ -1817,9 +1821,7 @@ p.invalid{
 	.classification{
 		padding:@grid-padding/4 @grid-padding/2;
 		border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
-		font-family: 'CallunaSans-Regular';
-		font-size:11px;
-		text-transform: lowercase;
+		.serif(12px);
 
 	}
 
@@ -1887,55 +1889,7 @@ p.invalid{
 .bordered-bottom{
 	border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
 }
-.enquete{
-	&:hover .title{
-		color: @base-color;
-	}
-	&.hoverable:hover{ // , &.hover
-	text-shadow: 1px 1px 2px darken(@base-color,36%);
-		.box-shadow( 1px 1px 2px darken( @background-color, 3%) );
-		border-top: 1px solid darken(  @base-color, 5% );
-		border-left: 1px solid darken( @base-color, 3% );
-		border-right: 1px solid darken( @base-color, 15% );
-		border-bottom: 1px solid darken(  @base-color, 17% );
 
-		border-top: 1px solid fade(@base-color, 20%);
-		background: @base-color;
-		color: white;
-		.classification{
-			border-bottom: 1px solid rgba(1, 77, 103, 0.3);
-		} 
-		.author, .dates, .geocover{
-			border-bottom: 1px solid rgba(1, 77, 103, 0.3);
-		}
-		.title{
-			border-top:1px solid fade(white,10%);
-		}
-		.abstract, .dates, .geocover{
-			color:white;
-			border-top:1px solid fade(white,5%);
-		}
-		.abstract{
-			//.bordered-bottom;
-			background: darken(@base-color,9%);
-			
-		}
-		.dates{
-			//.bordered-bottom;
-			background: darken(@base-color,3%);
-			
-		}
-		.geocover{
-			//.bordered-bottom;
-			background: darken(@base-color,6%);
-			
-		}
-		.statistics{
-			height: 56px;
-
-		}
-	}
-}
 
 
 //
@@ -2000,6 +1954,7 @@ p.invalid{
 				.serif-italic(17px);
 				color: white;
 				margin-left: @grid-padding /3;
+				padding: @grid-padding/3 0;
 			}
 
 			&:first-child{
@@ -2053,7 +2008,7 @@ background: lighten( @page-color, 2%);
 
 	>h3{
 		margin: @grid-padding/2 @grid-padding @grid-padding/2 @grid-padding;
-		.serif(28px);
+		.serif(24px);
 	}
 		
 
@@ -2150,6 +2105,10 @@ b{
 	.serif-bold(14px);
 }
 
+h4{
+	.serif-bold(16px);
+}
+
 #footer-inner{
 	height: @footer-height - @grid-padding;
 	background: @base-color;
@@ -2188,3 +2147,116 @@ b{
 }
 
 
+table.meta{
+	border-spacing: 0px;
+	padding:0;
+	margin:0;
+
+	tr{
+		border-spacing:0px;
+
+		th{
+			h4{
+				border-bottom: 1px solid #dbdbdb;
+				.serif-bold(16px);
+				padding: @grid-padding/2 0 @grid-padding/3 0;
+			}
+			
+			padding: 0 0 @grid-padding/3 0;
+		}
+
+		td.key{
+			.serif-slant(14px);
+			padding: 0 @grid-padding/2 0 @grid-padding/3;
+
+		}
+	}
+}
+
+
+.enquete{
+	overflow:hidden;
+	// covers and wrappers
+	&.active{
+		.cover{
+			top: 0%;
+		}
+
+	}
+	.cover, .wrap{
+		
+	}
+	.cover{
+		height:100%;
+		width:100%;
+		position:absolute;
+		top:-100%;
+
+		background: @base-color;
+		// display: none;	
+		.transition(top, .3s, ease-in-out);
+		&.active{
+			top: 0%;
+			display:block;
+		}
+
+		.title{
+			padding:@grid-padding/3 @grid-padding/2;
+			.serif(21px);
+			border-top: 1px solid fade( white, 20%);
+			color: white;
+
+		}
+
+		&:hover{
+			.title{
+				color: white;
+			}
+		}
+
+		.author{
+			padding:@grid-padding/4 @grid-padding/2;
+			.serif-italic(18px);
+			border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
+		}
+
+		.classification{
+			padding:@grid-padding/4 @grid-padding/2;
+			border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
+			.serif(12px);
+			color: fade(white,90%);
+			
+		}
+
+		>.upperside, >.lowerside{
+			//height:50%;
+			
+			width: 100%;
+			margin:0;
+			border:0;
+			padding:0;
+
+			a, a:visited{
+				display:block;
+				height: 100%;
+				width: 100%;
+				color:fade(white, 85%);
+				&:hover{
+					background: @base-color;
+					color:white;
+					text-decoration: underline;
+				}
+			}
+
+			.inner{
+				padding: @grid-padding / 2;
+
+
+			}
+		}
+
+		>.lowerside{
+
+		}
+	}
+}

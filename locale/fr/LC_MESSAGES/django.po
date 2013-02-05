@@ -50,9 +50,6 @@ msgstr ""
 msgid "title"
 msgstr ""
 
-#: glue/forms.py:24
-msgid "abstract"
-msgstr ""
 
 #: glue/forms.py:25
 msgid "content"
@@ -393,7 +390,7 @@ msgstr "conditions d'utilisation"
 msgid "send"
 msgstr "envoyer"
 
-msgid "affiliation"
+msgid "affiliation institution"
 msgstr "votre etablissement d'affiliation"
 
 msgid "university or institution"
@@ -434,3 +431,166 @@ msgstr "Les informations recueillies font l'objet d'un traitement informatique d
 
 #~ msgid "Search"
 #~ msgstr "Recherche"
+
+
+
+
+#
+#	SECTION B
+#	===
+#
+#	JSON metadata field tranlations
+#
+msgid "langdoc"
+msgstr "Langage documentation"
+
+msgid "meta.locationofunitsofobservation"
+msgstr "Niveau de comparatisme"
+
+msgid "meta.abstract"
+msgstr "Résumé"
+
+msgid "meta.general"
+msgstr "Général"
+
+msgid "meta.affiliation"
+msgstr "Affiliation"
+
+msgid "keywords"
+msgstr "Mots clefs"
+
+msgid "copyright"
+msgstr "copyright"
+
+msgid "discipline"
+msgstr "Discipline"
+
+msgid "methodofdatacollection"
+msgstr "Technique de collection"
+
+msgid "titl"
+msgstr "Nom"
+
+msgid "contact"
+msgstr "Contact"
+
+msgid "actor"
+msgstr "Acteur(s)"
+
+msgid "targetgroups"
+msgstr "Groupes de population ciblés"
+
+msgid "collsitu"
+msgstr "Durée des observations"
+
+msgid "accessconditions"
+msgstr "Conditions d'accès"
+
+msgid "relpubl"
+msgstr "Publications"
+
+msgid "colldate"
+msgstr "Dates de récolte des données"
+
+msgid "anonymization"
+msgstr "Anonymisation"
+
+msgid "corpus"
+msgstr "Corpus"
+
+msgid "authenty"
+msgstr "Auteur(s)"
+
+msgid "sampprocedure"
+msgstr "Echantillonnage "
+
+msgid "distrbtr"
+msgstr "Distributeur"
+
+
+
+msgid "topicclassification"
+msgstr "Classification"
+
+msgid "nation"
+msgstr "Pays"
+
+msgid "timedimension"
+msgstr "Périodicité"
+
+msgid "modedatacollection"
+msgstr "Accès aux observations"
+
+msgid "numberofunits"
+msgstr "Nombre d'observations"
+
+msgid "studydates"
+msgstr "Dates de l'enquête"
+
+msgid "timeperiodcovered"
+msgstr "Période couverte"
+
+msgid "spatialunits"
+msgstr "Unités spatialisées"
+
+msgid "datakind"
+msgstr "Types de documents"
+
+msgid "weighting"
+msgstr "Segmentation"
+
+msgid "edition"
+msgstr "Edition"
+
+msgid "universe"
+msgstr "Univers"
+
+msgid "numberoffiles"
+msgstr "Nombre de documents"
+
+msgid "locarch"
+msgstr "Localisation archives"
+
+msgid "analysis"
+msgstr "Analyse"
+
+msgid "method"
+msgstr "Méthode"
+
+msgid "grantno"
+msgstr "Bourse"
+
+msgid "idno"
+msgstr "DDI Id"
+
+msgid "observunits"
+msgstr "Unités d'observation"
+
+msgid "langdata"
+msgstr "Language données"
+
+msgid "editor"
+msgstr "Edition"
+
+msgid "geogcover"
+msgstr "Couverture géographique"
+
+msgid "transcription"
+msgstr "Transcription"
+
+msgid "firstedition"
+msgstr "Première version"
+
+msgid "fundag"
+msgstr "Agence de financement"
+
+msgid "latestedition"
+msgstr "Dernière version"
+
+msgid "software"
+msgstr "Logiciel"
+
+
+msgid "interview done on the"
+msgstr "entretien réalisé le"
+
