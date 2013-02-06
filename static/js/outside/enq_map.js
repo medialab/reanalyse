@@ -159,8 +159,8 @@ oo.enq.map.init = function ( objects ){
 
 	oo.enq.map.data = nest;
 
-	oo.log('objects', objects)
-	oo.log('oo.enq.map.data', oo.enq.map.data)
+	// oo.log('objects', objects)
+	// oo.log('oo.enq.map.data', oo.enq.map.data)
 
     // return
 

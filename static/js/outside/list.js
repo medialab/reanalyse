@@ -13,7 +13,7 @@ oo.list = {};
 
 oo.list.init = function(){ oo.log("[oo.list.init]");
 
-	$('.items-container').masonry({ itemSelector : '.item' });
+	
 	oo.sidebar.init();
 	$('.items-container').on('click', ".cover a",function( e ){ e.stopImmediatePropagation(); return true; } );
 	$('.items-container').on('click', ".item", oo.list.items.click );
@@ -21,6 +21,17 @@ oo.list.init = function(){ oo.log("[oo.list.init]");
 	
 	// create hidden div
 	$('.items-container').on('mouseleave', ".item", oo.list.covers.mouseleave );
+
+	$('.items-container .item').each( function( i, el ){
+		var el = $(el);
+		var ah = el.height(); // actual height of the item, stored as css height propery
+		el.css({"height":ah});
+		// move cover inside wrap
+		
+
+	});
+
+	$('.items-container').masonry({ itemSelector : '.item' });
 }
 
 
