@@ -20,7 +20,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 # django specific import
 from django.conf import settings
-from reanalyseapp.models import Enquete, Texte
+from reanalyseapp.models import Enquete, Texte, Tag
 
 def update( textes, enquete, csvdict ):
 	print """
@@ -47,7 +47,7 @@ def update( textes, enquete, csvdict ):
 			texte_name = row['*name']
 			locationgeo = re.sub( r'[^0-9\.,]', '', row['*locationgeo'])
 			researcher = row['*researcher']
-
+			article =  row['*article']
 		except KeyError, e:
 			print "            Field format is not valid: %s " % ( e )
 			break
@@ -76,8 +76,19 @@ def update( textes, enquete, csvdict ):
 			
 		print "            %s \"%s\": %s" % ( texte.id, texte_name, locationgeo )
 		
+		# get or save tag
+		print  "            %s \"%s\": %s" % ( texte.id, texte_name, article )
+
+		try:
+			t = Tag.objects.get( type=Tag.ARTICLE, slug=article )
+		except Tag.DoesNotExist, e:
+			print  "            %s \"%s\": creating tag [%s:%s]" % ( texte.id, texte_name, article, Tag.ARTICLE )
+			t = Tag( type=Tag.ARTICLE, slug=article, name=article)
+			t.save()
+
 		# save location geo
 		texte.locationgeo = locationgeo
+		texte.tags.add( t )
 		texte.save()
 		#try
 

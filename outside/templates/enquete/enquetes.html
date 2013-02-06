@@ -51,31 +51,28 @@
 			data-enquiry-href="{% url outside_enquiry s.id %}"
 			data-enquete-title="{{ s.name }}"
 			data-enquete-classement="{% for topicclassification in s.meta.values.general.topicclassification.value %}{{ topicclassification }}{% endfor %}">
-
 			<div class="cover" id="cover-of-item-{{ s.id }}">
-				<p class="classification">Sociologie Politique</p>
-				<div class="title">{{ s.name }}</div>
-
+				
 				<div class="upperside">
 					<a href="{% url outside_enquete_metadata s.id %}">
-						1. accéder aux <b>metadonnees</b> de l'enquête
+						l'enquête en bref
 					</a>
 					<a href="{% url outside_enquiry s.id %}">
-						2. accéder a l'enquête sur l'enquête
+						l'enquête sur l'enquête
 					</a>
 
 					<a href="{% url outside_enquete s.id %}">
-						3. accéder aux visualisations
+						focus sur l'enquête
 					</a>
 
 
 				</div>
 				<div class="lowerside">
-					Pour accêder aux données de l'enquête vous devez être inscrit
+					<p>Pour accêder aux données de l'enquête vous devez être inscrit</p>
 					<a href="{% url outside_enquete s.id %}">
-						accéder à l'enquête
+						accéder aux contenus
 					</a>
-					<a href="{% url outside_enquete s.id %}">
+					<a href="{% url outside_signup %}">
 						demander l'accès
 					</a>
 				</div>
@@ -95,7 +92,6 @@
 					<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
 						{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>
 				
-					<p class="geocover">{% for geogcover in s.meta.values.universe.geogcover.value %}{{ geogcover }}{% endfor %}</p>
 					<p class="abstract" >{% for abstract  in s.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}</p>
 					<!-- ul class="statistics">
 						<li>

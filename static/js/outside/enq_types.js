@@ -161,21 +161,23 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 			g.append('rect')
 				.attr('class', 'percentage')
-				.attr('width', gWidth)
+				.attr('width', gWidth - 1)
 				.attr('height', height)
 
 			g.append('rect')
 				.attr('class', 'line')
 				.attr('transform', 'translate(0, ' + height + ')')
 				.attr('width', 1)
-				.attr('height', 15)
+				.attr('height', 5)
+
+			var gText = gWidth < 60 ? map[i].values.length : map[i].values.length + ' ' + map[i].key;
 
 			g.append('text')
 				.attr('class', 'figure')
 				.attr('width', gWidth)
 				.attr('height', height)
-				.attr('transform', 'translate(4,25)')
-				.text(map[i].values.length + ' ' + map[i].key)
+				.attr('transform', 'translate(0,25)')
+				.text(gText)
 
 			xPosition += gWidth;
 
@@ -199,7 +201,6 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 			    totalNumber = g.attr('data-total'),
 			    totalWidth = g.attr('data-filter') == 'true' ? width : g.attr('data-originalWidth');
 
-			// oo.log('type', type)
 
 			for (var i in map) {
 			    if ( map[i].key == type ) {
@@ -216,11 +217,16 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 				g.select('rect.percentage')
 					.transition()
 					.duration(1000)
-					.attr('width', partialWidth)				
+					.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )				
 			}
 
-			g.select('text.figure')
-				.text(partialNumber + ' ' + type)
+			var gText = partialWidth < 60 ? partialNumber : partialNumber + ' ' + type;
+
+			oo.log('partialWidth', partialWidth, partialWidth < 60)
+
+
+			// g.select('text.figure')
+			// 	.text(gText)
 
 			g.attr('data-partial', partialNumber);
 

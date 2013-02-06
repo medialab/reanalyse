@@ -12,7 +12,7 @@ from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError
-from reanalyseapp.models import Enquete
+from reanalyseapp.models import Enquete, Tag
 from datetime import datetime
 import os, mimetypes
 
@@ -216,11 +216,13 @@ def enquete_data( request, enquete_id ):
 	response.meta('total_count', textes.count() )
 	response.meta('version', version)
 
+
 	response.add('objects',[{
 		'id':t.id,
 		'type':t.doctype,
 		'title':t.name,
-		'tags':[ {'name':tag.name, 'type':tag.type} for tag in t.tags.all() ],
+		'articles': [{'article':a.name} for a in t.tags.filter(type=Tag.ARTICLE)],
+		# 'tags':[ {'name':tag.name, 'type':tag.type} for tag in t.tags.all() ],
 		'categories': [{'category':c} for c in t.doccat2.split(",")],
 		'phases': [{'phase' : t.doccat1}],
 		'times':[{'time':t.date.isoformat()} ] if t.date else [],

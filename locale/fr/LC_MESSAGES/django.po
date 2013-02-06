@@ -590,7 +590,12 @@ msgstr "Dernière version"
 msgid "software"
 msgstr "Logiciel"
 
-
 msgid "interview done on the"
 msgstr "entretien réalisé le"
+
+msgid "news"
+msgstr "actualités"
+
+msgid "contacts"
+msgstr "contact"
 
