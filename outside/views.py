@@ -7,15 +7,16 @@ from django.template import RequestContext
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import login, logout, authenticate
-from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
-from outside.forms import AddEnquiryForm
+
+
 
 
 from reanalyseapp.models import Enquete
 from glue.models import Pin, Page
+from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 from outside.models import Enquiry
 from outside.sites import OUTSIDE_SITES_AVAILABLE
-from outside.forms import SubscriberForm
+from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
 
 #
 #    Outside
@@ -200,6 +201,7 @@ def login_view( request ):
 
 def signup( request ):
 	data = shared_context( request, tags=[ "signup" ] )
+	data['signup_form'] = SignupForm(  auto_id="id_signup_%s" )
 	# load all pins without page (aka news)
 	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
 	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )

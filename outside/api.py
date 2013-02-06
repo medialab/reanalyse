@@ -3,10 +3,12 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.conf import settings
 from django.db.models import Q 
+from django.contrib.auth.models import User
+
 
 from glue.models import Pin
 from outside.models import Enquiry, Subscriber, Message
-from outside.forms import AddEnquiryForm, SubscriberForm
+from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError
@@ -252,6 +254,7 @@ def subscribers(request):
 				last_name = form.cleaned_data['last_name'],
 				email = form.cleaned_data['email'],
 				affiliation = form.cleaned_data['affiliation'],
+				status = form.cleaned_data['status'],
 				accepted_terms = form.cleaned_data['accepted_terms'],
 				description = form.cleaned_data['description'])
 			s.save()
@@ -281,7 +284,7 @@ def signup( request, subscriber_id ):
 def signups(request):
 	# logger.info("Welcome to GLUEBOX api")
 	response = Epoxy( request )
-	if response.method=="GET":
+	if response.method=="POST":
 
 		form = SignupForm( request.REQUEST )
 		
@@ -290,28 +293,32 @@ def signups(request):
 		
 		try:
 			#User creation
-			ADDED_USER = User.objects.create(
+			created_user = User.objects.create(
 				first_name = form.cleaned_data['first_name'],
 				last_name = form.cleaned_data['last_name'],
-				username = form.cleaned_data['username'],
+				username = form.cleaned_data['email'],
 				email = form.cleaned_data['email'],
-				password = form.cleaned_data['password'],
-			).save()
-			
-			
-			S = Subscriber(
-				user = ADDED_USER,
-				affiliation = form.cleaned_data['affiliation'],
-				accepted_terms = form.cleaned_data['accepted_terms'],
-				description = form.cleaned_data['description']).save()
+				password = form.cleaned_data['password']
+			)
 				
-			return response.queryset( User.objects.filter() ).json()
+				
+			s = Subscriber(
+				user = created_user,
+				affiliation = form.cleaned_data['affiliation'],
+				first_name = form.cleaned_data['first_name'],
+				last_name = form.cleaned_data['last_name'],
+				email = form.cleaned_data['email'],
+				status = form.cleaned_data['status'],
+				accepted_terms = form.cleaned_data['accepted_terms'],
+				description = "registration required")
+			s.save()
+
+			response.add('object', s, jsonify=True)
+
+		except IntegrityError, e:
+			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
 		
-		except :
-			return response.queryset( User.objects.filter() ).json()
-			
-	
-	return response.queryset( User.objects.filter() ).json()
+	return response.queryset( Subscriber.objects.filter() ).json()
 
 
 

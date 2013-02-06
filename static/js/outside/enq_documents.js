@@ -8,9 +8,6 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
-	d3.select("#reset")
-        .on("click", oo.filt.clean );
-
 	var	docs = d3.select('#documents ul'),
 		counter = d3.select('#counter span.docNumber')
 		container = d3.select('#counter p'),
@@ -55,7 +52,7 @@ oo.enq.docs.update = function( event, filters ){
 
 	container.transition()
 		.duration(delay)
-		.style('margin-top', '24px');
+		.style('margin-top', '30px');
 
 	counter.transition()
 		.duration(1)
@@ -72,6 +69,9 @@ oo.enq.docs.update = function( event, filters ){
 oo.enq.docs.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.docs.update );
+
+	d3.select("#reset")
+        .on("click", oo.filt.clean );
 
 	var counter = d3.select('#counter span.docNumber'),
 		docs = d3.select('#documents ul'),

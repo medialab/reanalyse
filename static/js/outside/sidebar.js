@@ -69,7 +69,7 @@ oo.sidebar.scrollspy.spy = function(){
 
 
 
-		//oo.log( wh, ws, i, h,  ht, ht < wh + ws, ht + hh > ws );
+		oo.log( wh, ws, i, h,  ht, ht < wh + ws, ht + hh > ws );
 		// visibility
 		if( ht < wh + ws && ht + hh > ws ){
 			// first element visible in page

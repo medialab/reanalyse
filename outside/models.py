@@ -98,4 +98,6 @@ class Subscriber( models.Model ):
 			'affiliation' : self.affiliation,
 			'accepted_terms' : self.accepted_terms,
 			'description' : self.description,
+
+			'user':{'id':self.user.id, 'username':self.user.username} if self.user is not None else None
 		}

@@ -30,20 +30,20 @@ class LoginForm( forms.Form ):
 	
 	
 class SignupForm( forms.Form ):
-    first_name = forms.CharField( max_length = 64, initial="Alex" ) # longer than standard field
-    last_name = forms.CharField( max_length = 64, initial="azzouz" ) # longer than standard field
+    first_name = forms.CharField( max_length = 64,  ) # longer than standard field
+    last_name = forms.CharField( max_length = 64,  ) # longer than standard field
     
-    username = forms.CharField( max_length=32, widget=forms.TextInput, initial="kenji" )
+    username = forms.CharField( max_length=32, widget=forms.TextInput,  )
     
-    password = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ), initial="alex", required=True )
+    password = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
     #password2 = forms.CharField( max_length=64, label='Password2', widget=forms.PasswordInput(render_value=False ), required=True )
     
-    email = forms.EmailField(initial="alexandreaazzouz@gmail.com")
+    email = forms.EmailField()
     
-    affiliation = forms.CharField( max_length = 128, required=False, initial="university" )
-    status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES), initial="RES")
+    affiliation = forms.CharField( max_length = 128, required=True,  )
+    status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES), )
     accepted_terms = forms.BooleanField(initial=1)
     
-    
+    captcha = ReCaptchaField(attrs={'theme':'clean'})
     
     

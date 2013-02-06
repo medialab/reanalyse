@@ -33,11 +33,11 @@ oo.enq.map.update = function( event, filters ){
 
 
 	for (var i = 0; i < objects.features.length; i++) {
-		oo.log('i', objects.features[i])
+		// oo.log('i', objects.features[i])
 		objects.features[i].counter = 0;
 	};
 
-	oo.log('objects', objects)
+	// oo.log('objects', objects)
 
 	var nest = objects;
 
@@ -61,7 +61,7 @@ oo.enq.map.update = function( event, filters ){
 
 	}
 
-	oo.log('nest', nest)
+	// oo.log('nest', nest)
 
 	var zoom = oo.enq.map.map.coordinate.zoom;
 	// 	inactiveSize = (zoom + 1) * 3 * .2,
@@ -69,7 +69,7 @@ oo.enq.map.update = function( event, filters ){
 
 	for (var i = 0; i < nest.features.length; i++) {
 		// oo.log('nest[i]', nest.features[i])
-		oo.log('nest[i].location', nest.features[i].location)
+		// oo.log('nest[i].location', nest.features[i].location)
 		map.select('circle[data-location="' + nest.features[i].location + '"]')
 			.transition()
 				.duration(1500)

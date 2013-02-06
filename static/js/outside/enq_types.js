@@ -12,22 +12,22 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 	var gummy = this;
 
-	var types = d3.select( selector );
+	var types = d3.select( selector ),
+		svg = types.append('svg');
 
 	this.init = function(){
 
 		var map = oo.nest( objects, 
 			nester, 
 			function (a, b){ return a.values.length < b.values.length ? 1 : a.values.length > b.values.length ? -1 : 0 }
-		)
-		sum = d3.sum(map, function(d) { return d.values.length })
-		width = types.style('width').slice(0, -2) - types.style('padding-left').slice(0, -2) * 2,
-		scaleX = d3.scale.linear()
-			.domain([ 0, sum ])
-			.range([ 0,  width ]),
-		svg = types.append('svg'),
-		xPosition = 0,
-		height = 10;
+		),
+			sum = d3.sum(map, function(d) { return d.values.length }),
+			width = types.style('width').slice(0, -2) - types.style('padding-left').slice(0, -2) * 2,
+			scaleX = d3.scale.linear()
+				.domain([ 0, sum ])
+				.range([ 0,  width ]),
+			xPosition = 0,
+			height = 10;
 
 		for (var i in map) {
 			
@@ -175,9 +175,8 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 		var map = oo.nest( oo.filt.data, 
 			nester, 
 			function (a, b){ return a.values.length < b.values.length ? 1 : a.values.length > b.values.length ? -1 : 0 }
-		);
-
-		var width = types.style('width').slice(0, -2) - types.style('padding-left').slice(0, -2) * 2;
+		),
+			width = types.style('width').slice(0, -2) - types.style('padding-left').slice(0, -2) * 2;
 
 		types.selectAll('g')
 			.each( function(){
@@ -188,7 +187,7 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 				    totalWidth = g.attr('data-filter') == 'true' ? width : g.attr('data-originalWidth');
 
 				for (var i in map) {
-				    if (map[i].key == type) {
+				    if ( map[i].key == type ) {
 				    	var partialNumber = map[ i ].values.length;
 				    }
 				}
@@ -225,9 +224,9 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 
 oo.enq.types.init = function(objects) {
-	// var categor1 = new oo.Gummy(objects, '#types', function( d ){ return d.type }, 'type');
+	var categor1 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
 	var categor2 = new oo.Gummy(objects, '#categories', function( d ){ return d.categories[0].category }, 'category');
-	var categor2 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
+	// var categor3 = new oo.Gummy(objects, '#articles', function( d ){ return [ to set ] }, 'type');
 }
 
 

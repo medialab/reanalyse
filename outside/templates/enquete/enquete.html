@@ -139,34 +139,34 @@
 
 {% block right_sidebar %}	
 	<div id="right-sidebar" >
+
 		{% block page_right %}	
 			{% if edit_mode %}
 				<div class="edit-mode add-pin" data-page-slug="" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add news" %}">[ {% trans "add news" %} ]
 				</div>
 			{% endif %}
 
-	
+			<div id="reset">→ Reetablir les filtres</div>
 
-		<div class="" id="reset">reetablir les filtres</div>
-
-		<!-- <p><i class="icon-repeat icon-white"></i></p> -->
+			<!-- <p><i class="icon-repeat icon-white"></i></p> -->
 
 
-		<div id="counter">
-			<p>
-				<span class="docNumber"></span>
-				<span class='docLabel'>{% trans "documents" %}</span>
-			</p>
-		</div>
-		<div id="documents">
-			<div id="documents-inner">
-				<ul></ul>
+			<div id="counter">
+				<p>
+					<span class="docNumber"></span>
+					<span class='docLabel'>{% trans "documents" %}</span>
+				</p>
 			</div>
-		</div>
+			<div id="documents">
+				<div id="documents-inner">
+					<ul></ul>
+				</div>
+			</div>
+
 		{% endblock %}
 
 
-		{% block navbar %}	
+<!-- 		{% block navbar %}	
 		<div id="navbar">
 			<ul class="nav navbar">
 				<li><a href="#visualization">{% trans "document visualization"%}</a></li>
@@ -176,7 +176,7 @@
 			
 			</ul>
 		</div>	
-		{% endblock %}
+		{% endblock %} -->
 
 	
 		<div class="clear"></div>

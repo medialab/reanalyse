@@ -1,0 +1,296 @@
+{% extends "enquete/middle.html" %}
+{% load i18n %}
+
+{% block less%}
+	{{ block.super }}
+	<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/enquete.less">
+	
+{% endblock %}
+
+
+
+
+{% block navbar %}	
+	<div id="navbar">
+		<ul class="nav navbar">
+			<li><h3>&laquo;	 {{  enquiry.title }} &raquo;	</h3></li>
+
+			<li><a href="#general">{% trans "general" %}</a></li>
+			<li><a href="#actors">{% trans "actors" %}</a></li>
+			<li><a href="#universe">{% trans "universe" %}</a></li>
+			<li><a href="#method">{% trans "method" %}</a></li>
+			<li><a href="#corpus">{% trans "corpus" %}</a></li>
+			<li><a href="#analysis">{% trans "analysis" %}</a></li>
+			<li><a href="#edition">{% trans "edition" %}</a></li>
+		</ul>
+	</div>
+{% endblock %}
+
+
+
+
+{% block sidebar_add_section %}
+	{% if not enquete.enquiry and edit_mode %}
+		<div class="edit-mode add-enquiry" data-enquete-id="{{ page.id }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add enquete sur enquete" %}">[ {% trans "add enquete sur enquete" %} ]
+				</div>
+
+	{% endif %}
+{% endblock %}
+
+{% block page_title %}
+	{% trans "enquete" %} #{{ enquete.id }}
+{% endblock %}
+
+{% block page_header %}
+	{{ block.super }}
+	
+{% endblock %}
+
+{% block page_hook %}
+	<div class="hook">
+		<div class="nav">
+			<div class="back floating"  rel="tooltip" title="{% trans "back to enquetes list" %}" data-tooltip-placement="top">
+				<a href="{% url outside_enquetes %}"> &larr;</a>
+			</div>
+			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+		{% if enquiry %} 
+			<div class="ese floating">
+				<a href="{% url outside_enquiry enquete.id %}">{% trans "voir l'enquête sur l'enquête" %} : &laquo;	 {{  enquiry.title }} &raquo;	&rarr; </a>
+			</div>
+		{% endif %}
+		<div class="clear"></div>
+		</div>
+		
+		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
+		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
+		 <h3>{{ enquete.name }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_left %}
+	
+	
+	
+	<section id="content" class="section expand">
+		
+
+		<div class="content">
+			
+			<table class="meta">
+				
+				<!-- no section General, covered before -->
+				
+				<tbody id="general">
+				<tr>
+					<th colspan="2">
+						<h4>{% trans "general" %}</h4>
+					</th>
+				</tr>
+				{% for key,item in enquete.meta.values.general.items %}
+					
+					{% if item.value|length %}
+						<tr>
+							<td class="key">
+								{% trans key %}
+							</td>
+							<td>
+								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</tbody>
+
+				<!-- section Actors -->
+				<tbody id="actors">
+				<tr>
+					<th colspan="2">
+						<h4>{% trans "actors" %}</h4>
+					</th>
+				</tr>
+				{% for key,item in enquete.meta.values.actor.items %}
+					
+					{% if item.value|length %}
+						<tr>
+							<td class="key">
+								{% trans key %}
+							</td>
+							<td>
+								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</tbody>
+
+				<!-- section Universe -->
+				<tbody id="universe">
+				<tr>
+					<th colspan="2">
+						<h4>{% trans "universe" %}</h4>
+					</th>
+				</tr>
+				{% for key,item in enquete.meta.values.universe.items %}
+					
+					{% if item.value|length %}
+						<tr>
+							<td class="key">
+								{% trans key %}
+							</td>
+							<td>
+								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</tbody>
+
+				<!-- section Method -->
+				<tbody id="method">
+					<tr>
+						<th colspan="2">
+							<h4>{% trans "method" %}</h4>
+						</th>
+					</tr>
+					{% for key,item in enquete.meta.values.method.items %}
+						
+						{% if item.value|length %}
+							<tr>
+								<td class="key">
+									{% trans key %}
+								</td>
+								<td>
+									{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				</tbody>
+
+				<!-- section Corpus -->
+				<tbody id="corpus">
+				<tr>
+					<th colspan="2">
+						<h4>{% trans "corpus" %}</h4>
+					</th>
+				</tr>
+				{% for key,item in enquete.meta.values.corpus.items %}
+					
+					{% if item.value|length %}
+						<tr>
+							<td class="key">
+								{% trans key %}
+							</td>
+							<td>
+								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</td>
+
+				<!-- section Analysis -->
+				<tbody id="analysis">
+				<tr>
+					<th colspan="2">
+						<h4>{% trans "analysis" %}</h4>
+					</th>
+				</tr>
+				{% for key,item in enquete.meta.values.analysis.items %}
+					
+					{% if item.value|length %}
+						<tr>
+							<td class="key">
+								{% trans key %}
+							</td>
+							<td>
+								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</tbody>
+
+				<!-- section Edition -->
+				<tbody id="edition">
+				<tr>
+					<th colspan="2">
+						<h4>{% trans "edition" %}</h4>
+					</th>
+				</tr>
+				{% for key,item in enquete.meta.values.edition.items %}
+					
+					{% if item.value|length %}
+						<tr>
+							<td class="key">
+								{% trans key %}
+							</td>
+							<td>
+								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</tbody>
+
+
+
+
+			</table>
+
+			
+
+			
+		</div>
+	</section>
+
+
+{% endblock %}
+
+
+
+				
+
+
+{% block modals %}
+	{{ block.super }}
+	{% if edit_mode %}
+	<div class="modal fade" id="add-enquiry-modal">
+		<form method="POST">{% csrf_token %}
+
+		<div class="modal-header">
+		<!-- button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button -->
+		<h3>{% trans "add enquiry" %}</h3>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
+
+			{{ add_enquiry_form.as_p }}
+		</div>
+		<div class="modal-footer">
+		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
+		<input type="submit" href="#" id="add-enquiry" data-enquete-id="{{ enquete.id }}" value="{% trans "add enquiry" %}"/>
+		</div>
+	</div>
+	{% endif %}
+{% endblock %}
+
+
+{% block api_urls %}
+	
+	
+	{{ block.super }}
+	
+	oo.urls.get_enquete_data = "{% url outside_enquete_data enquete.id %}";
+
+
+{% endblock %}
