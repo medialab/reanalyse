@@ -21,13 +21,14 @@ oo.list.init = function(){ oo.log("[oo.list.init]");
 	
 	// create hidden div
 	$('.items-container').on('mouseleave', ".item", oo.list.covers.mouseleave );
+	$('.items-container').on('mouseenter', ".item", oo.list.covers.mouseenter );
 
 	$('.items-container .item').each( function( i, el ){
 		var el = $(el);
 		var ah = el.height(); // actual height of the item, stored as css height propery
 		el.css({"height":ah});
 		// move cover inside wrap
-		
+
 
 	});
 
@@ -48,6 +49,12 @@ oo.list.items.click = function( event ){
 }
 
 oo.list.covers = { timeouts:{} };
+oo.list.covers.mouseenter = function( event ){
+	var id = $(this).attr('data-enquete-id');
+	oo.log("oo.list.covers.mouseenter ", id );
+	clearTimeout( oo.list.covers.timeouts[  id ] );
+	
+}
 oo.list.covers.mouseleave = function( event ){
 	var id = $(this).attr('data-enquete-id');
 

@@ -12,16 +12,19 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 	var gummy = this;
 
-	var types = d3.select( selector ),
-		svg = types.append('svg'),
-		map = oo.nest( objects, 
+	var types = d3.select( selector );
+
+	
+	var	svg = types.append('svg');
+		var map = oo.nest( objects, 
 			nester, 
 			function (a, b){ return a.values.length < b.values.length ? 1 : a.values.length > b.values.length ? -1 : 0 }
-		),
-		width = types.style('width').slice(0, -2) - types.style('padding-left').slice(0, -2) * 2,
+		);
+
+		var width = types.style('width').slice(0, -2) - types.style('padding-left').slice(0, -2) * 2,
 		sum = d3.sum(map, function(d) { return d.values.length }),
 		xPosition = 0,
-			height = 10;
+		height = 10;
 
 	this.init = function(){
 
@@ -238,7 +241,7 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 oo.enq.types.init = function(objects) {
 	var categor1 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
 	var categor2 = new oo.Gummy(objects, '#categories', function( d ){ return d.categories[0].category }, 'category');
-	// var categor3 = new oo.Gummy(objects, '#articles', function( d ){ return [ to set ] }, 'type');
+	var categor3 = new oo.Gummy(objects, '#articles', function( d ){ return d.articles[0].article }, 'article');
 }
 
 

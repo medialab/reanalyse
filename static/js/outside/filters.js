@@ -45,6 +45,9 @@ oo.filt.cross = oo.filt.cross || {
 	},
 	'phase': function( item, filter ){
 		return item.phases[0].phase == filter
+	},
+	'article': function( item, filter ){
+		return item.articles[0].article == filter
 	}
 };
 

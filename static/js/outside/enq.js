@@ -35,6 +35,8 @@ oo.nest = function( objects, nester, sorter ){
 
 	for (var d in objects){
 
+		// Check if data are available
+		if ( objects[d].articles.length == 0 ) continue;
 
 		var index = nester( objects[d] );
 

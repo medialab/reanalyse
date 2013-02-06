@@ -1801,6 +1801,11 @@ p.invalid{
 		width:272px;
 	
 	}
+	&:hover{
+		.title{
+			text-decoration: underline;
+		}
+	}
 	.title, .author{
 		
 		
@@ -2179,22 +2184,24 @@ table.meta{
 	// covers and wrappers
 	&.active{
 		.cover{
-			top: 0%;
+			top: 0px;
 		}
-
+		.wrap{
+			margin-top: 200px;
+		}
 	}
-	.cover, .wrap{
-		
+	.wrap{
+		.transition(margin-top, .3s, ease-in-out);
 	}
 	.cover{
-		height:100%;
+		height:200px;
 		width:100%;
 		position:absolute;
-		top:-100%;
-
-		background: @base-color;
-		// display: none;	
+		top:-200px;
+		overview:hidden;
+		background:darken( @page-color, 8%);
 		.transition(top, .3s, ease-in-out);
+		
 		&.active{
 			top: 0%;
 			display:block;
@@ -2204,28 +2211,8 @@ table.meta{
 			padding:@grid-padding/3 @grid-padding/2;
 			.serif(21px);
 			border-top: 1px solid fade( white, 20%);
-			color: white;
+			color: black;
 
-		}
-
-		&:hover{
-			.title{
-				color: white;
-			}
-		}
-
-		.author{
-			padding:@grid-padding/4 @grid-padding/2;
-			.serif-italic(18px);
-			border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
-		}
-
-		.classification{
-			padding:@grid-padding/4 @grid-padding/2;
-			border-bottom: 1px solid darken( fade( @base-color, 10%),20% );
-			.serif(12px);
-			color: fade(white,90%);
-			
 		}
 
 		>.upperside, >.lowerside{
@@ -2240,10 +2227,10 @@ table.meta{
 				display:block;
 				height: 100%;
 				width: 100%;
-				color:fade(white, 85%);
+				color:@base-color;
+				.mono(16px);
 				&:hover{
-					background: @base-color;
-					color:white;
+					
 					text-decoration: underline;
 				}
 			}
@@ -2254,9 +2241,18 @@ table.meta{
 
 			}
 		}
-
 		>.lowerside{
+			
+		}
+		>.upperside{
+			a{
+				padding: @grid-padding/4 @grid-padding/3 0  @grid-padding/3;
+				vertical-align:middle;
 
+				.number{
+					color: white;
+				}
+			}
 		}
 	}
 }
