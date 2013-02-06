@@ -217,16 +217,24 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 				g.select('rect.percentage')
 					.transition()
 					.duration(1000)
-					.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )				
+					.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
 			}
+
+			//  else {
+			// 	g.select('rect.percentage')
+			// 		.transition()
+			// 		.duration(100)
+			// 		.delay(1000)
+			// 		.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
+			// }
 
 			var gText = partialWidth < 60 ? partialNumber : partialNumber + ' ' + type;
 
 			oo.log('partialWidth', partialWidth, partialWidth < 60)
+			oo.log(gText)
 
-
-			// g.select('text.figure')
-			// 	.text(gText)
+			g.select('text.figure')
+				.text(gText)
 
 			g.attr('data-partial', partialNumber);
 

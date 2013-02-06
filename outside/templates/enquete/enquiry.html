@@ -37,11 +37,11 @@
 	<div id="navbar">
 		<ul class="nav navbar">
 			
-
 			{% for pin in sections %}
 			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
 			{% endfor %}
-			
+			<li><a href="#{{ pin.slug }}">&rarr; telecharger ficher pdf</a></li>
+
 		</ul>
 	</div>
 {% endblock %}
