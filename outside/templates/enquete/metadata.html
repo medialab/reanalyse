@@ -26,6 +26,12 @@
 	</div>
 {% endblock %}
 
+{% block document_ready %}
+	{{ block.super }}
+	
+	oo.sidebar.scrollspy.measure_on_parent = false;
+		
+{% endblock %}
 
 
 

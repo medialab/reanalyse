@@ -41,7 +41,9 @@ oo.sidebar.scrollspy = {
 	previous: {
 		wh:0,
 		ws:0
-	}
+	},
+	timer:0,
+	measure_on_parent:true
 };
 oo.sidebar.scrollspy.init = function(){
 	// test visibility of the first element
@@ -51,6 +53,13 @@ oo.sidebar.scrollspy.init = function(){
 	$(window).resize( oo.sidebar.scrollspy.spy );
 }
 oo.sidebar.scrollspy.spy = function(){
+	clearTimeout( oo.sidebar.scrollspy.timer );
+	oo.sidebar.scrollspy.timer = setTimeout( oo.sidebar.scrollspy.pull, 200 );
+
+}
+
+oo.sidebar.scrollspy.pull = function(){oo.log("[oo.sidebar.scrollspy.pull]");
+
 	// calm down. not each scroll!
 	var wh = $(window).height()
 	var ws = $(window).scrollTop()
@@ -64,8 +73,14 @@ oo.sidebar.scrollspy.spy = function(){
 		}
 
 		var ht = $( h ).offset().top -36;
-		var hh = $( h ).parent().height(); // target height. It is visible??
+		if( oo.sidebar.scrollspy.measure_on_parent ){
+			var hh = $( h ).parent().height(); // target height. It is visible??
 
+
+		} else {
+			var hh = $( h ).height();
+		}
+		
 
 
 
