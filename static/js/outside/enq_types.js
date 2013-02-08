@@ -93,6 +93,16 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 							.duration(1000)
 							.attr('width', partialWidth);
 
+						g.select('text')
+							.transition()
+							.delay(500)
+							.duration(1000)
+							.each('end', function() {
+								oo.log('end')
+							})
+
+
+
 						// Send request
 						var obj = {},
 							name = propertyName,
@@ -127,7 +137,7 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 						g.select('rect.percentage')
 							.transition()
 							.duration(1000)
-							.attr('width', partialWidth)
+							.attr('width', partialWidth -1)
 
 						// Show others
 						types.selectAll('g[data-filter=false]')
@@ -151,6 +161,23 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 						oo.filt.trigger( oo.filt.events.reset, obj );
 
 					}
+
+					// var gText = gWidth < 60 ? map[i].values.length : map[i].values.length + ' ' + map[i].key;
+
+					// oo.log('?', gWidth < 60)
+					// oo.log('gText', gText)
+					// oo.log('gWidth', gWidth)
+					// oo.log('')
+
+					// g.select('text.figure')
+					// 	.text(gText)
+
+					// g.append('text')
+					// 	.attr('class', 'figure')
+					// 	.attr('width', gWidth)
+					// 	.attr('height', height)
+					// 	.attr('transform', 'translate(0,25)')
+					// 	.text(gText)
 
 				});
 
@@ -214,10 +241,12 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 				partialWidth = scaleX(partialNumber);
 
 			if ( g.attr('data-filter') == 'false' ) {
+
 				g.select('rect.percentage')
 					.transition()
 					.duration(1000)
-					.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
+					// This correct a problem with negative numbers
+					.attr( 'width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
 			}
 
 			//  else {
@@ -228,15 +257,15 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 			// 		.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
 			// }
 
-			var gText = partialWidth < 60 ? partialNumber : partialNumber + ' ' + type;
+			// var gText = partialWidth < 60 ? partialNumber : partialNumber + ' ' + type;
 
-			oo.log('partialWidth', partialWidth, partialWidth < 60)
-			oo.log(gText)
+			// oo.log('partialWidth', partialWidth, partialWidth < 60)
+			// oo.log(gText)
 
-			g.select('text.figure')
-				.text(gText)
+			// g.select('text.figure')
+			// 	.text(gText)
 
-			g.attr('data-partial', partialNumber);
+			// g.attr('data-partial', partialNumber);
 
 		} )
 

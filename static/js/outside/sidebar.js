@@ -54,7 +54,7 @@ oo.sidebar.scrollspy.init = function(){
 }
 oo.sidebar.scrollspy.spy = function(){
 	clearTimeout( oo.sidebar.scrollspy.timer );
-	oo.sidebar.scrollspy.timer = setTimeout( oo.sidebar.scrollspy.pull, 200 );
+	oo.sidebar.scrollspy.timer = setTimeout( oo.sidebar.scrollspy.pull, 50 );
 
 }
 

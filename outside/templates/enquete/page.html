@@ -18,7 +18,7 @@
 
 	{{ block.super }}
 	{% for p in pins %}
-	<div class="section expand alpha">
+	<div class="section expand {% if forloop.first %}alpha{% endif %}">
 		{% comment %}
 		<div class="marker-wrapper">
 			<div class="marker" >
