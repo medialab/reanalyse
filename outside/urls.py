@@ -9,6 +9,13 @@ urlpatterns = patterns('',
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
 	url(r'^contacts/$','outside.views.contacts', name='outside_contacts'),
 	url(r'^signup/$','outside.views.signup', name='outside_signup'),
+	
+	
+	url(r'^api/signup/$', 'outside.api.signups', name='outside_api_signups'),
+	url(r'^api/signup/(?P<subscriber_id>\d+)/$', 'outside.api.signup', name='outside_api_signup'),	
+	
+	
+	
 	url(r'^legal-notice/$','outside.views.legal', name='outside_legal'),
 	
 	url(r'^download/(?P<pin_slug>[a-z0-9-_]+)/$','outside.views.download_view', name='outside_download'),
@@ -31,8 +38,7 @@ urlpatterns = patterns('',
 
 	url(r'^api/enquiry/(?P<enquiry_slug>[A-Za-z0-9-]+)/pins/$','outside.api.enquiry_pins', name='outside_enquiry_pins'), # foreign key to enquete for model Oustide_Enquiry
 	
-	url(r'^api/signup/$', 'outside.api.signups', name='outside_api_signups'),
-	url(r'^api/signup/(?P<subscriber_id>\d+)/$', 'outside.api.signup', name='outside_api_signup'),
+	
 	
 
 	url(r'^api/subscriber/$', 'outside.api.subscribers', name='outside_api_subscribers'),

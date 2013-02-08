@@ -48,16 +48,16 @@ msgstr ""
 
 #: glue/forms.py:23
 msgid "title"
-msgstr ""
+msgstr "titre"
 
 
 #: glue/forms.py:25
 msgid "content"
-msgstr ""
+msgstr "contenu"
 
 #: outside/views.py:69
 msgid "user has been disabled"
-msgstr ""
+msgstr "l'utilisateur a été désactivé"
 
 #: outside/views.py:71 outside/views.py:74
 msgid "invalid credentials"
@@ -65,11 +65,11 @@ msgstr ""
 
 #: outside/views.py:156
 msgid "language not found"
-msgstr ""
+msgstr "language non trouvé"
 
 #: outside/templates/outside/enquete.html:26
 msgid "description"
-msgstr ""
+msgstr "description"
 
 #: outside/templates/outside/enquete.html:27
 msgid "enquete sur l'enquete"
@@ -81,11 +81,11 @@ msgstr ""
 
 #: outside/templates/outside/enquete.html:50
 msgid "file type"
-msgstr ""
+msgstr "type de fichier"
 
 #: outside/templates/outside/enquete.html:53
 msgid "file list"
-msgstr ""
+msgstr "liste du fichier"
 
 #: outside/templates/outside/enquetes.html:20
 #: outside/templates/outside/middle.html:57
@@ -102,119 +102,119 @@ msgstr ""
 #: outside/templates/outside/enquetes.html:100
 #: outside/templates/outside/index.html:19
 msgid "delete section"
-msgstr ""
+msgstr "supprimer la section"
 
 #: outside/templates/outside/enquiry.html:28
 msgid "an enquiry about"
-msgstr ""
+msgstr "une enquête à propos de"
 
 #: outside/templates/outside/enquiry.html:32
 #: outside/templates/outside/middle.html:84
 #: outside/templates/outside/page.html:55
 msgid "edit mode"
-msgstr ""
+msgstr "éditer le mode"
 
 #: outside/templates/outside/enquiry.html:32
 msgid "add enquiry content"
-msgstr ""
+msgstr "ajouter un contenu d'enquête"
 
 #: outside/templates/outside/index.html:26
 msgid "change abstract"
-msgstr ""
+msgstr "changer l'abstract"
 
 #: outside/templates/outside/index.html:48
 msgid "change content"
-msgstr ""
+msgstr "changer le contenu"
 
 #: outside/templates/outside/login.html:17
-msgid "login required"
+msgid "login requis"
 msgstr ""
 
 #: outside/templates/outside/middle.html:16
 msgid "logout"
-msgstr ""
+msgstr "se déconnecter"
 
 #: outside/templates/outside/middle.html:21
 msgid "disable edit"
-msgstr ""
+msgstr "désactiver l'édition"
 
 #: outside/templates/outside/middle.html:22
 msgid "disable edit mode"
-msgstr ""
+msgstr "désactiver le mode édition"
 
 #: outside/templates/outside/middle.html:28
 #: outside/templates/outside/middle.html:29
 msgid "enable edit mode"
-msgstr ""
+msgstr "activer le mode édition"
 
 #: outside/templates/outside/middle.html:28
 msgid "edit"
-msgstr ""
+msgstr "éditer"
 
 #: outside/templates/outside/middle.html:36
 msgid "EN"
-msgstr ""
+msgstr "EN"
 
 #: outside/templates/outside/middle.html:39
 msgid "FR"
-msgstr ""
+msgstr "FR"
 
 #: outside/templates/outside/middle.html:43
 #: outside/templates/outside/middle.html:147
 #: outside/templates/outside/middle.html:157
 msgid "add page"
-msgstr ""
+msgstr "ajouter une page"
 
 #: outside/templates/outside/middle.html:84
 #: outside/templates/outside/middle.html:166
 #: outside/templates/outside/middle.html:175
 msgid "add section"
-msgstr ""
+msgstr "ajouter une section"
 
 #: outside/templates/outside/middle.html:90
 msgid "collapse menu"
-msgstr ""
+msgstr "fermer le menu"
 
 #: outside/templates/outside/middle.html:91
 msgid "expand menu"
-msgstr ""
+msgstr "ouvrir le menu"
 
 #: outside/templates/outside/middle.html:132
 msgid "discard"
-msgstr ""
+msgstr "jeter"
 
 #: outside/templates/outside/middle.html:156
 #: outside/templates/outside/middle.html:174
 #: outside/templates/outside/middle.html:219
 msgid "cancel"
-msgstr ""
+msgstr "annuler"
 
 #: outside/templates/outside/middle.html:166
 msgid "add section into"
-msgstr ""
+msgstr "ajouter la section dans"
 
 #: outside/templates/outside/middle.html:169
 msgid "add section rules"
-msgstr ""
+msgstr "ajouter des règles à la section"
 
 #: outside/templates/outside/page.html:35
 #: outside/templates/outside/page.html:48
 msgid "edit content"
-msgstr ""
+msgstr "éditer le contenu"
 
 #: outside/templates/outside/page.html:36
 msgid "edit slug"
-msgstr ""
+msgstr "editer le slug"
 
 #: outside/templates/outside/page.html:55
 msgid "add pin"
-msgstr ""
+msgstr "ajouter un pin"
 
 # ###########################################################
 #: templates/bq_base.html:10
 #, fuzzy
 msgid "a project from"
-msgstr "Un projet"
+msgstr "un projet de"
 
 # ###########################################################
 #. Translators: Main top menu choices
@@ -245,7 +245,7 @@ msgstr "Retour aux enquêtes"
 
 #: templates/bq_e_base.html:81
 msgid "Overview"
-msgstr ""
+msgstr "Vue d'ensemble"
 
 #: templates/bq_e_base.html:85 templates/bq_e_base.html.py:87
 msgid "On the Research"
@@ -261,7 +261,7 @@ msgstr "Intervenants"
 
 #: templates/bq_e_base.html:93 templates/bq_e_base.html.py:142
 msgid "Visualizations"
-msgstr "Visualizations"
+msgstr "Visualisations"
 
 #. Translators: Left menu link to register page
 #: templates/bq_e_base.html:149
@@ -282,37 +282,37 @@ msgstr ""
 #. Translators: ESE final report download
 #: templates/bq_e_ese.html:73
 msgid "The final report can be downloaded"
-msgstr ""
+msgstr "Le rapport final peut être téléchargé"
 
 #. Translators: Documents browse when null
 #: templates/bq_ed_browse.html:102
 msgid "There is no linked documents in this study"
-msgstr ""
+msgstr "Il n'y a pas de documents liés à cette étude"
 
 #. Translators: edShow: on top toggle text for streamtimeline viz used for navigation
 #: templates/bq_ed_show.html:131
 msgid "exploration using viz"
-msgstr ""
+msgstr "explorer avec viz"
 
 #. Translators: Speakers browse when null
 #: templates/bq_es_browse.html:126
 msgid "There is no linked speakers in this study"
-msgstr ""
+msgstr "Il n'y a pas de conférenciers lié à cette étude"
 
 #. Translators: Visualization browse when null
 #: templates/bq_ev_browse.html:96
 msgid "There isn\\'t any Visualisation in this study"
-msgstr ""
+msgstr "Il n'y a aucune visualisation dans cette étude"
 
 #. Translators: Login page title
 #: templates/bq_home.html:45
 msgid "If you already have an account, please login"
-msgstr ""
+msgstr "Si vous avez déjà un compte, veuillez vous connecter"
 
 #. Translators: Login form button
 #: templates/bq_home.html:53
 msgid "Login"
-msgstr ""
+msgstr "Connexion"
 
 #. Translators: Below login form, link to register form page
 #: templates/bq_home.html:70
@@ -328,7 +328,7 @@ msgstr ""
 #. Translators: Access page: ask for explore status: Study
 #: templates/bq_home.html:86
 msgid "Study:"
-msgstr ""
+msgstr "Étude"
 
 #. Translators: Access page: request explore status sent
 #: templates/bq_home.html:101
@@ -343,24 +343,24 @@ msgstr ""
 #. Translators: Access page: Current Status title
 #: templates/bq_home.html:107
 msgid "Current Status"
-msgstr ""
+msgstr "Status actuel"
 
 #: templates/bq_home.html:108
 msgid ""
 "You can consult studies on studies. To explore a whole study site, please go "
 "to the study you wish to consult."
-msgstr ""
+msgstr "Vous pouvez consulter les enquêtes sur enquêtes. Pour explorer complètement une étude, veuillez aller"
 
 #. Translators: register form page title: ask for browse(discover) status
 #: templates/bq_home.html:115
 msgid "You can ask for a Discover status"
-msgstr ""
+msgstr "Vous pouvez demander un status de découverte "
 
 #. Translators: Access page: request browse(discover) status sent
 #: templates/bq_home.html:126
 msgid ""
 "Your request was sent ! You will soon receive information in your mailbox."
-msgstr ""
+msgstr "Votre requête a été envoyée ! Vous recevrez bientôt une réponse dans votre boite mail"
 
 msgid "Home Page"
 msgstr "Accueil"
@@ -394,7 +394,7 @@ msgid "affiliation institution"
 msgstr "votre etablissement d'affiliation"
 
 msgid "university or institution"
-msgstr "université, instituion ..."
+msgstr "université, institution ..."
 
 msgid "legal notice description"
 msgstr "Les informations recueillies font l'objet d'un traitement informatique destiné à la gestion du portail BeQuali. Conformément à la loi &laquo; Informatique et Libertés &raquo; du 6 janvier 1978 modifiée en 2004, vous bénéficiez d'un droit d'accès et de rectification aux informations qui vous concernent." 
@@ -598,4 +598,3 @@ msgstr "actualités"
 
 msgid "contacts"
 msgstr "contact"
-
