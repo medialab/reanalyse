@@ -1,0 +1,36 @@
+{% extends "enquete/middle.html" %}
+{% load i18n %}
+{% block page_hook %}
+	
+	<div class="hook">
+		
+		<div class="nav">
+			<div class="back floating" >
+				<a href="{% url outside_enquetes %}"> <i>&larr;  {% trans "back to enquetes list" %}</i></a>
+			</div>
+
+			<div class="back floating {% if "metadata" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_enquete_metadata enquiry.enquete.id %}{% else %}{% url outside_enquete_metadata enquete.id %}{% endif %}">{% trans "l'enquête en bref" %}</a>
+			</div>
+
+			<div class="back floating {% if "enquiry" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_enquiry enquiry.enquete.id %}{% else %}{% url outside_enquiry enquete.id %}{% endif %}">{% trans "l'enquête sur l'enquête" %}</a>
+			</div>
+
+			<div class="back floating {% if "focus-on-enquete" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_enquete enquiry.enquete.id %}{% else %}{% url outside_enquete enquete.id %}{% endif %}">{% trans "focus sur l'enquête" %}</a>
+			</div>
+
+			<div class="ese floating {% if "signup" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_signup enquiry.enquete.id %}{% else %}{% url outside_signup enquete.id %}{% endif %}"><i>{% trans "demander l'acces" %}</i> &rarr;</a>
+			</div>
+
+			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+		
+			<div class="clear"></div>
+		</div>
+		{% block page_hook_inner %}
+		
+		{% endblock %}
+	</div>
+{% endblock %}

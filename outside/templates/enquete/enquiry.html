@@ -1,4 +1,4 @@
-{% extends "enquete/middle.html" %}
+{% extends "enquete/hook.html" %}
 {% load i18n %}
 
 {% block head %}
@@ -47,30 +47,8 @@
 {% endblock %}
 
 
-{% block page_hook %}
-	<div class="hook">
-		<div class="nav">
-			<div class="back floating" >
-				<a href="{% url outside_enquetes %}"> &larr; {% trans "back to enquetes list" %}</a>
-			</div>
-
-			<div class="back floating">
-				<a href="{% url outside_enquete_metadata enquiry.enquete.id %}">{% trans "l'enquête en bref" %}</a>
-			</div>
-
-			<div class="back floating selected">
-				<a href="{% url outside_enquiry enquiry.enquete.id %}">{% trans "l'enquête sur l'enquête" %}</a>
-			</div>
-
-			<div class="ese floating">
-				<a href="{% url outside_enquete enquiry.enquete.id %}">{% trans "focus sur l'enquête" %}</a>
-			</div>
-		
-		<div class="clear"></div>
-		</div>
-		
-		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
-		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
+{% block page_hook_inner %}
+	
 		 <h3>{{ enquiry.title }}</h3>
 		 {% if edit_mode %}
 			<a href="{% url admin:outside_enquiry_change enquiry.id %}" rel="tooltip" title="{% trans "edit mode" 	%}: {% trans "add news" %}">[ {% trans "add section" %} ]</a>
@@ -96,7 +74,8 @@
 			</span>
 		</div>
 		{% endwith %}
-	</div>
+	
+	
 {% endblock %}
 
 

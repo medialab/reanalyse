@@ -68,7 +68,7 @@ def page( request, page_slug ):
 	return render_to_response("%s/page.html" % 'enquete', RequestContext(request, data ) )
 
 def enquete( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquetes" ] )
+	data = shared_context( request, tags=[ "enquetes", "focus-on-enquete" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 	data['disabled'] =  [ t.slug for t in data['enquete'].tags.filter( type=Tag.DISABLE_VISUALIZATION ) ]
 	try:
@@ -81,7 +81,7 @@ def enquete( request, enquete_id ):
 	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
 def enquete_metadata( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquetes" ] )
+	data = shared_context( request, tags=[ "enquetes","metadata" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 
 	try:
@@ -91,7 +91,7 @@ def enquete_metadata( request, enquete_id ):
 	return render_to_response('enquete/metadata.html', RequestContext(request, data ) )
 
 def enquiry( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquetes" ] )
+	data = shared_context( request, tags=[ "enquetes","enquiry" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
 	data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
 
@@ -210,6 +210,10 @@ def signup( request, enquete_id=None ):
 		
 	# load all pins without page (aka news)
 	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	
+	if enquete_id is not None:
+		return render_to_response("enquete/signup.html", RequestContext(request, data ) )
+	
 	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )
 
 

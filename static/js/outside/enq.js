@@ -34,11 +34,23 @@ oo.nest = function( objects, nester, sorter ){
 
 	nested = {};
 
+	// oo.log('objects', objects)
+	// oo.log('nester', nester)
+	// oo.log('sorter', sorter)
+
 	for (var d in objects){
 
 		// Check if data are available
 
 		// TO DO TO CHECK
+
+		// oo.log(objects[d], objects[d].articles.length)
+
+		// oo.log('nester', nester)
+		// oo.log(nester( objects[d] ))
+
+		// if (typeof nester( objects[d] ) != 'undefined') oo.log('yes')
+
 		if ( objects[d].articles.length == 0 ) continue;
 
 		var index = nester( objects[d] );

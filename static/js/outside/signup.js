@@ -27,7 +27,7 @@ oo.magic.signup.add = function(){
 
 
 oo.api.signup = {};
-oo.api.signup.add = function( params ){
+oo.api.signup.add = function( params ){oo.log("[oo.api.signup.add]", params);
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_signup,
 		data: params, 
@@ -38,13 +38,13 @@ oo.api.signup.add = function( params ){
 				return oo.toast( oo.i18n.translate("error"), oo.i18n.translate("error") );
 			}
 
-			oo.api.process( result, oo.magic.signup.add, "signup" );
+			oo.api.process( result, oo.magic.signup.add, "id_signup" );
 		}
 	}));
 };
 
 
-oo.signup.init = function(){
+oo.signup.init = function(){oo.log("[oo.signup.init]");
 	
 	$("#add-signup").click( function(){
 

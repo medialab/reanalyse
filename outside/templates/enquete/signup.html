@@ -1,10 +1,23 @@
-{% extends "enquete/middle.html" %}
+{% extends "enquete/hook.html" %}
 {% load i18n %}
 {% load extras %}
 
 
 	<!-- static url: {{ STATIC_URL }} -->
 
+{% block page_hook_inner %}
+		<h3>{{ enquete.name }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
+	
+{% endblock %}
 
 {% block page_left %}
 	<div id="subscription">
@@ -25,7 +38,9 @@
 			
 		
 
-			<label for="email">{% trans "email" %}</label>
+			<label for="email">{% trans "email" %}
+				<div class="specification">le compte sera addesse a votre addresse email</div>
+			</label>
 			{{ signup_form.email }}
 			
 			

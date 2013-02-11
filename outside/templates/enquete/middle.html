@@ -201,7 +201,11 @@
 	<!-- the footer -->
 	<footer>
 		{% block footer %}
-		{{ block.super }}
+		{% ifequal site "app" %}
+			{{ block.super }}
+		{% else %}
+
+		{% endifequal %}
 
 		{% endblock %}	
 		
@@ -225,6 +229,7 @@
 	
 	{% endif %}
 	
+	oo.urls.add_signup= "{% url outside_api_signups %}";
 	oo.urls.get_enquete_data = "{% url outside_enquete_data 0 %}";
 	
 
