@@ -1,9 +1,57 @@
-{% extends "hub/middle.html" %}
+{% extends "enquete/middle.html" %}
 {% load i18n %}
 {% load extras %}
 
 
 	<!-- static url: {{ STATIC_URL }} -->
+
+
+{% block page_hook %}
+	{% if enquete %}
+	<div class="hook">
+		<div class="nav">
+			<div class="back floating" >
+				<a href="{% url outside_enquetes %}"> &larr; {% trans "back to enquetes list" %}</a>
+			</div>
+
+			<div class="back floating">
+				<a href="{% url outside_enquete_metadata enquete.id %}">{% trans "l'enquête en bref" %}</a>
+			</div>
+
+			<div class="back floating">
+				<a href="{% url outside_enquiry enquete.id %}">{% trans "l'enquête sur l'enquête" %}</a>
+			</div>
+
+			<div class="back floating">
+				<a href="{% url outside_enquete enquete.id %}">{% trans "focus sur l'enquête" %}</a>
+			</div>
+
+			<div class="ese floating selected">
+				<a href="{% url outside_signup enquete.id %}">{% trans "demander l'acces" %}</a>
+			</div>
+
+			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+		
+		<div class="clear"></div>
+		</div>
+		
+		<!-- <div class="authors">{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</div>
+		<div class="dates" >{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}{% endfor %}, {% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</div> -->
+		 <h3>{{ enquete.name }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
+	</div>
+	{% endif %}
+{% endblock %}
+
+
 
 {% block page_left %}
 	<div id="subscription">

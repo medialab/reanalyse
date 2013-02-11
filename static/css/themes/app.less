@@ -230,7 +230,7 @@ a{
 			a, a:visited{
 				
 				border-bottom: 4px solid @base-color;
-				
+				color: @base-color;
 			}
 		}
 
@@ -2020,26 +2020,33 @@ background: lighten( @page-color, 2%);
 	>.nav{
 		margin: 0 @grid-padding @grid-padding/2 @grid-padding;
 		border-bottom:1px solid #dbdbdb;
-		
+		height: @grid-padding * 1.2;
 		a,a:visited{
 			display: block;
-			padding: @grid-padding/3;
+			padding: 0 @grid-padding/3;
 			&:hover{
 				color: @base-color;
 			}
 		}
 
 		.sans-serif( 14px);
+		.back, .ese{
+			height: @grid-padding * 1.2 - 2;
+			line-height: @grid-padding * 1.2 - 4;
+		}
 		.back{
 			border-right:1px solid #dbdbdb;
-			
 		}
+
 		.identifier{
 			border-right:1px solid #dbdbdb;
 			
 		}
-		.ese{
-
+		.selected{
+			border-bottom: 4px solid @base-color;
+			a,a:visited{
+				color: @base-color;
+			}
 		}
 	}
 	>.meta{

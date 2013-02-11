@@ -49,8 +49,8 @@ oo.sidebar.scrollspy.init = function(){
 	// test visibility of the first element
 	oo.sidebar.scrollspy.target = $("#navbar li a")
 
-	$(window).scroll( oo.sidebar.scrollspy.spy );
-	$(window).resize( oo.sidebar.scrollspy.spy );
+	$(window).scroll( oo.sidebar.scrollspy.pull );
+	$(window).resize( oo.sidebar.scrollspy.pull );
 }
 oo.sidebar.scrollspy.spy = function(){
 	clearTimeout( oo.sidebar.scrollspy.timer );

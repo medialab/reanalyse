@@ -433,6 +433,17 @@ msgstr "Les informations recueillies font l'objet d'un traitement informatique d
 #~ msgstr "Recherche"
 
 
+#
+#
+# enquiry.html
+#
+#
+msgid "Read the whole report (PDF)"
+msgstr "Lire le rapport de l'enquête sur l'enquête (PDF)"
+
+msgid "on"
+msgstr "le"
+
 
 
 #
@@ -598,3 +609,6 @@ msgstr "actualités"
 
 msgid "contacts"
 msgstr "contact"
+
+msgid "back to enquetes list"
+msgstr "retour à la liste des enquêtes"

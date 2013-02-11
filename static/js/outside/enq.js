@@ -5,6 +5,7 @@ oo.enq.map = {};
 oo.enq.timeline = {};
 oo.enq.types = {};
 oo.enq.docs = {};
+oo.enq.disabled = {};
 
 
 // 
@@ -36,6 +37,8 @@ oo.nest = function( objects, nester, sorter ){
 	for (var d in objects){
 
 		// Check if data are available
+
+		// TO DO TO CHECK
 		if ( objects[d].articles.length == 0 ) continue;
 
 		var index = nester( objects[d] );

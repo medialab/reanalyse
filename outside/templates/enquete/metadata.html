@@ -13,8 +13,6 @@
 {% block navbar %}	
 	<div id="navbar">
 		<ul class="nav navbar">
-			<li><h3>&laquo;	 {{  enquiry.title }} &raquo;	</h3></li>
-
 			<li><a href="#general">{% trans "general" %}</a></li>
 			<li><a href="#actors">{% trans "actors" %}</a></li>
 			<li><a href="#universe">{% trans "universe" %}</a></li>
@@ -55,15 +53,21 @@
 {% block page_hook %}
 	<div class="hook">
 		<div class="nav">
-			<div class="back floating"  rel="tooltip" title="{% trans "back to enquetes list" %}" data-tooltip-placement="top">
-				<a href="{% url outside_enquetes %}"> &larr;</a>
+			<div class="back floating" >
+				<a href="{% url outside_enquetes %}"> &larr; {% trans "back to enquetes list" %}</a>
 			</div>
-			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
-		{% if enquiry %} 
+
+			<div class="back floating selected">
+				<a href="{% url outside_enquete_metadata enquete.id %}">{% trans "l'enquête en bref" %}</a>
+			</div>
+
+			<div class="back floating">
+				<a href="{% url outside_enquiry enquete.id %}">{% trans "l'enquête sur l'enquête" %}</a>
+			</div>
+
 			<div class="ese floating">
-				<a href="{% url outside_enquiry enquete.id %}">{% trans "voir l'enquête sur l'enquête" %} : &laquo;	 {{  enquiry.title }} &raquo;	&rarr; </a>
+				<a href="{% url outside_enquete enquete.id %}">{% trans "focus sur l'enquête" %}</a>
 			</div>
-		{% endif %}
 		<div class="clear"></div>
 		</div>
 		

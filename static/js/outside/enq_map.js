@@ -124,9 +124,20 @@ oo.enq.map.update = function( event, filters ){
 
 oo.enq.map.init = function ( objects ){
 
+	oo.log('oo.enq.disabled.map', oo.enq.disabled.map)
+
+	if ( typeof oo.enq.disabled.map == 'undefined' ) {
+		d3.select('#map').style('display', 'block');
+		d3.select('#timeline').style('margin-top', '0');
+		return;	
+	}
+
+
+
 	oo.filt.on( oo.filt.events.change, oo.enq.map.update );
 
 	// Map init
+
 
 	oo.enq.map.map = mapbox.map('map');
     oo.enq.map.map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));

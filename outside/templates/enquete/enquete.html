@@ -32,6 +32,11 @@
 
 {% block document_ready %}
 	{{ block.super }}
+
+	{% if not "disable-geo" in disabled %}
+		oo.enq.disabled.map = true;			
+	{% endif %}
+
 	oo.filt.init();
 	oo.enq.init();
 	oo.enquiry.init();
@@ -74,15 +79,28 @@
 {% block page_hook %}
 	<div class="hook">
 		<div class="nav">
-			<div class="back floating"  rel="tooltip" title="{% trans "back to enquetes list" %}" data-tooltip-placement="top">
-				<a href="{% url outside_enquetes %}"> &larr;</a>
+			<div class="back floating" >
+				<a href="{% url outside_enquetes %}"> &larr; {% trans "back to enquetes list" %}</a>
 			</div>
-			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
-		{% if enquiry %} 
+
+			<div class="back floating">
+				<a href="{% url outside_enquete_metadata enquete.id %}">{% trans "l'enquête en bref" %}</a>
+			</div>
+
+			<div class="back floating">
+				<a href="{% url outside_enquiry enquete.id %}">{% trans "l'enquête sur l'enquête" %}</a>
+			</div>
+
+			<div class="ese floating selected">
+				<a href="{% url outside_enquete enquete.id %}">{% trans "focus sur l'enquête" %}</a>
+			</div>
+
 			<div class="ese floating">
-				<a href="{% url outside_enquiry enquete.id %}">{% trans "voir l'enquête sur l'enquête" %} : &laquo;	 {{  enquiry.title }} &raquo;	&rarr; </a>
+				<a href="{% url outside_signup enquete.id %}">{% trans "demander l'acces" %}</a>
 			</div>
-		{% endif %}
+
+			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+		
 		<div class="clear"></div>
 		</div>
 		
@@ -114,8 +132,14 @@
 			<div id="phases"></div>
 			<div id="categories"></div>
 			<div id="articles"></div>
+
+		
 			<div id="map"></div>
+			
+			
+			
 			<div id="timeline"></div>
+			
 		</div>
 		<div class="clear"></div>
 	</section>

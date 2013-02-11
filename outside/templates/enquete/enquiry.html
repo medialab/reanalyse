@@ -40,7 +40,7 @@
 			{% for pin in sections %}
 			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
 			{% endfor %}
-			<li><a href="#{{ pin.slug }}">&rarr; telecharger ficher pdf</a></li>
+			<li><a href="{{ STATIC_URL }}docs/enquete-{{ enquiry.enquete.id }}.pdf">&rarr; {% trans "Lire le rapport de l'enquête sur l'enquête (PDF)" %}</a></li>
 
 		</ul>
 	</div>
@@ -50,12 +50,20 @@
 {% block page_hook %}
 	<div class="hook">
 		<div class="nav">
-			<div class="back floating"  rel="tooltip" title="{% trans "back to enquetes list" %}" data-tooltip-placement="top">
-				<a href="{% url outside_enquetes %}"> &larr;</a>
+			<div class="back floating" >
+				<a href="{% url outside_enquetes %}"> &larr; {% trans "back to enquetes list" %}</a>
 			</div>
-			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
+
+			<div class="back floating">
+				<a href="{% url outside_enquete_metadata enquiry.enquete.id %}">{% trans "l'enquête en bref" %}</a>
+			</div>
+
+			<div class="back floating selected">
+				<a href="{% url outside_enquiry enquiry.enquete.id %}">{% trans "l'enquête sur l'enquête" %}</a>
+			</div>
+
 			<div class="ese floating">
-				<a href="{% url outside_enquete enquiry.enquete.id %}">{% trans "retour à l'enquête" %} #{{ enquiry.enquete.id }} : &laquo;	 {{  enquiry.enquete.name }} &raquo;	&rarr; </a>
+				<a href="{% url outside_enquete enquiry.enquete.id %}">{% trans "focus sur l'enquête" %}</a>
 			</div>
 		
 		<div class="clear"></div>
@@ -71,12 +79,20 @@
 		{% with tags=enquiry.tags.all %}
 		<div class="meta">
 			<span class="author" >
-				{% for t in tags %}{% ifequal t.type "AU" %} {{ t.name }} {% endifequal %}{% endfor %}
-			</span> &dash;
+				{% for t in tags %}{% ifequal t.type "AU" %} {% if not forloop.first %}, {% endif %} {{ t.name }} {% endifequal %}{% endfor %}
+			</span> <!--&dash;-->
+			
+			<br/>
+			
 			<span class="tags">
-				{% for t in tags %}{% ifequal t.type "Pl" %} {{ t.name }} {% endifequal %}{% endfor %}
-				{% trans "interview done on the" %}
-				{% for t in tags %}{% ifequal t.type "Da" %} {{ t.name }} {% endifequal %}{% endfor %}
+				
+				{% trans "interview done with" %}
+				{% for t in tags %}{% ifequal t.type "Rs" %} {{ t.name }} {% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}
+				
+				{% trans "on" %}
+				
+				{% for t in tags %}{% ifequal t.type "Da" %} {{ t.name }} {% if not forloop.last %}, {% endif %} {% endifequal %}{% endfor %}
+				{% for t in tags %}{% ifequal t.type "Pl" %} {{ t.name }} {% if not forloop.last %}, {% endif %} {% endifequal %}{% endfor %}
 			</span>
 		</div>
 		{% endwith %}
@@ -102,7 +118,7 @@
 		
 		
 		<div class="abstract">
-			{% trans "Enquête sur l'enquête de" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
+			{% trans "Enquête sur l'enquête" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
 
 			de {% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if forloop.last %}{% else %}, {%endif %} {% endfor %}
 

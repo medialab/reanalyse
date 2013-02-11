@@ -55,14 +55,14 @@
 				
 				<div class="upperside">
 					<a href="{% url outside_enquete_metadata s.id %}">
-						l'enquête en bref
+						{% trans "l'enquête en bref" %}
 					</a>
 					<a href="{% url outside_enquiry s.id %}">
-						l'enquête sur l'enquête
+						{% trans "l'enquête sur l'enquête" %}
 					</a>
 
 					<a href="{% url outside_enquete s.id %}">
-						focus sur l'enquête
+						{% trans "focus sur l'enquête" %}
 					</a>
 
 
@@ -87,7 +87,7 @@
 				{% endfor %}
 				</p>
 				<p class="title">{{s.name }}</p>
-				<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}</p>
+				<p class="author" >{% for authenty in s.meta.values.actor.authenty.value %}{{ authenty }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 				<div class="metadata">
 					<p class="dates" >{% for nation in s.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
 						{% for studydate in s.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}</p>

@@ -92,7 +92,7 @@ class Tag(models.Model):
         (PLACE, 'Place'),
         (DATE, 'Date'),
         (GEOCOVER, 'Geographic coverage'),
-        (DISABLE_VISUALIZATION, 'Disable Visualization'),
+        (DISABLE_VISUALIZATION, 'Disable Visualization')
     )
 
 	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'

@@ -47,6 +47,8 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 				.attr('data-total', map[i].values.length)
 				.attr('data-partial', map[i].values.length)
 				.attr('transform', 'translate(' + xPosition + ', 0)')
+				.attr('rel', 'tooltip')
+				.attr('data-original-title', map[i].key)
 
 				.on("click", function() {
 
@@ -93,15 +95,14 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 							.duration(1000)
 							.attr('width', partialWidth);
 
+						// Set text
 						g.select('text')
 							.transition()
 							.delay(500)
-							.duration(1000)
+							.duration(500)
 							.each('end', function() {
-								oo.log('end')
+								d3.select(this).text( partialWidth < 60 ? tempTotal : tempTotal + ' ' + g.attr('data-id') )
 							})
-
-
 
 						// Send request
 						var obj = {},
@@ -139,18 +140,19 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 							.duration(1000)
 							.attr('width', partialWidth -1)
 
-						// Show others
+						// Show others and set unselected status
 						types.selectAll('g[data-filter=false]')
 							.style('display', 'block')
 							.transition()
 								.delay(500)
 								.duration(1000)
 								.style('opacity', '1')
-
-							// Set unselected status
 							.each('end', function() {
 								g.attr('data-filter', 'false');								
 							});
+
+						// Set text
+						g.select('text').text( partialWidth < 60 ? partialNumber : partialNumber + ' ' + g.attr('data-id') )
 
 						// Send request
 						var obj = {},
@@ -161,23 +163,6 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 						oo.filt.trigger( oo.filt.events.reset, obj );
 
 					}
-
-					// var gText = gWidth < 60 ? map[i].values.length : map[i].values.length + ' ' + map[i].key;
-
-					// oo.log('?', gWidth < 60)
-					// oo.log('gText', gText)
-					// oo.log('gWidth', gWidth)
-					// oo.log('')
-
-					// g.select('text.figure')
-					// 	.text(gText)
-
-					// g.append('text')
-					// 	.attr('class', 'figure')
-					// 	.attr('width', gWidth)
-					// 	.attr('height', height)
-					// 	.attr('transform', 'translate(0,25)')
-					// 	.text(gText)
 
 				});
 
@@ -197,14 +182,12 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 				.attr('width', 1)
 				.attr('height', 5)
 
-			var gText = gWidth < 60 ? map[i].values.length : map[i].values.length + ' ' + map[i].key;
-
 			g.append('text')
 				.attr('class', 'figure')
 				.attr('width', gWidth)
 				.attr('height', height)
 				.attr('transform', 'translate(0,25)')
-				.text(gText)
+				.text(gWidth < 60 ? map[i].values.length : map[i].values.length + ' ' + map[i].key)
 
 			xPosition += gWidth;
 

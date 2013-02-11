@@ -11,7 +11,7 @@ from django.contrib.auth import login, logout, authenticate
 
 
 
-from reanalyseapp.models import Enquete
+from reanalyseapp.models import Enquete, Tag
 from glue.models import Pin, Page
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 from outside.models import Enquiry
@@ -70,7 +70,7 @@ def page( request, page_slug ):
 def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
-
+	data['disabled'] =  [ t.slug for t in data['enquete'].tags.filter( type=Tag.DISABLE_VISUALIZATION ) ]
 	try:
 		data['enquiry'] = Enquiry.objects.get( enquete=enquete_id, language=data['language'] )
 	except Enquiry.DoesNotExist,e:
@@ -91,7 +91,7 @@ def enquete_metadata( request, enquete_id ):
 	return render_to_response('enquete/metadata.html', RequestContext(request, data ) )
 
 def enquiry( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquiries" ] )
+	data = shared_context( request, tags=[ "enquetes" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
 	data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
 
@@ -100,6 +100,7 @@ def enquiry( request, enquete_id ):
 
 	
 def enquiries( request ):
+
 	data = shared_context( request, tags=[ "enquiries" ] )
 	
 	try:
@@ -199,9 +200,14 @@ def login_view( request ):
 
 
 
-def signup( request ):
+def signup( request, enquete_id=None ):
 	data = shared_context( request, tags=[ "signup" ] )
 	data['signup_form'] = SignupForm(  auto_id="id_signup_%s" )
+
+	if enquete_id is not None:
+		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
+
+		
 	# load all pins without page (aka news)
 	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
 	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )
