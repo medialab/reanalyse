@@ -173,59 +173,68 @@ section.wide > h3, .section.wide > h3 {
 
 }
 
+p.title{
+
+
+
+	
+	.types {
+		fill: @cyan;
+		font-family: 'LatinModernSans10Regular', sans-serif;
+    	font-size: 12px;
+    // text-transform: uppercase;
+    // height: 30px;
+	}
+}
 #phases, #categories, #articles {
 
 	padding-left: @padding-left;
 	width: @container-width;
 	height: 50px;
-	position: relative;
+	// height: 120px;
+	// position: relative;
+
 
 	g {
 		cursor: pointer;
-		position: absolute;
-	}
+		// position: absolute;
 
-	rect {
+		rect {
 
-		fill: @cyan;
-		stroke-width: 0;
+			fill: @cyan;
+			stroke-width: 0;
+			shape-rendering: crispEdges;
 
-		shape-rendering: crispEdges;
-
-		@property: all;
-		@duration: 0.5s;
-		@ease: cubic-bezier(0,0,1,1);
-		-webkit-transition: @property @duration @ease;
-		-moz-transition: @property @duration @ease;
-		-o-transition: @property @duration @ease;
-		transition: @property @duration @ease;
-
-		&.background {
-			fill-opacity: .1;
-			&:hover {
-				fill-opacity: .3;
+			&.background {
+				fill-opacity: .1;
+				&:hover {
+					fill-opacity: .3;
+				}
 			}
-		}
 
-		&.percentage {
-			fill-opacity: .6;
-			&:hover {
-				fill-opacity: 1;
+			&.percentage {
+				fill-opacity: .6;
+				&:hover {
+					fill-opacity: 1;
+				}
+				
 			}
-			
+
+			&.line {
+				fill-opacity: .6;
+			}
+
 		}
 
-		&.line {
-			fill-opacity: .6;
+		text.figure {
+			fill: @cyan;
+			font-family: 'LatinModernSans10Regular', sans-serif;
+		    font-size: 11px;
 		}
-
+		
 	}
 
-	text {
-		fill: @cyan;
-		font-family: 'LatinModernSans10Regular', sans-serif;
-	    font-size: 11px;
-	}
+
 	
 }
 

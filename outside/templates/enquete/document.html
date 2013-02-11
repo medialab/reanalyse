@@ -1,0 +1,259 @@
+{% extends "enquete/hook.html" %}
+{% load i18n %}
+
+{% block head %}
+	{{ block.super }}
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/audio.min.js"></script>
+	<!-- script type="text/javascript" src="{{ STATIC_URL }}js/jwplayer.js"></script>
+	<script type="text/javascript">jwplayer.key="Q8pvYVJiRAZFafuu06UX9CRv4x0w1VGZSraGaQ==";</script -->
+{% endblock %}
+
+{% block outside_scripts %}
+	{{ block.super }}
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/enquiry.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/audio.js"></script>
+
+{% endblock %}
+
+
+
+{% block sidebar_add_section %}
+
+{% endblock %}
+
+{% block document_ready %}
+	{{ block.super }}
+	{% if edit_mode %}
+		//oo.enquiry.upload.enquiry_id = {{ enquiry.id }};
+		oo.enquiry.upload.init();
+	{% endif %}
+{% endblock %}
+
+{% block page_title %}
+	{{ enquiry.title }}
+{% endblock %}
+
+{% block navbar %}	
+	<div id="navbar">
+		<ul class="nav navbar">
+			
+			{% for pin in sections %}
+			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
+			{% endfor %}
+			<li><a href="{{ STATIC_URL }}docs/enquete-{{ enquiry.enquete.id }}.pdf">&rarr; {% trans "Lire le rapport de l'enquête sur l'enquête (PDF)" %}</a></li>
+
+		</ul>
+	</div>
+{% endblock %}
+
+
+{% block page_hook_inner %}
+	
+		 <h3>{{ enquiry.title }}</h3>
+		 {% if edit_mode %}
+			<a href="{% url admin:outside_enquiry_change enquiry.id %}" rel="tooltip" title="{% trans "edit mode" 	%}: {% trans "add news" %}">[ {% trans "add section" %} ]</a>
+		{% endif %}
+
+		{% with tags=enquiry.tags.all %}
+		<div class="meta">
+			<span class="author" >
+				{% for t in tags %}{% ifequal t.type "AU" %} {% if not forloop.first %}, {% endif %} {{ t.name }} {% endifequal %}{% endfor %}
+			</span> <!--&dash;-->
+			
+			<br/>
+			
+			<span class="tags">
+				
+				{% trans "interview done with" %}
+				{% for t in tags %}{% ifequal t.type "Rs" %} {{ t.name }} {% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}
+				
+				{% trans "on" %}
+				
+				{% for t in tags %}{% ifequal t.type "Da" %} {{ t.name }} {% if not forloop.last %}, {% endif %} {% endifequal %}{% endfor %}
+				{% for t in tags %}{% ifequal t.type "Pl" %} {{ t.name }} {% if not forloop.last %}, {% endif %} {% endifequal %}{% endfor %}
+			</span>
+		</div>
+		{% endwith %}
+	
+	
+{% endblock %}
+
+
+{% block page_right %}	
+	{% if edit_mode %}
+		<div class="edit-mode add-enquiry-pin" data-enquiry-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add news" %}">[ {% trans "add section" %} ]
+		</div>
+	{% endif %}
+
+							<div class="clear"></div>
+					{% endblock %}
+
+{% block page_left %}
+
+	<a id="description"></a>
+	
+	<section class="alpha wide" >
+		
+		
+		
+		<div class="abstract">
+			{% trans "Enquête sur l'enquête" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
+
+			de {% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if forloop.last %}{% else %}, {%endif %} {% endfor %}
+
+			{{ abstract|safe }}
+			
+		</div>
+
+		<div class="content">
+			{{ enquiry.content|safe }}
+		</div>
+
+		{% if edit_mode %}
+				<div class="edit-mode add-enquiry-pin"  href="#add-section-modal" data-enquete-id="{{ enquiry.enquete.id }}" role="button" title="{% trans "edit mode" %}: {% trans "add enquiry content" %}"> [ {% trans "add enquiry content" %} ] </div>
+			{% endif %}
+		
+
+
+		<script>
+			audiojs.events.ready(function() {
+    			var as = audiojs.createAll();
+  			});
+			
+		</script>
+		<!-- script>
+      $(function() { 
+        // Setup the player to autoplay the next track
+        var a = audiojs.createAll({
+          trackEnded: function() {
+            var next = $('ol li.playing').next();
+            if (!next.length) next = $('ol li').first();
+            next.addClass('playing').siblings().removeClass('playing');
+            audio.load($('a', next).attr('data-src'));
+            audio.play();
+          }
+        });
+        
+        // Load in the first track
+        var audio = a[0];
+            first = $('ol a').attr('data-src');
+        $('ol li').first().addClass('playing');
+        audio.load(first);
+
+        // Load in a track on click
+        $('ol li').click(function(e) {
+          e.preventDefault();
+          $(this).addClass('playing').siblings().removeClass('playing');
+          audio.load($('a', this).attr('data-src'));
+          audio.play();
+        });
+        // Keyboard shortcuts
+        $(document).keydown(function(e) {
+          var unicode = e.charCode ? e.charCode : e.keyCode;
+             // right arrow
+          if (unicode == 39) {
+            var next = $('li.playing').next();
+            if (!next.length) next = $('ol li').first();
+            next.click();
+            // back arrow
+          } else if (unicode == 37) {
+            var prev = $('li.playing').prev();
+            if (!prev.length) prev = $('ol li').last();
+            prev.click();
+            // spacebar
+          } else if (unicode == 32) {
+            audio.playPause();
+          }
+        })
+      });
+    </script -->
+
+		<div class="pin-box">
+			{% for p in sections %}
+			<div class="chapter">
+				{% comment %}
+				<div class="marker-wrapper">
+					<div class="marker" >
+						{{ p.date_last_modified|date:"d M." }}
+					</div>
+				</div>
+				
+				{% endcomment %}
+				<a id="{{ p.slug }}"></a>
+				<h2><!-- span class="counter">{{ forloop.counter }}</span --> {{ p.title }}</h2>
+
+				{% if p.abstract %}
+				<div class="abstract">
+					{{ p.abstract|safe }}
+				</div>
+				{% endif %}
+
+				{% for pc in p.children.all %}
+					<div class="child {% if forloop.first %}alpha{% endif %}">
+						<h4>{{ pc.title }}</h4>
+						{% if edit_mode %}
+							<a href="{% url admin:glue_pin_change pc.id %}">[ edit pin ]</a>
+
+						{% endif %}
+						{% ifequal pc.mime "audio" %}
+							<div id='audio-{{ pc.slug }}'></div>
+							<audio src="{{ pc.local.url }}" preload="auto" />
+						{% endifequal %}
+						
+
+					</div>
+				{% endfor %}
+
+
+
+
+				{% if p.local %}
+				{% comment %}
+					<a href="{% url outside_download p.slug %}">{% trans "download as" %} {{ p.mimetype }}</a>
+					{% endcomment %}
+				{% endif %}
+
+				<div class="author"><a href="">{% for u in p.users.all %}{{ u.username }}{% endfor %}</a></div>
+
+				{% if edit_mode %}
+					<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit content" %} id:{{ p.id }} ]</div>
+					<div class="edit-mode edit-pin" href="#edit-pin-modal" data-pin-id="{{ p.id }}" role="button">[ {% trans "edit slug" %} #{{ p.slug }} ]</div>
+					<div class="edit-mode delete-pin" href="#" data-pin-id="{{ p.id }}" role="button">[ {% trans "delete slug" %} #{{ p.slug }} ]</div>
+
+					{% ifequal p.status 'D' %}
+						<div class="edit-mode publish-pin" href="#" new-status="P" data-pin-id="{{ p.id }}" role="button">[ {% trans "publish" %} ]</div>
+					{% else %}
+						<div class="edit-mode publish-pin" href="#" new-status="D" data-pin-id="{{ p.id }}" role="button">[ {% trans "draftify" %} ]</div>
+					{% endifequal %}
+
+				{% endif %}
+
+				
+
+				<div class="content">
+					{{ p.content|safe }}
+					
+				</div>
+				{% if edit_mode %}
+
+				<div class="drag-over-me">
+					<form action="#">
+						<input type="file" name="files[]" data-enquiry-id="{{ enquiry.id }}" data-pin-slug="{{ p.slug }}" multiple class="fileupload"/>
+					</form>
+					<div class="message">why don't you drag some file directly here?</div>
+				</div>
+				{% endif %}
+				<div class="clear"></div>
+				
+			</div>
+			
+			{% endfor %}
+
+			<div class="clear"></div>
+
+		</div>
+
+
+	</section>
+	
+{% endblock %}	

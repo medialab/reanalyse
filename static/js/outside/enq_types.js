@@ -266,8 +266,11 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 oo.enq.types.init = function(objects) {
 	var categor1 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
-	var categor2 = new oo.Gummy(objects, '#categories', function( d ){ return d.categories[0].category }, 'category');
-	var categor3 = new oo.Gummy(objects, '#articles', function( d ){ return d.articles[0].article }, 'article');
+	var categor2 = new oo.Gummy(objects, '#categories', function( d ){ 
+		return d.categories.length > 0? d.categories[0].category : null; }, 'category');
+	var categor3 = new oo.Gummy(objects, '#articles', function( d ){
+		return d.articles.length > 0? d.articles[0].article : null;
+	}, 'article');
 }
 
 

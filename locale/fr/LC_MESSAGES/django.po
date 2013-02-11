@@ -391,10 +391,14 @@ msgid "send"
 msgstr "envoyer"
 
 msgid "affiliation institution"
-msgstr "votre etablissement d'affiliation"
+msgstr "votre établissement d'affiliation"
 
 msgid "university or institution"
-msgstr "université, institution ..."
+msgstr "université ou institution"
+
+
+msgid "procedure inscription"
+msgstr "Pour accéder au contenu de l'enquête veuillez remplir ce formulaire. Votre demande sera ensuite évaluée par l'équipe beQuali qui reviendra vers vous dès que possible pour la suite de votre accréditation. "
 
 msgid "legal notice description"
 msgstr "Les informations recueillies font l'objet d'un traitement informatique destiné à la gestion du portail BeQuali. Conformément à la loi &laquo; Informatique et Libertés &raquo; du 6 janvier 1978 modifiée en 2004, vous bénéficiez d'un droit d'accès et de rectification aux informations qui vous concernent." 
@@ -612,3 +616,12 @@ msgstr "contact"
 
 msgid "back to enquetes list"
 msgstr "retour à la liste des enquêtes"
+
+msgid "email specification"
+msgstr "cette addresse sera votre identifiant utilisateur une fois inscrit"
+
+msgid "message specification"
+msgstr "Dans ce message vous pouvez nous décrire votre projet de recherche afin de permettre à l'équipe beQuali d'évaluer votre demande"
+
+msgid "password specification"
+msgstr "votre mot de passe doit contenir au moins 8 charactères"

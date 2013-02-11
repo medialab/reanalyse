@@ -201,15 +201,19 @@ def login_view( request ):
 
 
 def signup( request, enquete_id=None ):
-	data = shared_context( request, tags=[ "signup" ] )
+	
+	if enquete_id is not None:
+		data = shared_context( request, tags=[ "enquetes", "signup" ] )
+	
+		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
+	else:
+		data = shared_context( request, tags=[ "signup" ] )
+	
+
 	data['signup_form'] = SignupForm(  auto_id="id_signup_%s" )
 
-	if enquete_id is not None:
-		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
-
-		
 	# load all pins without page (aka news)
-	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
+	# data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
 	
 	if enquete_id is not None:
 		return render_to_response("enquete/signup.html", RequestContext(request, data ) )

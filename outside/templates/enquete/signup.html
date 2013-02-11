@@ -19,11 +19,37 @@
 	
 {% endblock %}
 
+{% block document_ready %}
+	{% if enquete %}
+		oo.vars.enquete_id = "{{ enquete.id }}";
+	{% endif %}
+	{{ block.super }}
+{% endblock %}
+
 {% block page_left %}
 	<div id="subscription">
-		<h2>{% trans "fill signup form" %}</h2>
+		{% trans "procedure inscription" %}
 
 		<div class="subscription-wrapper">
+			
+			
+			
+			
+					<label for="email">{% trans "email" %}
+						<div class="specification">{% trans "email specification" %}</div>
+					</label>
+					{{ signup_form.email }}
+
+					<label for="password">{% trans "password" %}
+						<div class="specification">{% trans "password specification" %}</div>
+					</label>
+					{{ signup_form.password }}
+					
+					
+					<label for="message">{% trans "message" %}
+						<div class="specification">{% trans "message specification" %}</div>
+					</label>
+					{{ signup_form.message }}
 			
 			<label for="first_name">{% trans "first name" %}</label>
 			{{ signup_form.first_name }}
@@ -32,24 +58,12 @@
 			{{ signup_form.last_name }}
 			
 			
-			
-			<label for="password">{% trans "password" %}</label>
-			{{ signup_form.password }}
-			
-		
-
-			<label for="email">{% trans "email" %}
-				<div class="specification">le compte sera addesse a votre addresse email</div>
-			</label>
-			{{ signup_form.email }}
-			
-			
 			<label for="affiliation">{% trans "status" %}
 				
 			</label>
 			<p>{{ signup_form.status }}</p>
 
-			<label for="affiliation">{% trans "affiliation" %}
+			<label for="affiliation">{% trans "affiliation institution" %}
 				<div class="specification">{% trans "university or institution" %}</div>
 			</label>
 			{{ signup_form.affiliation }}
@@ -62,11 +76,14 @@
 			{{ signup_form.captcha }}
 			
 			<label for="accepted_terms">{% trans "accepted terms" %}
-				<div class="specification">{% trans "accept terms" %}</div>
+				<div class="specification">{% trans "legal notice description" %}</div>
+				<div class="specification"><b>J'ai lu et j'accepte</b>		{{ subscriber_form.accepted_terms }}</div>
+
 			</label>
 			
-			{{ subscriber_form.accepted_terms }}
+	
 			
+
 			
 			<input type="button" id="add-signup" value="{% trans "send" %}"/>
 		</div>

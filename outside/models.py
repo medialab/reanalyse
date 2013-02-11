@@ -79,12 +79,16 @@ class Subscriber( models.Model ):
 	first_name = models.CharField( max_length = 64 ) # longest than standard field
 	last_name = models.CharField( max_length = 64 ) # longest than standard field
 	email = models.EmailField( unique=True )
+	email_confirmed = models.BooleanField( default=False )
+
 	affiliation = models.CharField( max_length = 128 )
 	status =     models.CharField( max_length = 3, choices=STATUS_CHOICES )
 	accepted_terms = models.BooleanField()
 	description = models.TextField() # personal description
 	messages = models.ManyToManyField( Message )
-	
+	confirmation_code = models.CharField( max_length = 64, null=True, blank=True )
+
+
 	def __unicode__(self):
 		return "%s %s <%s>" % (self.last_name.upper(), self.first_name, self.email )
 

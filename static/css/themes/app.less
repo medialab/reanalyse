@@ -425,6 +425,14 @@ html{
 			width: 100%;
 
 		}
+
+		#username-field{
+			padding: 0  @grid-padding/2 @grid-padding/2 @grid-padding/2;
+			margin-top: @grid-padding /2;
+			background: #f4f4f4;
+			border: 1px solid #dbdbdb;
+		}
+
 	}
 	a, a:visited{
 			.mono( 16px );
@@ -2145,6 +2153,11 @@ h4{
 	a.footer-link{
 		display:block;
 		float:left;
+
+		.right{
+			float:right;
+		}
+
 		height: @footer-height - @grid-padding - 2;
 		.sans-serif( 13px );
 		color: white;
@@ -2181,6 +2194,7 @@ table.meta{
 
 		td.key{
 			.serif-slant(14px);
+			text-align:left;
 			padding: 0 @grid-padding/2 0 @grid-padding/3;
 
 		}
@@ -2271,3 +2285,20 @@ table.meta{
 		}
 	}
 }
+
+
+
+//
+//
+//	Enquetes
+//  ===
+//
+#visualization{
+	.title{
+		.serif-slant(12px);
+		padding: 0 0 0 @grid-padding + 14;
+		margin: 0;
+	}
+
+}
+

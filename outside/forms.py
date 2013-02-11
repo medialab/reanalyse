@@ -33,7 +33,7 @@ class SignupForm( forms.Form ):
     first_name = forms.CharField( max_length = 64,  ) # longer than standard field
     last_name = forms.CharField( max_length = 64,  ) # longer than standard field
     
-    username = forms.CharField( max_length=32, widget=forms.TextInput,  )
+    #username = forms.CharField( max_length=32, widget=forms.TextInput,  )
     
     password = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
     #password2 = forms.CharField( max_length=64, label='Password2', widget=forms.PasswordInput(render_value=False ), required=True )
@@ -44,6 +44,10 @@ class SignupForm( forms.Form ):
     status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES), )
     accepted_terms = forms.BooleanField(initial=1)
     
+    message = forms.CharField( widget=forms.Textarea) # personal message
+
     captcha = ReCaptchaField(attrs={'theme':'clean'})
     
+    
+
     

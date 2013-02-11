@@ -34,10 +34,14 @@
 			</label>
 			<p>{{ signup_form.status }}</p>
 
-			<label for="affiliation">{% trans "affiliation" %}
+			<label for="affiliation">{% trans "affiliation institution" %}
 				<div class="specification">{% trans "university or institution" %}</div>
 			</label>
 			{{ signup_form.affiliation }}
+			
+			<label for="affiliation">{% trans "message" %}
+			</label>
+			{{ signup_form.message }}
 			
 			
 			
@@ -47,7 +51,7 @@
 			{{ signup_form.captcha }}
 			
 			<label for="accepted_terms">{% trans "accepted terms" %}
-				<div class="specification">{% trans "accept terms" %}</div>
+				<div class="specification">{% trans "legal notice description" %}</div>
 			</label>
 			
 			{{ subscriber_form.accepted_terms }}

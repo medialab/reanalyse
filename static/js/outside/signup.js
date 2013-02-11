@@ -27,7 +27,14 @@ oo.magic.signup.add = function(){
 
 
 oo.api.signup = {};
-oo.api.signup.add = function( params ){oo.log("[oo.api.signup.add]", params);
+oo.api.signup.add = function( params ){
+	
+	if( typeof oo.vars.enquete_id != "undefined"){
+		$.extend( params, {enquete_id:oo.vars.enquete_id})
+	}
+
+	oo.log("[oo.api.signup.add]", params);
+
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_signup,
 		data: params, 
@@ -47,8 +54,10 @@ oo.api.signup.add = function( params ){oo.log("[oo.api.signup.add]", params);
 oo.signup.init = function(){oo.log("[oo.signup.init]");
 	
 	$("#add-signup").click( function(){
-
+		
+		
 		oo.api.signup.add({
+
 			username:$('input[name=username]').val(),
 			first_name:$('input[name=first_name]').val(),
 			last_name:$('input[name=last_name]').val(),
@@ -56,6 +65,7 @@ oo.signup.init = function(){oo.log("[oo.signup.init]");
 			affiliation:$('input[name=affiliation]').val(),
 			password:$('input[name=password]').val(),
 			status:$('select[name=status]').val(),
+			message:$('#id_signup_message').val(),
 			accepted_terms:$('input[name=accepted_terms]').val(),
 			recaptcha_challenge_field:$('input[name=recaptcha_challenge_field]').val(),
 			recaptcha_response_field:$('input[name=recaptcha_response_field]').val(),
