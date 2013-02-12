@@ -77,8 +77,12 @@ oo.enq.docs.init = function ( objects ){
 		docs = d3.select('#documents ul'),
 		container = d3.select('#counter p');
 
+	var map = objects.sort(function (a, b){ 
+		return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
+	}) // Sorting
+
 	var li = docs.selectAll("li")
-		.data(objects)
+		.data(map)
 		.enter().append("li")
 		.attr('class', 'active')
 		.attr('data-id', function(d) { return d.id; })
