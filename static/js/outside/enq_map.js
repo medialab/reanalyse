@@ -18,17 +18,6 @@ oo.enq.map.update = function( event, filters ){
 
 	items.attr('data-status', 'inactive'); // Reset
 	
-	// for ( var i in oo.filt.data ) {
-	// 	oo.filt.data[ i ].filtered &&
-	// 		map.select('circle[data-id="' + oo.filt.data[ i ].id + '"]')
-	// 			.attr('data-status', 'active');
-	// } // Set active
-
-
-
-	// var objects = oo.filt.data;
-
-
 	var objects = oo.enq.map.data;
 
 
@@ -40,8 +29,6 @@ oo.enq.map.update = function( event, filters ){
 	// oo.log('objects', objects)
 
 	var nest = objects;
-
-	// var nest = { type : "FeatureCollection", features : [] };
 
 	for (var i in oo.filt.data){
 
@@ -64,63 +51,19 @@ oo.enq.map.update = function( event, filters ){
 	// oo.log('nest', nest)
 
 	var zoom = oo.enq.map.map.coordinate.zoom;
-	// 	inactiveSize = (zoom + 1) * 3 * .2,
-	// 	activeSize = (zoom + 1) * 3;
 
 	for (var i = 0; i < nest.features.length; i++) {
-		// oo.log('nest[i]', nest.features[i])
-		// oo.log('nest[i].location', nest.features[i].location)
 		map.select('circle[data-location="' + nest.features[i].location + '"]')
 			.transition()
 				.duration(1500)
 				.attr('r', (zoom + 1) * nest.features[i].counter / 10 );
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// items.each(function() {
-
-	// 	var item = d3.select(this),
-	// 		oldStatus = item.attr('data-status-old'),
-	// 		newStatus = item.attr('data-status');
-
-	// 	if ( ( oldStatus == 'active' ) && ( newStatus == 'inactive' ) ) {
-	// 		item.transition()
-	// 			.duration(1000)
-	// 			.attr('r', inactiveSize);
-	// 	} else if ( ( oldStatus == 'inactive') && ( newStatus == 'active') ) {
-	// 		item.transition()
-	// 			.duration(1500)
-	// 			.ease('elastic', 7, .8)
-	// 			.attr('r', activeSize);
-	// 	} else if (item.attr('data-status') == 'inactive') {
-	// 		item.transition()
-	// 			.duration(1000)
-	// 			.attr('r', inactiveSize);
-	// 	} else {
-	// 		item.transition()
-	// 			.duration(1500)
-	// 			.attr('r', activeSize);
-	// 	}
-
-	// })
 	
 };
+
+
+
+
 
 oo.enq.map.init = function ( objects ){
 
@@ -132,12 +75,9 @@ oo.enq.map.init = function ( objects ){
 		return;	
 	}
 
-
-
 	oo.filt.on( oo.filt.events.change, oo.enq.map.update );
 
 	// Map init
-
 
 	oo.enq.map.map = mapbox.map('map');
     oo.enq.map.map.addLayer(mapbox.layer().id('fumoseaffabulazioni.map-80sq0fh2'));
@@ -171,7 +111,7 @@ oo.enq.map.init = function ( objects ){
 	oo.enq.map.data = nest;
 
 	// oo.log('objects', objects)
-	// oo.log('oo.enq.map.data', oo.enq.map.data)
+	oo.log('oo.enq.map.data', oo.enq.map.data)
 
     // return
 
@@ -225,7 +165,7 @@ oo.enq.map.d3layer = function() {
 	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
 	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; })
 	      	.attr('data-location', function(d, i) { return collection.features[i].location; })
-	      	.attr('title', function(d, i) { return collection.features[i].name; })
+	      	.attr('title', function(d, i) { return collection.features[i].counter + ' in ' + collection.features[i].name; })
 	      	.attr('rel', 'tooltip');
     };
 

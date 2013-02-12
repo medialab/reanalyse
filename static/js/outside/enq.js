@@ -40,7 +40,7 @@ oo.nest = function( objects, nester, sorter ){
 
 		// TO DO TO CHECK
 		var index = nester( objects[d] );
-		oo.log(index)
+		// oo.log(index)
 
 		if (index == null ){ continue; }
 
