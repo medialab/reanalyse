@@ -207,7 +207,7 @@ oo.glue.init = function(){ oo.log("[oo.glue.init]");
 	
 	// Delete PIN
 	$(document).on("click",".delete-pin", function(event){
-		oo.api.pin.delete($(this).attr('data-pin-id'),{});
+		oo.api.pin['delete']($(this).attr('data-pin-id'),{});
 	});
 	
 	//Publish PIN
