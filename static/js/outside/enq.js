@@ -40,9 +40,9 @@ oo.nest = function( objects, nester, sorter ){
 
 		// TO DO TO CHECK
 		var index = nester( objects[d] );
+		oo.log(index)
 
 		if (index == null ){ continue; }
-		// oo.log(index)
 
 		if (typeof nested[ index ] == "undefined"){
 			nested[ index ] = { "key": index, "values":[] };

@@ -47,7 +47,7 @@ oo.filt.cross = oo.filt.cross || {
 		return item.phases[0].phase == filter
 	},
 	'article': function( item, filter ){
-		if ( item.articles.length == 0 ) return false;
+		// if ( item.articles.length == 0 ) return false;
 		return item.articles[0].article == filter
 	}
 };
