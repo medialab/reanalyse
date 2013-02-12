@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 from django.conf import settings
+from django.core.mail import send_mail
 from django.db.models import Q 
 from django.contrib.auth.models import User
 
@@ -14,14 +15,14 @@ from glue.forms import AddPinForm
 from django.db import IntegrityError
 from reanalyseapp.models import Enquete, Tag
 from datetime import datetime
+
 import os, mimetypes
 
 from django.contrib.sites.models import get_current_site
 
 from django.utils.translation import ugettext as _
 
-import string
-import random
+import string, random
 
 version = '0.0.3'
 
@@ -300,7 +301,11 @@ def signups(request):
 		if not form.is_valid():
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
 		
+
 		try:
+			
+			created_user =  User.objects.get( username = form.cleaned_data['email'] )
+		except User.DoesNotExist, e:
 			# User creation
 			created_user = User.objects.create(
 				first_name = form.cleaned_data['first_name'],
@@ -310,17 +315,22 @@ def signups(request):
 				password = form.cleaned_data['password'],
 				is_active = False
 			)
-		
+			created_user.is_active = False
+
 		except IntegrityError, e:
+
 			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
 		
 		# desactivate user
-		created_user.is_active = False
+		
 			
 		confirmation_code = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for x in range(33))
 		
 		try:
-					
+			s = Subscriber.objects.get( email=form.cleaned_data['email'] )
+
+		except Subscriber.DoesNotExist, e:
+
 			s = Subscriber(
 				user = created_user,
 				affiliation = form.cleaned_data['affiliation'],
@@ -332,15 +342,17 @@ def signups(request):
 				description = "Enquete : %s \n\n %s" % ( request.POST.get( 'enquete_id', 0 ), form.cleaned_data['message'] ),
 				confirmation_code=confirmation_code
 			)
-			
+			s.save()
 		except IntegrityError, e:
+
+
 			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
 		
-			s.save()
+		
 			
-			send_registration_confirmation( subscriber=s, request=request )
+		send_registration_confirmation( subscriber=s, request=request )
 
-			response.add('object', s, jsonify=True)
+		response.add('object', s, jsonify=True)
 
 		
 	return response.queryset( Subscriber.objects.filter() ).json()
@@ -349,7 +361,7 @@ def signups(request):
 
 def send_registration_confirmation( subscriber, request ):
 
-	confirmation_href = "%s/%s/%s/" % ( settings.REANALYSEURL, s.confirmation_code, subscriber.user.username )
+	confirmation_href = "%s/%s/%s/" % ( settings.REANALYSEURL, subscriber.confirmation_code, subscriber.user.id )
 
 	send_mail(
 		_("account confirmation"), 
@@ -360,24 +372,6 @@ def send_registration_confirmation( subscriber, request ):
 	)
 	
 	
-def confirm(request, confirmation_code, username):
-	try:
-		user = User.objects.get(username=username)
-		profile = Subscriber.objects.get(user=user)
-		
-		if profile.confirmation_code == confirmation_code and user.date_joined > (datetime.datetime.now()-datetime.timedelta(days=1)):
-			
-			#TODO : TURN CONFIRM EMAIL FLAG DBFIELD TO TRUE
-			
-			
-
-			user.is_active = True
-			#user.save()
-			#user.backend='django.contrib.auth.backends.ModelBackend' 
-			#auth_login(request,user)
-		return HttpResponseRedirect('../../../../../')
-	except:
-		return HttpResponseRedirect('../../../../../')
 
 
 def subscriber( request, subscriber_id ):

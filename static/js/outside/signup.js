@@ -13,7 +13,7 @@ oo.magic.signup.add = function(){
 	oo.log("[oo.magic.subscriber.add]");
 	$("#subscription").empty().hide();
 	$("#subscription-accepted").show();
-	$("#right-sidebar").height($("#subscription-accepted").height());
+	$("#right-sidebar").height($("#left-side").height());
 };
 
 /*

@@ -8,7 +8,9 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth import login, logout, authenticate
 
-
+from django.contrib.auth.models import User
+from outside.models import Subscriber
+from django.core.mail import send_mail
 
 
 from reanalyseapp.models import Enquete, Tag
@@ -221,8 +223,30 @@ def signup( request, enquete_id=None ):
 	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )
 
 
+def confirm( request, token, user_id ):
+	data = shared_context( request, tags=[ "signup" ] )
+	return render_to_response("%s/confirm.html" % data['template'], RequestContext(request, data ) )
 
 
+
+def confirm( request, token, user_id ):
+	
+	user = User.objects.get(pk=user_id)
+	profile = Subscriber.objects.get(user=user)
+	
+	data = shared_context( request, tags=[ "signup" ] )
+	
+	if( profile.email_confirmed is False ):
+		profile.email_confirmed = True
+		profile.save()
+		return render_to_response("%s/confirm.html" % data['template'], {'error':'0'}, RequestContext(request, data ) )
+	
+	
+	else:
+		#TODO 
+		return render_to_response("%s/confirm.html" % data['template'],{'error':'1'}, RequestContext(request, data ) )
+		
+		
 
 
 def logout_view( request ):

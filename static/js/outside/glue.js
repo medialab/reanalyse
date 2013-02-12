@@ -72,7 +72,7 @@ oo.api.pin.edit = function( pk, params, callback ){
 	}));
 };
 
-oo.api.pin.delete = function( pk, params, callback ){
+oo.api.pin['delete'] = function( pk, params, callback ){
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.api.urlfactory( oo.urls.edit_pin, pk ),
 		data: $.extend({'method':'DELETE'}, params),

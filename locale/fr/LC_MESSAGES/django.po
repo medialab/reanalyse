@@ -621,7 +621,7 @@ msgid "email specification"
 msgstr "cette addresse sera votre identifiant utilisateur une fois inscrit"
 
 msgid "message specification"
-msgstr "Dans ce message vous pouvez nous décrire votre projet de recherche afin de permettre à l'équipe beQuali d'évaluer votre demande"
+msgstr "Dans ce message veuillez nous décrire votre <i>projet de recherche</i> afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/>Veuillez notamment préciser dans quel cadre vous comptez réutiliser cette enquête et quel type de traitement vous avez prévu de mener sur les documents de l'enquête."
 
 msgid "password specification"
 msgstr "votre mot de passe doit contenir au moins 8 charactères"
