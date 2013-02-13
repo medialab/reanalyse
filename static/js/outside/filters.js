@@ -31,6 +31,9 @@ oo.filt.cross = oo.filt.cross || {
 	'extent': function( item, filter ){
 		var bounds = filter,
 			 point = item.coordinates.geometry.coordinates;
+		if( item.location == null){
+			return true;
+		}
 		return point[1] < bounds.north && point[1] > bounds.south && point[0] < bounds.east && point[0] > bounds.west;
 	},
 	'period': function( item, filter ){
