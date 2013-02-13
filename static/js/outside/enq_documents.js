@@ -96,7 +96,7 @@ oo.enq.docs.init = function ( objects ){
 			if (typeof d.type != 'undefined' ) string += '<i>'+d.type+'</i>' 
 			if (typeof d.phases[0].phase != 'undefined' ) string += '<i>'+d.phases[0].phase+'</i>' 
 			if (typeof d.categories[0].category != 'undefined' ) string += '<i>'+d.categories[0].category+'</i>' 
-			if (typeof d.articles.length != 0 ) string += '<i>'+d.articles[0].article+'</i>' 
+			if ( d.articles.length != 0 ) string += '<i>'+d.articles[0].article+'</i>' 
 
 			return string;
 		})
