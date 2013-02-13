@@ -3,7 +3,10 @@
 // 
 // Map
 // 
-// 
+//
+
+
+
 
 oo.enq.map.update = function( event, filters ){
 
@@ -45,7 +48,10 @@ oo.enq.map.update = function( event, filters ){
 		.transition()
 			.duration(1500)
 			.attr('r', function(d, i) {
-				return (oo.enq.map.map.coordinate.zoom + 1) * nest.features[i].counter / 10
+				// oo.log('zoom', oo.enq.map.map.coordinate.zoom)
+				// oo.log('norm', oo.vars.map.normalize(nest.features[i].counter) )
+				// oo.log( (oo.enq.map.map.coordinate.zoom + 1) * .5 * oo.vars.map.normalize(nest.features[i].counter) )
+				return (oo.enq.map.map.coordinate.zoom + 1) * .5 * oo.vars.map.normalize(nest.features[i].counter)
 			});
 
 };
@@ -142,8 +148,10 @@ oo.enq.map.d3layer = function() {
 
     f.draw = function() {
 
-    	var zoom = oo.enq.map.map.coordinate.zoom;
-        
+		oo.vars.map.normalize = d3.scale.linear()
+			.domain([ 0, d3.max(collection.features, function(d) { return d.counter; }) ])
+			.range([ 0, 10 ]);
+
       	first && svg.attr("width", f.map.dimensions.x)
 	        	.attr("height", f.map.dimensions.y * 2)
 				.style("margin-left", "0px")
@@ -151,7 +159,9 @@ oo.enq.map.d3layer = function() {
 			&& ( first = false );
 
       	circle
-      		.attr('r', function(d, i) { return (zoom + 1) * collection.features[i].counter / 10 })
+      		.attr('r', function(d, i) {
+      			return (oo.enq.map.map.coordinate.zoom + 1) * .5 * oo.vars.map.normalize(collection.features[i].counter)
+      		})
       		.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
             .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
 	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })

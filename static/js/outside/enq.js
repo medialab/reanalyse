@@ -6,6 +6,7 @@ oo.enq.timeline = {};
 oo.enq.types = {};
 oo.enq.docs = {};
 oo.enq.disabled = {};
+oo.vars.map = {};
 
 
 // 
