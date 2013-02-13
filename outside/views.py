@@ -1,24 +1,36 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
+
+import urllib, os
+
+
+
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.mail import send_mail
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
-from django.conf import settings
 from django.utils.translation import ugettext as _
-from django.contrib.auth import login, logout, authenticate
 
-from django.contrib.auth.models import User
-from outside.models import Subscriber
-from django.core.mail import send_mail
+from mimetypes import guess_extension, guess_type
 
+from reanalyseapp.models import Enquete, Tag, Texte
 
-from reanalyseapp.models import Enquete, Tag
 from glue.models import Pin, Page
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
-from outside.models import Enquiry
+
+from outside.models import Enquiry, Subscriber
 from outside.sites import OUTSIDE_SITES_AVAILABLE
 from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
+
+
+	
+# settings.py
+LOGIN_URL = '/reanalyse/login/'
 
 #
 #    Outside
@@ -92,6 +104,83 @@ def enquete_metadata( request, enquete_id ):
 		pass
 	return render_to_response('enquete/metadata.html', RequestContext(request, data ) )
 
+
+@login_required( login_url=LOGIN_URL )
+@permission_required('reanalyseapp.can_browse')
+def enquete_download( request, enquete_id ):
+	
+	enquete = get_object_or_404( Enquete, id=enquete_id )
+
+	import zipfile, zlib
+
+	zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete.id )
+
+	zf = zipfile.ZipFile( zippath, mode='w' )
+
+	for t in Texte.objects.filter( enquete=enquete ):
+		zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, arcname= os.path.join( t.doctype, os.path.basename(  t.locationpath ) ) )
+
+	response = HttpResponse( open( zippath , 'r' ) , content_type="application/gzip"  )
+	response['Content-Description'] = "File Transfer";
+	response['Content-Disposition'] = "attachment; filename=enquete-%s.zip" % ( enquete.id ) 
+	
+	return response
+
+
+@login_required( login_url=LOGIN_URL )
+@permission_required('reanalyseapp.can_browse')
+def document( request, document_id ):
+	data = shared_context( request, tags=[ "enquetes","metadata" ] )
+
+	data['document'] = document = get_object_or_404( Texte, id=document_id )
+	data['enquete'] = document.enquete
+	data['mimetype'] = guess_type( document.locationpath )[0]
+
+	return render_to_response('enquete/document.html', RequestContext(request, data ) )
+
+
+@login_required( login_url=LOGIN_URL )
+@permission_required('reanalyseapp.can_browse')
+def document_download( request, document_id ):
+	data = shared_context( request )
+	
+	document = get_object_or_404( Texte, id=document_id )
+
+	mimetype = guess_type( document.locationpath )[0]
+
+	try:
+		extension = guess_extension( mimetype )
+		content_type = mimetype
+	except AttributeError, e:
+		filetitle, extension = os.path.splitext( document.locationpath )
+		content_type = "application/octet-stream"
+
+	response = HttpResponse( open( document.locationpath , 'r' ) , content_type=content_type  )
+	response['Content-Description'] = "File Transfer";
+	response['Content-Disposition'] = "attachment; filename=%s-%s-%s%s" % ( document.enquete.id, document.id, document.name, extension ) 
+	
+	return response
+
+@login_required( login_url=LOGIN_URL )
+@permission_required('reanalyseapp.can_browse')
+def document_embed( request, document_id ):
+	data = shared_context( request )
+	
+	document = get_object_or_404( Texte, id=document_id )
+
+
+	mimetype = guess_type( document.locationpath )[0]
+
+	try:
+		extension = guess_extension( mimetype )
+		content_type = mimetype
+	except AttributeError, e:
+		filetitle, extension = os.path.splitext( document.locationpath )
+		content_type = "application/octet-stream"
+
+	return HttpResponse( open( document.locationpath , 'r' ) , mimetype=content_type  )
+	
+
 def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","enquiry" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
@@ -133,8 +222,6 @@ def download_view( request, pin_slug ):
 	data = shared_context( request )
 	pin = get_object_or_404(Pin, slug=pin_slug, language=data['language'] )
 	data['root'] = settings.MEDIA_ROOT
-	from mimetypes import guess_extension
-	import urllib, os
 	
 	try:
 		extension = guess_extension( pin.mimetype )
@@ -223,11 +310,6 @@ def signup( request, enquete_id=None ):
 	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )
 
 
-def confirm( request, token, user_id ):
-	data = shared_context( request, tags=[ "signup" ] )
-	return render_to_response("%s/confirm.html" % data['template'], RequestContext(request, data ) )
-
-
 
 def confirm( request, token, user_id ):
 	
@@ -240,7 +322,15 @@ def confirm( request, token, user_id ):
 		profile.email_confirmed = True
 		profile.save()
 		return render_to_response("%s/confirm.html" % data['template'], {'error':'0'}, RequestContext(request, data ) )
-	
+		
+		send_mail(
+			"Inscription pour une enquête", 
+			'<href="%s">%s</a>' % ( confirmation_href, confirmation_href ),
+			'Bequali Registration submission <signup@bequali.fr>'
+			,[ 'alexandreaazzouz@gmail.com' ],
+			fail_silently=False
+		)
+		
 	
 	else:
 		#TODO 

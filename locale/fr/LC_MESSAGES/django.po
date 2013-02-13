@@ -439,6 +439,27 @@ msgstr "Les informations recueillies font l'objet d'un traitement informatique d
 
 #
 #
+# hub/signup.html
+#
+#
+msgid "recaptcha"
+msgstr "captcha"
+
+
+msgid "recaptcha description"
+msgstr "Veuillez recopier le texte de l'image ci-dessous"
+
+
+msgid "fill signup form"
+msgstr "Inscription"
+
+
+
+
+
+
+#
+#
 # enquiry.html
 #
 #
@@ -459,16 +480,16 @@ msgstr "le"
 msgid "langdoc"
 msgstr "Langage documentation"
 
-msgid "meta.locationofunitsofobservation"
+msgid "locationofunitsofobservation"
 msgstr "Niveau de comparatisme"
 
-msgid "meta.abstract"
+msgid "abstract"
 msgstr "Résumé"
 
 msgid "meta.general"
 msgstr "Général"
 
-msgid "meta.affiliation"
+msgid "affiliation"
 msgstr "Affiliation"
 
 msgid "keywords"
@@ -490,7 +511,10 @@ msgid "contact"
 msgstr "Contact"
 
 msgid "actor"
-msgstr "Acteur(s)"
+msgstr "Acteur"
+
+msgid "actors"
+msgstr "Acteurs"
 
 msgid "targetgroups"
 msgstr "Groupes de population ciblés"
@@ -607,6 +631,9 @@ msgstr "Logiciel"
 
 msgid "interview done on the"
 msgstr "entretien réalisé le"
+
+msgid "interview done with"
+msgstr "entretien réalisé avec"
 
 msgid "news"
 msgstr "actualités"

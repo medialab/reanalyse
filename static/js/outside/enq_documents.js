@@ -87,7 +87,19 @@ oo.enq.docs.init = function ( objects ){
 		.attr('class', 'active')
 		.attr('data-id', function(d) { return d.id; })
 		.attr('data-status', 'active')
-		.html(function(d) { return d.title.split('_').join(' ').split('/').join(' '); })
+		
+		.html(function(d) {
+			oo.log(d)
+			
+			var string = d.title.split('_').join(' ').split('/').join(' ') + '<br/>';
+			
+			if (typeof d.type != 'undefined' ) string += '<i>'+d.type+'</i>' 
+			if (typeof d.phases[0].phase != 'undefined' ) string += '<i>'+d.phases[0].phase+'</i>' 
+			if (typeof d.categories[0].category != 'undefined' ) string += '<i>'+d.categories[0].category+'</i>' 
+			if (typeof d.articles.length != 0 ) string += '<i>'+d.articles[0].article+'</i>' 
+
+			return string;
+		})
 
 		.on('click', function(d, i) {
 			oo.log('this', this)

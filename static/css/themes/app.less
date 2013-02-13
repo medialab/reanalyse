@@ -229,7 +229,7 @@ a{
 			
 			a, a:visited{
 				
-				border-bottom: 4px solid @base-color;
+				border-bottom: 2px solid @base-color;
 				color: @base-color;
 			}
 		}
@@ -2010,6 +2010,10 @@ section, .section{
 
 		}
 		
+		>.icon{
+			float:left;
+			margin: @grid-padding/3 @grid-padding/2 @grid-padding/2 @grid-padding ;
+		}
 	}
 
 
@@ -2024,36 +2028,54 @@ background: lighten( @page-color, 2%);
 		.serif(24px);
 	}
 		
-
+	@nav-height: 48px;
 	>.nav{
 		margin: 0 @grid-padding @grid-padding/2 @grid-padding;
 		border-bottom:1px solid #dbdbdb;
-		height: @grid-padding * 1.2;
+		height: @nav-height;
 		a,a:visited{
 			display: block;
 			padding: 0 @grid-padding/3;
 			&:hover{
 				color: @base-color;
 			}
+
+			
+		}
+		.icon{
+			margin: @grid-padding/9 @grid-padding/4 0 0;
+			float:left;
+			img{
+				height:16px;
+			}
+		}
+		li{
+			height: @nav-height;
 		}
 		i{
 			.serif-slant(13px);
 		}
 		.sans-serif( 14px);
 		.back, .ese{
-			height: @grid-padding * 1.2 - 2;
-			line-height: @grid-padding * 1.2 - 4;
+			height: @nav-height;
+			line-height: @nav-height - 4;
+			&:not(.selected).with-icon:hover{
+				border-bottom: 1px solid @base-color;
+				background: fade(@base-color, 5%);
+			}
 		}
 		.back{
 			border-right:1px solid #dbdbdb;
 		}
+		
 
 		.identifier{
 			border-right:1px solid #dbdbdb;
 			
 		}
 		.selected{
-			border-bottom: 4px solid @base-color;
+			height: @nav-height - 1;
+			border-bottom: 2px solid @base-color;
 			a,a:visited{
 				color: @base-color;
 			}

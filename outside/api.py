@@ -22,6 +22,8 @@ from django.contrib.sites.models import get_current_site
 
 from django.utils.translation import ugettext as _
 
+from django.core.mail import EmailMultiAlternatives
+
 import string, random
 
 version = '0.0.3'
@@ -361,16 +363,19 @@ def signups(request):
 
 def send_registration_confirmation( subscriber, request ):
 
-	confirmation_href = "%s/%s/%s/" % ( settings.REANALYSEURL, subscriber.confirmation_code, subscriber.user.id )
+	confirmation_href = "%s/%s/%s/%s/" % ( settings.REANALYSEURL, settings.ROOT_DIRECTORY_NAME, subscriber.confirmation_code, subscriber.user.id )
 
-	send_mail(
-		_("account confirmation"), 
-		'<href="%s">%s</a>' % ( confirmation_href, confirmation_href ),
-		'Bequali Registration submission <signup@bequali.fr>'
-		,[ subscriber.email ],
-		fail_silently=False
-	)
+	subject, from_email, to = _("Bequali account confirmation"),'BEQUALI <signup@bequali.fr>', subscriber.email
+	text_content = '%s <a href="%s">%s</a>' % ( _('Please click on this link to confirm your signup email address:'), 
+											confirmation_href, confirmation_href )
+	html_content = '%s <a href="%s">%s</a>' % ( _('Please click on this link to confirm your signup email address:'), 
+											confirmation_href, confirmation_href )
+
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+	msg.attach_alternative(html_content, "text/html")
+	msg.send()
 	
+
 	
 
 

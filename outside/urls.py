@@ -24,7 +24,12 @@ urlpatterns = patterns('',
 
 	url(r'^enquetes/$','outside.views.enquetes', name='outside_enquetes'),
 	url(r'^enquete/(?P<enquete_id>\d+)/$','outside.views.enquete', name='outside_enquete'),
-	url(r'^enquete/(?P<enquete_id>\d+)/metadata$','outside.views.enquete_metadata', name='outside_enquete_metadata'),
+	url(r'^enquete/(?P<enquete_id>\d+)/metadata/$','outside.views.enquete_metadata', name='outside_enquete_metadata'),
+	url(r'^enquete/(?P<enquete_id>\d+)/download/$','outside.views.enquete_download', name='outside_enquete_download'),
+
+	url(r'^document/(?P<document_id>\d+)/$','outside.views.document', name='outside_enquete_document'),
+	url(r'^document/(?P<document_id>\d+)/download/$','outside.views.document_download', name='outside_enquete_document_download'),
+	url(r'^document/(?P<document_id>\d+)/embed/$','outside.views.document_embed', name='outside_enquete_document_embed'),
 
 	url(r'^enquiry/(?P<enquete_id>\d+)/$','outside.views.enquiry', name='outside_enquiry'), # foreign key to enquete for model Oustide_Enquiry
 	url(r'^enquiries/$','outside.views.enquiries', name='outside_enquiries'),

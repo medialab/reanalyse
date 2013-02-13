@@ -12,51 +12,49 @@
 
 		<div class="subscription-wrapper">
 			
-			<label for="first_name">{% trans "first name" %}</label>
+			<label for="id_signup_first_name">{% trans "first name"|capfirst %}</label>
 			{{ signup_form.first_name }}
 
-			<label for="last_name">{% trans "last name" %}</label>
+			<label for="id_signup_last_name">{% trans "last name"|capfirst %}</label>
 			{{ signup_form.last_name }}
-			
-			
-			
-			<label for="password">{% trans "password" %}</label>
-			{{ signup_form.password }}
-			
-		
 
-			<label for="email">{% trans "email" %}</label>
+			<label for="id_signup_email">{% trans "email"|capfirst %}</label>
 			{{ signup_form.email }}
 			
 			
-			<label for="affiliation">{% trans "status" %}
-				
-			</label>
+			<label for="id_signup_password">{% trans "password"|capfirst %}</label>
+			{{ signup_form.password }}
+						
+			
+			<label for="id_signup_affiliation">{% trans "status"|capfirst %}</label>
 			<p>{{ signup_form.status }}</p>
 
-			<label for="affiliation">{% trans "affiliation institution" %}
-				<div class="specification">{% trans "university or institution" %}</div>
+			<label for="id_signup_affiliation">{% trans "affiliation institution"|capfirst %}
+				<div class="specification">{% trans "university or institution"|capfirst %}</div>
 			</label>
 			{{ signup_form.affiliation }}
 			
-			<label for="affiliation">{% trans "message" %}
-			</label>
+			<label for="id_signup_message">{% trans "message"|capfirst %}</label>
 			{{ signup_form.message }}
 			
 			
 			
-			<label for="recaptcha">{% trans "Recaptcha" %}
-				<div class="specification">{% trans "Recaptcha" %}</div>
+			<label for="recaptcha_response_field">{% trans "recaptcha"|capfirst %}
+				<div class="specification">{% trans "recaptcha description"|capfirst %}</div>
 			</label>
 			{{ signup_form.captcha }}
 			
-			<label for="accepted_terms">{% trans "accepted terms" %}
-				<div class="specification">{% trans "legal notice description" %}</div>
+
+		
+			<label for="id_signup_accepted_terms">{% trans "legal notices"|capfirst %}
+				<div class="specification">
+					{% trans "legal notice description"|capfirst  %}
+				</div>
+
+				<div class="specification"><b>{% trans "I have read and accepted the" %} {% trans "legal notices" %} </b> {{ signup_form.accepted_terms }}</div>
 			</label>
 			
-			{{ subscriber_form.accepted_terms }}
-			
-			
+
 			<input type="button" id="add-signup" value="{% trans "send" %}"/>
 		</div>
 	

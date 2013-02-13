@@ -6,25 +6,38 @@
 		
 		<div class="nav">
 			<div class="back floating" >
-				<a href="{% url outside_enquetes %}"> <i>&larr;  {% trans "back to enquetes list" %}</i></a>
+				<a href="{% url outside_enquetes %}" title="  {% trans "back to enquetes list" %}">&larr;</a>
 			</div>
 
-			<div class="back floating {% if "metadata" in tags %}selected{%endif%}">
-				<a href="{% if enquiry %}{% url outside_enquete_metadata enquiry.enquete.id %}{% else %}{% url outside_enquete_metadata enquete.id %}{% endif %}">{% trans "l'enquête en bref" %}</a>
+			<div class="back floating with-icon {% if "metadata" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_enquete_metadata enquiry.enquete.id %}{% else %}{% url outside_enquete_metadata enquete.id %}{% endif %}" title="{% trans "l'enquête en bref" %}" >
+					<div class="icon"><img src="{{ STATIC_URL }}img/179-notepad.png"></div>{% trans "l'enquête en bref" %}
+				</a>
 			</div>
 
-			<div class="back floating {% if "enquiry" in tags %}selected{%endif%}">
-				<a href="{% if enquiry %}{% url outside_enquiry enquiry.enquete.id %}{% else %}{% url outside_enquiry enquete.id %}{% endif %}">{% trans "l'enquête sur l'enquête" %}</a>
+			<div class="back floating with-icon {% if "enquiry" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_enquiry enquiry.enquete.id %}{% else %}{% url outside_enquiry enquete.id %}{% endif %}" title="{% trans "l'enquête sur l'enquête" %}" >
+					<div class="icon"><img src="{{ STATIC_URL }}img/66-microphone.png"></div>{% trans "l'enquête sur l'enquête" %}
+				</a>
 			</div>
 
-			<div class="back floating {% if "focus-on-enquete" in tags %}selected{%endif%}">
-				<a href="{% if enquiry %}{% url outside_enquete enquiry.enquete.id %}{% else %}{% url outside_enquete enquete.id %}{% endif %}">{% trans "focus sur l'enquête" %}</a>
+			<div class="back floating with-icon {% if "focus-on-enquete" in tags %}selected{%endif%}">
+				<a href="{% if enquiry %}{% url outside_enquete enquiry.enquete.id %}{% else %}{% url outside_enquete enquete.id %}{% endif %}" title="{% trans "focus sur l'enquête" %}">
+					<div class="icon"><img src="{{ STATIC_URL }}img/151-telescope.png"></div>{% trans "focus sur l'enquête" %}
+				</a>
 			</div>
+			{% if request.user.is_authenticated %}
+			<div class="back floating with-icon">
+				<a href="{% if enquiry %}{% url outside_enquete_download enquiry.enquete.id %}{% else %}{% url outside_enquete_download enquete.id %}{% endif %}" title="{% trans "telecharger l'enquête" %}">
+					<div class="icon"><img src="{{ STATIC_URL }}img/57-download.png"></div>{% trans "telecharger" %}
+				</a>
+			</div>
+			{% endif %}
 
 			<div class="ese floating {% if "signup" in tags %}selected{%endif%}">
 				<a href="{% if enquiry %}{% url outside_signup enquiry.enquete.id %}{% else %}{% url outside_signup enquete.id %}{% endif %}"><i>{% trans "demander l'acces" %}</i> &rarr;</a>
 			</div>
-
+			
 			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
 		
 			<div class="clear"></div>

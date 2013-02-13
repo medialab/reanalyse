@@ -248,31 +248,41 @@
 
 #right-sidebar {
 
-			color: white;
-
+			color: #d4d1cd;
 		
 		#reset {
-			margin: 30px 0 0 20px;
+			padding: 4px 18px;
 			font-family: 'LatinModernRoman10Regular', serif;
 			font-style: italic;
+			font-size: 13px;
 			text-decoration: underline;
 			cursor: pointer;
+
+			&:hover{
+				background: lighten( #383838, 8% );
+			}
+
+			border-top:1px solid fade( white, 5%);
+			border-bottom:1px solid darken(#383838, 14%);
 		}
 
 
 		#counter {
 			font-family: 'LatinModernSans10Regular', sans-serif;
-			margin: 30px 0 0 20px;
-		    border-bottom: solid 1px white;
-		    padding-bottom: 5px;
+		    padding: 12px 18px;
 			font-size: 24px;
 		    overflow: hidden;
-		    width: 200px;
+		    width: 214px;
 		    height: 24px;
 		    line-height: 24px;
+		    cursor: default;
+		    background: darken( #383838, 3% );
+
+		    border-top:1px solid fade( white, 5%);
+			border-bottom:1px solid darken(#383838, 4%);
 
 			p {
-				margin-top: 24px;
+				margin-top: 40px; // For initial sliding
 			    text-transform: capitalize;
 			}
 
@@ -284,23 +294,45 @@
 			overflow: -moz-scrollbars-vertical; 
 			overflow-y: scroll;
 			height: @line_height * 22 + 9;
-			margin: 0 0 0 20px;
 			padding-bottom: 2px;
-		    width: 200px;
-		    border-bottom: solid 1px white;
+		    width: 250px;
+		    
+		    border-bottom:1px solid darken(#383838, 14%);
 
-			li {
-				font-family: 'LatinModernSans10Regular', sans-serif;
-				white-space: nowrap;
-				width: 100%;
-				overflow: hidden;
-				height: @line_height;
-				line-height: @line_height;
-				text-overflow: ellipsis;
-				text-shadow: none;
-			    font-size: 12px;
-			    margin-left: -20px;
-			    cursor: pointer;
+		    background: #383838;
+
+
+			ul{
+				margin:0;
+				padding:0;
+				
+				li{
+					font-family: 'LatinModernSans10Regular', sans-serif;
+					font-size: 14px;
+					cursor: pointer;
+
+					display: block;
+					padding: 12px 18px;
+
+					border-top:1px solid fade( white, 5%);
+					border-bottom:1px solid darken(#383838, 4%);
+
+					&:hover{
+						background: lighten( #383838, 8% );
+					}
+
+					i {
+						font-family: 'LatinModernSans10Regular', sans-serif;
+						font-size: 10px;
+						text-transform: uppercase;
+						background: lighten( #383838, 8% );
+						padding: 0 2px;
+						border:0 solid;
+						border-radius: 2px;
+					}
+
+				}
+				
 			}
 
 		}
