@@ -381,8 +381,8 @@ msgstr "Votre message à bien été envoyé"
 msgid "status"
 msgstr "votre statut"
 
-msgid "I have read and accepted the"
-msgstr "J'ai lu et j'accepte les"
+msgid "I have read and accepted"
+msgstr "J'ai lu et j'accepte"
 
 msgid "legal notices"
 msgstr "conditions d'utilisation"
@@ -454,7 +454,90 @@ msgid "fill signup form"
 msgstr "Inscription"
 
 
+msgid "A confirmation mail will be sent to your mailbox in order to finalize your subscription"
+msgstr "Vous allez recevoir un mail de confirmation pour finaliser votre inscription"
 
+msgid "Hello, you have a new signup request."
+msgstr "Bonjour, vous avez une demande d'inscription"
+
+msgid "Information"
+msgstr "Informations"
+
+msgid "Goodbye"
+msgstr "Aurevoir"
+
+msgid "Signup request"
+msgstr "Demande d'inscription"
+
+msgid "Bequali Team"
+msgstr "L'équipe Bequali"
+
+
+msgid "bequali contact request"
+msgstr "Demande de contact site bequali"
+
+
+
+#: outside/api.py:114 outside/api.py:121
+msgid "Hello, you have a new contact request."
+msgstr "Bonjour, vous avez une demande de contact sur le site bequali"
+
+#: outside/api.py:115 outside/api.py:122
+msgid "Contact information :"
+msgstr "Informations du contact :"
+
+
+
+#: outside/api.py:85
+msgid "Bequali : Message sent"
+msgstr "Bequali : message envoyé"
+
+#: outside/api.py:86 outside/api.py:92
+msgid "Hello, your message has been sent, we will respond as soon as possible."
+msgstr ""
+"Bonjour, votre message a été envoyé, nous vous répondrons dès que possible."
+
+#: outside/api.py:87 outside/api.py:93
+msgid "Message content :"
+msgstr "Contenu du message : "
+
+
+
+
+
+#
+#
+# hub/confirm.html outside/api.py
+#
+#
+msgid "Thank you, your email has been confirmed, we will consider your request for this survey."
+msgstr "Merci, votre email a été confirmé, nous allons étudier votre demande pour cette enquête."
+
+msgid "Your email has already been confirmed."
+msgstr "Votre email a déjà été confirmé."
+
+msgid "Bequali signup"
+msgstr "Bequali inscription"
+
+msgid "Please click on this link to confirm your signup email address"
+msgstr "Veuillez cliquer sur ce lien pour confirmer votre inscription sur le site Bequali"
+
+msgid "Hello"
+msgstr "Bonjour"
+
+
+#
+#
+#
+#hub/contact.html
+#
+#
+
+msgid "Thank you"
+msgstr "Merci"
+
+msgid "Your message is sent, you will receive a notification mail"
+msgstr "Votre message est envoyé, vous allez recevoir un email de notification"
 
 
 

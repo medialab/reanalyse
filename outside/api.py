@@ -1,10 +1,17 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
+
+from django.db.models import Q 
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, redirect, get_object_or_404
+
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
-from django.conf import settings
-from django.core.mail import send_mail
-from django.db.models import Q 
-from django.contrib.auth.models import User
+
+from django.core.mail import EmailMultiAlternatives
 
 
 from glue.models import Pin
@@ -283,9 +290,58 @@ def subscribers(request):
 		s.messages.add( m )
 		s.save()
 
-		response.add("object", m, jsonify=True )
+		#Notification mail to the client
+		subject, from_email, to = _('Bequali : Message sent'),"L'équipe Bequali <admin@bequali.fr>", form.cleaned_data['email']
+		text_content = '%s<br/><br/>%s</br>%s<br/><br/>%s<br/><br/>%s' % (_('Hello, your message has been sent, we will respond as soon as possible.'),
+												_('Message content :'),
+												form.cleaned_data['description'],
+												_('Goodbye'),
+												'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
+												)
+				
+		html_content = text_content.replace('\n', '<br/>')
+		
+
+		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+		msg.attach_alternative(html_content, "text/html")
+		msg.content_subtype = 'html'
+		msg.send()
+		
+		
+		
+		form_datas2 = {'1. Prenom' : form.cleaned_data['first_name'],
+				'2. nom' : form.cleaned_data['last_name'],
+				'3. email' : form.cleaned_data['email'],
+				'4. affiliation' : form.cleaned_data['affiliation'],
+				'5. message' : form.cleaned_data['description']}	
+		
+		#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
+		subject, from_email, to = _('bequali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
+		html_content = '%s<br/><br/>%s<br/><br/>%s<br/><br/>%s</br/><br/>%s' % (
+												_('Hello, you have a new contact request.'),
+												_('Contact information :'), 
+												''.join(['%s : %s<br/>' % (k, v) for k, v in sorted(form_datas2.items())]),
+												_('Goodbye'),
+												'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
+												)
+		
+		text_content = html_content.replace('<br/>', '\n')
+
+											 
+		msg2 = EmailMultiAlternatives(subject, text_content, from_email, to)
+		msg2.attach_alternative(html_content, 'text/html')
+		msg2.content_subtype = 'html'
+		msg2.send()
 
 	return response.queryset( Subscriber.objects.filter() ).json()
+
+
+
+
+
+
+
+
 
 
 
@@ -363,20 +419,40 @@ def signups(request):
 
 def send_registration_confirmation( subscriber, request ):
 
-	confirmation_href = "%s/%s/%s/%s/" % ( settings.REANALYSEURL, settings.ROOT_DIRECTORY_NAME, subscriber.confirmation_code, subscriber.user.id )
+	confirmation_href = "%s://%s%s"% ( 'https' if request.is_secure()  else 'http', request.get_host(), reverse('outside.views.confirm', args=( subscriber.confirmation_code, subscriber.user.id ) ) )
 
-	subject, from_email, to = _("Bequali account confirmation"),'BEQUALI <signup@bequali.fr>', subscriber.email
-	text_content = '%s <a href="%s">%s</a>' % ( _('Please click on this link to confirm your signup email address:'), 
-											confirmation_href, confirmation_href )
-	html_content = '%s <a href="%s">%s</a>' % ( _('Please click on this link to confirm your signup email address:'), 
-											confirmation_href, confirmation_href )
+	subject, from_email, to = _("Bequali signup"), _("Bequali Team")+"<equipe@bequali.fr>", subscriber.email
+	
+	text_content = '%s\n\n%s <a href="%s">%s</a>\n\n%s\n\n%s	' % (
+			_('Hello')+' '+subscriber.first_name+' '+subscriber.last_name,
+			_('Please click on this link to confirm your signup email address:'), 
+			confirmation_href, 
+			confirmation_href,
+			_('Goodbye'),
+			'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>')
+											
+	
+	html_content = '%s,<br/><br/>%s : <a href="%s">%s</a><br/><br/>%s<br/><br/>%s' % (
+			_('Hello')+' '+subscriber.first_name+' '+subscriber.last_name,
+			_('Please click on this link to confirm your signup email address'), 
+			confirmation_href, 
+			confirmation_href,
+			_('Goodbye'),
+			'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>')
 
 	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()
 	
 
+def test( request ):
+	response = Epoxy( request )
+	response.add( 'full_path', request.get_host()  )
 	
+	full_url =  "%s://%s%s"% ( 'https' if request.is_secure()  else 'http', request.get_host(), reverse('outside.views.confirm', args=( "dsdsdsds", 12 ) ) )
+	response.add( 'full_url',  full_url  )
+
+	return response.json()
 
 
 def subscriber( request, subscriber_id ):

@@ -51,7 +51,7 @@
 					{% trans "legal notice description"|capfirst  %}
 				</div>
 
-				<div class="specification"><b>{% trans "I have read and accepted the" %} {% trans "legal notices" %} </b> {{ signup_form.accepted_terms }}</div>
+				<div class="specification"><b>{% trans "I have read and accepted" %}</b> {{ signup_form.accepted_terms }}</div>
 			</label>
 			
 
@@ -61,9 +61,9 @@
 	</div>
 
 	<div id="subscription-accepted" style="display:none">
-		<h2>{% trans "Merci !"%}</h2>
+		<h2>{% trans "Thank you"%} !</h2>
 
-		{% trans "A confirmation mail will be sent to your mailbox" %}
+		{% trans "A confirmation mail will be sent to your mailbox in order to finalize your subscription" %}
 
 		<p>
 			<a href="{% url outside_index %}">{% trans "back to home page"%}</a>

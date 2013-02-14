@@ -42,8 +42,8 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 			var	g = svg.append('g')
 				.attr('data-id', map[i].key)
 				.attr('data-filter', 'false')
-				.attr('data-originalWidth', gWidth)
-				.attr('data-originalX', xPosition)
+				.attr('data-width', gWidth)
+				.attr('data-origin', xPosition)
 				.attr('data-total', map[i].values.length)
 				.attr('data-partial', map[i].values.length)
 				.attr('transform', 'translate(' + xPosition + ', 0)')
@@ -60,49 +60,49 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 						g.attr('data-filter', 'true');
 
 						// Hide others
-						types.selectAll('g[data-filter=false]')
-							.transition()
-							.duration(500)
-							.style('opacity', '0')
-							.each('end', function(d, i) {
-								d3.select(this).style('display', 'none')
-							});
+						// types.selectAll('g[data-filter=false]')
+						// 	.transition()
+						// 		.duration(500)
+						// 		.style('opacity', '0')
+						// 	.each('end', function() {
+						// 		d3.select(this).style('display', 'none');
+						// 	});
 
-						// Move group
-						g.transition()
-							.delay(500)
-							.duration(1000)
-							.attr('transform', 'translate(0, 0)');
+						// // Move group
+						// g.transition()
+						// 	.delay(500)
+						// 	.duration(1000)
+						// 	.attr('transform', 'translate(0, 0)');
 
-						// Lengthen background
-						g.select('rect.background')
-							.transition()
-							.delay(500)
-							.duration(1000)
-							.attr('width', width)
+						// // Lengthen background
+						// g.select('rect.background')
+						// 	.transition()
+						// 	.delay(500)
+						// 	.duration(1000)
+						// 	.attr('width', width)
 
-						// Lengthen percentage
-						var tempPartial = g.attr('data-partial'),
-							tempTotal = g.attr('data-total'),
-							tempScale = d3.scale.linear()
-								.domain([ 0, tempTotal ])
-								.range([ 0,  width ]),
-							partialWidth = tempScale( tempPartial );
+						// // Lengthen percentage
+						// var tempPartial = g.attr('data-partial'),
+						// 	tempTotal = g.attr('data-total'),
+						// 	tempScale = d3.scale.linear()
+						// 		.domain([ 0, tempTotal ])
+						// 		.range([ 0,  width ]),
+						// 	partialWidth = tempScale( tempPartial );
 
-						g.select('rect.percentage')
-							.transition()
-							.delay(500)
-							.duration(1000)
-							.attr('width', partialWidth);
+						// g.select('rect.percentage')
+						// 	.transition()
+						// 	.delay(500)
+						// 	.duration(1000)
+						// 	.attr('width', partialWidth);
 
-						// Set text
-						g.select('text')
-							.transition()
-							.delay(500)
-							.duration(500)
-							.each('end', function() {
-								d3.select(this).text( partialWidth < 60 ? tempTotal : tempTotal + ' ' + g.attr('data-id') )
-							})
+						// // Set text
+						// g.select('text')
+						// 	.transition()
+						// 	.delay(500)
+						// 	.duration(500)
+						// 	.each('end', function() {
+						// 		d3.select(this).text( partialWidth < 60 ? tempTotal : tempTotal + ' ' + g.attr('data-id') )
+						// 	})
 
 						// Send request
 						var obj = {},
@@ -114,45 +114,50 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 					} else {
 
-						var x = g.attr('data-originalX'),
-							totalWidth = g.attr('data-originalWidth'),
-							partialNumber = g.attr('data-partial'),
-							totalNumber = g.attr('data-total'),
-							scaleX = d3.time.scale()
-								.domain([ 0, totalNumber ])
-								.range([ 0,  totalWidth ]),
-							partialWidth = scaleX(partialNumber);
+						
 
-						// Set group position
-						g.transition()
-							.duration(1000)
-							.attr('transform', 'translate(' + x + ', 0)')
+						// var x = g.attr('data-originalX'),
+						// 	totalWidth = g.attr('data-originalWidth'),
+						// 	partialNumber = g.attr('data-partial'),
+						// 	totalNumber = g.attr('data-total'),
+						// 	scaleX = d3.time.scale()
+						// 		.domain([ 0, totalNumber ])
+						// 		.range([ 0,  totalWidth ]),
+						// 	partialWidth = scaleX(partialNumber);
 
-						// Shorten background
-						g.select('rect.background')
-							.transition()
-							.duration(1000)
-							.attr('width', totalWidth)
+						// // Set group position
+						// g.transition()
+						// 	.duration(1000)
+						// 	.attr('transform', 'translate(' + x + ', 0)')
 
-						// Shorten percentage
-						g.select('rect.percentage')
-							.transition()
-							.duration(1000)
-							.attr('width', partialWidth -1)
+						// // Shorten background
+						// g.select('rect.background')
+						// 	.transition()
+						// 	.duration(1000)
+						// 	.attr('width', totalWidth)
+
+						// // Shorten percentage
+						// g.select('rect.percentage')
+						// 	.transition()
+						// 	.duration(1000)
+						// 	.attr('width', partialWidth -1)
 
 						// Show others and set unselected status
-						types.selectAll('g[data-filter=false]')
-							.style('display', 'block')
-							.transition()
-								.delay(500)
-								.duration(1000)
-								.style('opacity', '1')
-							.each('end', function() {
-								g.attr('data-filter', 'false');								
-							});
+						// types.selectAll('g[data-filter=false]')
+						// 	.style('display', 'block')
+						// 	.transition()
+						// 		.delay(500)
+						// 		.duration(1000)
+						// 		.style('opacity', '1')
+						// 	.each('end', function() {
+						// 		g.attr('data-filter', 'false');								
+						// 	});
 
-						// Set text
-						g.select('text').text( partialWidth < 60 ? partialNumber : partialNumber + ' ' + g.attr('data-id') )
+						// Set select status
+						g.attr('data-filter', 'false');
+
+						// // Set text
+						// g.select('text').text( partialWidth < 60 ? partialNumber : partialNumber + ' ' + g.attr('data-id') )
 
 						// Send request
 						var obj = {},
@@ -206,49 +211,76 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 		types.selectAll('g').each( function(){
 
-			var g = d3.select(this),
-				type = g.attr('data-id'),
-			    totalNumber = g.attr('data-total'),
-			    totalWidth = g.attr('data-filter') == 'true' ? width : g.attr('data-originalWidth');
+			// Nest
 
-
+			var gType = d3.select(this).attr('data-id');
+			
 			for (var i in map) {
-			    if ( map[i].key == type ) {
-			    	var partialNumber = map[ i ].values.length;
+			    if ( map[i].key == gType ) {
+			    	var gNumberPartial = map[ i ].values.length;
 			    }
 			}
 
-			var scaleX = d3.scale.linear()
-					.domain([ 0, totalNumber ])
-					.range([ 0,  totalWidth ]),
-				partialWidth = scaleX(partialNumber);
+			// Set variables
 
-			if ( g.attr('data-filter') == 'false' ) {
+			var g = d3.select(this),
+			    gNumber = g.attr('data-total'),
+			    gWidth = g.attr('data-filter') == 'true' ? width : g.attr('data-width'),
+			    gOrigin = g.attr('data-filter') == 'true' ? 0 : g.attr('data-origin'),
+				gScale = d3.scale.linear()
+					.domain([ 0, gNumber ])
+					.range([ 0,  gWidth ]),
+				gWidthPartial = gScale(gNumberPartial),
+				gText = gWidth < 60 ? gNumberPartial : gNumberPartial + ' ' + gType;
 
-				g.select('rect.percentage')
-					.transition()
-					.duration(1000)
-					// This correct a problem with negative numbers
-					.attr( 'width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
-			}
+			oo.log('g', g)
+			oo.log('gType', gType)
+			oo.log('gText', gText)
+			oo.log('gNumber', gNumber, 'gNumberPartial', gNumberPartial)
+			oo.log('gScale', gScale)
+			oo.log('gWidth', gWidth, 'gWidthPartial', gWidthPartial)
 
-			//  else {
-			// 	g.select('rect.percentage')
-			// 		.transition()
-			// 		.duration(100)
-			// 		.delay(1000)
-			// 		.attr('width', partialWidth - 1 < 0 ? 0 : partialWidth - 1 )
-			// }
+			g.transition()
+				.duration(1000)
+				.attr('transform', 'translate(' + gOrigin + ', 0)');
 
-			// var gText = partialWidth < 60 ? partialNumber : partialNumber + ' ' + type;
+			g.select('rect.percentage')
+				.transition()
+				.duration(1000)
+				.attr( 'width', gWidthPartial - 1 < 0 ? 0 : gWidthPartial - 1 ) // Manage negative numbers
 
-			// oo.log('partialWidth', partialWidth, partialWidth < 60)
-			// oo.log(gText)
+			g.select('text.figure')
+				.text(gText)
 
-			// g.select('text.figure')
-			// 	.text(gText)
+			// if 
 
-			// g.attr('data-partial', partialNumber);
+			// types.selectAll('g[data-filter=false]')
+			// 	.style('display', 'block')
+			// 	.transition()
+			// 		.delay(500)
+			// 		.duration(1000)
+			// 		.style('opacity', '1')
+			// 	.each('end', function() {
+			// 		g.attr('data-filter', 'false');								
+			// 	});
+
+			// types.selectAll('g[data-filter=false]')
+			// 	.style('display', 'block')
+			// 	.transition()
+			// 		.delay(500)
+			// 		.duration(1000)
+			// 		.style('opacity', '1')
+			// 	.each('end', function() {
+			// 		g.attr('data-filter', 'false');								
+			// 	});
+
+			// types.selectAll('g[data-filter=false]')
+			// 	.transition()
+			// 		.duration(500)
+			// 		.style('opacity', '0')
+			// 	.each('end', function() {
+			// 		d3.select(this).style('display', 'none');
+			// 	});
 
 		} )
 
@@ -265,13 +297,13 @@ oo.Gummy = function ( objects, selector, nester, propertyName ){
 
 
 oo.enq.types.init = function(objects) {
-	var categor1 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
-	var categor2 = new oo.Gummy(objects, '#categories', function( d ){ 
-			return d.categories.length > 0? d.categories[0].category : null;
-		}, 'category');
-	var categor3 = new oo.Gummy(objects, '#articles', function( d ){
-			return d.articles.length > 0? d.articles[0].article : null;
-		}, 'article');
+	// var categor1 = new oo.Gummy(objects, '#phases', function( d ){ return d.phases[0].phase }, 'phase');
+	// var categor2 = new oo.Gummy(objects, '#categories', function( d ){ 
+	// 		return d.categories.length > 0? d.categories[0].category : null;
+	// 	}, 'category');
+	// var categor3 = new oo.Gummy(objects, '#articles', function( d ){
+	// 		return d.articles.length > 0? d.articles[0].article : null;
+	// 	}, 'article');
 }
 
 

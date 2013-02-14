@@ -8,8 +8,21 @@
 
 {% block page_left %}
 	
+	
+	
 	<p>
-		{% trans "Thank you, your email has been confirmed, we will consider your request for this survey" %}
+	{% if error %}
+	
+		{% trans "Your email has already been confirmed." %}
+		
+	
+	{% else %}
+	
+		{% trans "Thank you, your email has been confirmed, we will consider your request for this survey." %}
+
+	{% endif %}
 	</p>
+	
+	
 	
 {% endblock %}

@@ -27,6 +27,8 @@ from outside.models import Enquiry, Subscriber
 from outside.sites import OUTSIDE_SITES_AVAILABLE
 from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
 
+from django.core.mail import EmailMultiAlternatives
+
 
 	
 # settings.py
@@ -313,29 +315,64 @@ def signup( request, enquete_id=None ):
 
 def confirm( request, token, user_id ):
 	
-	user = User.objects.get(pk=user_id)
-	profile = Subscriber.objects.get(user=user)
-	
+	subscriber = get_object_or_404( Subscriber, user__id=user_id, confirmation_code=token )
+
 	data = shared_context( request, tags=[ "signup" ] )
 	
-	if( profile.email_confirmed is False ):
-		profile.email_confirmed = True
-		profile.save()
+	form_datas = {
+		'1. Prenom' : subscriber.first_name,
+		'2. nom' : subscriber.last_name,
+		'3. email' : subscriber.email,
+		'4. affiliation' : subscriber.affiliation,
+		'4. status' : dict(Subscriber.STATUS_CHOICES)[subscriber.status],
+		'5. message' : subscriber.description
+	}	
+	
+	subject, from_email, to = _("Signup request"),"L'équipe Bequali <equipe@bequali.fr>", settings.EMAIL_ADMINS
+	html_content = '%s<br/><br/>%s :<br/><br/>%s<br/><br/>%s</br/><br/>%s' % (
+		_('Hello, you have a new signup request.'),
+		_('Information'), 
+		''.join(['%s : %s<br/>' % (k, v) for k, v in sorted(form_datas.items())]),
+		_('Goodbye'),
+		'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
+		)
+	text_content = html_content.replace('<br/>', '\n')
+	
+	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+	msg.attach_alternative(html_content, 'text/html')
+	msg.content_subtype = 'html'
+	
+	msg.send()
+	if not subscriber.email_confirmed :
+		subscriber.email_confirmed = True
+		subscriber.save()
+		msg.send()
+		
 		return render_to_response("%s/confirm.html" % data['template'], {'error':'0'}, RequestContext(request, data ) )
 		
-		send_mail(
-			"Inscription pour une enquête", 
-			'<href="%s">%s</a>' % ( confirmation_href, confirmation_href ),
-			'Bequali Registration submission <signup@bequali.fr>'
-			,[ 'alexandreaazzouz@gmail.com' ],
-			fail_silently=False
-		)
-		
-	
 	else:
 		#TODO 
 		return render_to_response("%s/confirm.html" % data['template'],{'error':'1'}, RequestContext(request, data ) )
-		
+	
+	
+	
+
+	
+	
+	
+	
+
+										 
+	
+	
+
+	send_mail(
+		"Demande d'inscription", 
+		'<href="%s">%s</a>' % ( confirmation_href, confirmation_href ),
+		'Bequali Registration submission <signup@bequali.fr>'
+		,[ 'alexandreaazzouz@gmail.com' ],
+		fail_silently=False
+	)
 		
 
 

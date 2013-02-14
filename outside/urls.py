@@ -51,6 +51,7 @@ urlpatterns = patterns('',
 	url(r'^api/subscriber/(?P<subscriber_id>\d+)/$', 'outside.api.subscriber', name='outside_api_subscriber'),
 	
 	
+	url(r'^api/test/$','outside.api.test', name='outside_test'),
 
 	url(r'^(?P<page_slug>[A-Za-z0-9-]+)/$','outside.views.page', name='outside_page'),
 

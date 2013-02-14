@@ -54,7 +54,7 @@
 					{% trans "legal notice description"  %}
 				</div>
 
-				<div class="specification"><b>{% trans "I have read and accepted the" %} {% trans "legal notices" %}</b> {{ subscriber_form.accepted_terms }}</div>
+				<div class="specification"><b>{% trans "I have read and accepted" %}</b> {{ subscriber_form.accepted_terms }}</div>
 			</label>
 			
 			
@@ -64,9 +64,9 @@
 	</div>
 
 	<div id="subscription-accepted" style="display:none">
-		<h2>{% trans "Merci !"%}</h2>
+		<h2>{% trans "Thank you" %}!</h2>
 
-		{% trans "message sent" %}
+		{% trans "Your message is sent, you will receive a notification mail" %}.
 
 		<p>
 			<a href="{% url outside_index %}">{% trans "back to home page"%}</a>
