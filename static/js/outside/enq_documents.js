@@ -29,39 +29,36 @@ oo.enq.docs.update = function( event, filters ){
 	} // Set active
 
 
+	// Hide / Show list's
+
 	items.each(function() {
 
 		var item = d3.select(this),
 			oldStatus = item.attr('data-status-old'),
 			newStatus = item.attr('data-status');
 
-		if ( oldStatus == 'active' && newStatus == 'inactive' ) {
-			item.transition()
-				.duration(1000)
-				.style('opacity', '0')
-				.style('height', '0px');
-		} else if ( oldStatus == 'inactive' && newStatus == 'active' ) {
-			item.transition()
-				.duration(1000)
-				.style('opacity', '1')
-				.style('height', '22px');
-		} 
+		if ( oldStatus == 'inactive' && newStatus == 'active' ) {
+			item.style('display', 'block');
+		} else if ( oldStatus == 'active' && newStatus == 'inactive' ) {
+			item.style('display', 'none');
+		}
+
 	})
 
-	var delay = 500;
+	var delay = 800;
 
 	container.transition()
-		.duration(delay)
-		.style('margin-top', '30px');
+		.duration(delay / 2)
+		.style('margin-top', '35px');
 
 	counter.transition()
 		.duration(1)
 		.delay(delay)
-		.text(meter);
+		.text( meter + '/' + counter.attr('data-total') );
 		
 	container.transition()
-		.delay(delay + 300)
-		.duration(1000)
+		.delay(delay * 1.2)
+		.duration(delay)
 		.style('margin-top', '0px');
 
 };
@@ -70,16 +67,22 @@ oo.enq.docs.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.docs.update );
 
-	d3.select("#reset")
-        .on("click", oo.filt.clean );
-
 	var counter = d3.select('#counter span.docNumber'),
+		total = d3.select('#counter span.docTotal'),
 		docs = d3.select('#documents ul'),
-		container = d3.select('#counter p');
-
-	var map = objects.sort(function (a, b){ 
+		container = d3.select('#counter p'),
+		map = objects.sort(function (a, b){ 
 		return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
-	}) // Sorting
+	})
+
+	// Set Reset Button
+
+	d3.select("#reset").on("click", function() {
+    	oo.filt.clean();
+		oo.enq.map.map.extent(layer.extent());
+    });
+
+	// Create Documents
 
 	var li = docs.selectAll("li")
 		.data(map)
@@ -89,15 +92,11 @@ oo.enq.docs.init = function ( objects ){
 		.attr('data-status', 'active')
 		
 		.html(function(d) {
-			oo.log(d)
-			
 			var string = d.title.split('_').join(' ').split('/').join(' ') + '<br/>';
-			
 			if (typeof d.type != 'undefined' ) string += '<i>'+d.type+'</i>' 
 			if (typeof d.phases[0].phase != 'undefined' ) string += '<i>'+d.phases[0].phase+'</i>' 
 			if (typeof d.categories[0].category != 'undefined' ) string += '<i>'+d.categories[0].category+'</i>' 
 			if ( d.articles.length != 0 ) string += '<i>'+d.articles[0].article+'</i>' 
-
 			return string;
 		})
 
@@ -107,7 +106,10 @@ oo.enq.docs.init = function ( objects ){
 			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_blank');
 		});
 
-	counter.html(li[0].length);
+	// Set Documents' Counter
+
+	counter.text(li[0].length + '/' + li[0].length)
+		.attr('data-total', li[0].length);
 
 	container.transition()
 		.duration(500)
