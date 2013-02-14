@@ -45,21 +45,27 @@ oo.enq.docs.update = function( event, filters ){
 
 	})
 
-	var delay = 800;
+	if ( meter != counter.attr('data-previous') ) {
 
-	container.transition()
-		.duration(delay / 2)
-		.style('margin-top', '35px');
+		var delay = 800;
 
-	counter.transition()
-		.duration(1)
-		.delay(delay)
-		.text( meter + '/' + counter.attr('data-total') );
-		
-	container.transition()
-		.delay(delay * 1.2)
-		.duration(delay)
-		.style('margin-top', '0px');
+		container.transition()
+			.duration(delay / 2)
+			.style('margin-top', '35px');
+
+		counter.transition()
+			.duration(1)
+			.delay(delay)
+			.text( meter + '/' + counter.attr('data-total') )
+			.attr('data-previous', meter);
+			
+		container.transition()
+			.delay(delay * 1.2)
+			.duration(delay)
+			.style('margin-top', '0px');
+
+	}
+
 
 };
 
@@ -109,7 +115,8 @@ oo.enq.docs.init = function ( objects ){
 	// Set Documents' Counter
 
 	counter.text(li[0].length + '/' + li[0].length)
-		.attr('data-total', li[0].length);
+		.attr('data-total', li[0].length)
+		.attr('data-previous', li[0].length);
 
 	container.transition()
 		.duration(500)
