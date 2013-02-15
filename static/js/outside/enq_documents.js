@@ -84,12 +84,16 @@ oo.enq.docs.init = function ( objects ){
 	// Set Reset Button
 
 	d3.select("#reset").on("click", function() {
-    	oo.filt.clean();
+		
+		// Reset categories
+		d3.selectAll('#phases g, #categories g, #articles g').attr('data-status', 'normal');
+		
+		// Reset Map
 		oo.enq.map.map.extent(layer.extent());
 
-		// circle.attr('r', function(d, i) {
-		// 	return (oo.enq.map.map.coordinate.zoom + 1) * oo.vars.map.normalize(collection.features[i].counter)
-		// })
+		// Reset Filters
+    	oo.filt.clean();
+
     });
 
 	// Create Documents

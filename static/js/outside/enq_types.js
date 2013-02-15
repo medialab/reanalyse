@@ -134,7 +134,6 @@ oo.Gummy = function ( objects, nester, selector, propertyName ){
 			// oo.log('gScale', gScale)
 			// oo.log('gWidth', gWidth, 'gWidthPartial', gWidthPartial)
 
-			// g.attr('data-original-title', 'yep');
 			g.attr('data-original-title', selector + '<div class="white"></div>' + gNumberPartial + '/' + gNumber + ' of ' + gType);
 
 			if ( g.attr('data-status') == 'normal' || g.attr('data-status') == 'full' ) {
