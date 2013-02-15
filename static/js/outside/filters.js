@@ -28,29 +28,31 @@ oo.filt.parser = {
 // Filters plug-in
 
 oo.filt.cross = oo.filt.cross || {
+
+	// The if statement has to let pass invalid data
+	// This data will be filtrated in each corresponding javascript
+
 	'extent': function( item, filter ){
+		if ( item.location == null) return true;
 		var bounds = filter,
 			 point = item.coordinates.geometry.coordinates;
-		if( item.location == null){
-			return true;
-		}
 		return point[1] < bounds.north && point[1] > bounds.south && point[0] < bounds.east && point[0] > bounds.west;
 	},
 	'period': function( item, filter ){
+		if ( item.times.length == 0 ) return true;
 		var item_time = oo.filt.parser.datetime.parse( item.times[0].time ).getTime();
 		return item_time > filter[0] && item_time < filter[1];
 	},
-	'type': function( item, filter ){
-		return item.type == filter
-	},
 	'category': function( item, filter ){
+		if ( item.categories.length == 0 ) return true;
 		return item.categories[0].category == filter
 	},
 	'phase': function( item, filter ){
+		if ( item.phases.length == 0 ) return true;
 		return item.phases[0].phase == filter
 	},
 	'article': function( item, filter ){
-		// if ( item.articles.length == 0 ) return false;
+		if ( item.articles.length == 0 ) return true;
 		return item.articles[0].article == filter
 	}
 };

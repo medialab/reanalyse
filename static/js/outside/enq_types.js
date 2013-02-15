@@ -184,9 +184,11 @@ oo.enq.types.init = function(objects) {
 		return d.phases[0].phase;
 	}, '#phases', 'phase');
 	var categor2 = new oo.Gummy(objects, function( d ){ 
-		return d.categories.length > 0 ? d.categories[0].category : null;
+		return d.categories[0].category;
+		// return d.categories.length > 0 ? d.categories[0].category : null;
 	}, '#categories', 'category');
 	var categor3 = new oo.Gummy(objects, function( d ){
+		// return d.articles[0].article;
 		return d.articles.length > 0 ? d.articles[0].article : null;
 	}, '#articles', 'article');
 }
