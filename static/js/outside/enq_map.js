@@ -46,7 +46,7 @@ oo.enq.map.update = function( event, filters ){
 				+ ' in ' + nest.features[i].name;
 		})
 		.transition()
-			.duration(1500)
+			.duration(1000)
 			.attr('r', function(d, i) {
 				// oo.log('zoom', oo.enq.map.map.coordinate.zoom)
 				// oo.log('norm', oo.vars.map.normalize(nest.features[i].counter) )
@@ -110,6 +110,12 @@ oo.enq.map.init = function ( objects ){
 
 	oo.enq.map.data = nest;
 
+	// Scale to represents circles
+
+	oo.vars.map.normalize = d3.scale.linear()
+		.domain([ 0, d3.max(oo.enq.map.data.features, function(d) { return d.counter; }) ])
+		.range([ 0, 8 ]);
+
     // Layering
 
     layer = oo.enq.map.d3layer().data(oo.enq.map.data);
@@ -148,30 +154,33 @@ oo.enq.map.d3layer = function() {
 
     f.draw = function() {
 
-		oo.vars.map.normalize = d3.scale.linear()
-			.domain([ 0, d3.max(collection.features, function(d) { return d.counter; }) ])
-			.range([ 0, 10 ]);
+		if ( first ) {
 
-      	first && svg.attr("width", f.map.dimensions.x)
+			svg.attr("width", f.map.dimensions.x)
 	        	.attr("height", f.map.dimensions.y * 2)
 				.style("margin-left", "0px")
-				.style("margin-top", "0px")
-			&& ( first = false );
+				.style("margin-top", "0px");
+
+			circle
+		      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
+		      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; })
+		      	.attr('data-total', function(d, i) { return collection.features[i].counter; })
+		      	.attr('data-original-title', function(d, i) { return 'Map <div class="white"></div>' +
+		      		collection.features[i].counter + '/' + collection.features[i].counter +
+		      		' in ' + collection.features[i].name; })
+		      	.attr('html', 'true')
+	      		.attr('rel', 'tooltip')
+	      		.attr('r', function(d, i) {
+	      			return (oo.enq.map.map.coordinate.zoom + 1) * .5 * oo.vars.map.normalize(collection.features[i].counter)
+				})
+			
+			first = false;
+		}
 
       	circle
-      		.attr('r', function(d, i) {
-      			return (oo.enq.map.map.coordinate.zoom + 1) * .5 * oo.vars.map.normalize(collection.features[i].counter)
-      		})
-      		.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
-            .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
-	      	.attr('lon', function(d, i) { return collection.features[i].geometry.coordinates[0]; })
-	      	.attr('lat', function(d, i) { return collection.features[i].geometry.coordinates[1]; })
-	      	.attr('data-total', function(d, i) { return collection.features[i].counter; })
-	      	.attr('data-original-title', function(d, i) { return 'Map <div class="white"></div>' +
-	      		collection.features[i].counter + '/' + collection.features[i].counter +
-	      		' in ' + collection.features[i].name; })
-	      	.attr('html', 'true')
-	      	.attr('rel', 'tooltip');
+			.attr('cx', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[0] })
+	        .attr('cy', function(d, i) { return f.project(collection.features[i].geometry.coordinates)[1] })
+	      	
     };
 
     f.data = function(data) {

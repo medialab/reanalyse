@@ -86,6 +86,10 @@ oo.enq.docs.init = function ( objects ){
 	d3.select("#reset").on("click", function() {
     	oo.filt.clean();
 		oo.enq.map.map.extent(layer.extent());
+
+		// circle.attr('r', function(d, i) {
+		// 	return (oo.enq.map.map.coordinate.zoom + 1) * oo.vars.map.normalize(collection.features[i].counter)
+		// })
     });
 
 	// Create Documents
