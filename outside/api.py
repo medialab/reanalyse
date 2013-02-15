@@ -313,7 +313,8 @@ def subscribers(request):
 				'2. nom' : form.cleaned_data['last_name'],
 				'3. email' : form.cleaned_data['email'],
 				'4. affiliation' : form.cleaned_data['affiliation'],
-				'5. message' : form.cleaned_data['description']}	
+				'5. site' : settings.OUTSIDE_SITE_NAME,
+				'6. message' : form.cleaned_data['description']}	
 		
 		#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
 		subject, from_email, to = _('bequali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS

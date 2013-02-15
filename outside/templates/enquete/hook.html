@@ -20,12 +20,13 @@
 					<div class="icon"><img src="{{ STATIC_URL }}img/66-microphone.png"></div>{% trans "l'enquête sur l'enquête" %}
 				</a>
 			</div>
-
+			{% comment %}
 			<div class="back floating with-icon {% if "focus-on-enquete" in tags %}selected{%endif%}">
 				<a href="{% if enquiry %}{% url outside_enquete enquiry.enquete.id %}{% else %}{% url outside_enquete enquete.id %}{% endif %}" title="{% trans "focus sur l'enquête" %}">
 					<div class="icon"><img src="{{ STATIC_URL }}img/151-telescope.png"></div>{% trans "focus sur l'enquête" %}
 				</a>
 			</div>
+			{% endcomment %}
 			{% if request.user.is_authenticated %}
 			<div class="back floating with-icon">
 				<a href="{% if enquiry %}{% url outside_enquete_download enquiry.enquete.id %}{% else %}{% url outside_enquete_download enquete.id %}{% endif %}" title="{% trans "telecharger l'enquête" %}">

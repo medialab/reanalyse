@@ -32,7 +32,7 @@ msgstr ""
 #: outside/templates/outside/middle.html:124
 #: outside/templates/outside/middle.html:133
 msgid "login"
-msgstr ""
+msgstr "se connecter"
 
 #: glue/forms.py:7
 msgid "password"
