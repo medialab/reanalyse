@@ -10,7 +10,7 @@
 
 oo.Gummy = function ( objects, nester, selector, propertyName ){
 
-	var types = d3.select( selector ),
+	var types = d3.select( '#' + selector ),
 		svg = types.append('svg'),
 		map = oo.nest( objects, 
 			nester, 
@@ -41,29 +41,27 @@ oo.Gummy = function ( objects, nester, selector, propertyName ){
 				.attr('data-total', map[i].values.length)
 				.attr('transform', 'translate(' + gOrigin + ', 0)')
 				.attr('rel', 'tooltip')
-				.attr('data-original-title', map[i].key)
+				.attr('data-original-title', selector + '<div class="white"></div>' + map[i].values.length + '/' + map[i].values.length + ' of ' + map[i].key)
 
 				.on("click", function() {
 
-					var g = d3.select(this);
+					d3.select('.tooltip').remove();
+					
+					var g = d3.select(this),
+						obj = {},
+						name = propertyName;
 
 					if ( g.attr('data-status') == 'normal' ) {
 
 						types.selectAll('g').attr('data-status', 'hidden');
 						g.attr('data-status', 'full'); // Set status
-						var obj = {},
-							name = propertyName,
-							value = g.attr('data-id');
-						obj[name] = value;
+						obj[name] = g.attr('data-id');
 						oo.filt.trigger( oo.filt.events.replace, obj ); // Send request
 
 					} else {
 
 						types.selectAll('g').attr('data-status', 'normal'); // Set status
-						var obj = {},
-							name = propertyName;
-							value = '';
-						obj[name] = value;
+						obj[name] = '';
 						oo.filt.trigger( oo.filt.events.reset, obj ); // Send request
 
 					}
@@ -136,7 +134,11 @@ oo.Gummy = function ( objects, nester, selector, propertyName ){
 			// oo.log('gScale', gScale)
 			// oo.log('gWidth', gWidth, 'gWidthPartial', gWidthPartial)
 
+			// g.attr('data-original-title', 'yep');
+			g.attr('data-original-title', selector + '<div class="white"></div>' + gNumberPartial + '/' + gNumber + ' of ' + gType);
+
 			if ( g.attr('data-status') == 'normal' || g.attr('data-status') == 'full' ) {
+
 				g.transition()
 					.duration(1000)
 					.style('opacity', '1')
@@ -182,15 +184,15 @@ oo.Gummy = function ( objects, nester, selector, propertyName ){
 oo.enq.types.init = function(objects) {
 	var categor1 = new oo.Gummy(objects, function( d ){
 		return d.phases[0].phase;
-	}, '#phases', 'phase');
+	}, 'phases', 'phase');
 	var categor2 = new oo.Gummy(objects, function( d ){ 
 		return d.categories[0].category;
 		// return d.categories.length > 0 ? d.categories[0].category : null;
-	}, '#categories', 'category');
+	}, 'categories', 'category');
 	var categor3 = new oo.Gummy(objects, function( d ){
 		// return d.articles[0].article;
 		return d.articles.length > 0 ? d.articles[0].article : null;
-	}, '#articles', 'article');
+	}, 'articles', 'article');
 }
 
 
