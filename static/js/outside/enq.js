@@ -39,9 +39,7 @@ oo.nest = function( objects, nester, sorter ){
 
 		// Check if data are available
 
-		// TO DO TO CHECK
 		var index = nester( objects[d] );
-		// oo.log(index)
 
 		if (index == null ){ continue; }
 
