@@ -115,8 +115,8 @@ oo.enq.docs.init = function ( objects ){
 		})
 
 		.on('click', function(d, i) {
-			oo.log('this', this)
-			oo.log('id', d3.select(this).attr('data-id'))
+			// oo.log('this', this)
+			// oo.log('id', d3.select(this).attr('data-id'))
 			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_blank');
 		});
 
