@@ -1,4 +1,4 @@
-{% extends "outside/middle.html" %}
+{% extends "hub/middle.html" %}
 {% load i18n %}
 
 {% block sidebar %}
@@ -10,13 +10,16 @@
 	
 {% endblock %}
 
-{% block page %}
+{% block page_left %}
 	
 	<section class="alpha">
+		
 		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
 		<h2>{% trans "login required" %}</h2>
-		<p class="invalid">{{ error }}</p>
-		{{ next }}
+		{% if error %}
+		<p>{{ error }}</p>
+		{% endif %}
+		<!-- {{ next }} -->
 		<div class="mini-section">
 			{{ login_form.username.label_tag }}
 			{{ login_form.username }}

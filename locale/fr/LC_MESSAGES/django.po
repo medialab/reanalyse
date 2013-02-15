@@ -61,7 +61,7 @@ msgstr "l'utilisateur a été désactivé"
 
 #: outside/views.py:71 outside/views.py:74
 msgid "invalid credentials"
-msgstr ""
+msgstr "Le mot de passe ou l'utilisateur est invalide"
 
 #: outside/views.py:156
 msgid "language not found"
@@ -181,7 +181,7 @@ msgstr "ouvrir le menu"
 
 #: outside/templates/outside/middle.html:132
 msgid "discard"
-msgstr "jeter"
+msgstr "annuler"
 
 #: outside/templates/outside/middle.html:156
 #: outside/templates/outside/middle.html:174
@@ -729,6 +729,10 @@ msgstr "retour à la liste des enquêtes"
 
 msgid "email specification"
 msgstr "cette addresse sera votre identifiant utilisateur une fois inscrit"
+
+
+msgid "login required"
+msgstr "Authentification requise"
 
 msgid "message specification"
 msgstr "Dans ce message veuillez nous décrire votre <i>projet de recherche</i> afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/>Veuillez notamment préciser dans quel cadre vous comptez réutiliser cette enquête et quel type de traitement vous avez prévu de mener sur les documents de l'enquête."

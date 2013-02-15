@@ -280,6 +280,8 @@ def login_view( request ):
 		else:
 			login_message['error'] = _("invalid credentials")
 			# Return a 'disabled account' error message
+	elif request.method != 'POST':
+		pass
 	else:
 		login_message['error'] = _("invalid credentials")
 		login_message['invalid_fields'] = form.errors
@@ -288,7 +290,7 @@ def login_view( request ):
 	data = shared_context( request, tags=[ "index" ], previous_context=login_message )
 
 
-	return render_to_response("%s/legal.html" % data['template'], RequestContext(request, data ) )
+	return render_to_response("%s/login.html" % data['template'], RequestContext(request, data ) )
 
 
 
