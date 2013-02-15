@@ -569,7 +569,7 @@ msgstr "Niveau de comparatisme"
 msgid "abstract"
 msgstr "Résumé"
 
-msgid "meta.general"
+msgid "general"
 msgstr "Général"
 
 msgid "affiliation"
