@@ -8,7 +8,7 @@ urlpatterns = patterns('',
 	url(r'^login/$','outside.views.login_view', name='outside_login'),
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
 	url(r'^contacts/$','outside.views.contacts', name='outside_contacts'),
-	url(r'^signup/$','outside.views.signup', name='outside_signup'),
+	url(r'^signup/$','outside.views.signup', name='outside_signup_generic'),
 	url(r'^signup/enquete/(?P<enquete_id>\d+)/$','outside.views.signup', name='outside_signup'),
 	url(r'^confirm/(?P<token>[a-zA-Z\d]+)/(?P<user_id>\d+)/$','outside.views.confirm', name='outside_confirm'),
 

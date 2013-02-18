@@ -60,19 +60,21 @@
 					<a href="{% url outside_enquiry s.id %}">
 						{% trans "l'enquête sur l'enquête" %}
 					</a>
-
+					{% comment %}
 					<a href="{% url outside_enquete s.id %}">
 						{% trans "focus sur l'enquête" %}
 					</a>
-
+					{% endcomment %}
 
 				</div>
 				<div class="lowerside">
 					<p>Pour accêder aux données de l'enquête vous devez être inscrit</p>
+					{% comment %}
 					<a href="{% url outside_enquete s.id %}">
 						accéder aux contenus
 					</a>
-					<a href="{% url outside_signup %}">
+					{% endcomment %}
+					<a href="{% url outside_signup s.id %}">
 						demander l'accès
 					</a>
 				</div>

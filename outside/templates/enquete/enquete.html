@@ -85,7 +85,7 @@
 		<h3>{{ enquete.name }}</h3>
 		<div class="meta">
 			<span class="author" >
-				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if not forloop.last %}, {% endif %}{% endfor %}
 			</span> &dash;
 			<span class="tags">
 				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}

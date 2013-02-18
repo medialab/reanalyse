@@ -84,6 +84,8 @@ def page( request, page_slug ):
 
 	return render_to_response("%s/page.html" % 'enquete', RequestContext(request, data ) )
 
+
+@login_required( login_url=LOGIN_URL )
 def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes", "focus-on-enquete" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
