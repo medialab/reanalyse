@@ -33,6 +33,8 @@ import re, os
 import django_tables2 as tables
 from django.utils.safestring import mark_safe
 
+from collections import OrderedDict 
+
 ###########################################################################
 # LOGGING
 ###########################################################################
@@ -110,35 +112,55 @@ class Tag(models.Model):
 # ENQUETE
 ##############################################################################
 class Enquete(models.Model):
-	#connection_name="enquetes"				# todo: one db for each enquete ?
-	name = models.CharField(max_length=250)
-	uploadpath	 = models.CharField(max_length=250)	# root path of uploaded folder (if we want to remove everything)
-	locationpath = models.CharField(max_length=250)	# root path of the extracted folder (used as base during import)
-	metadata = models.TextField(default='{}') 		# store all metadata as json dict
-	ese = models.TextField()						# ese is not yet included/structured in enquete, let's put all infos from ese.xml into a json dict
-	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars
-	statuscomplete = models.BigIntegerField(default=0) 					# loading 0-100%
-	date = models.DateTimeField(auto_now_add=True)							# date uploaded
-	ddi_id = models.CharField(max_length=170)
+    #connection_name="enquetes"                # todo: one db for each enquete ?
+    name = models.CharField(max_length=250)
+    uploadpath     = models.CharField(max_length=250)    # root path of uploaded folder (if we want to remove everything)
+    locationpath = models.CharField(max_length=250)    # root path of the extracted folder (used as base during import)
+    metadata = models.TextField(default='{}')         # store all metadata as json dict
+    ese = models.TextField()                        # ese is not yet included/structured in enquete, let's put all infos from ese.xml into a json dict
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES)        # see globalvars
+    statuscomplete = models.BigIntegerField(default=0)                     # loading 0-100%
+    date = models.DateTimeField(auto_now_add=True)                            # date uploaded
+    ddi_id = models.CharField(max_length=170)
 
-	tags = models.ManyToManyField( Tag )
+    tags = models.ManyToManyField( Tag )
 
-	#permission = models.ForeignKey(Permission)
-	class Meta: # Users & Groups are initialized in views
-		permissions = (
-			("can_browse", "BROWSE Can see enquete overview"),
-			("can_explore", "EXPLORE Can see whole enquete"),
-			("can_make", "MAKE Can upload enquetes and make viz"),
-		)
-	def __unicode__(self):
-		return str(self.id)+":"+self.name
-	def meta(self):
-		if self.metadata:
-			return simplejson.loads(self.metadata)
-		else:
-			return {'metainfo':'no meta was parsed'}
+    #permission = models.ForeignKey(Permission)
+    class Meta: # Users & Groups are initialized in views
+        permissions = (
+            ("can_browse", "BROWSE Can see enquete overview"),
+            ("can_explore", "EXPLORE Can see whole enquete"),
+            ("can_make", "MAKE Can upload enquetes and make viz"),
+        )
+    def __unicode__(self):
+        return str(self.id)+":"+self.name
+    def meta(self):
+        if self.metadata:
+            return simplejson.loads(self.metadata)
+        else:
+            return {'metainfo':'no meta was parsed'}
+    
+    def meta_items(self):
+        if self.metadata:
+           self.metadata = simplejson.loads(self.metadata)
+           
+           sorted_values = {}
+            
+           for k in self.metadata['values']:
+               sorted_values[k] = OrderedDict(sorted([x for x in self.metadata['values'][k].iteritems() if isinstance(x[1], dict)], key=lambda x: x[1]['i'] ))
+               
+           self.metadata['values'] = sorted_values
+           
+           
+           return self.metadata
+            
+            #return simplejson.loads(self.metadata)
+        else:
+            return {'metainfo':'no meta was parsed'}   
+        
+        
+        
 ####################################################################
-
 
 
 ##############################################################################

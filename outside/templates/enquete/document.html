@@ -73,13 +73,16 @@
 	
 	<section class="alpha wide" >
 		<div class="icon {{ document.doctype }}">
-			<img src="{{ STATIC_URL }}/img/{{ document.doctype }}.png"/>
+			<img src="{{ STATIC_URL }}/img/{{ document.doctype }}.png" style="height:24px"/>
 		</div>
 		<h3>{{ document.name }}</h3>
 		
-		
+		<div class="content" >
+		{{ document.doccat1 }}
 
-		Test.
+		{{ document.doccat2 }}
+		
+		</div>
 		<div class="clear"></div>
 
 	</section>
@@ -93,10 +96,13 @@
 				</object>
 				
 			</div>
-		{% else %}
-
+	
 		{% endifequal %}
 
+		{% ifequal document.doctype "TEI" %}
+			{{ tei }}
+
+		{% endifequal %}
 	</section>
 	
 {% endblock %}	

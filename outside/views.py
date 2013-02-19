@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
@@ -33,7 +32,7 @@ from django.core.mail import EmailMultiAlternatives
 
 	
 # settings.py
-LOGIN_URL = '/%s/login/' % settings.ROOT_DIRECTORY_NAME
+LOGIN_URL = '/reanalyse/login/'
 
 #
 #    Outside
@@ -84,12 +83,13 @@ def page( request, page_slug ):
 
 	return render_to_response("%s/page.html" % 'enquete', RequestContext(request, data ) )
 
-
-@login_required( login_url=LOGIN_URL )
 def enquete( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes", "focus-on-enquete" ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 	data['disabled'] =  [ t.slug for t in data['enquete'].tags.filter( type=Tag.DISABLE_VISUALIZATION ) ]
+	
+	
+	
 	try:
 		data['enquiry'] = Enquiry.objects.get( enquete=enquete_id, language=data['language'] )
 	except Enquiry.DoesNotExist,e:
@@ -99,14 +99,22 @@ def enquete( request, enquete_id ):
 
 	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
+
+
+
 def enquete_metadata( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","metadata" ] )
-	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
-
+	enquete = get_object_or_404( Enquete, id=enquete_id )
+	enquete.meta = enquete.meta_items()
+	
+	data['enquete'] = enquete	
+	
 	try:
 		data['enquiry'] = Enquiry.objects.get( enquete=enquete_id, language=data['language'] )
+		
 	except Enquiry.DoesNotExist,e:
 		pass
+
 	return render_to_response('enquete/metadata.html', RequestContext(request, data ) )
 
 
@@ -190,6 +198,8 @@ def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","enquiry" ] )
 	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
 	data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
+
+	
 
 	return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 
@@ -282,8 +292,6 @@ def login_view( request ):
 		else:
 			login_message['error'] = _("invalid credentials")
 			# Return a 'disabled account' error message
-	elif request.method != 'POST':
-		pass
 	else:
 		login_message['error'] = _("invalid credentials")
 		login_message['invalid_fields'] = form.errors
@@ -292,7 +300,7 @@ def login_view( request ):
 	data = shared_context( request, tags=[ "index" ], previous_context=login_message )
 
 
-	return render_to_response("%s/login.html" % data['template'], RequestContext(request, data ) )
+	return render_to_response('outside/login.html', RequestContext(request, data ) )
 
 
 
@@ -382,7 +390,6 @@ def confirm( request, token, user_id ):
 
 
 def logout_view( request ):
-	
 	logout( request )
 	return redirect( 'outside_index' )
 

@@ -83,12 +83,19 @@
 						<h4>{% trans "general" %}</h4>
 					</th>
 				</tr>
+				
+				
+				
+				
+				
+				
+				
 				{% for key,item in enquete.meta.values.general.items %}
 					
 					{% if item.value|length %}
 						<tr>
-							<td class="key">
-								{% trans key %}
+							<td class="key">	
+								{% trans key %} 
 							</td>
 							<td>
 								{% for i in item.value %}{{ i }}{% if not forloop.last %}, {% endif %}{% endfor %}
