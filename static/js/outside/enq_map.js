@@ -24,8 +24,9 @@ oo.enq.map.update = function( event, filters ){
 
 	for ( var i in oo.filt.data ) {
 
-		if ( oo.filt.data[i].location == null) continue; // Manage null location
-		if ( oo.filt.data[i].filtered == false) continue; // Manage filtered items
+		if ( oo.filt.data[i].location == null
+			|| oo.filt.data[i].location.length == 0
+			|| oo.filt.data[i].filtered == false ) continue; // Manage null location
 
 		for ( var j = 0; j <= nest.features.length; j++ ) {
 
@@ -90,7 +91,7 @@ oo.enq.map.init = function ( objects ){
 
 		var j, exist = false;
 
-		if ( objects[i].location == null) continue;
+		if ( objects[i].location == null || objects[i].location.length == 0 ) continue;
 
 		for ( j = 0; j <= nest.features.length; j++ ) {
 			if ( typeof nest.features[j] == 'undefined' ) break;
