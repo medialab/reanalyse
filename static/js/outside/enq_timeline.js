@@ -28,7 +28,10 @@ oo.enq.timeline.update = function( event, filters ){
 		function( d ){
 			return format.parse(d.date).getFullYear()
 		}, 
-		function (a, b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0 }
+		function (a, b){
+			var _a = a.key;
+			var _b = b.key;
+			return _a < _b ? 1 : _a > _b ? -1 : 0 }
 	);
 
 	// Set variables
@@ -82,8 +85,13 @@ oo.enq.timeline.init = function( objects ){
 		function( d ){
 			return format.parse(d.date).getFullYear()
 		}, 
-		function (a, b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0 }
+		function (a, b){
+			var _a = a.key;
+			var _b = b.key;
+			return _a < _b ? 1 : _a > _b ? -1 : 0 }
 	);
+
+	oo.log('nest', nest)
 
 	// Set variables
 
