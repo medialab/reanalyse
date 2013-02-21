@@ -4,7 +4,8 @@
 #
 import sys, os, csv, re
 from optparse import OptionParser
-from datetime import datetime
+
+
 
 # get path of the django project
 path = ("/").join( sys.path[0].split("/")[:-1] )
@@ -20,15 +21,10 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 # django specific import
 from django.conf import settings
 from reanalyseapp.models import Enquete, Texte, Tag
+from datetime import datetime
 
 def update( textes, enquete, csvdict ):
-	print """
-
-	WELCOME TO APP UPDATER
-
-	-------------------------------
-
-	"""
+	
 
 
 	print "        %s documents found in enquete: \"%s\", id:%s" % ( textes.count(), enquete.name, enquete.id )
@@ -44,12 +40,11 @@ def update( textes, enquete, csvdict ):
 		try:
 			texte_url = row['*file']
 			texte_name = row['*name']
-			locationgeo = re.sub( r'[^0-9\.,]', '', row['*locationgeo'])
+			locationgeo = re.sub( r'[^0-9\.,-]', '', row['*locationgeo'])
 			researcher = row['*researcher']
 			article =  row['*article']
-			date = datetime.strptime(row['*date'], "%Y_%m_%d")
-
-			print "        date: %s" % date
+			date = datetime.strptime(row['*date'], "%Y_%m_%d") #"31-12-12"
+					
 
 		except KeyError, e:
 			print "            Field format is not valid: %s " % ( e )
@@ -92,17 +87,51 @@ def update( textes, enquete, csvdict ):
 		# save location geo
 		texte.locationgeo = locationgeo
 		texte.tags.add( t )
+		texte.date = date
 		texte.save()
 		#try
 
 
+def install( upload_path, enquete_path ) :
+	from imexport import importEnqueteUsingMeta
+	print "        from upload path '%s'" % upload_path
+	
+	if not os.path.exists( upload_path ):
+		print "        upload_path folder '%s' does not exists or it is not readable !" % upload_path
+		print
+		return
+	
+	print "        from upload path '%s'" % enquete_path
+	if not os.path.exists( enquete_path ):
+		print "        enquete_path folder '%s' does not exists or it is not readable !" % enquete_path
+		print
+		return
+
+	print "        call importEnqueteUsingMeta (please follow up in log file)"
+	importEnqueteUsingMeta( upload_path, enquete_path )
+	print "        installation completed."
+
 def main( argv ):
+	print """
+
+	WELCOME TO APP UPDATER
+
+	-------------------------------
+
+	"""
 	parser = OptionParser( usage="\n\n%prog --enquete=34 --csv=/home/dgu/meta_documents.csv" )
 
-	parser.add_option("-c", "--csv", dest="csvfile", help="csv file absolute path")
-	parser.add_option("-e", "--enquete", dest="enquete_id", help="enquete identifier")
+	parser.add_option("-c", "--csv", dest="csvfile", help="csv file absolute path", default="" )
+	parser.add_option("-e", "--enquete", dest="enquete_id", help="enquete identifier", default=0 )
+	parser.add_option("-p", "--upload_path", dest="upload_path", help="enquete upload path", default="" ) #use with --func=install
+	parser.add_option("-x", "--enquete_path", dest="enquete_path", help="enquete extracted path", default="" ) #use with --func=install
+	parser.add_option("-f", "--function", dest="func", help="update function", default="update" )
 
 	( options, argv ) = parser.parse_args()
+
+	if options.func == "install" :
+		# install the enquete
+		return install( options.upload_path, options.enquete_path )
 
 	if options.enquete_id is None:
 		error("enquete_id arg not found!", parser)

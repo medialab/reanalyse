@@ -144,6 +144,8 @@ def doFiestaToEnquete(e):
 
 ###########################################################################
 def importEnqueteUsingMeta(upPath,folderPath):
+	logger.info( "import enquete from:'%s' folder:'%s'" % (upPath, folderPath))
+
 	stdPath=folderPath+'_meta/meta_study.csv'
 	docPath=folderPath+'_meta/meta_documents.csv'
 	spkPath=folderPath+'_meta/meta_speakers.csv'
@@ -200,8 +202,8 @@ def importEnqueteUsingMeta(upPath,folderPath):
 	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
 	newEnquete.save()
 	
-	eidstr = "[enquete_id:"+str(newEnquete.id)+"] " # for logger prefix
-	
+	eidstr = "[#"+str(newEnquete.id)+"] " # for logger prefix
+	logger.info("%s enquete '%s':%s created"  % ( eidstr, study_name, newEnquete.id ))
 	### create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
 	permname = 'EXPLORe_'+str(newEnquete.id)
@@ -212,9 +214,12 @@ def importEnqueteUsingMeta(upPath,folderPath):
 		logger.info(eidstr+"=========== PARSING META_DOCUMENTS.CSV")
 		###### Parsing Documents
 		doc = csv.DictReader(open(docPath),delimiter='\t')
-		for row in doc:
+		
+		logger.info(eidstr+" %s row found " % doc )
+
+		for counter, row in enumerate(doc):
 			#try:
-			logger.info( "%s storing document " % ( eidstr, row['*id'] ) )
+			logger.info("%s fields : %s" % (eidstr, row ) ) 
 			if row['*id']!='*descr':
 				#try:
 				file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
@@ -228,22 +233,19 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				doc_location = 		row['*location']
 				try:
 					doc_location_geo = 	row['*location_geo']
-				except:
-					logger.info( "%s var not found or invalid" % eidstr )
+				except KeyError, e:
+					logger.info( "%s KeyError warning, location_geo field not found or invalid: %s" % (eidstr,e) )
 					doc_location_geo = ""
 
-				
-				#logger.info(eidstr+"doc ref: "+doc_mimetype+" | "+row['*file'])
-				#except:
-				#	logger.info(eidstr+"EXCEPT need *file *mimetype *name *category *location *description in meta_documents.csv")
-				
-				### fetch document date
+				# document date
 				try:
 					doc_date = datetime.datetime.strptime(row['*date'], "%Y_%m_%d") #"31-12-12"
 				except:
-					logger.exception(eidstr+"EXCEPT malformed or empty date @ "+row['*id']+" | "+row['*file'])
+					logger.info("%s line %s EXCEPT malformed or empty date : %s, supported format 'YYYY_MM_DD'" % ( eidstr, counter, row['*date']))
 					doc_date = datetime.datetime.today()
 
+
+				
 				### very special for ese, don't create any texte() model, just parse ese.xml and fill enquete.ese with a json
 				if doc_mimetype=='ese':
 					#try:
@@ -257,8 +259,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
 						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
-						logger.info(eidstr+"creating document: "+doc_mimetype+" | "+doc_category1+" | "+doc_category2+" | "+file_location)
-						
+			
 
 						newDocument.doctype = doc_mimetype.upper()
 						if doc_mimetype in ['link','ref']:
@@ -306,9 +307,8 @@ def importEnqueteUsingMeta(upPath,folderPath):
 						logger.info(eidstr+"EXCEPT unconsidered or empty *mimetype: "+doc_mimetype)
 				### unknown cat
 				else:
-					logger.info(eidstr+"EXCEPT unconsidered or empty *category: ("+doc_category1+") | ("+doc_category2+")")
-			
-
+					logger.warning( "%s at line : %s '*researchPhase':'%s' it is NOT in %s OR '*documentType':'%s' it is NOT in %s" % ( eidstr, counter, doc_category1, DOC_CAT_1.keys(), doc_category2, DOC_CAT_2.keys()  ))
+					break
 			#except:
 				#logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:

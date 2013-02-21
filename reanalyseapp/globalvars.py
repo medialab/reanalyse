@@ -37,6 +37,7 @@ DOC_CAT_1['prep']		= '1.Preparatory'
 DOC_CAT_1['col'] 		= '2.Collection'
 DOC_CAT_1['anal'] 		= '3.Analysis'
 DOC_CAT_1['compl'] 		= '4.Complement'
+DOC_CAT_1['add'] 		= '5.Complement'
 DOC_CAT_1['ese'] 		= 'ese'			# will not be displayed anyway
 
 # B) meta_documents.csv : COLUMN *documentType that are accepted, and their translation in the view
@@ -49,7 +50,7 @@ DOC_CAT_2['icono'] 		= 'Icono'
 DOC_CAT_2['inter'] 		= 'Intermediate'
 DOC_CAT_2['methodo'] 	= 'Method'
 DOC_CAT_2['note'] 		= 'Note'
-DOC_CAT_2['publi'] 		= 'Publication'
+DOC_CAT_2['prod'] 		= 'Production'
 DOC_CAT_2['revis'] 		= 'Reused'
 DOC_CAT_2['transcr'] 	= 'Transcription'
 
