@@ -37,12 +37,16 @@ oo.nest = function( objects, nester, sorter ){
 
 	for (var d in objects){
 
-		// Check if data are available
-
 		var index = nester( objects[d] );
 
-		if (index == null ){ continue; }
+		// Check if data are available
+		if (index == null ) continue;
 
+		if (typeof objects[d].filtered != 'undefined') {
+			if (objects[d].filtered == 'false') continue;
+		}
+
+		// 
 		if (typeof nested[ index ] == "undefined"){
 			nested[ index ] = { "key": index, "values":[] };
 		}

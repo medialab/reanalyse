@@ -40,7 +40,8 @@ oo.filt.cross = oo.filt.cross || {
 	},
 	'period': function( item, filter ){
 		if ( item.times.length == 0 ) return true;
-		var item_time = oo.filt.parser.datetime.parse( item.times[0].time ).getTime();
+		// Set time in the middle of the year
+		var item_time = oo.filt.parser.datetime.parse( item.times[0].time.split('-')[0] + '-06-15' ).getTime();
 		return item_time > filter[0] && item_time < filter[1];
 	},
 	'category': function( item, filter ){
