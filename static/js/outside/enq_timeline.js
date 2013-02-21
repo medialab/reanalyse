@@ -38,8 +38,6 @@ oo.enq.timeline.update = function( event, filters ){
 		minX = new Date(d3.min( oo.filt.data, function (d) { return format.parse(d.date) } )),
 	    maxX = new Date(d3.max( oo.filt.data, function (d) { return format.parse(d.date) } )),
 	    rectTime = ( maxX - minX ) / ( steps - 1);
-		minY = 0,
-		maxY = d3.max(nest, function (d) { return d.values.length });
 
 	// Round scale edges
 
@@ -50,12 +48,8 @@ oo.enq.timeline.update = function( event, filters ){
 
 	// Set scales
 
-	var scaleX = d3.time.scale()
-			.domain([ minX, maxX ])
-			.range([ 0, size.width - 100 ]),
-		scaleY = d3.scale.linear()
-			.domain([minY, maxY])
-			.range([ 0, size.chartHeight - margin.top ]);
+	var scaleX = oo.enq.timeline.scaleX,
+		scaleY = oo.enq.timeline.scaleY;
 
 	oo.enq.timeline.rectangles.backgrounds = oo.enq.timeline.rectangles.selectAll(".background")
 		.data(nest)
@@ -119,8 +113,8 @@ oo.enq.timeline.init = function( objects ){
 		minX = new Date(d3.min(objects, function (d) { return format.parse(d.date) })),
 	    maxX = new Date(d3.max(objects, function (d) { return format.parse(d.date) })),
 	    rectTime = ( maxX - minX ) / ( steps - 1);
-		minY = 0,
-		maxY = d3.max(nest, function (d) { return d.values.length });
+		oo.enq.timeline.minY = 0,
+		oo.enq.timeline.maxY = d3.max(nest, function (d) { return d.values.length });
 
 	// Round scale edges
 
@@ -135,8 +129,11 @@ oo.enq.timeline.init = function( objects ){
 			.domain([ minX, maxX ])
 			.range([ 0, size.width - 100 ]),
 		scaleY = d3.scale.linear()
-			.domain([minY, maxY])
+			.domain([oo.enq.timeline.minY, oo.enq.timeline.maxY])
 			.range([ 0, size.chartHeight - margin.top ]);
+
+	oo.enq.timeline.scaleX = scaleX;
+	oo.enq.timeline.scaleY = scaleY;
 
 	// Containers
 
@@ -161,10 +158,6 @@ oo.enq.timeline.init = function( objects ){
 			b = [circleTime, circleTime + rectTime],
 			brushWidth = scaleX(b[1]) - scaleX(b[0]);
 			
-		oo.log('circleTime', circleTime)
-		oo.log('rectWidth', rectWidth)
-		oo.log('rectTime', rectTime)
-		
 		d3.select("rect.extent")
 			.transition()
 			.duration(1000)
