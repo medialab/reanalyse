@@ -33,34 +33,13 @@ oo.enq.timeline.update = function( event, filters ){
 
 	// Set variables
 
-	var steps = nest.length,
-		rectWidth = d3.round( ( size.width - 100 ) / (steps) ),
-		minX = new Date(d3.min( oo.filt.data, function (d) { return format.parse(d.date) } )),
-	    maxX = new Date(d3.max( oo.filt.data, function (d) { return format.parse(d.date) } )),
-	    rectTime = ( maxX - minX ) / ( steps - 1);
-
-	// Round scale edges
-
-	minX.setDate(1);
-	minX.setMonth(0);
-	maxX.setDate(1);
-	maxX.setMonth(12);
-
-	// Set scales
-
-	var scaleX = oo.enq.timeline.scaleX,
+	var steps = oo.enq.timeline.steps,
+		rectWidth = oo.enq.timeline.rectWidth,
+		minX = oo.enq.timeline.minX,
+	    maxX = oo.enq.timeline.maxX,
+	    rectTime = oo.enq.timeline.rectTime,
+	    scaleX = oo.enq.timeline.scaleX,
 		scaleY = oo.enq.timeline.scaleY;
-
-	oo.enq.timeline.rectangles.backgrounds = oo.enq.timeline.rectangles.selectAll(".background")
-		.data(nest)
-		.enter().append('rect')
-			.attr('class', 'background')
-			.attr("x", function(d, i) { return i * rectWidth })
-			.attr("y", function(d) { return - scaleY(d.values.length) })
-			.attr("width", rectWidth)
-			.attr("height", function(d) { return scaleY(d.values.length) })
-			.attr("data-id", function(d) { return d.key; })
-			.on("click", function() { onClick(this); })
 
 	// Animate objects
 
@@ -109,24 +88,30 @@ oo.enq.timeline.init = function( objects ){
 	// Set variables
 
 	var steps = nest.length,
-		rectWidth = d3.round( ( size.width - 100 ) / (steps) ),
-		minX = new Date(d3.min(objects, function (d) { return format.parse(d.date) })),
-	    maxX = new Date(d3.max(objects, function (d) { return format.parse(d.date) })),
-	    rectTime = ( maxX - minX ) / ( steps - 1);
-		oo.enq.timeline.minY = 0,
-		oo.enq.timeline.maxY = d3.max(nest, function (d) { return d.values.length });
+		rectWidth = d3.round( ( size.width - 100 ) / (steps) );
+
+	oo.enq.timeline.minX = new Date(d3.min(objects, function (d) { return format.parse(d.date) }));
+    oo.enq.timeline.maxX = new Date(d3.max(objects, function (d) { return format.parse(d.date) }));
+	
+	var rectTime = ( oo.enq.timeline.maxX - oo.enq.timeline.minX ) / ( steps - 1);
+
+	oo.enq.timeline.minY = 0;
+	oo.enq.timeline.maxY = d3.max(nest, function (d) { return d.values.length });
+	oo.enq.timeline.steps = steps;
+	oo.enq.timeline.rectWidth = rectWidth;
+	oo.enq.timeline.rectTime = rectTime;
 
 	// Round scale edges
 
-	minX.setDate(1);
-	minX.setMonth(0);
-	maxX.setDate(1);
-	maxX.setMonth(12);
+	oo.enq.timeline.minX.setDate(1);
+	oo.enq.timeline.minX.setMonth(0);
+	oo.enq.timeline.maxX.setDate(1);
+	oo.enq.timeline.maxX.setMonth(12);
 
 	// Set scales
 
 	var scaleX = d3.time.scale()
-			.domain([ minX, maxX ])
+			.domain([ oo.enq.timeline.minX, oo.enq.timeline.maxX ])
 			.range([ 0, size.width - 100 ]),
 		scaleY = d3.scale.linear()
 			.domain([oo.enq.timeline.minY, oo.enq.timeline.maxY])
@@ -137,11 +122,10 @@ oo.enq.timeline.init = function( objects ){
 
 	// Containers
 
-	var svg = d3.select('#timeline').append('svg');
-
-	oo.enq.timeline.rectangles = svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")");
-	oo.enq.timeline.axis       = svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")").attr('class', 'axis');
-	oo.enq.timeline.brush      = svg.append('g').attr("transform", "translate(50, " + size.height + ")");
+	oo.enq.timeline.svg        = d3.select('#timeline').append('svg');
+	oo.enq.timeline.rectangles = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")");
+	oo.enq.timeline.axis       = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")").attr('class', 'axis');
+	oo.enq.timeline.brush      = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.height + ")");
 	
 	// Axis
 
