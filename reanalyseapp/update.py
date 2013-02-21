@@ -4,8 +4,7 @@
 #
 import sys, os, csv, re
 from optparse import OptionParser
-
-
+from datetime import datetime
 
 # get path of the django project
 path = ("/").join( sys.path[0].split("/")[:-1] )
@@ -48,6 +47,10 @@ def update( textes, enquete, csvdict ):
 			locationgeo = re.sub( r'[^0-9\.,]', '', row['*locationgeo'])
 			researcher = row['*researcher']
 			article =  row['*article']
+			date = datetime.strptime(row['*date'], "%Y_%m_%d")
+
+			print "        date: %s" % date
+
 		except KeyError, e:
 			print "            Field format is not valid: %s " % ( e )
 			break

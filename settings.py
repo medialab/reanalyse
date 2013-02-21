@@ -157,7 +157,7 @@ PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = BASE_URL+'media/admin/'
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -247,8 +247,9 @@ LOGGING = {
 	'disable_existing_loggers': False,
 	'formatters': {
 		'verbose': {
+			'format': '%(levelname)s %(asctime)s | %(module)s:%(lineno)d | %(thread)d %(message)s'
 			#'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-			'format': '%(levelname)s %(asctime)s | %(module)s | %(message)s'
+			#'format': '%(levelname)s %(asctime)s | %(module)s | %(message)s'
 		},
 		'simple': {
 			'format': '%(levelname)s %(message)s'
