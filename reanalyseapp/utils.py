@@ -460,9 +460,10 @@ class unzip:
 		divisions = 100 / percent
 		perc = int(num_files / divisions)
 
-		try :
+		
 			# extract files to directory structure
-			for i, name in enumerate(zf.namelist()) :
+		for i, name in enumerate(zf.namelist()) :
+			try :	
 				name=name.decode("utf-8")
 				logger.info(name)
 				if not name.endswith('/'):
@@ -470,9 +471,9 @@ class unzip:
 					outfile.write(zf.read(name.encode("latin-1")))
 					outfile.flush()
 					outfile.close()
-		except Exception,e: 
-			logger.info("ERROR : A FILE NAME CONTAINS A COMPLEX CHARACTER, please use standard ascii charcater a-Z")
-			exit()
+			except Exception,e: 
+				logger.exception("ERROR : %s CONTAINS A COMPLEX CHARACTER, please use standard ascii charcater a-Z" % name )
+				exit()
 
 	def _createstructure(self, file, dir):
 		self._makedirs(self._listdirs(file), dir)

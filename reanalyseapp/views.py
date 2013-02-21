@@ -272,7 +272,7 @@ def deleteThis(path):
 		else:
 			logger.info("weird file path ! not removing: "+path)
 	except:
-		logger.info("["+str(eid)+"] EXCEPT trying to remove: "+path)
+		logger.exception("["+str(eid)+"] EXCEPT trying to remove: "+path)
 ###########################################################################
 @login_required
 def eDelete(request,eid):	

@@ -200,7 +200,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 	newEnquete.metadata = simplejson.dumps(allmeta,indent=4,ensure_ascii=False)
 	newEnquete.save()
 	
-	eidstr = "["+str(newEnquete.id)+"] " # for logger prefix
+	eidstr = "[enquete_id:"+str(newEnquete.id)+"] " # for logger prefix
 	
 	### create permission for this enquete
 	content_type,isnew = ContentType.objects.get_or_create(app_label='reanalyseapp', model='Enquete')
@@ -214,6 +214,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
 		doc = csv.DictReader(open(docPath),delimiter='\t')
 		for row in doc:
 			#try:
+			logger.info( "%s storing document " % ( eidstr, row['*id'] ) )
 			if row['*id']!='*descr':
 				#try:
 				file_location = 	folderPath+row['*file']						# if LINK > url , else REF > nothing
@@ -238,9 +239,9 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				
 				### fetch document date
 				try:
-					doc_date = datetime.datetime.strptime(row['*date'], "%d/%m/%y") #"31-12-12"
+					doc_date = datetime.datetime.strptime(row['*date'], "%Y_%m_%d") #"31-12-12"
 				except:
-					logger.info(eidstr+"EXCEPT malformed or empty date @ "+row['*id']+" | "+row['*file'])
+					logger.exception(eidstr+"EXCEPT malformed or empty date @ "+row['*id']+" | "+row['*file'])
 					doc_date = datetime.datetime.today()
 
 				### very special for ese, don't create any texte() model, just parse ese.xml and fill enquete.ese with a json
@@ -256,7 +257,8 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
 					if doc_mimetype in DOCUMENT_MIMETYPES:
 						newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
-			
+						logger.info(eidstr+"creating document: "+doc_mimetype+" | "+doc_category1+" | "+doc_category2+" | "+file_location)
+						
 
 						newDocument.doctype = doc_mimetype.upper()
 						if doc_mimetype in ['link','ref']:
@@ -305,6 +307,8 @@ def importEnqueteUsingMeta(upPath,folderPath):
 				### unknown cat
 				else:
 					logger.info(eidstr+"EXCEPT unconsidered or empty *category: ("+doc_category1+") | ("+doc_category2+")")
+			
+
 			#except:
 				#logger.info(eidstr+" EXCEPT on meta_document.csv line: "+row['*id'])
 	else:
