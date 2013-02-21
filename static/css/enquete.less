@@ -145,12 +145,20 @@
 
 
 
-		.brush .extent {
-			stroke-width: 0px;
-			fill: @cyan;
-			fill-opacity: .2;
-			shape-rendering: crispEdges;
+		.brush {
+
+			.extent {
+				stroke-width: 0px;
+				fill: @cyan;
+				fill-opacity: .2;
+				shape-rendering: crispEdges;
+			}
+			
+			.background {
+				// visibility: visible !important;
+			}
 		}
+
 
 		.axis {
 			path, line {

@@ -5,7 +5,7 @@
 // 
 // 
 
-var format = d3.time.format("%Y-%m-%d"),
+var format = oo.filt.parser.datetime,
 	size = {
 			  width : $('#timeline').width(),
 			 height : $('#timeline').height(),
@@ -93,7 +93,7 @@ oo.enq.timeline.init = function( objects ){
 	oo.enq.timeline.minX = new Date(d3.min(objects, function (d) { return format.parse(d.date) }));
     oo.enq.timeline.maxX = new Date(d3.max(objects, function (d) { return format.parse(d.date) }));
 	
-	var rectTime = ( oo.enq.timeline.maxX - oo.enq.timeline.minX ) / ( steps - 1);
+	var rectTime = ( oo.enq.timeline.maxX - oo.enq.timeline.minX ) / ( steps - 1 );
 
 	oo.enq.timeline.minY = 0;
 	oo.enq.timeline.maxY = d3.max(nest, function (d) { return d.values.length });
@@ -125,7 +125,7 @@ oo.enq.timeline.init = function( objects ){
 	oo.enq.timeline.svg        = d3.select('#timeline').append('svg');
 	oo.enq.timeline.rectangles = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")");
 	oo.enq.timeline.axis       = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")").attr('class', 'axis');
-	oo.enq.timeline.brush      = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.height + ")");
+	oo.enq.timeline.brush      = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.height + ")").attr("class", "brush");
 	
 	// Axis
 
@@ -149,7 +149,7 @@ oo.enq.timeline.init = function( objects ){
 			.attr('width', brushWidth ); // Width is fixed
 		
 		setTimeout( function() {
-    		oo.enq.timeline.brush.call(brushObj.extent([b[0], b[1]]));
+    		oo.enq.timeline.brush.call(brush.extent([b[0], b[1]]));
     		oo.filt.trigger( oo.filt.events.replace, { 'period': b } );
     	}, 1000 );
 	}
@@ -186,7 +186,7 @@ oo.enq.timeline.init = function( objects ){
 
 	oo.enq.timeline.rectangles.lines = oo.enq.timeline.rectangles.selectAll(".line")
 		.data(nest)
-			.enter().append('rect')
+		.enter().append('rect')
 			.attr('class', 'line')
 			.attr("x", function(d, i) { return i * rectWidth })
 			.attr("y", function(d) { return - scaleY(d.values.length) - 3})
@@ -196,22 +196,24 @@ oo.enq.timeline.init = function( objects ){
 
 	// Brush
 	
-	var brushObj = d3.svg.brush();
+	var brush = d3.svg.brush()
+		.x(scaleX)
+		// .extent(scaleX.domain()) // Used to set the initial 
+		.on("brushend", brushEnd);
 
-	oo.enq.timeline.brush.attr("class", "x brush")
-		.call(brushObj.x(scaleX)
-			.extent(scaleX.domain())
-			.on("brushend", brushEnd))
-		.selectAll("rect")
+	oo.enq.timeline.brush.call(brush);
+
+	oo.enq.timeline.brush.selectAll("rect")
 		.attr("y", - size.brushHeight )
-		.attr("height", size.brushHeight );
+		.attr("height", size.brushHeight )
 
-	d3.select('rect.extent').attr("class", "extent transition");
+	oo.enq.timeline.brush.extent = d3.select('.brush > .extent');
+	oo.enq.timeline.brush.background = d3.select('.brush > .background');
 
 	// Activate filter
 	
 	function brushEnd() {
-		var b = brushObj.empty() ? scaleX.domain() : brushObj.extent(); // this returns a period of time
+		var b = brush.empty() ? scaleX.domain() : brush.extent(); // this returns a period of time
 		b = [ b[0].getTime(), b[1].getTime() ];
 		oo.filt.trigger( oo.filt.events.replace, { 'period': b } );
 	}
