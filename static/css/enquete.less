@@ -110,24 +110,14 @@
 			&.dot {
 				cursor: pointer;
 				fill-opacity: @path_opacity;
-
-				&:hover {
-					fill-opacity: @path_opacity_hover;
-				}
-				&.active {
-				}
-				&.inactive {
-					fill: white;
-				}
+				&:hover { fill-opacity: @path_opacity_hover; }
+				&.inactive { fill: white; }
 			}
 
 			&.background {
 				cursor: pointer;
 				fill-opacity: .1;
-
-				&:hover {
-					fill-opacity: .4;
-				}
+				&:hover { fill-opacity: .4; }
 			}
 
 			&.line {
@@ -163,7 +153,6 @@
 		}
 
 		.axis {
-
 			path, line {
 			    fill: none;
 			    stroke: @cyan;
