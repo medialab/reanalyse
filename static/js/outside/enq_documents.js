@@ -8,30 +8,36 @@ oo.enq.docs.update = function( event, filters ){
 
 	oo.log("[oo.enq.docs.update]");
 
-	var	docs = d3.select('#documents ul'),
-		counter = d3.select('#counter span.docNumber')
-		container = d3.select('#counter p'),
-		meter = 0;
+	var	meter = 0;
 
-	var items = docs.selectAll('li').each(function(d, i) {
+
+	// Copy old status
+	
+	oo.enq.docs.li.each(function(d, i) {
 		item = d3.select(this);
 		item.attr('data-status-old', item.attr('data-status'));
-	}); // Copy new status to old status
+	});
 
+
+	// Set new status
+	
 	for ( var i in oo.filt.data ) {
-		var item = docs.select('li[data-id="' + oo.filt.data[i].id + '"]');
+		
+		var item = oo.enq.docs.ul.select('[data-id="' + oo.filt.data[i].id + '"]');
+
 		if ( oo.filt.data[ i ].filtered ) {
 			item.attr('data-status', 'active');
 			meter++;
 		} else {
 			item.attr('data-status', 'inactive');	
 		}
-	} // Set active
+
+	}
 
 
-	// Hide / Show list's
+	// Hide / Show Itemss
 
-	items.each(function() {
+	oo.enq.docs.li.each(function() {
 
 		var item = d3.select(this),
 			oldStatus = item.attr('data-status-old'),
@@ -45,21 +51,23 @@ oo.enq.docs.update = function( event, filters ){
 
 	})
 
-	if ( meter != counter.attr('data-previous') ) {
+	// Update Counter
+
+	if ( meter != oo.enq.docs.counter.attr('data-previous') ) {
 
 		var delay = 800;
 
-		container.transition()
+		oo.enq.docs.container.transition()
 			.duration(delay / 2)
 			.style('margin-top', '35px');
 
-		counter.transition()
+		oo.enq.docs.counter.transition()
 			.duration(1)
 			.delay(delay)
-			.text( meter + '/' + counter.attr('data-total') )
+			.text( meter + '/' + oo.enq.docs.counter.attr('data-total') )
 			.attr('data-previous', meter);
 			
-		container.transition()
+		oo.enq.docs.container.transition()
 			.delay(delay * 1.2)
 			.duration(delay)
 			.style('margin-top', '0px');
@@ -69,15 +77,19 @@ oo.enq.docs.update = function( event, filters ){
 
 };
 
+
+
+
+
 oo.enq.docs.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.docs.update );
 
-	var counter = d3.select('#counter span.docNumber'),
-		total = d3.select('#counter span.docTotal'),
-		docs = d3.select('#documents ul'),
-		container = d3.select('#counter p'),
-		map = objects.sort(function (a, b){ 
+	oo.enq.docs.counter = d3.select('#counter span.docNumber');
+	oo.enq.docs.ul = d3.select('#documents ul');
+	oo.enq.docs.container = d3.select('#counter p');
+
+	var map = objects.sort(function (a, b){ 
 		return a.title > b.title ? 1 : a.title < b.title ? -1 : 0
 	})
 
@@ -98,7 +110,7 @@ oo.enq.docs.init = function ( objects ){
 
 	// Create Documents
 
-	var li = docs.selectAll("li")
+	oo.enq.docs.li = oo.enq.docs.ul.selectAll("li")
 		.data(map)
 		.enter().append("li")
 		.attr('class', 'active')
@@ -106,27 +118,23 @@ oo.enq.docs.init = function ( objects ){
 		.attr('data-status', 'active')
 		
 		.html(function(d) {
-			var string = d.title.split('_').join(' ').split('/').join(' ') + '<br/>';
-			if (typeof d.type != 'undefined' ) string += '<i>'+d.type+'</i>' 
-			if (typeof d.phases[0].phase != 'undefined' ) string += '<i>'+d.phases[0].phase+'</i>' 
-			if (typeof d.categories[0].category != 'undefined' ) string += '<i>'+d.categories[0].category+'</i>' 
-			if ( d.articles.length != 0 ) string += '<i>'+d.articles[0].article+'</i>' 
+			var string = d.title + '<br/>';
+			if (typeof d.date != 'undefined' ) string += '<i>' + d.date.substring(5, 7) + '/' + d.date.substring(0, 4) + '</i>' 
+			if (typeof d.coordinates.properties.name != 'undefined' ) string += '<i>'+d.coordinates.properties.name+'</i>' 
 			return string;
 		})
 
 		.on('click', function(d, i) {
-			// oo.log('this', this)
-			// oo.log('id', d3.select(this).attr('data-id'))
 			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_blank');
 		});
 
 	// Set Documents' Counter
 
-	counter.text(li[0].length + '/' + li[0].length)
-		.attr('data-total', li[0].length)
-		.attr('data-previous', li[0].length);
+	oo.enq.docs.counter.text( oo.enq.docs.li[0].length + '/' + oo.enq.docs.li[0].length)
+		.attr('data-total', oo.enq.docs.li[0].length)
+		.attr('data-previous', oo.enq.docs.li[0].length);
 
-	container.transition()
+	oo.enq.docs.container.transition()
 		.duration(500)
 		.style('margin-top', '0px');
 	
