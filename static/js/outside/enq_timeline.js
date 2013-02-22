@@ -32,6 +32,8 @@ oo.enq.timeline.update = function( event, filters ){
 			return a.key < b.key ? -1 : a.key > b.key ? 1 : 0 }
 	);
 
+	oo.log('nest', nest)
+
 	// Set variables
 
 	var steps = oo.enq.timeline.steps,
@@ -86,8 +88,6 @@ oo.enq.timeline.init = function( objects ){
 		function (a, b){
 			return a.key < b.key ? -1 : a.key > b.key ? 1 : 0 }
 	);
-
-	oo.log('nest', nest)
 
 	// Set variables
 

@@ -37,6 +37,7 @@ oo.nest = function( objects, nester, sorter ){
 
 	for (var d in objects){
 
+
 		// Define object
 		var index = nester( objects[d] );
 
@@ -44,10 +45,10 @@ oo.nest = function( objects, nester, sorter ){
 		if ( index == null || index.length == 0 ) continue;
 
 		// Skip not filtered elements
-		if (typeof objects[d].filtered != 'undefined') {
+		if ( typeof objects[d].filtered != 'undefined' ) {
 			if (objects[d].filtered == 'false') continue;
 		}
-
+		
 		// Check group existence
 		if (typeof nested[ index ] == "undefined"){
 			nested[ index ] = { "key": index, "values":[] };
