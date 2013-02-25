@@ -452,9 +452,9 @@ def test( request ):
 	
 	full_url =  "%s://%s%s"% ( 'https' if request.is_secure()  else 'http', request.get_host(), reverse('outside.views.confirm', args=( "dsdsdsds", 12 ) ) )
 	response.add( 'full_url',  full_url  )
-	request.session.set_test_cookie()
+	
+	
 
-	response.add( 'test cookie worked',  request.session.test_cookie_worked()  )
 	return response.json()
 
 
