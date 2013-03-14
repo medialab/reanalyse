@@ -51,6 +51,8 @@ class Enquiry( PageAbstract ):
 # class Message( models.Model ):
 
 
+
+
 # a profile for the given user
 class Subscriber( models.Model ):
 
@@ -105,3 +107,5 @@ class Subscriber( models.Model ):
 
 			'user':{'id':self.user.id, 'username':self.user.username} if self.user is not None else None
 		}
+		
+	

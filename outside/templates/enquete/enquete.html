@@ -16,6 +16,22 @@
 	<script src="http://d3js.org/d3.v3.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.js"></script>
 	<script src="{{ STATIC_URL }}js/jquery.slimscroll.min.js"></script>
+	
+	
+	<script>
+	{% if messages %}
+		$(document).ready(function() {
+	    {% for message in messages %}
+			oo.toast( "{{ message|safe }}", 
+				"{{ message.tags }}",
+				{stayTime:7000, cleanup: true}
+				)
+	    {% endfor %}
+		})
+	{% endif %}
+	</script>
+
+	
 
 {% endblock %}
 
@@ -152,7 +168,6 @@
 			<div id="reset">→ Reetablir les filtres</div>
 
 			<!-- <p><i class="icon-repeat icon-white"></i></p> -->
-
 
 			<div id="counter">
 				<p>

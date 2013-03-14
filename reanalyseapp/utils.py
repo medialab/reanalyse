@@ -2,7 +2,7 @@
 ###########################################################################
 import settings
 import re
-from reanalyseapp.models import *
+from reanalyse.reanalyseapp.models import *
 from django.core import serializers
 from xml.etree.ElementTree import ElementTree
 # to randomly sort an array : random.shuffle(arr)
@@ -12,6 +12,8 @@ import math
 
 # custom OR queries
 from django.db.models import Q
+
+
 
 # for unzip class made by Doug Tolton (see bottom) - used during upload in the views.py
 import os, zipfile

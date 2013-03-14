@@ -294,17 +294,17 @@
 {% block api_urls %}
 	{% if edit_mode %}
 	oo.urls = {
-		add_page:"{% url glue_api_pages %}",
-		add_pin:"{% url glue_api_pins %}",
-		add_enquiry:"{% url outside_api_enquiries %}",
-		edit_pin:"{% url glue_api_pin 0 %}",
-		get_pin:"{% url glue_api_pin 0 %}",
+		"add_page":"{% url glue_api_pages %}",
+		"add_pin":"{% url glue_api_pins %}",
+		"add_enquiry":"{% url outside_api_enquiries %}",
 		"edit_pin":"{% url glue_api_pin 0 %}",
+		"get_pin":"{% url glue_api_pin 0 %}",
+		"edit_pin"":"{% url glue_api_pin 0 %}",
 		"get_pin":"{% url glue_api_pin 0 %}",
 		"publish_pin":"{% url glue_api_publish_pin 0 %}",
 		"pin_upload":"{% url glue_api_pin_upload %}",
-		upload_enquiry_pin:"{% url outside_api_enquiry_upload_pin 0 %}",
-		
+		"upload_enquiry_pin":"{% url outside_api_enquiry_upload_pin 0 %}",
+		"outside_access_request":{% url glue_api_pin_upload %}"
 		
 	};
 	{% endif %}

@@ -43,8 +43,8 @@ from haystack.management.commands import update_index
 import logging
 logger = logging.getLogger('apps')
 class NullHandler(logging.Handler):
-    def emit(self, record):
-        pass
+	def emit(self, record):
+		pass
 nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 
@@ -138,7 +138,35 @@ def doFiestaToEnquete(e):
 ###########################################################################
 
 
+#CheckMetaDocuments
+#Check if every file exists in MetaDocuments
+#return False with error dictionnary or True
+#
+def isMetaDocOK(folderPath,docPath):
+	if os.path.exists(docPath):
+		#mandatoryFields = ['*id','*name','*category','*description','*location','*date']
+		print("=========== PARSING META_DOCUMENTS.CSV TO CHECK IF A FILE IS MISSING IF TRUE IMPORT IS CANCELLED")
+		###### Parsing Documents
+		doc = csv.DictReader(open(docPath),delimiter='\t')
+		
+		error = False
+		error_dict = {}
+		
+		for counter, row in enumerate(doc):
+			if row['*id']!='*descr':
+				file_location = folderPath+row['*file']
+				try:
+					open(file_location)						 
+				except IOError, e:
+					if(e.args[0] == 2):#no such file or directory
+						error = True
+						error_dict.update({file_location:e.args[1]})
+                       				logger.info({file_location:e.args[1]})
 
+		if(error is True):
+			return {'status':False, 'error_dict':error_dict}
+		else:
+			return True
 
 
 
@@ -150,6 +178,18 @@ def importEnqueteUsingMeta(upPath,folderPath):
 	docPath=folderPath+'_meta/meta_documents.csv'
 	spkPath=folderPath+'_meta/meta_speakers.csv'
 	codPath=folderPath+'_meta/meta_codes.csv'
+	
+
+	#Check if every files exists in meta_documents.csv
+	check = isMetaDocOK(folderPath,docPath)
+	if(check == True):
+		pass
+	else:
+		logger.info("=========== PARSING META_STUDY.CSV CANCELLED")
+		return check
+	
+	
+	
 	
 	logger.info("=========== PARSING META_STUDY.CSV")
 	### Parsing Study metadatas (the only file mandatory!)
@@ -889,7 +929,6 @@ def getEnqueteSurEnqueteJson(eseXmlPath,e):
 # 	atlasdoc.status='0'
 # 	atlasdoc.save()
 ###########################################################################
-
 
 
 

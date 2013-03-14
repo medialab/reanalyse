@@ -10,6 +10,7 @@ from django.db import models
 
 # For math manipulations in TF,DF,TFIDF
 from django.db.models import Avg, Max, Min, Count
+from django.contrib.auth.models import User
 
 from xml.etree.ElementTree import ElementTree
 from lxml import etree
@@ -125,6 +126,9 @@ class Enquete(models.Model):
 
     tags = models.ManyToManyField( Tag )
 
+    users = models.ManyToManyField( User, through="AccessRequest" ) # user having th...
+    
+    
     #permission = models.ForeignKey(Permission)
     class Meta: # Users & Groups are initialized in views
         permissions = (
@@ -159,8 +163,31 @@ class Enquete(models.Model):
             return {'metainfo':'no meta was parsed'}   
         
         
-        
-####################################################################
+    
+
+
+#Store every access request from clients
+class AccessRequest(models.Model):
+    user = models.ForeignKey( User )
+    enquete = models.ForeignKey( Enquete, related_name="access_requests" )
+    description = models.TextField()
+    date = models.DateTimeField( auto_now_add=True )
+    is_activated = models.BooleanField( default=False )
+    
+    class Meta:
+        unique_together = ('user', 'enquete')
+    
+    def __unicode__(self):
+        return "%s %s" % ( self.enquete.id, self.user.username )
+
+
+
+
+
+
+
+
+
 
 
 ##############################################################################

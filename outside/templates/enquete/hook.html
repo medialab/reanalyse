@@ -36,7 +36,7 @@
 			{% endif %}
 
 			<div class="ese floating {% if "signup" in tags %}selected{%endif%}">
-				<a href="{% if enquiry %}{% url outside_signup enquiry.enquete.id %}{% else %}{% url outside_signup enquete.id %}{% endif %}"><i>{% trans "demander l'acces" %}</i> &rarr;</a>
+				<a href="{% if enquiry %}{% url outside_access_request enquiry.enquete.id %}{% else %}{% url outside_access_request enquete.id %}{% endif %}"><i>{% trans "demander l'acces" %}</i> &rarr;</a>
 			</div>
 			
 			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->

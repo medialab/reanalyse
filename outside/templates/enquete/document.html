@@ -2,6 +2,17 @@
 {% load i18n %}
 
 {% block head %}
+
+    <script src="{{ STATIC_URL }}/js/csvtotable/js/jquery.csvToTable.js"></script>
+    <script src="{{ STATIC_URL }}/js/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="{{ STATIC_URL }}/js/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="{{ STATIC_URL }}/js/DataTables/extras/TableTools/media/js/TableTools.min.js"></script>
+    <script src="{{ STATIC_URL }}/js/DataTables/extras/ColReorder/media/js/colReorderResize.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}/js/DataTables/media/css/jquery.dataTables.css" type="text/css" id="" media="print, projection, screen" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}/js/DataTables/extras/flick/jquery.ui.theme.css" type="text/css" id="" media="print, projection, screen" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}/js/DataTables/extras/flick/jquery-ui.css" type="text/css" id="" media="print, projection, screen" />
+    
+	
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/audio.min.js"></script>
 	<!-- script type="text/javascript" src="{{ STATIC_URL }}js/jwplayer.js"></script>
@@ -12,6 +23,11 @@
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/enquiry.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/audio.js"></script>
+	
+	
+    <script>
+        //we'll write script commands here
+    </script>
 
 {% endblock %}
 
@@ -37,7 +53,8 @@
 			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
 			{% endfor %}
 			<li><a href="{{ STATIC_URL }}docs/enquete-{{ enquiry.enquete.id }}.pdf">&rarr; {% trans "Lire le rapport de l'enquête sur l'enquête (PDF)" %}</a></li>
-
+			
+			
 		</ul>
 	</div>
 {% endblock %}
@@ -73,7 +90,7 @@
 	
 	<section class="alpha wide" >
 		<div class="icon {{ document.doctype }}">
-			<img src="{{ STATIC_URL }}/img/{{ document.doctype }}.png" style="height:24px"/>
+			<img src="{{ STATIC_URL }}/img/{{ document.doctype }}.png" style="height:36px"/>
 		</div>
 		<h3>{{ document.name }}</h3>
 		
@@ -82,11 +99,17 @@
 
 		{{ document.doccat2 }}
 		
-		</div>
+		</div>			
+		
+		<a class="return-link" href="{% url outside.views.enquete document.enquete.id %}">
+			<img src="{{STATIC_URL}}/img/return-arrow.png"/> 
+			<b>{% trans "retour à l'enquête" %}</b>
+		</a>
+
 		<div class="clear"></div>
 
 	</section>
-
+	
 	<section class="wide">
 		{% ifequal document.doctype "PDF" %}
 			<div class="pdf">
@@ -98,9 +121,64 @@
 			</div>
 	
 		{% endifequal %}
+		
+		{% if document.doctype == "CSV" or mimetype == "CSV"  %}
+			
+			
+			<!-- DISPLAY CSV FILE-->
+			
+			<!--	
+			HEADER	
+			-->
+		
+		<style>
+			.tablesorter{
+				width:400px;
+				
+			}			
+		</style>
+		
+		<div id="CSVTable" width="200"></div>
+		
+		<div id="pager" width=500></div>
+		
+		<script>
 
+			$('#CSVTable').CSVToTable('{% url outside_enquete_document_embed document.id %}', 
+			    { 
+			       loadingImage: '', 
+			       startLine: 0,
+			       separator:'\t',
+			       tableClass:'tablesorter'
+			       //headers: ['Album Title', 'Artist Name', 'Price ($USD)']
+			    }
+			).bind("loadComplete",function() { 
+			    $('#CSVTable').find('TABLE')
+			    	.dataTable({ "bJQueryUI": true,
+			    	//"sScrollY": "500px",
+			    	"sScrollX": "300px",
+			    	"bAutoWidth": false,
+			    	"oTableTools": {
+						"sSwfPath": "{{STATIC_URL}}js/DataTables/extras/TableTools/media/swf/copy_csv_xls_pdf.swf"
+					},
+					 "sDom": "Rlfrtip"
+			    	
+			    	})
+			    	
+			    
+			});;
+
+		</script>
+		
+
+		{% endif %}
+		
+		
+		
 		{% ifequal document.doctype "TEI" %}
-			{{ tei }}
+			{% autoescape on %}
+				{{ xslt_render|safe }}
+			{% endautoescape %}
 
 		{% endifequal %}
 	</section>

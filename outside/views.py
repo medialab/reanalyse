@@ -18,19 +18,23 @@ from django.utils.translation import ugettext as _
 
 from mimetypes import guess_extension, guess_type
 
-from reanalyseapp.models import Enquete, Tag, Texte
+from reanalyseapp.models import Enquete, Tag, Texte, AccessRequest
 
 from glue.models import Pin, Page
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 
 from outside.models import Enquiry, Subscriber
 from outside.sites import OUTSIDE_SITES_AVAILABLE
-from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
+from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm
 
 from django.core.mail import EmailMultiAlternatives
 
+from django.core.urlresolvers import reverse
 
-	
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
+
+
 # settings.py
 LOGIN_URL = '/reanalyse/login/'
 
@@ -121,17 +125,28 @@ def enquete_metadata( request, enquete_id ):
 @login_required( login_url=LOGIN_URL )
 @permission_required('reanalyseapp.can_browse')
 def enquete_download( request, enquete_id ):
+	#Check if the user has access to the files
+	try:
+   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
+	except AccessRequest.DoesNotExist:
+		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+							 ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) ), extra_tags='Access')
+		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
+		return redirect(viewurl)
+	else:
+		pass
+	
 	
 	enquete = get_object_or_404( Enquete, id=enquete_id )
-
+	
 	import zipfile, zlib
 
 	zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete.id )
 
 	zf = zipfile.ZipFile( zippath, mode='w' )
 
-	for t in Texte.objects.filter( enquete=enquete ):
-		zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, arcname= os.path.join( t.doctype, os.path.basename(  t.locationpath ) ) )
+	for t in Texte.objects.filter( enquete=enquete ):	
+		zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, arcname= os.path.join( t.doccat1, os.path.basename(  t.locationpath ) ) )
 
 	response = HttpResponse( open( zippath , 'r' ) , content_type="application/gzip"  )
 	response['Content-Description'] = "File Transfer";
@@ -140,26 +155,83 @@ def enquete_download( request, enquete_id ):
 	return response
 
 
+
+
 @login_required( login_url=LOGIN_URL )
 @permission_required('reanalyseapp.can_browse')
 def document( request, document_id ):
 	data = shared_context( request, tags=[ "enquetes","metadata" ] )
 
 	data['document'] = document = get_object_or_404( Texte, id=document_id )
-	data['enquete'] = document.enquete
+	data['enquete'] = enquete = document.enquete
 	data['mimetype'] = guess_type( document.locationpath )[0]
 
-	return render_to_response('enquete/document.html', RequestContext(request, data ) )
+
+	#Check if the user has access to the files
+	try:
+   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+	except AccessRequest.DoesNotExist:
+		
+		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+		return redirect(viewurl)
+	else:
+		pass
+	
+	
+	
+	
+	return render_to_response('enquete/document.html', {'access':False}, RequestContext(request, data ) )
+	
+	
+	"""
+	from lxml import etree
+	
+	
+	
+	
+	if(document.doctype == "TEI"):
+		
+		try:
+			xml_input = etree.parse(document.locationpath)
+			xslt_root = etree.parse("/var/opt/reanalyse/static/xsl/tei.xsl")
+			transform = etree.XSLT(xslt_root)
+			
+			#return HttpResponse( str(transform(xml_input)) , mimetype='texte'  )
+			
+		except Exception, e:
+			return HttpResponse( str(e) , mimetype='application/xml'  )
+			
+		else:
+			return render_to_response('enquete/document.html', {'xslt_render':transform(xml_input)}, RequestContext(request, data ) )
+		
+	
+	return render_to_response('enquete/document.html', RequestContext(request, data ) )"""
 
 
 @login_required( login_url=LOGIN_URL )
 @permission_required('reanalyseapp.can_browse')
 def document_download( request, document_id ):
 	data = shared_context( request )
-	
 	document = get_object_or_404( Texte, id=document_id )
+	
 
+	#Check if the user has access to the files
+	try:
+   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+	except AccessRequest.DoesNotExist:
+		
+		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+		return redirect(viewurl)
+	else:
+		pass
+	
+	
 	mimetype = guess_type( document.locationpath )[0]
+	
 
 	try:
 		extension = guess_extension( mimetype )
@@ -172,17 +244,30 @@ def document_download( request, document_id ):
 	response['Content-Description'] = "File Transfer";
 	response['Content-Disposition'] = "attachment; filename=%s-%s-%s%s" % ( document.enquete.id, document.id, document.name, extension ) 
 	
+	
+	
 	return response
 
 @login_required( login_url=LOGIN_URL )
 @permission_required('reanalyseapp.can_browse')
 def document_embed( request, document_id ):
 	data = shared_context( request )
-	
 	document = get_object_or_404( Texte, id=document_id )
-
-
 	mimetype = guess_type( document.locationpath )[0]
+
+	#Check if the user has access to the files
+	try:
+   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+	except AccessRequest.DoesNotExist:
+		
+		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+		return redirect(viewurl)
+	else:
+		pass
+	
+
 
 	try:
 		extension = guess_extension( mimetype )
@@ -230,7 +315,7 @@ def enquetes( request ):
 	data['enquetes'] = Enquete.objects.all() 
 	data['page'] = get_object_or_404(Page, slug="enquetes", language=data['language'] )
 	data['pins'] = Pin.objects.filter( page__slug="enquetes", language=data['language'], parent=None)
-
+	
 	return render_to_response("enquete/enquetes.html", RequestContext(request, data ) )
 
 def download_view( request, pin_slug ):
@@ -279,29 +364,80 @@ def login_view( request ):
 	
 	form = LoginForm( request.POST )
 	login_message = { 'next':request.REQUEST.get('next', 'outside_index') }
-
-	if form.is_valid():
-		user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				# @todo: Redirect to next page
-				return redirect( request.REQUEST.get('next', 'outside_index') )
+	
+	if request.method == 'POST': 
+		
+	#return HttpResponse( request.POST, content_type="text"  )
+	
+		if form.is_valid():
+			user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+					# @todo: Redirect to next page
+					return redirect( request.REQUEST.get('next', 'outside_index') )
+				else:
+					login_message['error'] = _("user has been disabled")
 			else:
-				login_message['error'] = _("user has been disabled")
+				login_message['error'] = _("invalid credentials")
+				# Return a 'disabled account' error message
 		else:
 			login_message['error'] = _("invalid credentials")
-			# Return a 'disabled account' error message
-	else:
-		login_message['error'] = _("invalid credentials")
-		login_message['invalid_fields'] = form.errors
-
-
+			login_message['invalid_fields'] = form.errors
+	
+	
 	data = shared_context( request, tags=[ "index" ], previous_context=login_message )
 
 
 	return render_to_response('outside/login.html', RequestContext(request, data ) )
 
+
+def access_request(request, enquete_id=None):
+	
+	data = shared_context( request, tags=[ "enquetes", "access_request" ] )
+	
+	if enquete_id is not None:
+		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
+	data['enquetes'] = Enquete.objects.all()
+		
+	
+	#If connected ...
+	if not request.user.is_authenticated():
+		return redirect(LOGIN_URL)
+	else:
+		
+		#Verify if he has already requested the enquete
+		try:
+	   		access = AccessRequest.objects.get(user=request.user.id, enquete=enquete_id)
+		except AccessRequest.DoesNotExist:
+			pass
+		
+		else:
+			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
+			if(access.is_activated == True):
+				error_str = _('You already have access to this study.')
+			else:
+				error_str = _('You already asked for this study, you will be notified when your access will be granted.')
+			
+			messages.add_message(request, messages.ERROR, error_str)
+			
+
+			return redirect(viewurl)
+		
+		
+		
+		subscriber = Subscriber.objects.get(user=request.user.id)
+		#Fill form with user infos
+		data['access_request_form'] = AccessRequestForm( auto_id="id_access_request_%s", initial={'email': subscriber.email,
+																		'username': request.user.username,
+																		'first_name': request.user.first_name,
+																		'last_name': request.user.last_name,
+																		'affiliation': subscriber.affiliation,
+																		'status': subscriber.status,
+																		'enquete': enquete_id 
+																		} )
+
+		return render_to_response("enquete/access_form.html", RequestContext(request, data ) )
 
 
 def signup( request, enquete_id=None ):
@@ -313,14 +449,10 @@ def signup( request, enquete_id=None ):
 	else:
 		data = shared_context( request, tags=[ "signup" ] )
 	
-
 	data['signup_form'] = SignupForm(  auto_id="id_signup_%s" )
 
 	# load all pins without page (aka news)
 	# data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True ).order_by("-id")
-	
-	if enquete_id is not None:
-		return render_to_response("enquete/signup.html", RequestContext(request, data ) )
 	
 	return render_to_response("%s/signup.html" % data['template'], RequestContext(request, data ) )
 
@@ -369,16 +501,6 @@ def confirm( request, token, user_id ):
 	
 	
 	
-
-	
-	
-	
-	
-
-										 
-	
-	
-
 	send_mail(
 		"Demande d'inscription", 
 		'<href="%s">%s</a>' % ( confirmation_href, confirmation_href ),
@@ -484,3 +606,38 @@ def load_language( request, d ):
 	d['language'] = language.upper()
 	
 	return language
+
+
+
+@login_required
+def change_password(request):
+	data = shared_context( request, tags=[ "form", "change_password" ] )
+	data['change_password_form'] = ChangePasswordForm(  auto_id="id_change_password_%s", initial={'username': request.user.username} )
+	
+	return render_to_response("hub/change_password.html", RequestContext(request, data ) )
+	
+	"""message = 'Change Password'
+	pForm = ChangePasswordForm()
+
+	if request.method == 'POST':
+		if request.POST['submit'] == 'Change':
+			postDict = request.POST.copy()
+			pForm = LoginForm(postDict)
+			if pForm.is_valid():
+				uPass1 = request.POST['password']
+				uPass2 = request.POST['password1']
+				if uPass1 == uPass2:
+					user = get_object_or_404(Employee.objects.get(name__exact= request.session['uid']))
+					#user = request.session['uid']
+					print 'User: ' + user
+					user.set_password(uPass1)
+					user.save()
+					return HttpResponseRedirect(next)
+				else:
+					message = 'Passwords dont match'
+					pForm = ChangePasswordForm()
+	
+	return render_to_response('employee/change_password.html', {
+	                                  'pForm': pForm,
+	                                  'message': message })"""
+

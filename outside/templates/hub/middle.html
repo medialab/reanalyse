@@ -344,9 +344,11 @@
 			<textarea id="id_edit_pin_content" style="height:306px" cols="40" name="content"></textarea>
 		</div>
 		<div class="modal-footer">
-		<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
-		<input type="submit" href="#" id="edit-pin" data-pin-id="0" value="{% trans "edit section" %}"/>
-		
+			
+			<a href=""/a>Mot de passe oublié ?</a>
+			<input type="button" data-dismiss="modal" class="bad" value="{% trans "cancel" %}" />
+			<input type="submit" href="#" id="edit-pin" data-pin-id="0" value="{% trans "edit section" %}"/>
+			
 		</div>
 	</form>
 	</div>
@@ -367,8 +369,9 @@
 		"get_pin":"{% url glue_api_pin 0 %}",
 		"publish_pin":"{% url glue_api_publish_pin 0 %}",
 		"pin_upload":"{% url glue_api_pin_upload %}",
-		
-		"add_subscriber":"{% url outside_api_subscribers %}"
+		"outside_access_request":"{% url outside_api_access_request %}",
+		"add_subscriber":"{% url outside_api_subscribers %}",
+		"change_password":"{% url outside_api_change_password %}"
 	};
 
 {% endblock %}

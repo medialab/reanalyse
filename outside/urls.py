@@ -7,15 +7,22 @@ urlpatterns = patterns('',
 	url(r'^news/$','outside.views.news', name='outside_news'),
 	url(r'^login/$','outside.views.login_view', name='outside_login'),
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
+	
+	url(r'^changePassword/$','outside.views.change_password', name='outside_change_password'),
+	
+	
+	
 	url(r'^contacts/$','outside.views.contacts', name='outside_contacts'),
 	url(r'^signup/$','outside.views.signup', name='outside_signup_generic'),
 	url(r'^signup/enquete/(?P<enquete_id>\d+)/$','outside.views.signup', name='outside_signup'),
+	url(r'^accessRequest/enquete/(?P<enquete_id>\d+)/$','outside.views.access_request', name='outside_access_request'),
+	url(r'^accessRequest/$','outside.views.access_request', name='outside_access_request'),
 	url(r'^confirm/(?P<token>[a-zA-Z\d]+)/(?P<user_id>\d+)/$','outside.views.confirm', name='outside_confirm'),
 
 	url(r'^api/signup/$', 'outside.api.signups', name='outside_api_signups'),
 	url(r'^api/signup/(?P<subscriber_id>\d+)/$', 'outside.api.signup', name='outside_api_signup'),	
-	
-	
+	url(r'^api/accessRequest/$', 'outside.api.access_request', name='outside_api_access_request'),
+	url(r'^api/changePassword/$','outside.api.change_password', name='outside_api_change_password'),
 	
 	url(r'^legal-notice/$','outside.views.legal', name='outside_legal'),
 	

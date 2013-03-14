@@ -16,11 +16,11 @@ from django.core.mail import EmailMultiAlternatives
 
 from glue.models import Pin
 from outside.models import Enquiry, Subscriber, Message
-from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm
+from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError
-from reanalyseapp.models import Enquete, Tag
+from reanalyseapp.models import Enquete, Tag, AccessRequest
 from datetime import datetime
 
 import os, mimetypes
@@ -291,7 +291,7 @@ def subscribers(request):
 		s.save()
 
 		#Notification mail to the client
-		subject, from_email, to = _('Bequali : Message sent'),"L'équipe Bequali <admin@bequali.fr>", form.cleaned_data['email']
+		subject, from_email, to = _('Bequali : Message sent'),"L'equipe Bequali <admin@bequali.fr>", form.cleaned_data['email']
 		text_content = '%s<br/><br/>%s</br>%s<br/><br/>%s<br/><br/>%s' % (_('Hello, your message has been sent, we will respond as soon as possible.'),
 												_('Message content :'),
 												form.cleaned_data['description'],
@@ -341,7 +341,63 @@ def subscribers(request):
 
 
 
+def access_request( request ):
+	response = Epoxy( request )
+	if response.method=="POST":
 
+		form = AccessRequestForm( request.REQUEST )
+		
+		if not form.is_valid():
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+		
+
+		try:
+			AccessRequest.objects.get( user = request.user, enquete=form.cleaned_data['enquete'] )
+		
+		except AccessRequest.DoesNotExist, e:
+			# AccessRequest creation
+			result = AccessRequest.objects.create(
+				user = request.user,
+				enquete = form.cleaned_data['enquete'],
+				description = form.cleaned_data['description'],
+				is_activated = False
+			)
+			
+		except IntegrityError, e:
+
+			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()
+		
+		else: #Request exists
+						
+			pass
+			#Send mail to prevent the request
+			"""form_datas = {'1. Prenom' : form.cleaned_data['first_name'],
+				'2. nom' : form.cleaned_data['last_name'],
+				'3. email' : form.cleaned_data['email'],
+				'4. affiliation' : form.cleaned_data['affiliation'],
+				'5. site' : settings.OUTSIDE_SITE_NAME,
+				'6. message' : form.cleaned_data['description'],
+				'7. enquete': form.cleaned_data['enquete']
+				
+				}.decode('utf-8')
+			
+			subject, from_email, to = _("Signup request"),"equipe Bequali <equipe@bequali.fr>", settings.EMAIL_ADMINS
+			html_content = '%s<br/><br/>%s :<br/><br/>%s<br/><br/>%s</br/><br/>%s' % (
+				_("Bonjour vous avez une demande d'enquete dans l'admin du site"),
+				_('Information'), 
+				''.join(['%s : %s<br/>' % (k, v) for k, v in sorted(form_datas.items())]),
+				_('Goodbye'),
+				'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
+				)
+			text_content = html_content.replace('<br/>', '\n')
+			
+			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+			msg.attach_alternative(html_content, 'text/html')
+			msg.content_subtype = 'html'
+			
+			msg.send()"""
+			
+	return response.json()
 
 
 
@@ -374,13 +430,14 @@ def signups(request):
 				password = form.cleaned_data['password'],
 				is_active = False
 			)
+			# desactivate user
 			created_user.is_active = False
 
 		except IntegrityError, e:
 
 			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
 		
-		# desactivate user
+		
 		
 			
 		confirmation_code = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for x in range(33))
@@ -403,8 +460,6 @@ def signups(request):
 			)
 			s.save()
 		except IntegrityError, e:
-
-
 			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
 		
 		
@@ -444,7 +499,28 @@ def send_registration_confirmation( subscriber, request ):
 	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 	msg.attach_alternative(html_content, "text/html")
 	msg.send()
-	
+
+
+def change_password(request):
+	response = Epoxy( request )
+	if request.method == 'POST':
+		form = ChangePasswordForm( request.REQUEST )
+		
+		if form.is_valid():
+			uPass1 = form.cleaned_data['password1']
+			uPass2 = form.cleaned_data['password2']
+			
+			if uPass1 == uPass2:
+				user = User.objects.get(username=form.cleaned_data['username'])
+				user.set_password(uPass1)
+				user.save()
+			else:
+				return response.throw_error( error={'password1':'the 2 pwd must be the same', 'password2':'the 2 pwd must be the same'}, code=API_EXCEPTION_FORMERRORS).json()
+		else:
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+				
+	return response.json()
+				
 
 def test( request ):
 	response = Epoxy( request )

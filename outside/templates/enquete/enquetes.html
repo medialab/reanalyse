@@ -30,14 +30,23 @@
 
 
 
-
-
 {% block page_title %}
 	{% trans "enquetes" %}
 {% endblock %}
 
 {% block page %}
 
+
+
+<!-- Access error !-->
+{% if request.GET.error == 'already_ask' %}
+<script>
+	$(document).ready(function() {
+		oo.toast("You has already asked for this enquete")
+	})
+</script>
+
+{% endif %}
 
 
 <a id="enquetes"></a>
@@ -68,14 +77,17 @@
 
 				</div>
 				<div class="lowerside">
-					<p>Pour accêder aux données de l'enquête vous devez être inscrit</p>
-					{% comment %}
+						
+					<!--If the user is connected and authorized to explore the documents-->
+					
+					<p>{% trans "Pour accêder aux données de l'enquête vous devez être inscrit" %}</p>
+					
 					<a href="{% url outside_enquete s.id %}">
-						accéder aux contenus
+						{% trans "accéder aux contenus" %}
 					</a>
-					{% endcomment %}
-					<a href="{% url outside_signup s.id %}">
-						demander l'accès
+					
+					<a href="{% url outside_access_request s.id %}">
+						{% trans "demander l'accès" %}
 					</a>
 				</div>
 			</div>
