@@ -68,25 +68,6 @@ oo.enq.types.init = function ( objects ){
 
 	oo.filt.on( oo.filt.events.change, oo.enq.types.update );
 
-	var map = oo.nest( objects, 
-		function( d ){ return d.type }, 
-		function (a, b){ return a.values.length < b.values.length ? 1 : a.values.length > b.values.length ? -1 : 0 }
-	),
-		sum = d3.sum(map, function(d) { return d.values.length }),
-		width = d3.select("#types").style('width').slice(0, -2) - d3.select("#types").style('padding-left').slice(0, -2) * 2,
-		scaleX = d3.scale.linear()
-			.domain([ 0, sum ])
-			.range([ 0,  width ]),
-		types = d3.select('#types').append('svg'),
-		xPosition = 0,
-		height = 10;
-
-	for (var i in map) {
-		
-		var gWidth = scaleX( map[i].values.length ),
-
-			g = types.append('g')
-				.attr('data-id', map[i].key)
 				.attr('data-filter', 'false')
 				.attr('data-originalWidth', gWidth)
 				.attr('data-originalX', xPosition)

@@ -118,14 +118,14 @@ oo.enq.docs.init = function ( objects ){
 		.attr('data-status', 'active')
 		
 		.html(function(d) {
-			var string = d.title + '<br/>';
+			var string = d.title + ' <small>('+d.type+')</small> <br/>';
 			if (typeof d.date != 'undefined' ) string += '<i>' + d.date.substring(5, 7) + '/' + d.date.substring(0, 4) + '</i>' 
 			if (typeof d.coordinates.properties.name != 'undefined' ) string += '<i>'+d.coordinates.properties.name+'</i>' 
 			return string;
 		})
 
 		.on('click', function(d, i) {
-			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_blank');
+			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_self');
 		});
 
 	// Set Documents' Counter

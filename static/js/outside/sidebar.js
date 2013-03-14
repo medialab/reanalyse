@@ -58,7 +58,7 @@ oo.sidebar.scrollspy.spy = function(){
 
 }
 
-oo.sidebar.scrollspy.pull = function(){oo.log("[oo.sidebar.scrollspy.pull]");
+oo.sidebar.scrollspy.pull = function(){//oo.log("[oo.sidebar.scrollspy.pull]");
 
 	// calm down. not each scroll!
 	var wh = $(window).height()

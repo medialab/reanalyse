@@ -126,7 +126,7 @@ oo.enq.timeline.init = function( objects ){
 
 	// Containers
 
-	oo.enq.timeline.svg        = d3.select('#timeline').append('svg');
+	oo.enq.timeline.svg        = d3.select('#timeline').append('svg').attr('width', 700);
 	oo.enq.timeline.rectangles = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")");
 	oo.enq.timeline.axis       = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.chartHeight + ")").attr('class', 'axis');
 	oo.enq.timeline.brush      = oo.enq.timeline.svg.append('g').attr("transform", "translate(50, " + size.height + ")").attr("class", "brush");

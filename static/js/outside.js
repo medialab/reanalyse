@@ -107,6 +107,9 @@ oo.toast = function( message, title, options ){
 */
 oo.invalidate = function( errors, namespace ){ if (!namespace){ namespace = "id";} oo.log("[oo.invalidate] namespace:",namespace, " errors:",errors );
 	for (var i in errors){
+		
+		oo.log(namespace)
+		
 		if( i.indexOf("_date") != -1  ){
 			$("#"+namespace+"_"+i+"_day").parent().addClass("invalid");	
 			continue;
@@ -195,6 +198,7 @@ oo.i18n.dict = {
 		"list numbers sms failure":"Certains SMS n'ont pu être envoyés.",
 		"to change password": "Veuillez changer votre <br/> <b>mot de passe</b>",
 		"please check accepted terms": "Veuillez accepter les conditions d'utilisation",
+		"the two fields are not the same string":"Le mot de passe n'est pas le même dans les 2 champs."
 
 	}
 };

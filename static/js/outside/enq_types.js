@@ -11,7 +11,7 @@
 oo.Gummy = function ( objects, nester, selector, propertyName ){
 
 	var types = d3.select( '#' + selector ),
-		svg = types.append('svg'),
+		svg = types.append('svg').attr('width', 700),
 		map = oo.nest( objects, 
 			nester, 
 			function (a, b){ return a.values.length < b.values.length ? 1 : a.values.length > b.values.length ? -1 : 0 }
