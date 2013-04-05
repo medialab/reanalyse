@@ -217,8 +217,7 @@ INSTALLED_APPS = (
 	'captcha',
 	'glue', # content management via json api
 	'outside', # currently there is no model
-	'password_reset',
-	'djangosecure',
+
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
 )
