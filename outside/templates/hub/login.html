@@ -27,6 +27,12 @@
 		<div class="mini-section">
 			{{ login_form.password.label_tag }}
 			{{ login_form.password }}
+			
+			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
+			</label>
+			
+			{{ login_form.captcha }}
 		</div>
 		<div class="mini-section center">
 			<input type="hidden" value="{{ next }}" name="next"/>

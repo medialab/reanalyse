@@ -69,11 +69,18 @@
 		<script src="{{ STATIC_URL }}js/outside.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/sidebar.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/sites.js" type="text/javascript"></script>
-		<script src="{{ STATIC_URL }}js/outside/subscriber.js" type="text/javascript"></script>
+		
+		<script src="{{ STATIC_URL }}js/outside/glue.js" type="text/javascript"></script>
+		
+		<script src="{{ STATIC_URL }}js/outside/forms.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/signup.js" type="text/javascript"></script>
+		<script src="{{ STATIC_URL }}js/outside/passwordStrengthMeter.js" type="text/javascript"></script>
+		<script src="{{ STATIC_URL }}js/outside/maskedInputs.js" type="text/javascript"></script>
+		<script src="{{ STATIC_URL }}js/outside/subscriber.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/access_request.js" type="text/javascript"></script>
 		<script src="{{ STATIC_URL }}js/outside/change_password.js" type="text/javascript"></script>
-		<script src="{{ STATIC_URL }}js/outside/glue.js" type="text/javascript"></script>
+		<script src="{{ STATIC_URL }}js/outside/reinitialize_password.js" type="text/javascript"></script>
+		
 		{% endblock %}
 
 		<script type="text/javascript">
@@ -93,10 +100,12 @@
 			oo.glue.init();
 			oo.glue.upload.init();
 			oo.sites.init();
+			oo.api.forms.init();
 			oo.subscriber.init();
 			oo.signup.init();
 			oo.access_request.init();
 			oo.change_password.init();
+			oo.api.reinitialize_password.init();
 			
 			{% endblock %}
 		});

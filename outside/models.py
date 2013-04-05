@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -80,7 +80,7 @@ class Subscriber( models.Model ):
 	user = models.OneToOneField( User, null=True, blank=True )
 	first_name = models.CharField( max_length = 64 ) # longest than standard field
 	last_name = models.CharField( max_length = 64 ) # longest than standard field
-	email = models.EmailField( unique=True )
+	email = models.EmailField( unique=False )
 	email_confirmed = models.BooleanField( default=False )
 
 	affiliation = models.CharField( max_length = 128 )
@@ -108,4 +108,10 @@ class Subscriber( models.Model ):
 			'user':{'id':self.user.id, 'username':self.user.username} if self.user is not None else None
 		}
 		
-	
+
+class Confirmation_code( models.Model ):
+	code = models.CharField( max_length = 64, null=True, blank=True )
+	action = models.CharField( max_length = 64, null=True, blank=True )
+	date = models.DateField( auto_now=True )
+	activated = models.BooleanField( default=False )
+

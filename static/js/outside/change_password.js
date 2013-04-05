@@ -25,7 +25,15 @@ oo.magic.change_password.add = function(){
 oo.api.change_password = {};
 
 oo.api.change_password.add = function( params ){
-
+	
+	var $this = $(this);
+	if ($this.data("executing")) return;
+	
+	
+    $this.data("executing", true)
+    	//.attr("src", "/url/to/ajax-loader.gif");
+	
+	
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.change_password,
 		data: params, 
@@ -46,7 +54,8 @@ oo.api.change_password.add = function( params ){
 			}
 			
 			oo.api.process( result, oo.magic.change_password.add, "id_change_password" );	
-
+			
+			$this.removeData("executing");
 			
 		}
 	}));
@@ -55,9 +64,25 @@ oo.api.change_password.add = function( params ){
 oo.change_password.init = function(){
 	$("#change-password").click( function(){
 		
-		if( $('input[name=password1]').val() != $('input[name=password2]').val() ){
+		password1 = $('input[name=password1]').val()
+		password2 = $('input[name=password2]').val()
+		
+		if(  password1 != password2){
 			return oo.toast( oo.i18n.translate("the two fields are not the same string"), oo.i18n.translate("error") );
+		} else {
+			
+			if(  passwordStrength(password1,$('input[name=username]').val()) == 'Too short'
+				|| passwordStrength($('input[name=password1]').val(),$('input[name=username]').val()) == 'Bad'
+			
+			) {
+				return oo.toast( oo.i18n.translate("Your password security is too weak"), oo.i18n.translate("error") );
+				
+			}
+			
 		}
+		
+		
+		
 		
 		oo.api.change_password.add({
 			username:$('input[name=username]').val(),

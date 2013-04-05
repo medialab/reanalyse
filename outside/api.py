@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 from django.db.models import Q 
 from django.conf import settings
@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
@@ -15,8 +16,8 @@ from django.core.mail import EmailMultiAlternatives
 
 
 from glue.models import Pin
-from outside.models import Enquiry, Subscriber, Message
-from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm
+from outside.models import Enquiry, Subscriber, Message, Confirmation_code
+from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError
@@ -29,7 +30,10 @@ from django.contrib.sites.models import get_current_site
 
 from django.utils.translation import ugettext as _
 
-from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+from django.utils import translation
 
 import string, random
 
@@ -114,7 +118,7 @@ def enquiry_pins( request, enquiry_slug ):
 				pin_en = Pin.objects.get( slug=form.cleaned_data['parent_pin_slug'],language='EN')
 				pin_fr = Pin.objects.get( slug=form.cleaned_data['parent_pin_slug'],language='FR')
 			except Pin.DoesNotExist, e:
-				return response.throw_error( error=_("selected pin does not exists. Exception: %s" % e), code=API_EXCEPTION_FORMERRORS).json()
+				return response.throw_error( error=_("selected pin does not exists. Exception: %s" % e), code=API_EXCEPTION_DOESNOTEXIST).json()
 
 			response.add('pin', [ pin_en.json(), pin_fr.json() ] )
 
@@ -255,113 +259,162 @@ def enquete_data( request, enquete_id ):
 def subscribers(request):
 	# logger.info("Welcome to GLUEBOX api")
 	response = Epoxy( request )
+	
 	if response.method=="POST":
-
 		form = SubscriberForm( request.REQUEST )
-		
+			
 		if not form.is_valid():
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
-		
-		try:
 			
-			s = Subscriber.objects.get( email=form.cleaned_data['email']  )
-			
-
-		except Subscriber.DoesNotExist, e:
-			s = Subscriber(
-				first_name = form.cleaned_data['first_name'],
-				last_name = form.cleaned_data['last_name'],
-				email = form.cleaned_data['email'],
-				affiliation = form.cleaned_data['affiliation'],
-				status = form.cleaned_data['status'],
-				accepted_terms = form.cleaned_data['accepted_terms'],
-				description = form.cleaned_data['description'])
-			s.save()
-
-		
-		if s is None:
-			return response.throw_error( error="", code=API_EXCEPTION_INTEGRITY).json()
-		
-		m = Message(
-			content=form.cleaned_data['description']
-		)
-		m.save()
-
-		s.messages.add( m )
-		s.save()
-
-		#Notification mail to the client
-		subject, from_email, to = _('Bequali : Message sent'),"L'equipe Bequali <admin@bequali.fr>", form.cleaned_data['email']
-		text_content = '%s<br/><br/>%s</br>%s<br/><br/>%s<br/><br/>%s' % (_('Hello, your message has been sent, we will respond as soon as possible.'),
-												_('Message content :'),
-												form.cleaned_data['description'],
-												_('Goodbye'),
-												'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
-												)
+		else:
+	
+			if( form.cleaned_data['action'] == 'EDIT'):
 				
-		html_content = text_content.replace('\n', '<br/>')
-		
-
-		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-		msg.attach_alternative(html_content, "text/html")
-		msg.content_subtype = 'html'
-		msg.send()
-		
-		
-		
-		form_datas2 = {'1. Prenom' : form.cleaned_data['first_name'],
-				'2. nom' : form.cleaned_data['last_name'],
-				'3. email' : form.cleaned_data['email'],
-				'4. affiliation' : form.cleaned_data['affiliation'],
-				'5. site' : settings.OUTSIDE_SITE_NAME,
-				'6. message' : form.cleaned_data['description']}	
-		
-		#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
-		subject, from_email, to = _('bequali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
-		html_content = '%s<br/><br/>%s<br/><br/>%s<br/><br/>%s</br/><br/>%s' % (
-												_('Hello, you have a new contact request.'),
-												_('Contact information :'), 
-												''.join(['%s : %s<br/>' % (k, v) for k, v in sorted(form_datas2.items())]),
-												_('Goodbye'),
-												'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
-												)
-		
-		text_content = html_content.replace('<br/>', '\n')
-
-											 
-		msg2 = EmailMultiAlternatives(subject, text_content, from_email, to)
-		msg2.attach_alternative(html_content, 'text/html')
-		msg2.content_subtype = 'html'
-		msg2.send()
+			
+				#GET subscriber id
+				update = Subscriber.objects.filter(user=request.user.id).update(
+													first_name = form.cleaned_data['first_name'],
+													last_name = form.cleaned_data['last_name'],
+													email = form.cleaned_data['email'],
+													affiliation = form.cleaned_data['affiliation'],
+													status = form.cleaned_data['status'],
+													accepted_terms = form.cleaned_data['accepted_terms'],
+													description = form.cleaned_data['description'])
+				
+				
+			
+			elif( form.cleaned_data['action'] == 'ADD'):
+				
+				user = request.user
+				
+				s = Subscriber(
+					user = user,
+					affiliation = form.cleaned_data['affiliation'],
+					first_name = form.cleaned_data['first_name'],
+					last_name = form.cleaned_data['last_name'],
+					status = form.cleaned_data['status'],
+					accepted_terms = form.cleaned_data['accepted_terms'],
+					description = form.cleaned_data['description'],
+					email = form.cleaned_data['email'],
+					email_confirmed=False
+				)
+				s.save()
+																						
+			
 
 	return response.queryset( Subscriber.objects.filter() ).json()
 
 
+#Just send an email to the administrators, no inserts in DB
+def contacts( request ):
+	# logger.info("Welcome to GLUEBOX api")
+	response = Epoxy( request )
+	
+	if response.method=="POST":
+		form = SubscriberForm( request.REQUEST )
+			
+		if not form.is_valid():
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+			
+		else:
+			
+			email_args = {'prenom': form.cleaned_data['first_name'],
+						'nom': form.cleaned_data['last_name'],
+						'email': form.cleaned_data['email'], 
+						'affiliation': form.cleaned_data['affiliation'], 
+						'site': settings.OUTSIDE_SITE_NAME, 
+						'description': form.cleaned_data['description']}
+			
+			#Notification mail to the client
+			subject, from_email, to = _('beQuali : Message sent'),_("beQuali Team")+"<equipe@bequali.fr>", form.cleaned_data['email']
+						
+			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, i18n()))
+			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+			
+			# create the email, and attach the HTML version as well.
+			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
+			
+			
+			#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
+			subject, from_email, to = _('beQuali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
+						
+			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, i18n()))
+			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+			
+			# create the email, and attach the HTML version as well.
+			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
+
+			
+	return response.json()
 
 
+def i18n():
+	from django.utils import translation	
+	
+	
+	return {
+		'LANGUAGES': settings.LANGUAGES,
+		'LANGUAGE_CODE': translation.get_language(),
+		'LANGUAGE_BIDI': translation.get_language_bidi(),
+		}
 
 
 def access_request( request ):
+	
+	#return HttpResponse(translation.get_language(), 'text')
+	
 	response = Epoxy( request )
+	
 	if response.method=="POST":
 
 		form = AccessRequestForm( request.REQUEST )
 		
 		if not form.is_valid():
-			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+			return response.throw_error( error=form.errors,code=API_EXCEPTION_FORMERRORS).json()
 		
 
 		try:
 			AccessRequest.objects.get( user = request.user, enquete=form.cleaned_data['enquete'] )
 		
 		except AccessRequest.DoesNotExist, e:
+			
 			# AccessRequest creation
-			result = AccessRequest.objects.create(
+			request_object = AccessRequest.objects.create(
 				user = request.user,
 				enquete = form.cleaned_data['enquete'],
 				description = form.cleaned_data['description'],
 				is_activated = False
 			)
+			path = '%s%s' % (settings.REANALYSEURL, reverse('admin:reanalyseapp_accessrequest_change', args=[request_object.id]) )
+			
+			#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
+			subject, from_email, to = _('bequali enquete request'),'admin@bequali.fr', settings.EMAIL_ADMINS
+			
+
+			
+			html_content = render_to_string('email/access_request.html', 
+										{'action':'ask_request',
+										'prenom': form.cleaned_data['first_name'],
+										'nom': form.cleaned_data['last_name'], 
+										'email': form.cleaned_data['email'], 
+										'affiliation': form.cleaned_data['affiliation'], 
+										'site': settings.OUTSIDE_SITE_NAME,
+										'description': form.cleaned_data['description'], 
+										'enquete': form.cleaned_data['enquete'], 
+										'url': path}, RequestContext(request, i18n())
+										
+										)
+			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+			
+			# create the email, and attach the HTML version as well.
+			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
+			
 			
 		except IntegrityError, e:
 
@@ -370,32 +423,8 @@ def access_request( request ):
 		else: #Request exists
 						
 			pass
-			#Send mail to prevent the request
-			"""form_datas = {'1. Prenom' : form.cleaned_data['first_name'],
-				'2. nom' : form.cleaned_data['last_name'],
-				'3. email' : form.cleaned_data['email'],
-				'4. affiliation' : form.cleaned_data['affiliation'],
-				'5. site' : settings.OUTSIDE_SITE_NAME,
-				'6. message' : form.cleaned_data['description'],
-				'7. enquete': form.cleaned_data['enquete']
-				
-				}.decode('utf-8')
 			
-			subject, from_email, to = _("Signup request"),"equipe Bequali <equipe@bequali.fr>", settings.EMAIL_ADMINS
-			html_content = '%s<br/><br/>%s :<br/><br/>%s<br/><br/>%s</br/><br/>%s' % (
-				_("Bonjour vous avez une demande d'enquete dans l'admin du site"),
-				_('Information'), 
-				''.join(['%s : %s<br/>' % (k, v) for k, v in sorted(form_datas.items())]),
-				_('Goodbye'),
-				'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
-				)
-			text_content = html_content.replace('<br/>', '\n')
 			
-			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-			msg.attach_alternative(html_content, 'text/html')
-			msg.content_subtype = 'html'
-			
-			msg.send()"""
 			
 	return response.json()
 
@@ -416,34 +445,40 @@ def signups(request):
 		if not form.is_valid():
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
 		
-
-		try:
+		
+		if(form.cleaned_data['password1'] != form.cleaned_data['password2']):
+			return response.throw_error( 
+									error={'password1':'Please enter and confirm your password', 
+										'password2':'Please enter and confirm your password'}, 
+									code=API_EXCEPTION_FORMERRORS).json()
 			
-			created_user =  User.objects.get( username = form.cleaned_data['email'] )
-		except User.DoesNotExist, e:
+		
+		
+		try:
+			created_user =  User.objects.get( username = form.cleaned_data['username'] )
+		
+		except User.DoesNotExist, e:	
 			# User creation
 			created_user = User.objects.create(
 				first_name = form.cleaned_data['first_name'],
 				last_name = form.cleaned_data['last_name'],
-				username = form.cleaned_data['email'],
+				username = form.cleaned_data['username'],
 				email = form.cleaned_data['email'],
-				password = form.cleaned_data['password'],
-				is_active = False
+				is_active = False,
 			)
-			# desactivate user
-			created_user.is_active = False
 
-		except IntegrityError, e:
+			created_user.set_password(str(form.cleaned_data['password2']))
+			created_user.save()
 
-			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
-		
-		
-		
+	
+		else: #If the user already exists
 			
-		confirmation_code = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for x in range(33))
+			return response.throw_error( error=_('This username is already used'), code=API_EXCEPTION_INTEGRITY).json()
+		
+	
 		
 		try:
-			s = Subscriber.objects.get( email=form.cleaned_data['email'] )
+			s = Subscriber.objects.get( user=created_user )
 
 		except Subscriber.DoesNotExist, e:
 
@@ -452,53 +487,141 @@ def signups(request):
 				affiliation = form.cleaned_data['affiliation'],
 				first_name = form.cleaned_data['first_name'],
 				last_name = form.cleaned_data['last_name'],
-				email = form.cleaned_data['email'],
 				status = form.cleaned_data['status'],
 				accepted_terms = form.cleaned_data['accepted_terms'],
-				description = "Enquete : %s \n\n %s" % ( request.POST.get( 'enquete_id', 0 ), form.cleaned_data['message'] ),
-				confirmation_code=confirmation_code
+				description = form.cleaned_data['description'],
+				email = form.cleaned_data['email'],
+				email_confirmed=False
 			)
 			s.save()
-		except IntegrityError, e:
-			return response.throw_error( error="%s"%e, code=API_EXCEPTION_INTEGRITY).json()		
-		
-		
+				
+			send_confirmation_mail( subscriber=s, request=request, action="signup" )
 			
-		send_registration_confirmation( subscriber=s, request=request )
 
-		response.add('object', s, jsonify=True)
-
-		
 	return response.queryset( Subscriber.objects.filter() ).json()
 
 
 
-def send_registration_confirmation( subscriber, request ):
+def send_confirmation_mail( subscriber, request, action ):
 
-	confirmation_href = "%s://%s%s"% ( 'https' if request.is_secure()  else 'http', request.get_host(), reverse('outside.views.confirm', args=( subscriber.confirmation_code, subscriber.user.id ) ) )
-
-	subject, from_email, to = _("Bequali signup"), _("Bequali Team")+"<equipe@bequali.fr>", subscriber.email
+	if(action == 'signup'):
+		
+		confirmation_code = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for x in range(33))
+		
+		confirmation_code_row = Confirmation_code.objects.create(
+				code = confirmation_code,
+				action='signup',
+				activated = True,
+			)
+		
+		confirmation_code_row.save()
+		
 	
-	text_content = '%s\n\n%s <a href="%s">%s</a>\n\n%s\n\n%s	' % (
-			_('Hello')+' '+subscriber.first_name+' '+subscriber.last_name,
-			_('Please click on this link to confirm your signup email address:'), 
-			confirmation_href, 
-			confirmation_href,
-			_('Goodbye'),
-			'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>')
-											
+		subject, from_email, to = _("beQuali signup"), _("beQuali Team")+"<equipe@bequali.fr>", subscriber.user.email
+		
+		confirmation_href = "%s://%s%s"% ( 'https' if request.is_secure()  else 'http', 
+										request.get_host(), 
+										reverse('outside.views.confirm',
+											args=(confirmation_code, 
+											subscriber.user.id, 
+											'signup'
+											)))
+			
+		html_content = render_to_string('email/signup.html', 
+									{'action':'email_confirm',
+									'prenom': subscriber.first_name,
+									'nom': subscriber.last_name,
+									'confirmation_href': confirmation_href,
+									'username': subscriber.user.username, 
+									'password': '**********',#request.REQUEST['password1'],
+									
+									
+									}, RequestContext(request, i18n()))
+		
+		text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+		
+		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+		msg.attach_alternative(html_content, "text/html")
+		msg.send()
 	
-	html_content = '%s,<br/><br/>%s : <a href="%s">%s</a><br/><br/>%s<br/><br/>%s' % (
-			_('Hello')+' '+subscriber.first_name+' '+subscriber.last_name,
-			_('Please click on this link to confirm your signup email address'), 
-			confirmation_href, 
-			confirmation_href,
-			_('Goodbye'),
-			'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>')
+	elif( action == 'reinitialize_password'):
+		
+					
+		#Send mail
+		
+		subject, from_email, to = _("beQuali reinitialize password request"), _("beQuali Team")+"<equipe@bequali.fr>", subscriber.user.email
+		
+		
+		
+		
+		confirmation_code = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for x in range(33))
+		
+		confirmation_code_row = Confirmation_code.objects.create(
+				code = confirmation_code,
+				action='reinitPass',
+				activated = True,
+			)
+		
+		confirmation_code_row.save()
+		
+		
 
-	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-	msg.attach_alternative(html_content, "text/html")
-	msg.send()
+		confirmation_href = "%s://%s%s"% ( 'https' if request.is_secure()  
+													else 'http', request.get_host(), reverse('outside.views.confirm', 
+																							args=(confirmation_code, 
+																								subscriber.user.id, 
+																								'reinitPass'
+																							)))
+		html_content = render_to_string('email/reinitialize_password.html',{'action':'reinitialize_confirm',
+									'prenom': subscriber.first_name,
+									'nom': subscriber.last_name,
+									'confirmation_href': confirmation_href,
+									'username': subscriber.user.username, 
+									
+									}, RequestContext(request, i18n()))
+
+		
+		
+		
+		text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+		
+		# create the email, and attach the HTML version as well.
+		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+		msg.attach_alternative(html_content, "text/html")
+		msg.send()
+
+	
+
+
+def reinitialize_password(request):
+	
+	response = Epoxy( request )
+	if request.method == 'POST':
+		form = ReinitializePasswordForm( request.REQUEST )
+		
+		if form.is_valid():
+			
+			try:
+			
+				user = User.objects.get(username=form.cleaned_data['username'], email=form.cleaned_data['email'])
+				
+				
+			except User.DoesNotExist, e :
+				return response.throw_error( error=_('This user does not exist in our database'), code=API_EXCEPTION_DOESNOTEXIST).json()
+				
+			else:
+				
+				subscriber = get_object_or_404( Subscriber, user__id=user.id )
+				send_confirmation_mail(subscriber, request, action='reinitialize_password')
+				
+				
+							
+		
+		else:
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+				
+	return response.json()
+	
 
 
 def change_password(request):
@@ -536,3 +659,19 @@ def test( request ):
 
 def subscriber( request, subscriber_id ):
 	return Epoxy( request ).single( Subscriber, {'id':subscriber_id} ).json()
+
+import random
+
+def captcha(request):
+	# this compare captcha's number from POST and SESSION
+	if(request.method == 'POST' and request.POST['captcha'] is not None and request.POST['captcha'] == request.session['captcha']):
+		request.session['captcha'] = "success"# this line makes session free, we recommend you to keep it
+	
+	elif(request.method == 'POST' and request.POST['captcha'] is None):
+		return HttpResponse('failed', 'text')
+	
+	else:
+		rand = random.randint(0, 4)
+		request.session['captcha'] = rand
+		return HttpResponse(rand, 'text')
+	

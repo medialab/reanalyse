@@ -27,7 +27,7 @@
 						{% else %}
 						
 						<li style="float:right;">
-							<a href="#login" data-toggle="modal" data-target="#login-modal">{% trans "login" %}</a>
+							<a href="{% url outside_login %}" data-toggle="" data-target="#login-modal">{% trans "connection" %}</a>
 						</li>
 						
 						{% endif %}
@@ -39,8 +39,6 @@
 						<li style="float:right" {% ifequal language "FR" %} class="selected"{% endifequal %}>
 							<a href="{{  request.path }}?lang=fr">{% trans "french" %}</a>
 						</li>
-						
-						
 						{% endcomment %}
 
 						{% if has_edit_mode and user.is_authenticated %}
@@ -69,13 +67,25 @@
 										{% comment %}
 						<!-- list of page according to desired language -->
 						{% for p in pages %}
-						<li{% if p.slug in tags %} class="selected"{% endif %}>
+						<li {% if p.slug in tags %} class="selected"{% endif %}>
 							<a href="{% url outside_page p.slug %}">{{ p.title }}</a>
 						</li>
 						{% endfor %}
 						
 						{% endcomment %}
 						
+						
+						{% if user.is_authenticated %}
+						
+						
+						
+						<li style="float:right" {% if 'edit_profile' in tags %} class="selected"{% endif %}>
+							<a href="{% url outside_edit_profile %}"  title="{% trans "Your profile" %}">{% trans "Your profile "%}</a>
+						</li>
+					
+						{% endif %}
+						
+						 
 
 					</ul>
 				</div>

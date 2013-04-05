@@ -114,7 +114,6 @@ LANGUAGES = (
 	('fr', 'Français'),
 )
 
-LANGUAGE_CODE = 'en'
 
 LOCALE_PATHS = (
 	REANALYSEPROJECTPATH+'/locale',
@@ -188,6 +187,7 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.locale.LocaleMiddleware',
+	'djangosecure.middleware.SecurityMiddleware',
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -217,6 +217,8 @@ INSTALLED_APPS = (
 	'captcha',
 	'glue', # content management via json api
 	'outside', # currently there is no model
+	'password_reset',
+	'djangosecure',
 	# Uncomment the next line to enable admin documentation:
 	# 'django.contrib.admindocs',
 )
@@ -236,6 +238,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.core.context_processors.static",
 	"django.contrib.messages.context_processors.messages",
 	"django.core.context_processors.request",
+	
 )
 
 # A sample logging configuration. The only tangible logging

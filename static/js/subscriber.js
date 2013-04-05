@@ -23,12 +23,21 @@ oo.magic.subscriber.add = function(){
 */
 oo.api.subscriber = {};
 oo.api.subscriber.add = function( params ){
+	var $this = $(this);
+	if ($this.data("executing")) return;
+	
+	
+    $this.data("executing", true)
+    	//.attr("src", "/url/to/ajax-loader.gif");
+	
+	
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_subscriber,
 		data: params, 
 		success:function(result){
 			oo.log( "[oo.api.subscriber.add] result:", result );
 			oo.api.process( result, oo.magic.subscriber.add, "id_subscriber" );
+			$this.removeData("executing");
 		}
 	}));
 };

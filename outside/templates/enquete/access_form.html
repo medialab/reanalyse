@@ -3,7 +3,6 @@
 {% load extras %}
 
 
-	<!-- static url: {{ STATIC_URL }} -->
 
 {% block page_hook_inner %}
 		<h3>{{ enquete.name }}</h3>
@@ -77,8 +76,8 @@
 			
 			
 			
-			<label for="recaptcha_response_field">{% trans "Captcha" %}
-				<div class="specification">{% trans "Recaptcha" %}</div>
+			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
 			</label>
 			{{ access_request_form.captcha }}
 			
@@ -91,7 +90,7 @@
 			-->
 	
 			
-
+			{{ access_request_form.username }}
 			
 			<input type="button" id="add-access-request" value="{% trans "send" %}"/>
 		</div>

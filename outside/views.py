@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 
 import urllib, os
@@ -23,9 +23,9 @@ from reanalyseapp.models import Enquete, Tag, Texte, AccessRequest
 from glue.models import Pin, Page
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 
-from outside.models import Enquiry, Subscriber
+from outside.models import Enquiry, Subscriber, Confirmation_code
 from outside.sites import OUTSIDE_SITES_AVAILABLE
-from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm
+from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
 
 from django.core.mail import EmailMultiAlternatives
 
@@ -33,6 +33,10 @@ from django.core.urlresolvers import reverse
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 
 # settings.py
@@ -77,6 +81,24 @@ def contacts( request ):
 	data = shared_context( request, tags=[ "contacts" ] )
 	# load all pins without page (aka news)
 	data['pins'] = Pin.objects.filter(language=data['language'], page__isnull=True, parent__isnull=True ).order_by("-id")
+	
+	
+	
+	if request.user.is_authenticated():
+	
+		subscriber = Subscriber.objects.get(user=request.user.id)
+		#Fill form with user infos
+		data['subscriber_form'] = SubscriberForm( auto_id="id_subscriber_%s", initial={'email': subscriber.user.email,
+																		'username': request.user.username,
+																		'first_name': request.user.first_name,
+																		'last_name': request.user.last_name,
+																		'affiliation': subscriber.affiliation,
+																		'status': subscriber.status,
+																		} )
+	else:
+		data['subscriber_form'] = SubscriberForm(auto_id="id_subscriber_%s")
+	
+	
 	return render_to_response("%s/contacts.html" % data['template'], RequestContext(request, data ) )
 
 
@@ -123,13 +145,13 @@ def enquete_metadata( request, enquete_id ):
 
 
 @login_required( login_url=LOGIN_URL )
-@permission_required('reanalyseapp.can_browse')
+#@permission_required('reanalyseapp.can_browse')
 def enquete_download( request, enquete_id ):
 	#Check if the user has access to the files
 	try:
    		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
 	except AccessRequest.DoesNotExist:
-		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
 							 ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) ), extra_tags='Access')
 		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
 		return redirect(viewurl)
@@ -158,7 +180,7 @@ def enquete_download( request, enquete_id ):
 
 
 @login_required( login_url=LOGIN_URL )
-@permission_required('reanalyseapp.can_browse')
+#@permission_required('reanalyseapp.can_browse')
 def document( request, document_id ):
 	data = shared_context( request, tags=[ "enquetes","metadata" ] )
 
@@ -166,13 +188,14 @@ def document( request, document_id ):
 	data['enquete'] = enquete = document.enquete
 	data['mimetype'] = guess_type( document.locationpath )[0]
 
-
 	#Check if the user has access to the files
 	try:
-   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+	   
+		
 	except AccessRequest.DoesNotExist:
 		
-		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
 							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
 		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
 		return redirect(viewurl)
@@ -180,9 +203,7 @@ def document( request, document_id ):
 		pass
 	
 	
-	
-	
-	return render_to_response('enquete/document.html', {'access':False}, RequestContext(request, data ) )
+	return render_to_response('enquete/document.html', RequestContext(request, data ) )
 	
 	
 	"""
@@ -211,7 +232,7 @@ def document( request, document_id ):
 
 
 @login_required( login_url=LOGIN_URL )
-@permission_required('reanalyseapp.can_browse')
+#@permission_required('reanalyseapp.can_browse')
 def document_download( request, document_id ):
 	data = shared_context( request )
 	document = get_object_or_404( Texte, id=document_id )
@@ -222,7 +243,7 @@ def document_download( request, document_id ):
    		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 	except AccessRequest.DoesNotExist:
 		
-		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
 							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
 		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
 		return redirect(viewurl)
@@ -249,7 +270,7 @@ def document_download( request, document_id ):
 	return response
 
 @login_required( login_url=LOGIN_URL )
-@permission_required('reanalyseapp.can_browse')
+#@permission_required('reanalyseapp.can_browse')
 def document_embed( request, document_id ):
 	data = shared_context( request )
 	document = get_object_or_404( Texte, id=document_id )
@@ -260,7 +281,7 @@ def document_embed( request, document_id ):
    		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 	except AccessRequest.DoesNotExist:
 		
-		messages.add_message(request, messages.ERROR, "You don't have access to this document, please ask for access <a href='%s'> here</a> to ask for permission." %
+		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
 							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
 		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
 		return redirect(viewurl)
@@ -374,6 +395,14 @@ def login_view( request ):
 			if user is not None:
 				if user.is_active:
 					login(request, user)
+					
+					
+					try:
+						subscriber = Subscriber.objects.get(user=request.user.id)
+					except Subscriber.DoesNotExist:
+						return redirect( reverse('outside.views.create_profile') )
+					
+					
 					# @todo: Redirect to next page
 					return redirect( request.REQUEST.get('next', 'outside_index') )
 				else:
@@ -403,40 +432,45 @@ def access_request(request, enquete_id=None):
 	
 	#If connected ...
 	if not request.user.is_authenticated():
-		return redirect(LOGIN_URL)
+		return redirect(LOGIN_URL+'?next='+reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}))
 	else:
 		
 		#Verify if he has already requested the enquete
 		try:
 	   		access = AccessRequest.objects.get(user=request.user.id, enquete=enquete_id)
 		except AccessRequest.DoesNotExist:
-			pass
+			
+			try:
+				subscriber = Subscriber.objects.get(user=request.user.id)
+			except Subscriber.DoesNotExist:
+				pass
+			
+			else:
+				
+				#Fill form with user infos
+				data['access_request_form'] = AccessRequestForm( auto_id="id_access_request_%s", initial={'email': subscriber.user.email,
+																				'username': request.user.username,
+																				'first_name': request.user.first_name,
+																				'last_name': request.user.last_name,
+																				'affiliation': subscriber.affiliation,
+																				'status': subscriber.status,
+																				'enquete': enquete_id 
+																				} )
+				
+				data['access_request_form']['enquete'].editable = False
 		
 		else:
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
 			if(access.is_activated == True):
-				error_str = _('You already have access to this study.')
+				error_str = _('You already have access to this research.')
 			else:
-				error_str = _('You already asked for this study, you will be notified when your access will be granted.')
+				error_str = _('You already asked for this research, you will be notified when your access is granted.')
 			
 			messages.add_message(request, messages.ERROR, error_str)
 			
-
 			return redirect(viewurl)
 		
 		
-		
-		subscriber = Subscriber.objects.get(user=request.user.id)
-		#Fill form with user infos
-		data['access_request_form'] = AccessRequestForm( auto_id="id_access_request_%s", initial={'email': subscriber.email,
-																		'username': request.user.username,
-																		'first_name': request.user.first_name,
-																		'last_name': request.user.last_name,
-																		'affiliation': subscriber.affiliation,
-																		'status': subscriber.status,
-																		'enquete': enquete_id 
-																		} )
-
 		return render_to_response("enquete/access_form.html", RequestContext(request, data ) )
 
 
@@ -458,56 +492,95 @@ def signup( request, enquete_id=None ):
 
 
 
-def confirm( request, token, user_id ):
+def confirm( request, token, user_id, action ):
+	import string
+	import random
 	
-	subscriber = get_object_or_404( Subscriber, user__id=user_id, confirmation_code=token )
+	def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+		return ''.join(random.choice(chars) for x in range(size))
+	
+	subscriber = get_object_or_404( Subscriber, user__id=user_id )
+	confirmation_code = get_object_or_404( Confirmation_code, code=token, action=action, activated = True )
+	
+	
+	data = shared_context( request, tags=[ "confirm" ] )
+	
+	if(action == 'signup'):
+	
+		subject, from_email, to = _("Signup request"), _("Bequali Team")+"<equipe@bequali.fr>", settings.EMAIL_ADMINS
+		
+		path = '%s%s' % (settings.REANALYSEURL, reverse('admin:auth_user_change', args=[subscriber.user.id]) )
+		
+		html_content = render_to_string('email/signup.html', 
+											{'action':'admin_notification',
+											'prenom': subscriber.first_name,
+											'nom': subscriber.last_name,
+											'email': subscriber.user.email,
+											'affiliation': subscriber.affiliation,
+											'status': unicode(dict(Subscriber.STATUS_CHOICES)[subscriber.status], 'utf-8'),
+											'description': subscriber.description,
+											'admin_url' : path})
 
-	data = shared_context( request, tags=[ "signup" ] )
+		text_content = html_content.replace('<br/>', '\n')
 	
-	form_datas = {
-		'1. Prenom' : subscriber.first_name,
-		'2. nom' : subscriber.last_name,
-		'3. email' : subscriber.email,
-		'4. affiliation' : subscriber.affiliation,
-		'4. status' : dict(Subscriber.STATUS_CHOICES)[subscriber.status],
-		'5. message' : subscriber.description
-	}	
-	
-	subject, from_email, to = _("Signup request"),"L'équipe Bequali <equipe@bequali.fr>", settings.EMAIL_ADMINS
-	html_content = '%s<br/><br/>%s :<br/><br/>%s<br/><br/>%s</br/><br/>%s' % (
-		_('Hello, you have a new signup request.'),
-		_('Information'), 
-		''.join(['%s : %s<br/>' % (k, v) for k, v in sorted(form_datas.items())]),
-		_('Goodbye'),
-		'<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>'
-		)
-	text_content = html_content.replace('<br/>', '\n')
-	
-	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-	msg.attach_alternative(html_content, 'text/html')
-	msg.content_subtype = 'html'
-	
-	msg.send()
-	if not subscriber.email_confirmed :
-		subscriber.email_confirmed = True
-		subscriber.save()
+		msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+		msg.attach_alternative(html_content, 'text/html')
+		msg.content_subtype = 'html'
+		
+		
 		msg.send()
 		
-		return render_to_response("%s/confirm.html" % data['template'], {'error':'0'}, RequestContext(request, data ) )
+		confirmation_code.activated = False
 		
-	else:
-		#TODO 
-		return render_to_response("%s/confirm.html" % data['template'],{'error':'1'}, RequestContext(request, data ) )
+		confirmation_code.save()
+		
+		user = subscriber.user
+		
+		user.is_active = True
+		
+		user.save()
+			
+	elif (action == "reinitPass") :
+			
+		subject, from_email, to = _("beQuali password reinitialization"), _("Bequali Team")+"<equipe@bequali.fr>", subscriber.user.email
+		
+		login_view = reverse('outside.views.login_view')
+		change_password_view = reverse('outside.views.change_password')
+		login_url = '%s%s' % (settings.REANALYSEURL, login_view )
+		change_password_url = '%s%s' % (settings.REANALYSEURL, change_password_view )
+		
+		rand_pass = id_generator()
+		
+		user = subscriber.user
+		user.set_password(rand_pass)
+		user.save()
+
+		html_content = render_to_string('email/reinitialize_password.html', 
+											{'action':'reinitialize_notification',
+											'username':subscriber.user.username,
+											'prenom': subscriber.first_name,
+											'password':rand_pass,
+											'nom': subscriber.last_name,
+											'login_url' : login_url,
+											'change_password_url': change_password_url,})
+	
+		text_content = html_content.replace('<br/>', '\n')
 	
 	
 	
-	send_mail(
-		"Demande d'inscription", 
-		'<href="%s">%s</a>' % ( confirmation_href, confirmation_href ),
-		'Bequali Registration submission <signup@bequali.fr>'
-		,[ 'alexandreaazzouz@gmail.com' ],
-		fail_silently=False
-	)
+		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+		msg.attach_alternative(html_content, 'text/html')
+		msg.content_subtype = 'html'
+				
+		msg.send()
+		
+		confirmation_code.activated = False
+		confirmation_code.save()
+		
+	data['action'] = action
+	data['email'] = subscriber.user.email
+
+	return render_to_response("%s/confirm.html" % data['template'], RequestContext(request, data ) )
 		
 
 
@@ -530,7 +603,6 @@ def shared_context( request, tags=[], previous_context={} ):
 	d['stylesheet'] = settings.OUTSIDE_THEME
 	d['template'] = settings.OUTSIDE_TEMPLATE_DIR
 
-	d['subscriber_form'] = SubscriberForm( auto_id="id_subscriber_%s")
 
 	# if it is not auth, pull loginform
 	if request.user.is_authenticated():
@@ -609,11 +681,13 @@ def load_language( request, d ):
 
 
 
-@login_required
+@login_required( login_url=LOGIN_URL )
 def change_password(request):
 	data = shared_context( request, tags=[ "form", "change_password" ] )
 	data['change_password_form'] = ChangePasswordForm(  auto_id="id_change_password_%s", initial={'username': request.user.username} )
 	
+	data['change_password_form']['username'].editable = False;
+
 	return render_to_response("hub/change_password.html", RequestContext(request, data ) )
 	
 	"""message = 'Change Password'
@@ -641,3 +715,66 @@ def change_password(request):
 	                                  'pForm': pForm,
 	                                  'message': message })"""
 
+
+
+
+@login_required( login_url=LOGIN_URL )
+def edit_profile(request):
+	data = shared_context( request, tags=[ "form", "edit_profile" ] )
+	form = SubscriberForm( auto_id="id_subscriber_%s")
+	
+	
+	subscriber = Subscriber.objects.get(user=request.user.id)
+	#Fill form with user infos
+	data['edit_profile_form'] = SubscriberForm( auto_id="id_edit_profile_%s", initial={'email': subscriber.user.email,
+																	'first_name': subscriber.first_name,
+																	'last_name':subscriber.last_name,
+																	'email':subscriber.user.email,
+																	'affiliation':subscriber.affiliation,
+																	'status':subscriber.status,
+																	'description':subscriber.description,
+																	'action':'EDIT',
+																	} )
+	
+	
+	return render_to_response("hub/edit_profile.html", RequestContext(request, data ) )
+
+
+
+@login_required( login_url=LOGIN_URL )
+def create_profile(request):
+	
+	#return HttpResponse( request.user.id, mimetype='texte'  )
+	
+	try:
+		subscriber = Subscriber.objects.get(user=request.user.id)
+	
+	except Subscriber.DoesNotExist:
+		
+		data = shared_context( request, tags=[ "form", "create_profile" ] )
+		form = SubscriberForm( auto_id="id_subscriber_%s")
+		
+		#Fill form with user infos
+		data['create_profile_form'] = SubscriberForm( auto_id="id_subscriber_%s", initial={'action':'ADD'})
+	
+	else:
+		
+		messages.add_message(request, messages.ERROR, _("You already have a profile") )
+		
+		return redirect( request.REQUEST.get('next', 'outside_index') )
+	
+	
+	return render_to_response("hub/create_profile.html", RequestContext(request, data ) )
+	
+	
+def reinitialize_password(request):
+	data = shared_context( request, tags=[ "form", "reinitialize_passwd" ] )
+	
+	data['reinitialize_password_form'] = ReinitializePasswordForm(auto_id="id_reinitialize_password_%s")
+	
+	
+	return render_to_response("hub/reinitialize_passwd.html", RequestContext(request, data ) )
+	
+
+
+	

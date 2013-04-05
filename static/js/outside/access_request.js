@@ -17,21 +17,11 @@ oo.magic.access_request.add = function(){
 /*
 
 
-    signup Ajax API
+    AccessRequest Ajax API
     ===================
 
 */
 
-
-jQuery(function($){
-	$.mask.definitions['T'] = "[a-zA-Z0-9_]"
-	$.mask.definitions['S'] = "[a-zA-Z0-9_é,à,ê,â,ô,è,î,ï]"
-	$.mask.definitions['E'] = "[a-zA-Z0-9_@.]"
-	$("input[name=username]").mask("TT?TTTTTTTTTTTTTTTTTTT", {placeholder:""});
-	
-	$("input[name=email]").mask("EEEEE?EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", {placeholder:""});
-	$("input[name=affilation]").mask("SS?SSSSSSSSSSSSSSSSSSSSSS", {placeholder:""});
-});
 
 
 oo.api.access_request = {};
@@ -42,7 +32,16 @@ oo.api.access_request.add = function( params ){
 	}
 
 	oo.log("[oo.api.signup.add]", params);
-
+	
+	var $this = $(this);
+	if ($this.data("executing")) return;
+	
+	
+    $this.data("executing", true)
+    	//.attr("src", "/url/to/ajax-loader.gif");
+    
+	
+	
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.outside_access_request,
 		data: params, 
@@ -61,6 +60,8 @@ oo.api.access_request.add = function( params ){
 			}
 
 			oo.api.process( result, oo.magic.access_request.add, "id_access_request" );
+			
+			$this.removeData("executing");
 		}
 	}));
 };

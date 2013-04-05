@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-02 18:43+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-04-05 11:10+0200\n"
+"PO-Revision-Date: 2013-04-04 10:00+0100\n"
+"Last-Translator: Alexandre <alexandreaazzouz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -18,205 +17,1304 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: glue/api.py:68
+#: glue/api.py:71 glue/api.py:176
 msgid "selected page does not exists"
 msgstr ""
 
-#: glue/api.py:80
+#: glue/api.py:83 outside/api.py:121
 #, python-format
 msgid "selected pin does not exists. Exception: %s"
 msgstr ""
 
-#: glue/forms.py:6 outside/templates/outside/login.html:30
-#: outside/templates/outside/middle.html:12
-#: outside/templates/outside/middle.html:124
-#: outside/templates/outside/middle.html:133
+#: glue/forms.py:6 outside/templates/hub/login.html:39
+#: outside/templates/hub/middle.html:270
+#: outside/templates/outside/middle.html:156
+#: outside/templates/outside/middle.html:196
+#: outside/templates/outside/middle.html:205
 msgid "login"
-msgstr "se connecter"
+msgstr "login"
 
-#: glue/forms.py:7
+#: glue/forms.py:7 outside/templates/hub/edit_profile.html:26
+#: outside/templates/hub/signup.html:42
 msgid "password"
-msgstr ""
+msgstr "Mot de passe"
 
-#: glue/forms.py:11 glue/forms.py:16
+#: glue/forms.py:11 glue/forms.py:16 outside/forms.py:10
 msgid "french title"
-msgstr ""
+msgstr "Titre en français"
 
-#: glue/forms.py:12 glue/forms.py:17
+#: glue/forms.py:12 glue/forms.py:17 outside/forms.py:11
 msgid "english title"
-msgstr ""
+msgstr "Titre en anglais"
 
 #: glue/forms.py:23
 msgid "title"
-msgstr "titre"
+msgstr "Titre"
 
+#: glue/forms.py:24
+msgid "abstract"
+msgstr "Résumé"
 
 #: glue/forms.py:25
 msgid "content"
-msgstr "contenu"
+msgstr "Contenu"
 
-#: outside/views.py:69
-msgid "user has been disabled"
-msgstr "l'utilisateur a été désactivé"
+#: outside/api.py:329
+msgid "beQuali : Message sent"
+msgstr "beQuali : message envoyé"
 
-#: outside/views.py:71 outside/views.py:74
-msgid "invalid credentials"
-msgstr "Le mot de passe ou l'utilisateur est invalide"
+#: outside/api.py:329 outside/api.py:520 outside/api.py:552
+msgid "beQuali Team"
+msgstr "équipe beQuali"
 
-#: outside/views.py:156
-msgid "language not found"
-msgstr "language non trouvé"
+#: outside/api.py:341
+msgid "beQuali contact request"
+msgstr "beQuali demande de contact"
 
-#: outside/templates/outside/enquete.html:26
-msgid "description"
-msgstr "description"
+#: outside/api.py:395
+msgid "bequali enquete request"
+msgstr "beQuali demande d'accès pour enquête"
 
-#: outside/templates/outside/enquete.html:27
-msgid "enquete sur l'enquete"
+#: outside/api.py:476
+msgid "This username is already used"
+msgstr "Cet identifiant est déjà utilisé"
+
+#: outside/api.py:520
+msgid "beQuali signup"
+msgstr "beQuali inscription"
+
+#: outside/api.py:552
+msgid "beQuali reinitialize password request"
+msgstr "beQuali demande de réinitialisation du mot de passe"
+
+#: outside/api.py:610
+msgid "This user does not exist in our database"
+msgstr "Cet utilisateur n'existe pas sur le site"
+
+#: outside/forms.py:12
+msgid "enquete id"
 msgstr ""
 
-#: outside/templates/outside/enquete.html:33
+#: outside/forms.py:57 outside/forms.py:63
+#: outside/templates/hub/reinitialize_passwd.html:19
+#: outside/templates/hub/signup.html:27
+msgid "username"
+msgstr "Nom d'utilisateur"
+
+#: outside/views.py:154 outside/views.py:198
+#, python-format
+msgid ""
+"You don't have access to this document, please ask for access <a class='blue-"
+"link' href='%s'>here</a> to ask for permission."
+msgstr ""
+"Vous n'avez pas accès à cette enquête, veuillez demander l'autorisation <a "
+"href='%s' class='blue-link'>ici</a>."
+
+#: outside/views.py:246 outside/views.py:284
+#, fuzzy, python-format
+msgid ""
+"You don't have access to this document, please ask for access <a href=\"%s"
+"\">here</a> to ask for permission."
+msgstr ""
+"Vous n'avez pas accès à cette enquête, veuillez demander l'autorisation <a "
+"href='%s' class='blue-link'>ici</a>."
+
+#: outside/views.py:409
+msgid "user has been disabled"
+msgstr "Cet utilisateur a été désactivé"
+
+#: outside/views.py:411 outside/views.py:414
+msgid "invalid credentials"
+msgstr "Identifiants invalides"
+
+#: outside/views.py:465
+msgid "You already have access to this research."
+msgstr "Vous avez déjà accès à cette enquête."
+
+#: outside/views.py:467
+msgid ""
+"You already asked for this research, you will be notified when your access "
+"is granted."
+msgstr ""
+"Vous avez déjà demandé l'accès à cette enquête. Vous recevrez bientôt une "
+"confirmation de votre accès."
+
+#: outside/views.py:509
+msgid "Signup request"
+msgstr "Demande d'inscription"
+
+#: outside/views.py:509 outside/views.py:544
+#, fuzzy
+msgid "Bequali Team"
+msgstr "équipe beQuali"
+
+#: outside/views.py:544
+msgid "beQuali password reinitialization"
+msgstr "beQuali Réinitialisation du mot de passe effectuée"
+
+#: outside/views.py:673
+msgid "language not found"
+msgstr "Langue non disponible"
+
+#: outside/views.py:761
+#, fuzzy
+msgid "You already have a profile"
+msgstr "Vous avez déjà accès à cette enquête."
+
+#: outside/templates/email/access_request.html:6
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tBonjour, vous avez une nouvelle demande d'accès.<br/><br/>\n"
+"\t\n"
+"\tInformations de la demande :<br/>\n"
+"\t\n"
+"\tPrenom:%(prenom)s<br/>\n"
+"\tnom:%(nom)s<br/>\n"
+"\temail:%(email)s<br/>\n"
+"\taffiliation:%(affiliation)s<br/>\n"
+"\tsite:%(site)s<br/>\n"
+"\tdescription:%(description)s<br/>\n"
+"\tenquete:%(enquete)s<br/>\n"
+"\t<br/><br/>\n"
+"\t\n"
+"\tVous pouvez cliquer <a href=\"%(url)s\">ici</a> pour accéder à la page "
+"admin<br/>\n"
+"\t\t\t\t\t\n"
+"\tAurevoir<br/>\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Bonjour, vous avez une nouvelle demande d'inscription.<br/><br/>\n"
+"\t\t\t\tInformation :<br/>\n"
+"\n"
+"\t\t\t\t%(prenom)s : %s<br/>\n"
+"\t\t\t\t%(nom)s : %s<br/>\n"
+"\t\t\t\t%(email)s : %s<br/>\n"
+"\t\t\t\t%(affiliation)s : %s<br/>\n"
+"\t\t\t\t%(status)s : %s<br/>\n"
+"\t\t\t\t%(description)s : %s<br/>\n"
+"\n"
+"\t\t\t\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/email/access_request.html:33
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tBonjour, <br/><br/>\n"
+"\tVotre demande d'accès pour l'enquête \"%(enquete)s\" a été acceptée. Vous "
+"pouvez consulter l'enquête <a href=\"%(url)s\">ici</a><br/><br/>\n"
+"\t\n"
+"\tAurevoir\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Hello, you have a new message : <br/><br/>\n"
+"\t\t\t\tContact information :<br/>\n"
+"\t\t\t\t%s<br/><br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/email/contact.html:7
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tBonjour votre message a été envoyé, nous vous répondrons dès que possible. "
+"<br/><br/>\n"
+"\tContenu du message : %(message)s <br/><br/>\n"
+"\t\n"
+"\tAurevoir<br/>\n"
+"\t\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Hello, you have a new message : <br/><br/>\n"
+"\t\t\t\tContact information :<br/>\n"
+"\t\t\t\t%s<br/><br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/email/contact.html:26
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tBonjour, vous avez un nouveau message<br/><br/>\n"
+"\t\n"
+"\tInformations :<br/>\n"
+"\t\n"
+"\tprénom:%(prenom)s<br/>\n"
+"\tnom:%(nom)s<br/>\n"
+"\temail:%(email)s<br/>\n"
+"\taffiliation:%(affiliation)s<br/>\n"
+"\tsite:%(site)s<br/>\n"
+"\tmessage:%(description)s<br/>\n"
+"\t<br/><br/>\n"
+"\t\t\n"
+"\tAurevoir<br/>\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Bonjour, vous avez une nouvelle demande d'inscription.<br/><br/>\n"
+"\t\t\t\tInformation :<br/>\n"
+"\n"
+"\t\t\t\t%(prenom)s : %s<br/>\n"
+"\t\t\t\t%(nom)s : %s<br/>\n"
+"\t\t\t\t%(email)s : %s<br/>\n"
+"\t\t\t\t%(affiliation)s : %s<br/>\n"
+"\t\t\t\t%(status)s : %s<br/>\n"
+"\t\t\t\t%(description)s : %s<br/>\n"
+"\n"
+"\t\t\t\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/email/signup.html:6
+#, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tBonjour %(firstname)s %(nom)s,<br/><br/>\n"
+"\t\n"
+"\tVeuillez cliquer sur ce  <a href=\"%(confirmation_href)s\">lien</a> pour "
+"confirmer votre inscription sur le site BeQuali.<br/>\n"
+"\t\n"
+"\tVous pourrez vous connecter avec cet identifiant : %(username)s et mot de "
+"passe : %(password)s (masqué pour raison de sécurité). <br/><br/>\n"
+"\t\n"
+"\tAurevoir<br/>\n"
+"\t\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+
+#: outside/templates/email/signup.html:25
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tBonjour, vous avez une nouvelle demande d'accès : <br/><br/>\n"
+"\tuser information :<br/>\n"
+"\t\n"
+"\tprenom: %(prenom)s<br/>\n"
+"\tnom: %(nom)s<br/>\n"
+"\temail: %(email)s<br/>\n"
+"\taffiliation: %(affiliation)s<br/>\n"
+"\tstatus: %(status)s<br/>\n"
+"\tdescription:%(description)s<br/>\n"
+"\t\n"
+"\tVous pouvez cliquer <a href=\"%(admin_url)s\">ici</a> pour accéder à la "
+"page admin<br/>\n"
+"\t\n"
+"\tAurevoir<br/>\n"
+"\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>\n"
+"\t\t\t\t\t \n"
+"\t"
+msgstr ""
+"\n"
+"Bonjour, vous avez une nouvelle demande d'inscription.<br/><br/>\n"
+"\t\t\t\tInformation :<br/>\n"
+"\n"
+"\t\t\t\t%(prenom)s : %s<br/>\n"
+"\t\t\t\t%(nom)s : %s<br/>\n"
+"\t\t\t\t%(email)s : %s<br/>\n"
+"\t\t\t\t%(affiliation)s : %s<br/>\n"
+"\t\t\t\t%(status)s : %s<br/>\n"
+"\t\t\t\t%(description)s : %s<br/>\n"
+"\n"
+"\t\t\t\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/emailBak/access_request.html:6
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tHello, you have a new enquete request.<br/><br/>\n"
+"\t\n"
+"\tRequest information :<br/>\n"
+"\t\n"
+"\tPrenom:%(prenom)s<br/>\n"
+"\tnom:%(nom)s<br/>\n"
+"\temail:%(email)s<br/>\n"
+"\taffiliation:%(affiliation)s<br/>\n"
+"\tsite:%(site)s<br/>\n"
+"\tdescription:%(description)s<br/>\n"
+"\tenquete:%(enquete)s<br/>\n"
+"\t<br/><br/>\n"
+"\t\n"
+"\tYou can click <a href=\"%(url)s\">here</a> to access the admin page<br/>\n"
+"\t\t\t\t\t\n"
+"\tGoodbye<br/>\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Bonjour, vous avez une nouvelle demande d'inscription.<br/><br/>\n"
+"\t\t\t\tInformation :<br/>\n"
+"\n"
+"\t\t\t\t%(prenom)s : %s<br/>\n"
+"\t\t\t\t%(nom)s : %s<br/>\n"
+"\t\t\t\t%(email)s : %s<br/>\n"
+"\t\t\t\t%(affiliation)s : %s<br/>\n"
+"\t\t\t\t%(status)s : %s<br/>\n"
+"\t\t\t\t%(description)s : %s<br/>\n"
+"\n"
+"\t\t\t\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/emailBak/access_request.html:33
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tHello, <br/><br/>\n"
+"\tYour request for the research \"%(enquete)s\" has been granted.You can "
+"consult the research <a href=\"%(url)s\">here</a><br/><br/>\n"
+"\t\n"
+"\tGoodbye\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Hello, you have a new message : <br/><br/>\n"
+"\t\t\t\tContact information :<br/>\n"
+"\t\t\t\t%s<br/><br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/emailBak/contact.html:7
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tHello, your message has been sent, we will respond to you as soon as "
+"possible. <br/><br/>\n"
+"\tMessage content: %(message)s <br/><br/>\n"
+"\tGoodbye<br/>\n"
+"\t\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Hello, you have a new message : <br/><br/>\n"
+"\t\t\t\tContact information :<br/>\n"
+"\t\t\t\t%s<br/><br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/emailBak/contact.html:25
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tHello, you have a new message.<br/><br/>\n"
+"\t\n"
+"\tRequest information :<br/>\n"
+"\t\n"
+"\tprénom:%(prenom)s<br/>\n"
+"\tnom:%(nom)s<br/>\n"
+"\temail:%(email)s<br/>\n"
+"\taffiliation:%(affiliation)s<br/>\n"
+"\tsite:%(site)s<br/>\n"
+"\tmessage:%(description)s<br/>\n"
+"\t<br/><br/>\n"
+"\t\t\n"
+"\tGoodbye<br/>\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+"\n"
+"Bonjour, vous avez une nouvelle demande d'inscription.<br/><br/>\n"
+"\t\t\t\tInformation :<br/>\n"
+"\n"
+"\t\t\t\t%(prenom)s : %s<br/>\n"
+"\t\t\t\t%(nom)s : %s<br/>\n"
+"\t\t\t\t%(email)s : %s<br/>\n"
+"\t\t\t\t%(affiliation)s : %s<br/>\n"
+"\t\t\t\t%(status)s : %s<br/>\n"
+"\t\t\t\t%(description)s : %s<br/>\n"
+"\n"
+"\t\t\t\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/emailBak/signup.html:6
+#, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tHello %(firstname)s %(nom)s,<br/><br/>\n"
+"\t\n"
+"\tPlease click on this <a href=\"%(confirmation_href)s\">link</a> to confirm "
+"your signup for the BeQuali website.<br/>\n"
+"\t\n"
+"\tYou will be able to connect with this username : %(username)s and "
+"password : %(password)s. <br/><br/>\n"
+"\tGoodbye<br/>\n"
+"\t\n"
+"\t<img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-"
+"logo.png\"/>\n"
+"\t\n"
+"\t"
+msgstr ""
+
+#: outside/templates/emailBak/signup.html:24
+#, fuzzy, python-format
+msgid ""
+"\n"
+"\t\n"
+"\tHello, you have a new signup request.<br/><br/>\n"
+"\tuser information :<br/>\n"
+"\t\n"
+"\tprenom: %(prenom)s<br/>\n"
+"\tnom: %(nom)s<br/>\n"
+"\temail: %(email)s<br/>\n"
+"\taffiliation: %(affiliation)s<br/>\n"
+"\tstatus: %(status)s<br/>\n"
+"\tdescription:%(description)s<br/>\n"
+"\t\n"
+"\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\t\n"
+"\tGoodbye<br/>\n"
+"\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>\n"
+"\t\t\t\t\t \n"
+"\t"
+msgstr ""
+"\n"
+"Bonjour, vous avez une nouvelle demande d'inscription.<br/><br/>\n"
+"\t\t\t\tInformation :<br/>\n"
+"\n"
+"\t\t\t\t%(prenom)s : %s<br/>\n"
+"\t\t\t\t%(nom)s : %s<br/>\n"
+"\t\t\t\t%(email)s : %s<br/>\n"
+"\t\t\t\t%(affiliation)s : %s<br/>\n"
+"\t\t\t\t%(status)s : %s<br/>\n"
+"\t\t\t\t%(description)s : %s<br/>\n"
+"\n"
+"\t\t\t\tYou can click <a href=\"%(admin_url)s\">here</a> to access the admin "
+"page<br/>\n"
+"\n"
+"\t\t\t\tGoodbye<br/>\n"
+"\t\t\t\t <img src=\"http://quali.dime-shs.sciences-po.fr/bequali/static/img/"
+"bequali-logo.png\"/>"
+
+#: outside/templates/enquete/access_form.html:37
+msgid "Research project"
+msgstr "Projet de recherche"
+
+#: outside/templates/enquete/access_form.html:38
+msgid ""
+"To access the research content, please fill this form. Your request will be "
+"evaluated by the beQuali team and you will be notified by an email if you "
+"are granted or not."
+msgstr ""
+"Veuillez présenter votre projet de recherche en précisant notamment "
+"l'organisme financeur, la durée du projet, s'il s'agit d'un projet collectif "
+"ou non, les conditions de réutilisation des données (retour sur le terrain, "
+"comparaison avec d'autres données etc.)"
+
+#: outside/templates/enquete/access_form.html:43
+msgid "Research"
+msgstr "Enquête"
+
+#: outside/templates/enquete/access_form.html:56
+#: outside/templates/hub/contacts.html:18 outside/templates/hub/signup.html:21
+msgid "first name"
+msgstr "Prénom"
+
+#: outside/templates/enquete/access_form.html:59
+#: outside/templates/hub/contacts.html:21 outside/templates/hub/signup.html:24
+msgid "last name"
+msgstr "Nom"
+
+#: outside/templates/enquete/access_form.html:62
+#: outside/templates/hub/contacts.html:24
+#: outside/templates/hub/create_profile.html:28
+#: outside/templates/hub/edit_profile.html:29
+#: outside/templates/hub/reinitialize_passwd.html:30
+#: outside/templates/hub/signup.html:38
+msgid "email"
+msgstr "email"
+
+#: outside/templates/enquete/access_form.html:63
+msgid "email specification"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:68
+#: outside/templates/hub/contacts.html:27
+#: outside/templates/hub/create_profile.html:31
+#: outside/templates/hub/edit_profile.html:32
+#: outside/templates/hub/signup.html:64
+msgid "status"
+msgstr "Statut"
+
+#: outside/templates/enquete/access_form.html:73
+#: outside/templates/hub/create_profile.html:37
+#: outside/templates/hub/edit_profile.html:38
+#: outside/templates/hub/signup.html:67
+msgid "affiliation institution"
+msgstr "Établissement d'affiliation"
+
+#: outside/templates/enquete/access_form.html:74
+#: outside/templates/hub/contacts.html:33
+#: outside/templates/hub/create_profile.html:38
+#: outside/templates/hub/edit_profile.html:39
+#: outside/templates/hub/signup.html:68
+msgid "university or institution"
+msgstr "université ou institution"
+
+#: outside/templates/enquete/access_form.html:80
+#: outside/templates/hub/change_password.html:45
+#: outside/templates/hub/create_profile.html:46
+#: outside/templates/hub/login.html:31
+#: outside/templates/hub/reinitialize_passwd.html:42
+#: outside/templates/hub/signup.html:77
+msgid "captcha"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:81
+#: outside/templates/hub/change_password.html:46
+#: outside/templates/hub/create_profile.html:47
+#: outside/templates/hub/login.html:32
+#: outside/templates/hub/reinitialize_passwd.html:43
+#: outside/templates/hub/signup.html:78
+msgid "Please fill the image below"
+msgstr "Veuillez recopier l'image ci-dessous"
+
+#: outside/templates/enquete/access_form.html:86
+msgid "accepted terms"
+msgstr "J'ai lu et j'accepte"
+
+#: outside/templates/enquete/access_form.html:87
+#: outside/templates/hub/signup.html:87
+msgid "legal notice description"
+msgstr ""
+"Les informations recueillies font l'objet d'un traitement informatique "
+"destiné à la gestion du portail BeQuali. Conformément à la loi 'Informatique "
+"et Libertés' du 6 janvier 1978 modifiée en 2004, vous bénéficiez d'un droit "
+"d'accès et de rectification aux informations qui vous concernent. "
+
+#: outside/templates/enquete/access_form.html:96
+#: outside/templates/hub/change_password.html:51
+#: outside/templates/hub/contacts.html:50
+msgid "send"
+msgstr "envoyer"
+
+#: outside/templates/enquete/access_form.html:102
+#: outside/templates/hub/change_password.html:57
+#: outside/templates/hub/confirm.html:19
+#: outside/templates/hub/reinitialize_passwd.html:54
+msgid "Thanks"
+msgstr "Merci"
+
+#: outside/templates/enquete/access_form.html:104
+msgid ""
+"Your request has been sent, you will receive a mail when you are granted."
+msgstr ""
+"Merci. Votre demande d'accès a été envoyée, vous recevrez un email dès que "
+"l'équipe beQuali aura examiné votre demande."
+
+#: outside/templates/enquete/access_form.html:107
+#: outside/templates/hub/change_password.html:62
+#: outside/templates/hub/contacts.html:61
+#: outside/templates/hub/create_profile.html:68
+#: outside/templates/hub/edit_profile.html:69
+#: outside/templates/hub/reinitialize_passwd.html:59
+#: outside/templates/hub/signup.html:106
+msgid "back to home page"
+msgstr "retour à la page d'accueil"
+
+#: outside/templates/enquete/document.html:54
+#: outside/templates/enquete/enquiry.html:43
+msgid "Lire le rapport de l'enquête sur l'enquête (PDF)"
+msgstr "Read the whole report Reasearch on the research (PDF)"
+
+#: outside/templates/enquete/document.html:79
+#: outside/templates/enquete/enquete.html:80
+#: outside/templates/enquete/enquete.html:164
+#: outside/templates/enquete/enquiry.html:54
+#: outside/templates/enquete/enquiry.html:84
+#: outside/templates/enquete/enquiry.html:113
+#: outside/templates/enquete/metadata.html:38
+#: outside/templates/enquete/middle.html:160
+#: outside/templates/enquete/middle.html:176
+#: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:160
+#: outside/templates/hub/middle.html:178 outside/templates/hub/middle.html:190
+#: outside/templates/outside/enquete.html:43
+#: outside/templates/outside/enquete.html:117
+#: outside/templates/outside/middle.html:81
+#: outside/templates/outside/middle.html:99
+#: outside/templates/outside/middle.html:110
+#: outside/templates/outside/page.html:26
+msgid "edit mode"
+msgstr "Édition"
+
+#: outside/templates/enquete/document.html:79
+#: outside/templates/enquete/enquete.html:164
+#: outside/templates/enquete/enquiry.html:54
+#: outside/templates/enquete/enquiry.html:84
+#: outside/templates/enquete/middle.html:176
+#: outside/templates/hub/middle.html:190
+#: outside/templates/outside/enquete.html:117
+#: outside/templates/outside/middle.html:110
+msgid "add news"
+msgstr "Ajouter une news"
+
+#: outside/templates/enquete/document.html:79
+#: outside/templates/enquete/enquiry.html:54
+#: outside/templates/enquete/enquiry.html:84
+#: outside/templates/enquete/middle.html:160
+#: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:160
+#: outside/templates/hub/middle.html:178 outside/templates/hub/middle.html:312
+#: outside/templates/hub/middle.html:321
+#: outside/templates/outside/middle.html:81
+#: outside/templates/outside/middle.html:99
+#: outside/templates/outside/middle.html:238
+#: outside/templates/outside/middle.html:247
+#: outside/templates/outside/page.html:26
+msgid "add section"
+msgstr "Ajouter une section"
+
+#: outside/templates/enquete/document.html:105
+msgid "return to the research"
+msgstr "Retour à l'enquête"
+
+#: outside/templates/enquete/enquete.html:64
+#: outside/templates/enquete/enquete.html:175
+#: outside/templates/outside/enquete.html:30
+msgid "documents"
+msgstr "Documents"
+
+#: outside/templates/enquete/enquete.html:65
+#: outside/templates/hub/create_profile.html:34
+#: outside/templates/hub/edit_profile.html:35
+#: outside/templates/outside/enquete.html:31
+msgid "description"
+msgstr "Description"
+
+#: outside/templates/enquete/enquete.html:67
+#, fuzzy
+msgid "Research on the research"
+msgstr "Ajouter l'enquête sur l'enquête"
+
+#: outside/templates/enquete/enquete.html:80
+#: outside/templates/enquete/metadata.html:38
+#: outside/templates/outside/enquete.html:43
+msgid "add enquete sur enquete"
+msgstr ""
+
+#: outside/templates/enquete/enquete.html:87
+#: outside/templates/enquete/metadata.html:45
+#: outside/templates/outside/enquete.html:50
 msgid "enquete"
 msgstr ""
 
-#: outside/templates/outside/enquete.html:50
-msgid "file type"
-msgstr "type de fichier"
+#: outside/templates/enquete/enquete.html:190
+msgid "document visualization"
+msgstr "Visualisation"
 
-#: outside/templates/outside/enquete.html:53
-msgid "file list"
-msgstr "liste du fichier"
+#: outside/templates/enquete/enquete.html:191
+msgid "study metadata"
+msgstr "Métadonnées"
 
-#: outside/templates/outside/enquetes.html:20
-#: outside/templates/outside/middle.html:57
+#: outside/templates/enquete/enquete.html:215
+#: outside/templates/enquete/enquete.html:224
+#: outside/templates/enquete/metadata.html:267
+#: outside/templates/enquete/metadata.html:276
+#: outside/templates/outside/enquete.html:139
+msgid "add enquiry"
+msgstr "Ajouter"
+
+#: outside/templates/enquete/enquete.html:223
+#: outside/templates/enquete/metadata.html:275
+#: outside/templates/hub/middle.html:302 outside/templates/hub/middle.html:320
+#: outside/templates/hub/middle.html:367
+#: outside/templates/outside/enquete.html:148
+#: outside/templates/outside/middle.html:228
+#: outside/templates/outside/middle.html:246
+#: outside/templates/outside/middle.html:291
+msgid "cancel"
+msgstr "Annuler"
+
+#: outside/templates/enquete/enquetes.html:34
 msgid "enquetes"
 msgstr ""
 
-#: outside/templates/outside/enquetes.html:99
-#: outside/templates/outside/index.html:20
-#: outside/templates/outside/middle.html:186
-#: outside/templates/outside/middle.html:220
-msgid "edit section"
+#: outside/templates/enquete/enquetes.html:67
+#: outside/templates/enquete/hook.html:13
+msgid "The research in a nut shell"
+msgstr "L'enquête en bref"
+
+#: outside/templates/enquete/enquetes.html:70
+#: outside/templates/enquete/hook.html:19
+#: outside/templates/enquete/hook.html:20
+msgid "The research on the research"
+msgstr "L'enquête sur l'enquête"
+
+#: outside/templates/enquete/enquetes.html:85
+msgid "To access the survey datas you have to be registered"
+msgstr "Pour accêder aux données de l'enquête vous devez être inscrit"
+
+#: outside/templates/enquete/enquetes.html:88
+msgid "access content"
+msgstr "Accéder aux contenus"
+
+#: outside/templates/enquete/enquetes.html:92
+msgid "request access"
+msgstr "Demander l'accès"
+
+#: outside/templates/enquete/enquetes.html:177
+#: outside/templates/enquete/enquiries.html:127
+#: outside/templates/enquete/page.html:34 outside/templates/hub/index.html:35
+#: outside/templates/hub/legal.html:22 outside/templates/hub/page.html:23
+#: outside/templates/outside/index.html:54
+msgid "download as"
+msgstr "Télécharger"
+
+#: outside/templates/enquete/enquetes.html:183
+#: outside/templates/enquete/enquiries.html:133
+#: outside/templates/enquete/enquiry.html:221
+#: outside/templates/enquete/page.html:40 outside/templates/hub/blog.html:37
+#: outside/templates/hub/index.html:41 outside/templates/hub/legal.html:28
+#: outside/templates/hub/page.html:29 outside/templates/outside/index.html:60
+#: outside/templates/outside/page.html:42
+msgid "edit content"
+msgstr "Éditer"
+
+#: outside/templates/enquete/enquetes.html:184
+#: outside/templates/enquete/enquiries.html:134
+#: outside/templates/enquete/enquiry.html:222
+#: outside/templates/enquete/page.html:41 outside/templates/hub/blog.html:38
+#: outside/templates/hub/index.html:42 outside/templates/hub/legal.html:29
+#: outside/templates/hub/page.html:30 outside/templates/outside/index.html:61
+#: outside/templates/outside/page.html:43
+msgid "edit slug"
+msgstr "Éditer"
+
+#: outside/templates/enquete/enquetes.html:185
+#: outside/templates/enquete/enquiries.html:135
+#: outside/templates/enquete/enquiry.html:223
+#: outside/templates/enquete/page.html:42 outside/templates/hub/blog.html:39
+#: outside/templates/hub/index.html:43 outside/templates/hub/legal.html:30
+#: outside/templates/hub/page.html:31 outside/templates/outside/index.html:62
+#: outside/templates/outside/page.html:44
+msgid "delete slug"
+msgstr "Supprimer"
+
+#: outside/templates/enquete/enquetes.html:188
+#: outside/templates/enquete/enquiries.html:138
+#: outside/templates/enquete/enquiry.html:226
+#: outside/templates/enquete/page.html:45 outside/templates/hub/blog.html:42
+#: outside/templates/hub/index.html:46 outside/templates/hub/legal.html:33
+#: outside/templates/hub/page.html:34 outside/templates/outside/index.html:65
+#: outside/templates/outside/page.html:47
+msgid "publish"
+msgstr "Publier"
+
+#: outside/templates/enquete/enquetes.html:190
+#: outside/templates/enquete/enquiries.html:140
+#: outside/templates/enquete/enquiry.html:228
+#: outside/templates/enquete/page.html:47 outside/templates/hub/blog.html:44
+#: outside/templates/hub/index.html:48 outside/templates/hub/legal.html:35
+#: outside/templates/hub/page.html:36 outside/templates/outside/index.html:67
+#: outside/templates/outside/page.html:49
+msgid "draftify"
+msgstr "Dépublier"
+
+#: outside/templates/enquete/enquetes.html:218
+#: outside/templates/enquete/enquiries.html:168
+msgid "list of studies"
 msgstr ""
 
-#: outside/templates/outside/enquetes.html:100
-#: outside/templates/outside/index.html:19
-msgid "delete section"
-msgstr "supprimer la section"
+#: outside/templates/enquete/enquiries.html:36
+msgid "researches on the researches"
+msgstr "Enquêtes sur les enquêtes"
 
-#: outside/templates/outside/enquiry.html:28
-msgid "an enquiry about"
-msgstr "une enquête à propos de"
+#: outside/templates/enquete/enquiry.html:67
+msgid "interview done with"
+msgstr "Entretien réalisé par"
 
-#: outside/templates/outside/enquiry.html:32
-#: outside/templates/outside/middle.html:84
-#: outside/templates/outside/page.html:55
-msgid "edit mode"
-msgstr "éditer le mode"
+#: outside/templates/enquete/enquiry.html:70
+msgid "on"
+msgstr "Sur"
 
-#: outside/templates/outside/enquiry.html:32
+#: outside/templates/enquete/enquiry.html:100
+msgid "Enquête sur l'enquête"
+msgstr "Read the whole report Reasearch on the research (PDF)"
+
+#: outside/templates/enquete/enquiry.html:113
 msgid "add enquiry content"
-msgstr "ajouter un contenu d'enquête"
+msgstr "Ajouter"
 
-#: outside/templates/outside/index.html:26
-msgid "change abstract"
-msgstr "changer l'abstract"
+#: outside/templates/enquete/hook.html:9
+msgid "back to enquetes list"
+msgstr "Retour à la lsite des enquêtes"
 
-#: outside/templates/outside/index.html:48
-msgid "change content"
-msgstr "changer le contenu"
+#: outside/templates/enquete/hook.html:14
+msgid "Focus on the research"
+msgstr "Retour à l'enquête"
 
-#: outside/templates/outside/login.html:17
-msgid "login requis"
+#: outside/templates/enquete/hook.html:33
+msgid "Download the research"
+msgstr "Enquête sur l'enquête"
+
+#: outside/templates/enquete/hook.html:34
+msgid "Download"
+msgstr "Télécharger l'enquête"
+
+#: outside/templates/enquete/hook.html:40
+msgid "Ask for access"
+msgstr "Demander l'accès"
+
+#: outside/templates/enquete/hook.html:43
+msgid "enquete n."
 msgstr ""
 
-#: outside/templates/outside/middle.html:16
-msgid "logout"
-msgstr "se déconnecter"
+#: outside/templates/enquete/metadata.html:16
+#: outside/templates/enquete/metadata.html:83
+msgid "general"
+msgstr "Général"
 
-#: outside/templates/outside/middle.html:21
+#: outside/templates/enquete/metadata.html:17
+#: outside/templates/enquete/metadata.html:112
+msgid "actors"
+msgstr "Intervenants"
+
+#: outside/templates/enquete/metadata.html:18
+#: outside/templates/enquete/metadata.html:134
+msgid "universe"
+msgstr "Champs l'application"
+
+#: outside/templates/enquete/metadata.html:19
+#: outside/templates/enquete/metadata.html:156
+msgid "method"
+msgstr "Méthode"
+
+#: outside/templates/enquete/metadata.html:20
+#: outside/templates/enquete/metadata.html:178
+msgid "corpus"
+msgstr "Corpus"
+
+#: outside/templates/enquete/metadata.html:21
+#: outside/templates/enquete/metadata.html:200
+msgid "analysis"
+msgstr "Analyse"
+
+#: outside/templates/enquete/metadata.html:22
+#: outside/templates/enquete/metadata.html:222
+msgid "edition"
+msgstr "Édition"
+
+#: outside/templates/enquete/middle.html:24
+#: outside/templates/hub/middle.html:24
+#: outside/templates/outside/middle.html:15
+msgid "logout"
+msgstr "Déconnexion"
+
+#: outside/templates/enquete/middle.html:30
+#: outside/templates/hub/middle.html:30 outside/templates/hub/middle.html:279
+#: outside/templates/outside/login.html:64
+msgid "connection"
+msgstr "connexion"
+
+#: outside/templates/enquete/middle.html:48
+#: outside/templates/hub/middle.html:56
+#: outside/templates/outside/middle.html:167
 msgid "disable edit"
 msgstr "désactiver l'édition"
 
-#: outside/templates/outside/middle.html:22
+#: outside/templates/enquete/middle.html:49
+#: outside/templates/hub/middle.html:57
+#: outside/templates/outside/middle.html:168
 msgid "disable edit mode"
 msgstr "désactiver le mode édition"
 
-#: outside/templates/outside/middle.html:28
-#: outside/templates/outside/middle.html:29
+#: outside/templates/enquete/middle.html:55
+#: outside/templates/enquete/middle.html:56
+#: outside/templates/hub/middle.html:63 outside/templates/hub/middle.html:64
+#: outside/templates/outside/middle.html:174
+#: outside/templates/outside/middle.html:175
 msgid "enable edit mode"
-msgstr "activer le mode édition"
+msgstr "activer l'édition"
 
-#: outside/templates/outside/middle.html:28
+#: outside/templates/enquete/middle.html:55
+#: outside/templates/hub/middle.html:63
+#: outside/templates/outside/middle.html:174
 msgid "edit"
 msgstr "éditer"
 
-#: outside/templates/outside/middle.html:36
-msgid "EN"
-msgstr "EN"
-
-#: outside/templates/outside/middle.html:39
-msgid "FR"
-msgstr "FR"
-
-#: outside/templates/outside/middle.html:43
-#: outside/templates/outside/middle.html:147
-#: outside/templates/outside/middle.html:157
+#: outside/templates/enquete/middle.html:63
+#: outside/templates/hub/middle.html:71 outside/templates/hub/middle.html:293
+#: outside/templates/hub/middle.html:303
+#: outside/templates/outside/enquete.html:149
+#: outside/templates/outside/middle.html:37
+#: outside/templates/outside/middle.html:219
+#: outside/templates/outside/middle.html:229
 msgid "add page"
-msgstr "ajouter une page"
+msgstr ""
 
-#: outside/templates/outside/middle.html:84
-#: outside/templates/outside/middle.html:166
-#: outside/templates/outside/middle.html:175
-msgid "add section"
-msgstr "ajouter une section"
+#: outside/templates/enquete/middle.html:85
+#: outside/templates/hub/create_profile.html:11
+#: outside/templates/hub/edit_profile.html:11
+msgid "Your profile"
+msgstr "Mon compte"
 
-#: outside/templates/outside/middle.html:90
+#: outside/templates/enquete/middle.html:85
+#: outside/templates/hub/middle.html:90
+#: outside/templates/outside/middle.html:30
+msgid "Your profile "
+msgstr "Mon compte"
+
+#: outside/templates/enquete/middle.html:109
+#: outside/templates/hub/middle.html:128
+msgid "news"
+msgstr "Ajouter une nouvelle actualité"
+
+#: outside/templates/enquete/middle.html:113
+#: outside/templates/hub/middle.html:132
+msgid "contacts"
+msgstr "Contact"
+
+#: outside/templates/enquete/middle.html:160
+#: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:178
+#: outside/templates/outside/middle.html:99
+#: outside/templates/outside/page.html:26
+msgid "add pin"
+msgstr "Ajouter une section"
+
+#: outside/templates/hub/change_password.html:13
+msgid ""
+"Please enter the new password you want and confirm it, you will receive a "
+"notification mail."
+msgstr ""
+"Veuillez entrer le nouveau mot de passe que vous désirez et le confirmer, "
+"vous recevrez un email de notification."
+
+#: outside/templates/hub/change_password.html:23
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: outside/templates/hub/change_password.html:26
+#: outside/templates/hub/signup.html:45
+msgid "The password must have a good security"
+msgstr "Le mot de passe doit avoir une bonne sécurité"
+
+#: outside/templates/hub/change_password.html:34
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#: outside/templates/hub/change_password.html:37
+#: outside/templates/hub/signup.html:56
+msgid "Please confirm your password"
+msgstr "Veuillez confirmer votre mot de passe"
+
+#: outside/templates/hub/change_password.html:59
+msgid "Your password has been modified."
+msgstr "Votre mot de passe a été modifié"
+
+#: outside/templates/hub/confirm.html:24
+#, python-format
+msgid ""
+"\n"
+"\t\t\t\tYour account has been confirmed, you are now registered and you can "
+"login <a href=\"%(login_url)s\">here</a>\n"
+"\t\t\t\t"
+msgstr ""
+"\n"
+"Votre inscription est finalisée, vous pouvez vous connectez <a href=\"%(login_url)s\">ici</a>"
+
+#: outside/templates/hub/confirm.html:31
+#, python-format
+msgid ""
+"\n"
+"\t\t\t\tYour pass has been reinitialized, we have sended your new password "
+"by mail, to %(email)s\n"
+"\t\t\t\t"
+msgstr ""
+"\n"
+"Votre mot de passe a été réinitialisé, nous vous l'avons envoyé à cette adresse : %(email)s"
+
+#: outside/templates/hub/contacts.html:8
+msgid "Contact"
+msgstr "Contact"
+
+#: outside/templates/hub/contacts.html:32
+msgid "affiliation"
+msgstr "Affiliation"
+
+#: outside/templates/hub/contacts.html:37
+msgid "message"
+msgstr "Message"
+
+#: outside/templates/hub/contacts.html:43
+#: outside/templates/hub/contacts.html:44
+msgid "Recaptcha"
+msgstr ""
+
+#: outside/templates/hub/contacts.html:56
+#: outside/templates/hub/signup.html:101
+msgid "Thank you"
+msgstr "Merci"
+
+#: outside/templates/hub/contacts.html:58
+msgid "Your message is sent, you will receive a notification mail"
+msgstr ""
+"Votre message a été envoyé, vous allez recevoir un email de notification"
+
+#: outside/templates/hub/create_profile.html:13
+msgid "You don't have a profile, create one"
+msgstr "Vous n'avez pas de profile, veuillez en créer un"
+
+#: outside/templates/hub/create_profile.html:18
+#: outside/templates/hub/edit_profile.html:18
+msgid "firstname"
+msgstr "Prénom"
+
+#: outside/templates/hub/create_profile.html:21
+#: outside/templates/hub/edit_profile.html:21
+msgid "lastname"
+msgstr "Nom"
+
+#: outside/templates/hub/create_profile.html:57
+msgid "Create"
+msgstr "Créer"
+
+#: outside/templates/hub/create_profile.html:65
+#, fuzzy
+msgid "Your profile is created"
+msgstr "Mon compte"
+
+#: outside/templates/hub/edit_profile.html:13
+msgid "You can modify your information"
+msgstr "Vous pouvez modifier vos coordonnées"
+
+#: outside/templates/hub/edit_profile.html:47
+msgid "recaptcha"
+msgstr ""
+
+#: outside/templates/hub/edit_profile.html:48
+#, fuzzy
+msgid "recaptcha description"
+msgstr ""
+"Les informations recueillies font l'objet d'un traitement informatique "
+"destiné à la gestion du portail BeQuali. Conformément à la loi 'Informatique "
+"et Libertés' du 6 janvier 1978 modifiée en 2004, vous bénéficiez d'un droit "
+"d'accès et de rectification aux informations qui vous concernent. "
+
+#: outside/templates/hub/edit_profile.html:58
+msgid "Modifier"
+msgstr "Modifier"
+
+#: outside/templates/hub/edit_profile.html:66
+msgid "Your modifications are saved"
+msgstr "Vos modifications ont été enregistrées"
+
+#: outside/templates/hub/login.html:18 outside/templates/outside/login.html:21
+msgid "login required"
+msgstr "Authentification requise"
+
+#: outside/templates/hub/middle.html:166
+#: outside/templates/outside/middle.html:87
 msgid "collapse menu"
-msgstr "fermer le menu"
+msgstr ""
 
-#: outside/templates/outside/middle.html:91
+#: outside/templates/hub/middle.html:167
+#: outside/templates/outside/middle.html:88
 msgid "expand menu"
-msgstr "ouvrir le menu"
+msgstr ""
 
-#: outside/templates/outside/middle.html:132
+#: outside/templates/hub/middle.html:278
+#: outside/templates/outside/middle.html:204
 msgid "discard"
 msgstr "annuler"
 
-#: outside/templates/outside/middle.html:156
-#: outside/templates/outside/middle.html:174
-#: outside/templates/outside/middle.html:219
-msgid "cancel"
-msgstr "annuler"
-
-#: outside/templates/outside/middle.html:166
+#: outside/templates/hub/middle.html:312
+#: outside/templates/outside/middle.html:238
 msgid "add section into"
-msgstr "ajouter la section dans"
+msgstr "Ajouter une section"
 
-#: outside/templates/outside/middle.html:169
+#: outside/templates/hub/middle.html:315
+#: outside/templates/outside/middle.html:241
 msgid "add section rules"
-msgstr "ajouter des règles à la section"
+msgstr ""
 
-#: outside/templates/outside/page.html:35
-#: outside/templates/outside/page.html:48
-msgid "edit content"
-msgstr "éditer le contenu"
+#: outside/templates/hub/middle.html:332 outside/templates/hub/middle.html:368
+#: outside/templates/outside/middle.html:258
+#: outside/templates/outside/middle.html:292
+msgid "edit section"
+msgstr ""
 
-#: outside/templates/outside/page.html:36
-msgid "edit slug"
-msgstr "editer le slug"
+#: outside/templates/hub/reinitialize_passwd.html:13
+msgid ""
+"Please fill this form to reinitialize your password, you will receive your "
+"new password by mail"
+msgstr ""
+"Veuillez remplir ce formulaire pour réinitialiser votre mot de passe, vous "
+"recevrez votre nouveau mot de passe par email"
 
-#: outside/templates/outside/page.html:55
-msgid "add pin"
-msgstr "ajouter un pin"
+#: outside/templates/hub/reinitialize_passwd.html:48
+msgid "reinitialize"
+msgstr "réinitialiser"
 
-# ###########################################################
+#: outside/templates/hub/reinitialize_passwd.html:56
+msgid ""
+"We sended you an email with a confirm link to finalize your password "
+"reinilization."
+msgstr ""
+"Nous vous avons envoyé par mail un lien de confirmation pour la "
+"réinitialisation de votre mot de passe, vous recevrez ensuite votre nouveau "
+"mot de passe par email, vous pourrez le modifier dans la rubrique \"Mon "
+"compte\" du site."
+
+#: outside/templates/hub/signup.html:13
+msgid "Registration"
+msgstr "Inscription"
+
+#: outside/templates/hub/signup.html:15
+msgid ""
+"The registration will able you to ask the bequali team for researches "
+"access. Please fill up the form and send it, you will receive a mail with a "
+"link to confirm your subscription."
+msgstr ""
+"En vous inscrivant vous bénéficierez d'un compte qui vous permettra ensuite "
+"de demander l'accès aux enquêtes.Pour créer un compte, veuillez remplir les "
+"champs ci-dessous. Vous recevrez un email pour confirmer votre inscription."
+
+#: outside/templates/hub/signup.html:31
+msgid "You will login to the site with this username"
+msgstr ""
+"Vous vous connecterez sur le site avec cet identifiant, les accents et "
+"caractères spéciaux sont interdits"
+
+#: outside/templates/hub/signup.html:54
+msgid "password confirmation"
+msgstr "Confirmation du mot de passe"
+
+#: outside/templates/hub/signup.html:72
+msgid "describe yourself"
+msgstr "Décrivez-vous professionnellement, votre poste, où vous travaillez..."
+
+#: outside/templates/hub/signup.html:85
+msgid "legal notices"
+msgstr "Mentions légales"
+
+#: outside/templates/hub/signup.html:90
+msgid "I have read and accepted"
+msgstr "J'ai lu et j'accepte"
+
+#: outside/templates/hub/signup.html:94
+msgid "register"
+msgstr "inscription"
+
+#: outside/templates/hub/signup.html:103
+msgid ""
+"A confirmation mail will be sent to your mailbox in order to finalize your "
+"subscription"
+msgstr ""
+"Vous allez recevoir un email de confirmation pour finaliser votre inscription"
+
+#: outside/templates/outside/enquete.html:33
+msgid "enquete sur l'enquete"
+msgstr ""
+
+#: outside/templates/outside/login.html:24
+msgid "login page"
+msgstr "Authentification"
+
+#: outside/templates/outside/login.html:37
+#, python-format
+msgid ""
+"\n"
+"\t\t\tPlease fill this form to connect, <a href=\"%(signup_url)s\"><u>click "
+"here</u></a> if you are not registered\n"
+"\t\t\t "
+msgstr ""
+"\n"
+"\t\t\tPour demander l'accès à une enquête vous devez être incrit sur le "
+"site, vous pouvez vous  <a href=\"%(signup_url)s\"><u>inscrire ici</u></"
+"a><br/> Si vous disposez déjà d'un compte veuillez entrer vos login et mot "
+"de passe ci-dessous.<br/>Nous vous rappelons que ce site est réservé à la "
+"communauté académique pour un usage strictement scientifique.<br/>Une fois "
+"authentifié, vous pouvez demander à consulter les documents de l'enquête en "
+"remplissant le formulaire de demande d'accès.<br/>Vous devrez renouveller la "
+"procédure pour chaque enquête que vous souhaiterez consulter.\t\t\t "
+
+#: outside/templates/outside/login.html:67
+msgid "Password forgotten?"
+msgstr "Mot de passe oublié ?"
+
+#: outside/templates/outside/middle.html:20
+msgid "english"
+msgstr "Anglais"
+
+#: outside/templates/outside/middle.html:23
+msgid "french"
+msgstr "Français"
+
+#: reanalyseapp/models.py:208
+msgid "Bequali : Research request granted"
+msgstr "beQuali : Requête d'accès acceptée"
+
 #: templates/bq_base.html:10
-#, fuzzy
 msgid "a project from"
-msgstr "un projet de"
+msgstr "Projet de recherche"
 
-# ###########################################################
 #. Translators: Main top menu choices
 #: templates/bq_base.html:17
 msgid "Project"
@@ -224,7 +1322,7 @@ msgstr "Projet"
 
 #: templates/bq_base.html:20
 msgid "Methodology"
-msgstr "Méthode"
+msgstr "Méthodologie"
 
 #: templates/bq_base.html:23
 msgid "Access"
@@ -232,16 +1330,15 @@ msgstr "Accès"
 
 #: templates/bq_base.html:26
 msgid "The Studies"
-msgstr "Les Enquêtes"
+msgstr ""
 
 #: templates/bq_base.html:30
 msgid "Admin"
-msgstr "Admin"
+msgstr "Administration"
 
-# ###########################################################
 #: templates/bq_e_base.html:71
 msgid "Back to the studies list"
-msgstr "Retour aux enquêtes"
+msgstr "Retour à la liste des enquêtes"
 
 #: templates/bq_e_base.html:81
 msgid "Overview"
@@ -249,7 +1346,7 @@ msgstr "Vue d'ensemble"
 
 #: templates/bq_e_base.html:85 templates/bq_e_base.html.py:87
 msgid "On the Research"
-msgstr "Enquête sur Enquête"
+msgstr "Enquête sur l'enquête"
 
 #: templates/bq_e_base.html:91 templates/bq_e_base.html.py:140
 msgid "Documents"
@@ -266,59 +1363,64 @@ msgstr "Visualisations"
 #. Translators: Left menu link to register page
 #: templates/bq_e_base.html:149
 msgid "To consult the entire study, please consult the page"
-msgstr "Pour accéder à l'intégralité de l'enquête: "
+msgstr ""
 
-# ###########################################################
 #. Translators: back to home when looking at studies list
 #: templates/bq_e_browse.html:23
-#, fuzzy
 msgid "Back"
 msgstr "Retour"
 
-#: templates/bq_e_browse.html:81
+#. Translators: popup question when clicking delete study
+#: templates/bq_e_browse.html:36
+msgid ""
+"You are about to delete this study.\\nAre you sure you want to do this ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette enquête?"
+
+#: templates/bq_e_browse.html:89
 msgid "There isn't any study in this site. Please come back later."
 msgstr ""
 
 #. Translators: ESE final report download
 #: templates/bq_e_ese.html:73
 msgid "The final report can be downloaded"
-msgstr "Le rapport final peut être téléchargé"
+msgstr "Le rapport final est disponible pour le téléchargement"
 
 #. Translators: Documents browse when null
 #: templates/bq_ed_browse.html:102
 msgid "There is no linked documents in this study"
-msgstr "Il n'y a pas de documents liés à cette étude"
+msgstr "Il n'y a pas de documents disponibles pour cette enquête.D"
 
 #. Translators: edShow: on top toggle text for streamtimeline viz used for navigation
-#: templates/bq_ed_show.html:131
-msgid "exploration using viz"
-msgstr "explorer avec viz"
+#: templates/bq_ed_show.html:135
+msgid ""
+"exploration using viz (please refresh page if you change browser zoom or "
+"resize)"
+msgstr "Utiliser les outils de visualisation"
 
 #. Translators: Speakers browse when null
 #: templates/bq_es_browse.html:126
 msgid "There is no linked speakers in this study"
-msgstr "Il n'y a pas de conférenciers lié à cette étude"
+msgstr "Il n'y a pas d'intervenant enregistré pour cetet enquête."
 
 #. Translators: Visualization browse when null
-#: templates/bq_ev_browse.html:96
+#: templates/bq_ev_browse.html:97
 msgid "There isn\\'t any Visualisation in this study"
-msgstr "Il n'y a aucune visualisation dans cette étude"
+msgstr "Il n'y a pas de visualisation disponiblepour cette enquête"
 
 #. Translators: Login page title
 #: templates/bq_home.html:45
 msgid "If you already have an account, please login"
-msgstr "Si vous avez déjà un compte, veuillez vous connecter"
+msgstr "Si vous être déjà inscrit, vous pouvez vous authentifier"
 
 #. Translators: Login form button
 #: templates/bq_home.html:53
 msgid "Login"
-msgstr "Connexion"
+msgstr "Loginr"
 
 #. Translators: Below login form, link to register form page
 #: templates/bq_home.html:70
-#, fuzzy
 msgid "To ask for an account, please go to the page"
-msgstr "Pour accéder à l'intégralité de l'enquête: "
+msgstr "Pour s'enregistrer, cliquez ici"
 
 #. Translators: Access page: ask for explore status
 #: templates/bq_home.html:79
@@ -328,7 +1430,7 @@ msgstr ""
 #. Translators: Access page: ask for explore status: Study
 #: templates/bq_home.html:86
 msgid "Study:"
-msgstr "Étude"
+msgstr ""
 
 #. Translators: Access page: request explore status sent
 #: templates/bq_home.html:101
@@ -343,399 +1445,166 @@ msgstr ""
 #. Translators: Access page: Current Status title
 #: templates/bq_home.html:107
 msgid "Current Status"
-msgstr "Status actuel"
+msgstr ""
 
 #: templates/bq_home.html:108
 msgid ""
 "You can consult studies on studies. To explore a whole study site, please go "
 "to the study you wish to consult."
-msgstr "Vous pouvez consulter les enquêtes sur enquêtes. Pour explorer complètement une étude, veuillez aller"
+msgstr ""
 
 #. Translators: register form page title: ask for browse(discover) status
 #: templates/bq_home.html:115
 msgid "You can ask for a Discover status"
-msgstr "Vous pouvez demander un status de découverte "
+msgstr ""
 
 #. Translators: Access page: request browse(discover) status sent
 #: templates/bq_home.html:126
 msgid ""
 "Your request was sent ! You will soon receive information in your mailbox."
-msgstr "Votre requête a été envoyée ! Vous recevrez bientôt une réponse dans votre boite mail"
-
-msgid "Home Page"
-msgstr "Accueil"
-
-msgid "fill contact form"
-msgstr "Nous contacter"
-
-msgid "all fields compelled"
-msgstr "Nous contacter"
-
-msgid "back to home page"
-msgstr "revenir à l'accueil"
-
-
-msgid "message sent"
-msgstr "Votre message à bien été envoyé"
-
-msgid "status"
-msgstr "votre statut"
-
-msgid "I have read and accepted"
-msgstr "J'ai lu et j'accepte"
-
-msgid "legal notices"
-msgstr "conditions d'utilisation"
-
-msgid "send"
-msgstr "envoyer"
-
-msgid "affiliation institution"
-msgstr "votre établissement d'affiliation"
-
-msgid "university or institution"
-msgstr "université ou institution"
-
-
-msgid "procedure inscription"
-msgstr "Pour accéder au contenu de l'enquête veuillez remplir ce formulaire. Votre demande sera ensuite évaluée par l'équipe beQuali qui reviendra vers vous dès que possible pour la suite de votre accréditation. "
-
-msgid "legal notice description"
-msgstr "Les informations recueillies font l'objet d'un traitement informatique destiné à la gestion du portail BeQuali. Conformément à la loi &laquo; Informatique et Libertés &raquo; du 6 janvier 1978 modifiée en 2004, vous bénéficiez d'un droit d'accès et de rectification aux informations qui vous concernent." 
-
-#, fuzzy
-#~ msgid "You can explore the whole site"
-#~ msgstr ""
-#~ "EXPLORE - Vous pouvez consulter l'intégralité des enquêtes, mais pas "
-#~ "faire de viz"
-
-#~ msgid "ADMIN - You can consult, upload, make viz and phonecalls to god"
-#~ msgstr "ADMIN - Vous pouvez tout faire, c'est super"
-
-#, fuzzy
-#~ msgid "EXPLORE - You can explore whole study sites"
-#~ msgstr ""
-#~ "EXPLORE - Vous pouvez consulter l'intégralité des enquêtes, mais pas "
-#~ "faire de viz"
-
-#~ msgid "BROWSE - You can browse studies descriptions and studies on studies"
-#~ msgstr "BROWSE - Vous pouvez consulter les enquêtes sur enquêtes"
-
-#~ msgid "PUBLIC - You can browse the studies list"
-#~ msgstr "PUBLIC - Vous pouvez consulter la liste des enquêtes"
-
-#~ msgid "access"
-#~ msgstr "accès"
-
-#~ msgid "you are connected as"
-#~ msgstr "vous êtes connecté(e) en tant que "
-
-#~ msgid "Upload"
-#~ msgstr "Upload"
-
-#~ msgid "Search"
-#~ msgstr "Recherche"
-
-
-#
-#
-# hub/signup.html
-#
-#
-msgid "recaptcha"
-msgstr "captcha"
-
-
-msgid "recaptcha description"
-msgstr "Veuillez recopier le texte de l'image ci-dessous"
-
-
-msgid "fill signup form"
-msgstr "Inscription"
-
-
-msgid "A confirmation mail will be sent to your mailbox in order to finalize your subscription"
-msgstr "Vous allez recevoir un mail de confirmation pour finaliser votre inscription"
-
-msgid "Hello, you have a new signup request."
-msgstr "Bonjour, vous avez une demande d'inscription"
-
-msgid "Information"
-msgstr "Informations"
-
-msgid "Goodbye"
-msgstr "Aurevoir"
-
-msgid "Signup request"
-msgstr "Demande d'inscription"
-
-msgid "Bequali Team"
-msgstr "L'équipe Bequali"
-
-
-msgid "bequali contact request"
-msgstr "Demande de contact site bequali"
-
-
-
-#: outside/api.py:114 outside/api.py:121
-msgid "Hello, you have a new contact request."
-msgstr "Bonjour, vous avez une demande de contact sur le site bequali"
-
-#: outside/api.py:115 outside/api.py:122
-msgid "Contact information :"
-msgstr "Informations du contact :"
-
-
-
-#: outside/api.py:85
-msgid "Bequali : Message sent"
-msgstr "Bequali : message envoyé"
-
-#: outside/api.py:86 outside/api.py:92
-msgid "Hello, your message has been sent, we will respond as soon as possible."
 msgstr ""
-"Bonjour, votre message a été envoyé, nous vous répondrons dès que possible."
 
-#: outside/api.py:87 outside/api.py:93
-msgid "Message content :"
-msgstr "Contenu du message : "
+#~ msgid "^news/$"
+#~ msgstr "^actus/$"
 
+#~ msgid "^login/$"
+#~ msgstr "^connexion/$"
 
+#~ msgid "^logout/$"
+#~ msgstr "^Deconnexion/$"
 
+#~ msgid "^changePassword/$"
+#~ msgstr "^changerMdp/$"
 
+#, fuzzy
+#~ msgid "^reinitializePassword/$"
+#~ msgstr "réinitialiser"
 
-#
-#
-# hub/confirm.html outside/api.py
-#
-#
-msgid "Thank you, your email has been confirmed, we will consider your request for this survey."
-msgstr "Merci, votre email a été confirmé, nous allons étudier votre demande pour cette enquête."
+#, fuzzy
+#~ msgid "^contacts/$"
+#~ msgstr "Contact"
 
-msgid "Your email has already been confirmed."
-msgstr "Votre email a déjà été confirmé."
+#~ msgid "^accessRequest/$"
+#~ msgstr "^DemandeAcces/$"
 
-msgid "Bequali signup"
-msgstr "Bequali inscription"
+#~ msgid "^editProfile/$"
+#~ msgstr "^editionProfile/$"
 
-msgid "Please click on this link to confirm your signup email address"
-msgstr "Veuillez cliquer sur ce lien pour confirmer votre inscription sur le site Bequali"
+#~ msgid "^createProfile/$"
+#~ msgstr "^creationProfile/$"
 
-msgid "Hello"
-msgstr "Bonjour"
+#~ msgid "^legal-notice/$"
+#~ msgstr "^MentionsLegales/$"
 
+#~ msgid "^download/(?P<pin_slug>[a-z0-9-_]+)/$"
+#~ msgstr "^telecharger/(?P<pin_slug>[a-z0-9-_]+)/$"
 
-#
-#
-#
-#hub/contact.html
-#
-#
+#~ msgid "^passwordReset/$"
+#~ msgstr "^resetMdp/$"
 
-msgid "Thank you"
-msgstr "Merci"
+#, fuzzy
+#~ msgid "Your password has been reinitialized."
+#~ msgstr "Cet utilisateur a été désactivé"
 
-msgid "Your message is sent, you will receive a notification mail"
-msgstr "Votre message est envoyé, vous allez recevoir un email de notification"
+#~ msgid "Choose the research you want to ask for study"
+#~ msgstr "Choisissez l'enquête que vous voulez étudier"
 
+#~ msgid "Security of the password"
+#~ msgstr "Sécurité du mot de passe"
 
+#~ msgid "procedure inscription"
+#~ msgstr "Description"
 
-#
-#
-# enquiry.html
-#
-#
-msgid "Read the whole report (PDF)"
-msgstr "Lire le rapport de l'enquête sur l'enquête (PDF)"
+#~ msgid ""
+#~ "Hello, your message has been sent, we will respond as soon as possible."
+#~ msgstr ""
+#~ "Bonjour, votre message a bien été envoyé, vous recevrez une réponse au "
+#~ "plus vite."
 
-msgid "on"
-msgstr "le"
+#~ msgid "Message content :"
+#~ msgstr "Contenu de votre message : "
 
+#~ msgid "Goodbye"
+#~ msgstr "Au revoir"
 
+#~ msgid "Hello, you have a new contact request."
+#~ msgstr "Bonjour, Vous avez une nouvelle demande de contact."
 
-#
-#	SECTION B
-#	===
-#
-#	JSON metadata field tranlations
-#
-msgid "langdoc"
-msgstr "Langage documentation"
+#~ msgid "Contact information :"
+#~ msgstr "Contenu du message : "
 
-msgid "locationofunitsofobservation"
-msgstr "Niveau de comparatisme"
+#~ msgid "Hello, you have a new enquete request."
+#~ msgstr "Bonjour, vous avez une nouvelle demande d'inscription"
 
-msgid "abstract"
-msgstr "Résumé"
+#~ msgid "Hello"
+#~ msgstr "Bonjour"
 
-msgid "general"
-msgstr "Général"
+#~ msgid "Please click on this link to confirm your signup email address:"
+#~ msgstr "Veuillez cliquer sur ce lien pour confirmer votre adresse email : "
 
-msgid "affiliation"
-msgstr "Affiliation"
+#~ msgid "Please click on this link to confirm your signup email address"
+#~ msgstr "Veuillez cliquer sur ce lien pour confirmer votre adresse email : "
 
-msgid "keywords"
-msgstr "Mots clefs"
+#~ msgid "Hello, you have a new signup request."
+#~ msgstr "Bonjour, vous avez une nouvelle demande d'inscription"
 
-msgid "copyright"
-msgstr "copyright"
+#~ msgid "Information"
+#~ msgstr "Informations"
 
-msgid "discipline"
-msgstr "Discipline"
+#~ msgid "Your email has already been confirmed."
+#~ msgstr "Votre email a déjà ete confirmé."
 
-msgid "methodofdatacollection"
-msgstr "Technique de collection"
+#~ msgid ""
+#~ "Thank you, your email has been confirmed, we will consider your request "
+#~ "for this survey."
+#~ msgstr "Merci, votre demande d'accès a bien été prise en compte."
 
-msgid "titl"
-msgstr "Nom"
+#~ msgid ""
+#~ "\n"
+#~ "\t\t\t<p>Veuillez remplir ce formulaire pour vous connecter, <a href="
+#~ "\"%(signup_url)s\">cliquez ici</a> si vous n'êtes pas inscrit</p>\n"
+#~ "\t\t\t "
+#~ msgstr ""
+#~ "\n"
+#~ "\t\t\t<p>Please fill this form to connect, <a href=\"%(signup_url)s"
+#~ "\">click here</a> if you are not registered</p>\n"
+#~ "\t\t\t "
 
-msgid "contact"
-msgstr "Contact"
+#~ msgid "Hello, you have a new access request."
+#~ msgstr "Bonjour, vous avez une nouvelle demande d'accès"
 
-msgid "actor"
-msgstr "Acteur"
+#~ msgid "Research id"
+#~ msgstr "id enquête"
 
-msgid "actors"
-msgstr "Acteurs"
+#~ msgid "Sign up process"
+#~ msgstr "Procédure d'inscription"
 
-msgid "targetgroups"
-msgstr "Groupes de population ciblés"
+#~ msgid "Choose a research"
+#~ msgstr "Choisissez l'enquête que vous voulez consulter"
 
-msgid "collsitu"
-msgstr "Durée des observations"
+#~ msgid "Send"
+#~ msgstr "Envoyé"
 
-msgid "accessconditions"
-msgstr "Conditions d'accès"
+#~ msgid "Thank you!"
+#~ msgstr "Merci !"
 
-msgid "relpubl"
-msgstr "Publications"
+#~ msgid "Add research on th research"
+#~ msgstr "Ajouter l'enquête sur l'enquête"
 
-msgid "colldate"
-msgstr "Dates de récolte des données"
+#~ msgid "Researches"
+#~ msgstr "Enquêtes"
 
-msgid "anonymization"
-msgstr "Anonymisation"
+#~ msgid "List of the researches"
+#~ msgstr "Liste des enquêtes"
 
-msgid "corpus"
-msgstr "Corpus"
+#~ msgid "Research n."
+#~ msgstr "Enquête n."
 
-msgid "authenty"
-msgstr "Auteur(s)"
+#~ msgid "News"
+#~ msgstr "Actualités"
 
-msgid "sampprocedure"
-msgstr "Echantillonnage "
+#~ msgid "Sign up"
+#~ msgstr "S'inscrire"
 
-msgid "distrbtr"
-msgstr "Distributeur"
-
-
-
-msgid "topicclassification"
-msgstr "Classification"
-
-msgid "nation"
-msgstr "Pays"
-
-msgid "timedimension"
-msgstr "Périodicité"
-
-msgid "modedatacollection"
-msgstr "Accès aux observations"
-
-msgid "numberofunits"
-msgstr "Nombre d'observations"
-
-msgid "studydates"
-msgstr "Dates de l'enquête"
-
-msgid "timeperiodcovered"
-msgstr "Période couverte"
-
-msgid "spatialunits"
-msgstr "Unités spatialisées"
-
-msgid "datakind"
-msgstr "Types de documents"
-
-msgid "weighting"
-msgstr "Segmentation"
-
-msgid "edition"
-msgstr "Edition"
-
-msgid "universe"
-msgstr "Univers"
-
-msgid "numberoffiles"
-msgstr "Nombre de documents"
-
-msgid "locarch"
-msgstr "Localisation archives"
-
-msgid "analysis"
-msgstr "Analyse"
-
-msgid "method"
-msgstr "Méthode"
-
-msgid "grantno"
-msgstr "Bourse"
-
-msgid "idno"
-msgstr "DDI Id"
-
-msgid "observunits"
-msgstr "Unités d'observation"
-
-msgid "langdata"
-msgstr "Language données"
-
-msgid "editor"
-msgstr "Edition"
-
-msgid "geogcover"
-msgstr "Couverture géographique"
-
-msgid "transcription"
-msgstr "Transcription"
-
-msgid "firstedition"
-msgstr "Première version"
-
-msgid "fundag"
-msgstr "Agence de financement"
-
-msgid "latestedition"
-msgstr "Dernière version"
-
-msgid "software"
-msgstr "Logiciel"
-
-msgid "interview done on the"
-msgstr "entretien réalisé le"
-
-msgid "interview done with"
-msgstr "entretien réalisé avec"
-
-msgid "news"
-msgstr "actualités"
-
-msgid "contacts"
-msgstr "contact"
-
-msgid "back to enquetes list"
-msgstr "retour à la liste des enquêtes"
-
-msgid "email specification"
-msgstr "cette addresse sera votre identifiant utilisateur une fois inscrit"
-
-
-msgid "login required"
-msgstr "Authentification requise"
-
-msgid "message specification"
-msgstr "Dans ce message veuillez nous décrire votre <i>projet de recherche</i> afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/>Veuillez notamment préciser dans quel cadre vous comptez réutiliser cette enquête et quel type de traitement vous avez prévu de mener sur les documents de l'enquête."
-
-msgid "password specification"
-msgstr "votre mot de passe doit contenir au moins 8 charactères"
+#~ msgid "The researches"
+#~ msgstr "Les enquêtes"

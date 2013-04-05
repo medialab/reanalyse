@@ -27,7 +27,7 @@
 						{% else %}
 						
 						<li style="float:right;">
-							<a href="#login" data-toggle="modal" data-target="#login-modal">{% trans "login" %}</a>
+							<a href="{% url outside_login %}" data-toggle="" data-target="#login-modal">{% trans "connection" %}</a>
 						</li>
 						
 						{% endif %}
@@ -43,6 +43,12 @@
 						
 						{% endcomment %}
 
+						
+						
+						
+						
+						
+						
 						{% if has_edit_mode and user.is_authenticated %}
 							{% if edit_mode %}
 								<li style="float:right" class="selected">
@@ -69,12 +75,20 @@
 										{% comment %}
 						<!-- list of page according to desired language -->
 						{% for p in pages %}
-						<li{% if p.slug in tags %} class="selected"{% endif %}>
+						<li {% if p.slug in tags %} class="selected"{% endif %}>
 							<a href="{% url outside_page p.slug %}">{{ p.title }}</a>
 						</li>
 						{% endfor %}
 						
 						{% endcomment %}
+						
+						{% if user.is_authenticated %}
+							
+						<li style="float:right">
+							<a href="{% url outside_edit_profile %}" {% if 'edit_profile' in tags %} class="selected"{% endif %} title="{% trans "Your profile "%}">{% trans "Your profile "%}</a>
+						</li>
+					
+						{% endif %}
 						
 
 					</ul>
@@ -258,7 +272,7 @@
 			</div>
 			<div class="modal-footer">
 				<input type="button" class="bad" value="{% trans "discard" %}" data-dismiss="modal"/>
-				<input type="submit" value="{% trans "login"%}"/>
+				<input type="submit" value="{% trans "connection"%}"/>
 			</div>
 		</form>
 	</div>
@@ -371,7 +385,10 @@
 		"pin_upload":"{% url glue_api_pin_upload %}",
 		"outside_access_request":"{% url outside_api_access_request %}",
 		"add_subscriber":"{% url outside_api_subscribers %}",
-		"change_password":"{% url outside_api_change_password %}"
+		"contact_request":"{% url outside_api_contacts %}",
+		"change_password":"{% url outside_api_change_password %}",
+		"captcha":"{% url outside_captcha %}",
+		"reinitialize_password":"{% url outside_api_reinitialize_password %}",
 	};
 
 {% endblock %}

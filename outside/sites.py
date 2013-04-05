@@ -1,12 +1,8 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
-
-# context variables
-
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # context variables
+
 
 
 OUTSIDE_SITES_AVAILABLE = [

@@ -15,46 +15,46 @@
 		<div class="subscription-wrapper">
 			
 			
-			<label for="id_edit_profile_first_name">{% trans "firstname"|capfirst %}</label>
-			{{ edit_profile_form.first_name }}
+			<label for="id_create_profile_first_name">{% trans "firstname"|capfirst %}</label>
+			{{ create_profile_form.first_name }}
 			
-			<label for="id_edit_profile_last_name">{% trans "lastname"|capfirst %}</label>
-			{{ edit_profile_form.last_name }}
+			<label for="id_create_profile_last_name">{% trans "lastname"|capfirst %}</label>
+			{{ create_profile_form.last_name }}
 
 			
 			
 						
 			
-			<label for="id_edit_profile_email">{% trans "email"|capfirst %}</label>
-			<p>{{ edit_profile_form.email }}</p>
+			<label for="id_create_profile_email">{% trans "email"|capfirst %}</label>
+			<p>{{ create_profile_form.email }}</p>
 			
-			<label for="id_edit_profile_status">{% trans "status"|capfirst %}</label>
-			<p>{{ edit_profile_form.status }}</p>
+			<label for="id_create_profile_status">{% trans "status"|capfirst %}</label>
+			<p>{{ create_profile_form.status }}</p>
 			
-			<label for="id_edit_profile_description">{% trans "description"|capfirst %}</label>
-			<p>{{ edit_profile_form.description }}</p>
+			<label for="id_create_profile_description">{% trans "description"|capfirst %}</label>
+			<p>{{ create_profile_form.description }}</p>
 
-			<label for="id_edit_profile_affiliation">{% trans "affiliation institution"|capfirst %}
+			<label for="id_create_profile_affiliation">{% trans "affiliation institution"|capfirst %}
 				<div class="specification">{% trans "university or institution"|capfirst %}</div>
 			</label>
-			{{ edit_profile_form.affiliation }}
+			{{ create_profile_form.affiliation }}
 			
 
 			
 			
 			
-			<label for="recaptcha_response_field">{% trans "recaptcha"|capfirst %}
-				<div class="specification">{% trans "recaptcha description"|capfirst %}</div>
+			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
 			</label>
-			{{ edit_profile_form.captcha }}
+			{{ create_profile_form.captcha }}
 			
 			
-			{{ edit_profile_form.action }}
+			{{ create_profile_form.action }}
 
 		
 			
 
-			<input type="button" id="edit-subscriber" value="{% trans "Create" %}"/>
+			<input type="button" id="add-subscriber" value="{% trans "Create" %}"/>
 		</div>
 	
 	</div>
@@ -62,7 +62,7 @@
 	<div id="subscription-accepted" style="display:none">
 		
 
-		<h2>{% trans "Your modifications are saved" %}</h2>
+		<h2>{% trans "Your profile is created" %}</h2>
 
 		<p>
 			<a href="{% url outside_index %}">{% trans "back to home page"%}</a>

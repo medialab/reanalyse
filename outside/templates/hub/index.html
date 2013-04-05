@@ -6,7 +6,18 @@
 	<!-- static url: {{ STATIC_URL }} -->
 
 {% block page_left %}
-
+	<script>
+		{% if messages %}
+			$(document).ready(function() {
+		    {% for message in messages %}
+				oo.toast( "{{ message|safe }}", 
+					"",
+					{stayTime:5000, cleanup: true}
+					)
+		    {% endfor %}
+			})
+		{% endif %}
+	</script>
 	{{ block.super }}
 	{% for p in pins %}
 	<div class="section expand alpha">

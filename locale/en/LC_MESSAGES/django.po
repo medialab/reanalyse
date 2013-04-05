@@ -3,231 +3,881 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-02 18:43+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-19 11:47+0100\n"
+"PO-Revision-Date: 2013-03-19 10:43+0100\n"
+"Last-Translator: Alexandre <alexandreaazzouz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
 
-#: glue/api.py:68
+#: glue/api.py:71 glue/api.py:176
 msgid "selected page does not exists"
 msgstr ""
 
-#: glue/api.py:80
+#: glue/api.py:83 outside/api.py:117
 #, python-format
 msgid "selected pin does not exists. Exception: %s"
 msgstr ""
 
-#: glue/forms.py:6 outside/templates/outside/login.html:30
-#: outside/templates/outside/middle.html:12
-#: outside/templates/outside/middle.html:124
-#: outside/templates/outside/middle.html:133
+#: glue/forms.py:6 outside/templates/enquete/middle.html:30
+#: outside/templates/hub/login.html:33 outside/templates/hub/middle.html:30
+#: outside/templates/hub/middle.html:270 outside/templates/hub/middle.html:279
+#: outside/templates/outside/login.html:43
+#: outside/templates/outside/middle.html:156
+#: outside/templates/outside/middle.html:196
+#: outside/templates/outside/middle.html:205
+#, fuzzy
 msgid "login"
-msgstr ""
+msgstr "Identifiant"
 
-#: glue/forms.py:7
+#: glue/forms.py:7 outside/templates/hub/signup.html:25
+#, fuzzy
 msgid "password"
-msgstr ""
+msgstr "Mot de passe"
 
-#: glue/forms.py:11 glue/forms.py:16
+#: glue/forms.py:11 glue/forms.py:16 outside/forms.py:10
+#, fuzzy
 msgid "french title"
-msgstr ""
+msgstr "Titre en français"
 
-#: glue/forms.py:12 glue/forms.py:17
+#: glue/forms.py:12 glue/forms.py:17 outside/forms.py:11
+#, fuzzy
 msgid "english title"
-msgstr ""
+msgstr "Titre en anglais"
 
 #: glue/forms.py:23
+#, fuzzy
 msgid "title"
-msgstr ""
+msgstr "Titre"
 
 #: glue/forms.py:24
+#, fuzzy
 msgid "abstract"
-msgstr ""
+msgstr "Résumé"
 
 #: glue/forms.py:25
+#, fuzzy
 msgid "content"
+msgstr "Contenu"
+
+#: outside/api.py:295 outside/api.py:371
+#, fuzzy
+msgid "Bequali : Message sent"
+msgstr "beQuali : message envoyé"
+
+#: outside/api.py:296 outside/api.py:372
+msgid "Hello, your message has been sent, we will respond as soon as possible."
+msgstr ""
+"Bonjour, votre message a bien été envoyé, vous recevrez une réponse au plus "
+"vite."
+
+#: outside/api.py:297 outside/api.py:373
+#, fuzzy
+msgid "Message content :"
+msgstr "Contenu de votre message : "
+
+#: outside/api.py:299 outside/api.py:326 outside/api.py:375 outside/api.py:401
+#: outside/api.py:455 outside/api.py:572 outside/api.py:581
+#: outside/views.py:494
+msgid "Goodbye"
+msgstr "Au revoir"
+
+#: outside/api.py:321 outside/api.py:396
+#, fuzzy
+msgid "bequali contact request"
+msgstr "beQuali demande de contact"
+
+#: outside/api.py:323 outside/api.py:398
+msgid "Hello, you have a new contact request."
+msgstr "Bonjour, Vous avez une nouvelle demande de contact."
+
+#: outside/api.py:324 outside/api.py:399 outside/api.py:453
+#, fuzzy
+msgid "Contact information :"
+msgstr "Contenu du message : "
+
+#: outside/api.py:450
+#, fuzzy
+msgid "bequali enquete request"
+msgstr "beQuali demande de contact"
+
+#: outside/api.py:452
+#, fuzzy
+msgid "Hello, you have a new enquete request."
+msgstr "Bonjour, vous avez une nouvelle demande d'inscription"
+
+#: outside/api.py:525
+msgid "This email is already used"
+msgstr "Cet email est déjà utilisé"
+
+#: outside/api.py:565
+#, fuzzy
+msgid "Bequali signup"
+msgstr "beQuali inscription"
+
+#: outside/api.py:565
+#, fuzzy
+msgid "Bequali Team"
+msgstr "équipe beQuali"
+
+#: outside/api.py:568 outside/api.py:577
+msgid "Hello"
+msgstr "Bonjour"
+
+#: outside/api.py:569
+msgid "Please click on this link to confirm your signup email address:"
+msgstr "Veuillez cliquer sur ce lien pour confirmer votre adresse email : "
+
+#: outside/api.py:578
+msgid "Please click on this link to confirm your signup email address"
+msgstr "Veuillez cliquer sur ce lien pour confirmer votre adresse email : "
+
+#: outside/forms.py:12
+msgid "enquete id"
 msgstr ""
 
-#: outside/views.py:69
+#: outside/forms.py:56
+#, fuzzy
+msgid "username"
+msgstr "Nom d'utilisateur"
+
+#: outside/views.py:149
+#, python-format
+msgid ""
+"You don't have access to this document, please ask for access <a href='%s'> "
+"here</a> to ask for permission."
+msgstr "Vous n'avez pas accès à ce document, veuillez demander la permission <a href='%s'> "
+"ici</a>."
+
+#: outside/views.py:397
+#, fuzzy
 msgid "user has been disabled"
-msgstr ""
+msgstr "Cet utilisateur a été désactivé"
 
-#: outside/views.py:71 outside/views.py:74
+#: outside/views.py:399 outside/views.py:402
+#, fuzzy
 msgid "invalid credentials"
-msgstr ""
+msgstr "Identifiants invalides"
 
-#: outside/views.py:156
+#: outside/views.py:444
+#, fuzzy
+msgid "You already have access to this research."
+msgstr "Vous avez déjà accés à cete enquête"
+
+#: outside/views.py:446
+#, fuzzy
+msgid ""
+"You already asked for this research, you will be notified when your access "
+"is granted."
+msgstr ""
+"Vous avez déjà demandé l'accès à cette enquête. Vous recevrez bientôt une "
+"confirmation de votre accès."
+
+#: outside/views.py:489
+msgid "Signup request"
+msgstr "Demande d'inscription"
+
+#: outside/views.py:491
+msgid "Hello, you have a new signup request."
+msgstr "Bonjour, vous avez une nouvelle demande d'inscription"
+
+#: outside/views.py:492
+msgid "Information"
+msgstr "Informations"
+
+#: outside/views.py:614
 msgid "language not found"
+msgstr "Langue non disponible"
+
+#: outside/templates/enquete/access_form.html:31
+#, fuzzy
+msgid "procedure inscription"
+msgstr "Description"
+
+#: outside/templates/enquete/access_form.html:36
+msgid "Research project"
+msgstr "Projet de recherche"
+
+#: outside/templates/enquete/access_form.html:37
+msgid "message specification"
 msgstr ""
 
-#: outside/templates/outside/enquete.html:26
+#: outside/templates/enquete/access_form.html:41
+msgid "Survey"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:42
+msgid "Choose the survey you want to ask for study"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:49
+#: outside/templates/hub/contacts.html:20 outside/templates/hub/signup.html:15
+#, fuzzy
+msgid "first name"
+msgstr "Prénom"
+
+#: outside/templates/enquete/access_form.html:52
+#: outside/templates/hub/contacts.html:23 outside/templates/hub/signup.html:18
+#, fuzzy
+msgid "last name"
+msgstr "Nom"
+
+#: outside/templates/enquete/access_form.html:55
+#: outside/templates/hub/contacts.html:26
+#: outside/templates/hub/edit_profile.html:26
+#: outside/templates/hub/signup.html:22
+msgid "email"
+msgstr "email"
+
+#: outside/templates/enquete/access_form.html:56
+msgid "email specification"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:61
+#: outside/templates/hub/contacts.html:29
+#: outside/templates/hub/edit_profile.html:29
+#: outside/templates/hub/signup.html:32
+#, fuzzy
+msgid "status"
+msgstr "Statut"
+
+#: outside/templates/enquete/access_form.html:66
+#: outside/templates/hub/edit_profile.html:35
+#: outside/templates/hub/signup.html:35
+#, fuzzy
+msgid "affiliation institution"
+msgstr "Établissement d'affiliation"
+
+#: outside/templates/enquete/access_form.html:67
+#: outside/templates/hub/contacts.html:35
+#: outside/templates/hub/edit_profile.html:36
+#: outside/templates/hub/signup.html:36
+msgid "university or institution"
+msgstr "université ou institution"
+
+#: outside/templates/enquete/access_form.html:73
+msgid "Captcha"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:74
+#: outside/templates/hub/contacts.html:45
+#: outside/templates/hub/contacts.html:46
+msgid "Recaptcha"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:79
+#, fuzzy
+msgid "accepted terms"
+msgstr "J'ai lu et j'accepte"
+
+#: outside/templates/enquete/access_form.html:80
+#: outside/templates/hub/signup.html:54
+#, fuzzy
+msgid "legal notice description"
+msgstr "Mentions légales"
+
+#: outside/templates/enquete/access_form.html:89
+#: outside/templates/hub/change_password.html:23
+#: outside/templates/hub/contacts.html:52
+msgid "send"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:95
+#: outside/templates/hub/change_password.html:29
+msgid "Merci !"
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:97
+#: outside/templates/hub/change_password.html:31
+msgid ""
+"Your request has been sent, you will receive a mail when you are granted."
+msgstr ""
+
+#: outside/templates/enquete/access_form.html:100
+#: outside/templates/hub/change_password.html:34
+#: outside/templates/hub/contacts.html:63
+#: outside/templates/hub/edit_profile.html:66
+#: outside/templates/hub/signup.html:72
+#, fuzzy
+msgid "back to home page"
+msgstr "retour à lapage d'accueil"
+
+#: outside/templates/enquete/document.html:55
+#: outside/templates/enquete/enquiry.html:43
+msgid "Lire le rapport de l'enquête sur l'enquête (PDF)"
+msgstr "Read the whole report Reasearch on the research (PDF)"
+
+#: outside/templates/enquete/document.html:80
+#: outside/templates/enquete/enquete.html:80
+#: outside/templates/enquete/enquete.html:164
+#: outside/templates/enquete/enquiry.html:54
+#: outside/templates/enquete/enquiry.html:84
+#: outside/templates/enquete/enquiry.html:113
+#: outside/templates/enquete/metadata.html:38
+#: outside/templates/enquete/middle.html:160
+#: outside/templates/enquete/middle.html:176
+#: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:160
+#: outside/templates/hub/middle.html:178 outside/templates/hub/middle.html:190
+#: outside/templates/outside/enquete.html:43
+#: outside/templates/outside/enquete.html:117
+#: outside/templates/outside/middle.html:81
+#: outside/templates/outside/middle.html:99
+#: outside/templates/outside/middle.html:110
+#: outside/templates/outside/page.html:26
+#, fuzzy
+msgid "edit mode"
+msgstr "Édition"
+
+#: outside/templates/enquete/document.html:80
+#: outside/templates/enquete/enquete.html:164
+#: outside/templates/enquete/enquiry.html:54
+#: outside/templates/enquete/enquiry.html:84
+#: outside/templates/enquete/middle.html:176
+#: outside/templates/hub/middle.html:190
+#: outside/templates/outside/enquete.html:117
+#: outside/templates/outside/middle.html:110
+msgid "add news"
+msgstr "Ajouter une nouvelle actualité"
+
+#: outside/templates/enquete/document.html:80
+#: outside/templates/enquete/enquiry.html:54
+#: outside/templates/enquete/enquiry.html:84
+#: outside/templates/enquete/middle.html:160
+#: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:160
+#: outside/templates/hub/middle.html:178 outside/templates/hub/middle.html:312
+#: outside/templates/hub/middle.html:321
+#: outside/templates/outside/middle.html:81
+#: outside/templates/outside/middle.html:99
+#: outside/templates/outside/middle.html:238
+#: outside/templates/outside/middle.html:247
+#: outside/templates/outside/page.html:26
+#, fuzzy
+msgid "add section"
+msgstr "Ajouter une section"
+
+#: outside/templates/enquete/document.html:106
+msgid "retour à l'enquête"
+msgstr ""
+
+#: outside/templates/enquete/enquete.html:64
+#: outside/templates/enquete/enquete.html:175
+#: outside/templates/outside/enquete.html:30
+#, fuzzy
+msgid "documents"
+msgstr "Documents"
+
+#: outside/templates/enquete/enquete.html:65
+#: outside/templates/hub/edit_profile.html:32
+#: outside/templates/outside/enquete.html:31
+#, fuzzy
 msgid "description"
-msgstr ""
+msgstr "Description"
 
-#: outside/templates/outside/enquete.html:27
+#: outside/templates/enquete/enquete.html:67
+#: outside/templates/outside/enquete.html:33
 msgid "enquete sur l'enquete"
 msgstr ""
 
-#: outside/templates/outside/enquete.html:33
+#: outside/templates/enquete/enquete.html:80
+#: outside/templates/enquete/metadata.html:38
+#: outside/templates/outside/enquete.html:43
+msgid "add enquete sur enquete"
+msgstr ""
+
+#: outside/templates/enquete/enquete.html:87
+#: outside/templates/enquete/metadata.html:45
+#: outside/templates/outside/enquete.html:50
 msgid "enquete"
 msgstr ""
 
-#: outside/templates/outside/enquete.html:50
-msgid "file type"
-msgstr ""
+#: outside/templates/enquete/enquete.html:190
+#, fuzzy
+msgid "document visualization"
+msgstr "Visualisation"
 
-#: outside/templates/outside/enquete.html:53
-msgid "file list"
-msgstr ""
+#: outside/templates/enquete/enquete.html:191
+#, fuzzy
+msgid "study metadata"
+msgstr "Métadonnées"
 
-#: outside/templates/outside/enquetes.html:20
-#: outside/templates/outside/middle.html:57
+#: outside/templates/enquete/enquete.html:215
+#: outside/templates/enquete/enquete.html:224
+#: outside/templates/enquete/metadata.html:267
+#: outside/templates/enquete/metadata.html:276
+#: outside/templates/outside/enquete.html:139
+#, fuzzy
+msgid "add enquiry"
+msgstr "Ajouter"
+
+#: outside/templates/enquete/enquete.html:223
+#: outside/templates/enquete/metadata.html:275
+#: outside/templates/hub/middle.html:302 outside/templates/hub/middle.html:320
+#: outside/templates/hub/middle.html:367
+#: outside/templates/outside/enquete.html:148
+#: outside/templates/outside/middle.html:228
+#: outside/templates/outside/middle.html:246
+#: outside/templates/outside/middle.html:291
+#, fuzzy
+msgid "cancel"
+msgstr "Annuler"
+
+#: outside/templates/enquete/enquetes.html:34
 msgid "enquetes"
 msgstr ""
 
-#: outside/templates/outside/enquetes.html:99
-#: outside/templates/outside/index.html:20
-#: outside/templates/outside/middle.html:186
-#: outside/templates/outside/middle.html:220
-msgid "edit section"
+#: outside/templates/enquete/enquetes.html:67
+#: outside/templates/enquete/hook.html:13
+msgid "The research in a nut shell"
+msgstr "L'enquête en bref"
+
+#: outside/templates/enquete/enquetes.html:70
+#: outside/templates/enquete/hook.html:19
+#: outside/templates/enquete/hook.html:20
+msgid "The research on the research"
+msgstr "L'enquête sur l'enquête"
+
+#: outside/templates/enquete/enquetes.html:84
+msgid "To access the survey datas you have to be registered"
+msgstr "Pour accêder aux données de l'enquête vous devez être inscrit"
+
+#: outside/templates/enquete/enquetes.html:87
+#, fuzzy
+msgid "access content"
+msgstr "Accéder aux contenus"
+
+#: outside/templates/enquete/enquetes.html:91
+msgid "request access"
 msgstr ""
 
-#: outside/templates/outside/enquetes.html:100
-#: outside/templates/outside/index.html:19
-msgid "delete section"
+#: outside/templates/enquete/enquetes.html:176
+#: outside/templates/enquete/enquiries.html:127
+#: outside/templates/enquete/page.html:34 outside/templates/hub/index.html:24
+#: outside/templates/hub/legal.html:22 outside/templates/hub/page.html:23
+#: outside/templates/outside/index.html:38
+#, fuzzy
+msgid "download as"
+msgstr "Télécharger"
+
+#: outside/templates/enquete/enquetes.html:182
+#: outside/templates/enquete/enquiries.html:133
+#: outside/templates/enquete/enquiry.html:221
+#: outside/templates/enquete/page.html:40 outside/templates/hub/blog.html:37
+#: outside/templates/hub/index.html:30 outside/templates/hub/legal.html:28
+#: outside/templates/hub/page.html:29 outside/templates/outside/index.html:44
+#: outside/templates/outside/page.html:42
+#, fuzzy
+msgid "edit content"
+msgstr "Éditer"
+
+#: outside/templates/enquete/enquetes.html:183
+#: outside/templates/enquete/enquiries.html:134
+#: outside/templates/enquete/enquiry.html:222
+#: outside/templates/enquete/page.html:41 outside/templates/hub/blog.html:38
+#: outside/templates/hub/index.html:31 outside/templates/hub/legal.html:29
+#: outside/templates/hub/page.html:30 outside/templates/outside/index.html:45
+#: outside/templates/outside/page.html:43
+#, fuzzy
+msgid "edit slug"
+msgstr "Éditer"
+
+#: outside/templates/enquete/enquetes.html:184
+#: outside/templates/enquete/enquiries.html:135
+#: outside/templates/enquete/enquiry.html:223
+#: outside/templates/enquete/page.html:42 outside/templates/hub/blog.html:39
+#: outside/templates/hub/index.html:32 outside/templates/hub/legal.html:30
+#: outside/templates/hub/page.html:31 outside/templates/outside/index.html:46
+#: outside/templates/outside/page.html:44
+#, fuzzy
+msgid "delete slug"
+msgstr "Supprimer"
+
+#: outside/templates/enquete/enquetes.html:187
+#: outside/templates/enquete/enquiries.html:138
+#: outside/templates/enquete/enquiry.html:226
+#: outside/templates/enquete/page.html:45 outside/templates/hub/blog.html:42
+#: outside/templates/hub/index.html:35 outside/templates/hub/legal.html:33
+#: outside/templates/hub/page.html:34 outside/templates/outside/index.html:49
+#: outside/templates/outside/page.html:47
+#, fuzzy
+msgid "publish"
+msgstr "Publier"
+
+#: outside/templates/enquete/enquetes.html:189
+#: outside/templates/enquete/enquiries.html:140
+#: outside/templates/enquete/enquiry.html:228
+#: outside/templates/enquete/page.html:47 outside/templates/hub/blog.html:44
+#: outside/templates/hub/index.html:37 outside/templates/hub/legal.html:35
+#: outside/templates/hub/page.html:36 outside/templates/outside/index.html:51
+#: outside/templates/outside/page.html:49
+#, fuzzy
+msgid "draftify"
+msgstr "Dépublier"
+
+#: outside/templates/enquete/enquetes.html:217
+#: outside/templates/enquete/enquiries.html:168
+msgid "list of studies"
 msgstr ""
 
-#: outside/templates/outside/enquiry.html:28
-msgid "an enquiry about"
+#: outside/templates/enquete/enquiries.html:36
+msgid "enquetes sur les enquetes"
 msgstr ""
 
-#: outside/templates/outside/enquiry.html:32
-#: outside/templates/outside/middle.html:84
-#: outside/templates/outside/page.html:55
-msgid "edit mode"
-msgstr ""
+#: outside/templates/enquete/enquiry.html:67
+#, fuzzy
+msgid "interview done with"
+msgstr "Entretien réalisé par"
 
-#: outside/templates/outside/enquiry.html:32
+#: outside/templates/enquete/enquiry.html:70
+msgid "on"
+msgstr "Sur"
+
+#: outside/templates/enquete/enquiry.html:100
+#, fuzzy
+msgid "Enquête sur l'enquête"
+msgstr "Read the whole report Reasearch on the research (PDF)"
+
+#: outside/templates/enquete/enquiry.html:113
+#, fuzzy
 msgid "add enquiry content"
+msgstr "Ajouter"
+
+#: outside/templates/enquete/hook.html:9
+#, fuzzy
+msgid "back to enquetes list"
+msgstr "Retour à la lsite des enquêtes"
+
+#: outside/templates/enquete/hook.html:14
+#, fuzzy
+msgid "Focus on the research"
+msgstr "Retour à l'enquête"
+
+#: outside/templates/enquete/hook.html:33
+#, fuzzy
+msgid "Download the research"
+msgstr "Enquête sur l'enquête"
+
+#: outside/templates/enquete/hook.html:34
+msgid "Download"
+msgstr "Télécharger l'enquête"
+
+#: outside/templates/enquete/hook.html:40
+msgid "Ask for access"
+msgstr "Demander l'accès"
+
+#: outside/templates/enquete/hook.html:43
+msgid "enquete n."
 msgstr ""
 
-#: outside/templates/outside/index.html:26
-msgid "change abstract"
-msgstr ""
+#: outside/templates/enquete/metadata.html:16
+#: outside/templates/enquete/metadata.html:83
+msgid "general"
+msgstr "Général"
 
-#: outside/templates/outside/index.html:48
-msgid "change content"
-msgstr ""
+#: outside/templates/enquete/metadata.html:17
+#: outside/templates/enquete/metadata.html:112
+#, fuzzy
+msgid "actors"
+msgstr "Intervenants"
 
-#: outside/templates/outside/login.html:17
-msgid "login required"
-msgstr ""
+#: outside/templates/enquete/metadata.html:18
+#: outside/templates/enquete/metadata.html:134
+#, fuzzy
+msgid "universe"
+msgstr "Champs l'application"
 
-#: outside/templates/outside/middle.html:16
+#: outside/templates/enquete/metadata.html:19
+#: outside/templates/enquete/metadata.html:156
+#, fuzzy
+msgid "method"
+msgstr "Méthode"
+
+#: outside/templates/enquete/metadata.html:20
+#: outside/templates/enquete/metadata.html:178
+#, fuzzy
+msgid "corpus"
+msgstr "Corpus"
+
+#: outside/templates/enquete/metadata.html:21
+#: outside/templates/enquete/metadata.html:200
+#, fuzzy
+msgid "analysis"
+msgstr "Analyse"
+
+#: outside/templates/enquete/metadata.html:22
+#: outside/templates/enquete/metadata.html:222
+#, fuzzy
+msgid "edition"
+msgstr "Édition"
+
+#: outside/templates/enquete/middle.html:24
+#: outside/templates/hub/middle.html:24
+#: outside/templates/outside/middle.html:15
+#, fuzzy
 msgid "logout"
-msgstr ""
+msgstr "Déconnexion"
 
-#: outside/templates/outside/middle.html:21
+#: outside/templates/enquete/middle.html:48
+#: outside/templates/hub/middle.html:56
+#: outside/templates/outside/middle.html:167
 msgid "disable edit"
 msgstr ""
 
-#: outside/templates/outside/middle.html:22
+#: outside/templates/enquete/middle.html:49
+#: outside/templates/hub/middle.html:57
+#: outside/templates/outside/middle.html:168
 msgid "disable edit mode"
 msgstr ""
 
-#: outside/templates/outside/middle.html:28
-#: outside/templates/outside/middle.html:29
+#: outside/templates/enquete/middle.html:55
+#: outside/templates/enquete/middle.html:56
+#: outside/templates/hub/middle.html:63 outside/templates/hub/middle.html:64
+#: outside/templates/outside/middle.html:174
+#: outside/templates/outside/middle.html:175
 msgid "enable edit mode"
 msgstr ""
 
-#: outside/templates/outside/middle.html:28
+#: outside/templates/enquete/middle.html:55
+#: outside/templates/hub/middle.html:63
+#: outside/templates/outside/middle.html:174
 msgid "edit"
 msgstr ""
 
-#: outside/templates/outside/middle.html:36
-msgid "EN"
-msgstr ""
-
-#: outside/templates/outside/middle.html:39
-msgid "FR"
-msgstr ""
-
-#: outside/templates/outside/middle.html:43
-#: outside/templates/outside/middle.html:147
-#: outside/templates/outside/middle.html:157
+#: outside/templates/enquete/middle.html:63
+#: outside/templates/hub/middle.html:71 outside/templates/hub/middle.html:293
+#: outside/templates/hub/middle.html:303
+#: outside/templates/outside/enquete.html:149
+#: outside/templates/outside/middle.html:37
+#: outside/templates/outside/middle.html:219
+#: outside/templates/outside/middle.html:229
 msgid "add page"
 msgstr ""
 
-#: outside/templates/outside/middle.html:84
-#: outside/templates/outside/middle.html:166
-#: outside/templates/outside/middle.html:175
-msgid "add section"
+#: outside/templates/enquete/middle.html:85
+#: outside/templates/hub/edit_profile.html:11
+msgid "Your profile"
+msgstr "Mon compte"
+
+#: outside/templates/enquete/middle.html:85
+#: outside/templates/hub/middle.html:90
+#: outside/templates/outside/middle.html:30
+msgid "Your profile "
+msgstr "Mon compte"
+
+#: outside/templates/enquete/middle.html:109
+#: outside/templates/hub/middle.html:128
+#, fuzzy
+msgid "news"
+msgstr "Ajouter une nouvelle actualité"
+
+#: outside/templates/enquete/middle.html:113
+#: outside/templates/hub/middle.html:132
+#, fuzzy
+msgid "contacts"
+msgstr "Contact"
+
+#: outside/templates/enquete/middle.html:160
+#: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:178
+#: outside/templates/outside/middle.html:99
+#: outside/templates/outside/page.html:26
+msgid "add pin"
+msgstr "Ajouter une section"
+
+#: outside/templates/hub/change_password.html:13
+msgid ""
+"Veuillez entrer le nouveau mot de passe que vous désirez et le confirmer, "
+"vous recevrez un email de notification."
 msgstr ""
 
-#: outside/templates/outside/middle.html:90
+#: outside/templates/hub/change_password.html:16
+msgid "Nouveau mot de passe"
+msgstr ""
+
+#: outside/templates/hub/change_password.html:19
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#: outside/templates/hub/confirm.html:16
+msgid "Your email has already been confirmed."
+msgstr "Votre email a déjà ete confirmé."
+
+#: outside/templates/hub/confirm.html:21
+msgid ""
+"Thank you, your email has been confirmed, we will consider your request for "
+"this survey."
+msgstr "Merci, votre demande d'accès a bien été prise en compte."
+
+#: outside/templates/hub/contacts.html:10
+#, fuzzy
+msgid "fill contact form"
+msgstr "Formulaire de contact"
+
+#: outside/templates/hub/contacts.html:34
+#, fuzzy
+msgid "affiliation"
+msgstr "Affiliation"
+
+#: outside/templates/hub/contacts.html:39 outside/templates/hub/signup.html:40
+#, fuzzy
+msgid "message"
+msgstr "Message"
+
+#: outside/templates/hub/contacts.html:58 outside/templates/hub/signup.html:67
+msgid "Thank you"
+msgstr "Merci"
+
+#: outside/templates/hub/contacts.html:60
+#, fuzzy
+msgid "Your message is sent, you will receive a notification mail"
+msgstr ""
+"Votre message a été envoyé, vous allez recevoir un email de notification"
+
+#: outside/templates/hub/edit_profile.html:16
+#, fuzzy
+msgid "firstname"
+msgstr "Prénom"
+
+#: outside/templates/hub/edit_profile.html:19
+#, fuzzy
+msgid "lastname"
+msgstr "Nom"
+
+#: outside/templates/hub/edit_profile.html:44
+#: outside/templates/hub/signup.html:45
+msgid "recaptcha"
+msgstr ""
+
+#: outside/templates/hub/edit_profile.html:45
+#: outside/templates/hub/signup.html:46
+msgid "recaptcha description"
+msgstr ""
+
+#: outside/templates/hub/edit_profile.html:55
+#, fuzzy
+msgid "Modifier"
+msgstr "Modifier"
+
+#: outside/templates/hub/edit_profile.html:63
+msgid "Your modifications are saved"
+msgstr "Vos modifications ont été enregistrées"
+
+#: outside/templates/hub/login.html:18 outside/templates/outside/login.html:18
+msgid "login required"
+msgstr "Authentification requise"
+
+#: outside/templates/hub/middle.html:166
+#: outside/templates/outside/middle.html:87
 msgid "collapse menu"
 msgstr ""
 
-#: outside/templates/outside/middle.html:91
+#: outside/templates/hub/middle.html:167
+#: outside/templates/outside/middle.html:88
 msgid "expand menu"
 msgstr ""
 
-#: outside/templates/outside/middle.html:132
+#: outside/templates/hub/middle.html:278
+#: outside/templates/outside/middle.html:204
+#, fuzzy
 msgid "discard"
-msgstr ""
+msgstr "Rejeté"
 
-#: outside/templates/outside/middle.html:156
-#: outside/templates/outside/middle.html:174
-#: outside/templates/outside/middle.html:219
-msgid "cancel"
-msgstr ""
-
-#: outside/templates/outside/middle.html:166
+#: outside/templates/hub/middle.html:312
+#: outside/templates/outside/middle.html:238
+#, fuzzy
 msgid "add section into"
-msgstr ""
+msgstr "Ajouter une section"
 
-#: outside/templates/outside/middle.html:169
+#: outside/templates/hub/middle.html:315
+#: outside/templates/outside/middle.html:241
 msgid "add section rules"
 msgstr ""
 
-#: outside/templates/outside/page.html:35
-#: outside/templates/outside/page.html:48
-msgid "edit content"
+#: outside/templates/hub/middle.html:332 outside/templates/hub/middle.html:368
+#: outside/templates/outside/middle.html:258
+#: outside/templates/outside/middle.html:292
+msgid "edit section"
 msgstr ""
 
-#: outside/templates/outside/page.html:36
-msgid "edit slug"
+#: outside/templates/hub/signup.html:11
+#, fuzzy
+msgid "fill signup form"
+msgstr "Formulaire d'inscription"
+
+#: outside/templates/hub/signup.html:28
+msgid "confirmation du mot de passe"
 msgstr ""
 
-#: outside/templates/outside/page.html:55
-msgid "add pin"
+#: outside/templates/hub/signup.html:52
+#, fuzzy
+msgid "legal notices"
+msgstr "Mentions légales"
+
+#: outside/templates/hub/signup.html:57
+msgid "I have read and accepted"
+msgstr "J'ai lu et j'accepte"
+
+#: outside/templates/hub/signup.html:61
+msgid "s'incrire"
 msgstr ""
+
+#: outside/templates/hub/signup.html:69
+#, fuzzy
+msgid ""
+"A confirmation mail will be sent to your mailbox in order to finalize your "
+"subscription"
+msgstr ""
+"Vous allez recevoir un email de confirmation pour finaliser votre inscription"
+
+#: outside/templates/outside/login.html:26
+#, python-format
+msgid ""
+"\n"
+"\t\t\t<p>Veuillez remplir ce formulaire pour vous connecter, <a href="
+"\"%(signup_url)s\">cliquez ici</a> si vous n'êtes pas inscrit</p>\n"
+"\t\t\t "
+msgstr ""
+
+#: outside/templates/outside/login.html:44
+msgid "inscription"
+msgstr ""
+
+#: outside/templates/outside/login.html:47
+msgid "Password forgotten?"
+msgstr "Mot de passe oublié ?"
+
+#: outside/templates/outside/middle.html:20
+#, fuzzy
+msgid "english"
+msgstr "Anglais"
+
+#: outside/templates/outside/middle.html:23
+#, fuzzy
+msgid "french"
+msgstr "Français"
 
 #: templates/bq_base.html:10
+#, fuzzy
 msgid "a project from"
-msgstr ""
+msgstr "Projet de recherche"
 
 #. Translators: Main top menu choices
 #: templates/bq_base.html:17
 msgid "Project"
-msgstr ""
+msgstr "Projet"
 
 #: templates/bq_base.html:20
 msgid "Methodology"
-msgstr ""
+msgstr "Méthodologie"
 
 #: templates/bq_base.html:23
 msgid "Access"
-msgstr ""
+msgstr "Accès"
 
 #: templates/bq_base.html:26
 msgid "The Studies"
@@ -235,31 +885,31 @@ msgstr ""
 
 #: templates/bq_base.html:30
 msgid "Admin"
-msgstr ""
+msgstr "Administration"
 
 #: templates/bq_e_base.html:71
 msgid "Back to the studies list"
-msgstr ""
+msgstr "Retour à la liste des enquêtes"
 
 #: templates/bq_e_base.html:81
 msgid "Overview"
-msgstr ""
+msgstr "Vue d'ensemble"
 
 #: templates/bq_e_base.html:85 templates/bq_e_base.html.py:87
 msgid "On the Research"
-msgstr ""
+msgstr "Enquête sur l'enquête"
 
 #: templates/bq_e_base.html:91 templates/bq_e_base.html.py:140
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
 #: templates/bq_e_base.html:92 templates/bq_e_base.html.py:141
 msgid "Speakers"
-msgstr ""
+msgstr "Intervenants"
 
 #: templates/bq_e_base.html:93 templates/bq_e_base.html.py:142
 msgid "Visualizations"
-msgstr ""
+msgstr "Visualisations"
 
 #. Translators: Left menu link to register page
 #: templates/bq_e_base.html:149
@@ -269,51 +919,64 @@ msgstr ""
 #. Translators: back to home when looking at studies list
 #: templates/bq_e_browse.html:23
 msgid "Back"
-msgstr ""
+msgstr "Retour"
 
-#: templates/bq_e_browse.html:81
+#. Translators: popup question when clicking delete study
+#: templates/bq_e_browse.html:36
+#, fuzzy
+msgid ""
+"You are about to delete this study.\\nAre you sure you want to do this ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette enquête?"
+
+#: templates/bq_e_browse.html:89
 msgid "There isn't any study in this site. Please come back later."
 msgstr ""
 
 #. Translators: ESE final report download
 #: templates/bq_e_ese.html:73
 msgid "The final report can be downloaded"
-msgstr ""
+msgstr "Le rapport final est disponible pour le téléchargement"
 
 #. Translators: Documents browse when null
 #: templates/bq_ed_browse.html:102
+#, fuzzy
 msgid "There is no linked documents in this study"
-msgstr ""
+msgstr "Il n'y a pas de documents disponibles pour cette enquête.D"
 
 #. Translators: edShow: on top toggle text for streamtimeline viz used for navigation
-#: templates/bq_ed_show.html:131
-msgid "exploration using viz"
-msgstr ""
+#: templates/bq_ed_show.html:135
+#, fuzzy
+msgid ""
+"exploration using viz (please refresh page if you change browser zoom or "
+"resize)"
+msgstr "Utiliser les outils de visualisation"
 
 #. Translators: Speakers browse when null
 #: templates/bq_es_browse.html:126
+#, fuzzy
 msgid "There is no linked speakers in this study"
-msgstr ""
+msgstr "Il n'y a pas d'intervenant enregistré pour cetet enquête."
 
 #. Translators: Visualization browse when null
-#: templates/bq_ev_browse.html:96
+#: templates/bq_ev_browse.html:97
+#, fuzzy
 msgid "There isn\\'t any Visualisation in this study"
-msgstr ""
+msgstr "Il n'y a pas de visualisation disponiblepour cette enquête"
 
 #. Translators: Login page title
 #: templates/bq_home.html:45
 msgid "If you already have an account, please login"
-msgstr ""
+msgstr "Si vous être déjà inscrit, vous pouvez vous authentifier"
 
 #. Translators: Login form button
 #: templates/bq_home.html:53
 msgid "Login"
-msgstr ""
+msgstr "Identifiant"
 
 #. Translators: Below login form, link to register form page
 #: templates/bq_home.html:70
 msgid "To ask for an account, please go to the page"
-msgstr ""
+msgstr "Pour s'enregistrer, cliquez ici"
 
 #. Translators: Access page: ask for explore status
 #: templates/bq_home.html:79
@@ -356,3 +1019,70 @@ msgstr ""
 msgid ""
 "Your request was sent ! You will soon receive information in your mailbox."
 msgstr ""
+
+#~ msgid "beQuali access request"
+#~ msgstr "beQuali demande d'accès"
+
+#~ msgid "Hello, you have a new access request."
+#~ msgstr "Bonjour, vous avez une nouvelle demande d'accès"
+
+#~ msgid "Research id"
+#~ msgstr "id enquête"
+
+#~ msgid "Action"
+#~ msgstr "Action"
+
+#~ msgid "Sign up process"
+#~ msgstr "Procédure d'inscription"
+
+#~ msgid "Research"
+#~ msgstr "Enquête"
+
+#~ msgid "Choose a research"
+#~ msgstr "Choisissez l'enquête que vous voulez consulter"
+
+#~ msgid "Send"
+#~ msgstr "Envoyé"
+
+#~ msgid "Thank you!"
+#~ msgstr "Merci !"
+
+#~ msgid "Research on the research"
+#~ msgstr "Enquête sur l'enquête"
+
+#~ msgid "Add research on th research"
+#~ msgstr "Ajouter l'enquête sur l'enquête"
+
+#~ msgid "Add Research on the research"
+#~ msgstr "Ajouter l'enquête sur l'enquête"
+
+#~ msgid "Researches"
+#~ msgstr "Enquêtes"
+
+#~ msgid "List of the researches"
+#~ msgstr "Liste des enquêtes"
+
+#~ msgid "Research n."
+#~ msgstr "Enquête n."
+
+#~ msgid "News"
+#~ msgstr "Actualités"
+
+#~ msgid ""
+#~ "Please enter and confirm your new password, you will receive a "
+#~ "confirmation email."
+#~ msgstr ""
+#~ "Veuillez entrer le nouveau mot de passe que vous désirez et le confirmer, "
+#~ "vous recevrez un email de notification."
+
+#~ msgid "New password"
+#~ msgstr "Nouveau mot de passe"
+
+#~ msgid "Password confirmation"
+#~ msgstr "Confirmation du mot de passe"
+
+#~ msgid "Sign up"
+#~ msgstr "S'inscrire"
+
+#~ msgid "The researches"
+#~ msgstr "Les enquêtes"

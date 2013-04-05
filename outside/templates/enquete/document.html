@@ -3,16 +3,15 @@
 
 {% block head %}
 
-    <script src="{{ STATIC_URL }}/js/csvtotable/js/jquery.csvToTable.js"></script>
-    <script src="{{ STATIC_URL }}/js/DataTables/media/js/jquery.dataTables.min.js"></script>
-    <script src="{{ STATIC_URL }}/js/DataTables/media/js/jquery.dataTables.min.js"></script>
-    <script src="{{ STATIC_URL }}/js/DataTables/extras/TableTools/media/js/TableTools.min.js"></script>
-    <script src="{{ STATIC_URL }}/js/DataTables/extras/ColReorder/media/js/colReorderResize.js"></script>
-    <link rel="stylesheet" href="{{ STATIC_URL }}/js/DataTables/media/css/jquery.dataTables.css" type="text/css" id="" media="print, projection, screen" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}/js/DataTables/extras/flick/jquery.ui.theme.css" type="text/css" id="" media="print, projection, screen" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}/js/DataTables/extras/flick/jquery-ui.css" type="text/css" id="" media="print, projection, screen" />
-    
-	
+	<script src="{{ STATIC_URL }}/js/csvtotable/js/jquery.csvToTable.js"></script>
+    <script src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="{{ MEDIA_URL }}/datatables/extras/flick/jquery.ui.theme.css" type="text/css" id="" media="print, projection, screen" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}/datatables/extras/flick/jquery-ui.css" type="text/css" id="" media="print, projection, screen" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}/datatables/css/jquery.dataTables.css" type="text/css" id="" media="print, projection, screen" />
+	<script src="{{ MEDIA_URL }}/datatables/extras/TableTools/media/js/TableTools.min.js"></script>
+    <script src="{{ MEDIA_URL }}/datatables/extras/ColReorder/media/js/colReorderResize.js"></script>
+
+
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/audio.min.js"></script>
 	<!-- script type="text/javascript" src="{{ STATIC_URL }}js/jwplayer.js"></script>
@@ -103,7 +102,7 @@
 		
 		<a class="return-link" href="{% url outside.views.enquete document.enquete.id %}">
 			<img src="{{STATIC_URL}}/img/return-arrow.png"/> 
-			<b>{% trans "retour à l'enquête" %}</b>
+			<b>{% trans "return to the research" %}</b>
 		</a>
 
 		<div class="clear"></div>

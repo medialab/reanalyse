@@ -24,6 +24,13 @@
 				</li>
 	
 				
+				{% if user.is_authenticated %}
+							
+				<li style="float:right">
+					<a href="{% url outside_edit_profile %}" {% if 'change_password' in tags %} class="selected"{% endif %} title="{% trans "Your profile "%}">{% trans "Your profile "%}</a>
+				</li>
+			
+				{% endif %}
 
 				
 				{% if has_edit_mode and edit_mode %}
@@ -39,6 +46,7 @@
 					<a href="{% url outside_page p.slug %}">{{ p.title }}</a>
 				</li>
 				{% endfor %}
+				
 				
 				
 				
@@ -144,7 +152,7 @@
 
 				{% if not user.is_authenticated %}
 				<li>
-					<a href="#login" data-toggle="modal" data-target="#login-modal">{% trans "login" %}</a>
+					<a href="#login" data-toggle="" data-target="#login-modal">{% trans "login" %}</a>
 				</li>
 	{% else %}
 				{% comment %}<li>

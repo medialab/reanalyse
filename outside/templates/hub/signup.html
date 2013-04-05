@@ -3,58 +3,96 @@
 {% load extras %}
 
 
-	<!-- static url: {{ STATIC_URL }} -->
-
+{	<!-- static url: {{ STATIC_URL }} -->}
 
 {% block page_left %}
-	<div id="subscription">
-		<h2>{% trans "fill signup form" %}</h2>
+	
 
+	
+	<div id="subscription">
+		<h2>{% trans "Registration" %}</h2>
+		
+		<p>{% trans "The registration will able you to ask the bequali team for researches access. Please fill up the form and send it, you will receive a mail with a link to confirm your subscription." %}</p>
+		
 		<div class="subscription-wrapper">
 			
-			<label for="id_signup_first_name">{% trans "first name"|capfirst %}</label>
-			{{ signup_form.first_name }}
-
-			<label for="id_signup_last_name">{% trans "last name"|capfirst %}</label>
-			{{ signup_form.last_name }}
-
+			<form id="signup">
 			
+				<label for="id_signup_first_name">{% trans "first name"|capfirst %}</label>
+				{{ signup_form.first_name }}
+	
+				<label for="id_signup_last_name">{% trans "last name"|capfirst %}</label>
+				{{ signup_form.last_name }}
+				
+				<label for="id_signup_username">{% trans "username"|capfirst %}
+					
+					
+					<div class="specification">
+						{% trans "You will login to the site with this username"|capfirst  %}
+					</div>	
+					
+				</label>
+				{{ signup_form.username }}
+				
+				
+				<label for="id_signup_last_name">{% trans "email"|capfirst %}</label>
+				{{ signup_form.email }}
+				
+				<label for="id_signup_password1">
+					{% trans "password"|capfirst %}
+					
+					<div class="specification">
+						{% trans "The password must have a good security"|capfirst  %}: <span id="result" style="font-weight:bold"></span>
+					</div>
+				</label>
+				{{ signup_form.password1 }}
+				
+				
+				
+				<label for="id_signup_password2">
+					
+					{% trans "password confirmation"|capfirst %}
+					<div class="specification">
+						{% trans "Please confirm your password"|capfirst  %}: <span id="pass_confirm" style="font-weight:bold"></span>
+					</div>
 			
-			
-			<label for="id_signup_password">{% trans "password"|capfirst %}</label>
-			{{ signup_form.password }}
-						
-			
-			<label for="id_signup_affiliation">{% trans "status"|capfirst %}</label>
-			<p>{{ signup_form.status }}</p>
-
-			<label for="id_signup_affiliation">{% trans "affiliation institution"|capfirst %}
-				<div class="specification">{% trans "university or institution"|capfirst %}</div>
-			</label>
-			{{ signup_form.affiliation }}
-			
-			<label for="id_signup_message">{% trans "message"|capfirst %}</label>
-			{{ signup_form.message }}
-			
-			
-			
-			<label for="recaptcha_response_field">{% trans "recaptcha"|capfirst %}
-				<div class="specification">{% trans "recaptcha description"|capfirst %}</div>
-			</label>
-			{{ signup_form.captcha }}
-			
-
+					
+				</label>
+				{{ signup_form.password2 }}
+				
+				
+				<label for="id_signup_affiliation">{% trans "status"|capfirst %}</label>
+				<p>{{ signup_form.status }}</p>
+	
+				<label for="id_signup_affiliation">{% trans "affiliation institution"|capfirst %}
+					<div class="specification">{% trans "university or institution"|capfirst %}</div>
+				</label>
+				{{ signup_form.affiliation }}
+				
+				<label for="id_signup_description">{% trans "describe yourself"|capfirst %}</label>
+				{{ signup_form.description }}
+				
+				
 		
-			<label for="id_signup_accepted_terms">{% trans "legal notices"|capfirst %}
-				<div class="specification">
-					{% trans "legal notice description"|capfirst  %}
-				</div>
-
-				<div class="specification"><b>{% trans "I have read and accepted" %}</b> {{ signup_form.accepted_terms }}</div>
-			</label>
+				<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+					<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
+				</label>
+				{{ signup_form.captcha }}
 			
-
-			<input type="button" id="add-signup" value="{% trans "send" %}"/>
+				
+				<div class="ajax-fc-container"></div>
+			
+				<label for="id_signup_accepted_terms">{% trans "legal notices"|capfirst %}
+					<div class="specification">
+						{% trans "legal notice description"|capfirst  %}
+					</div>
+	
+					<div class="specification"><b>{% trans "I have read and accepted" %}</b> {{ signup_form.accepted_terms }}</div>
+				</label>
+				
+	
+				<input type="button" id="add-signup" value="{% trans "register" %}" />
+		</form>
 		</div>
 	
 	</div>

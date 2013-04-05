@@ -64,14 +64,14 @@
 				
 				<div class="upperside">
 					<a href="{% url outside_enquete_metadata s.id %}">
-						{% trans "l'enquête en bref" %}
+						{% trans "The research in a nut shell" %}
 					</a>
 					<a href="{% url outside_enquiry s.id %}">
-						{% trans "l'enquête sur l'enquête" %}
+						{% trans "The research on the research" %}
 					</a>
 					{% comment %}
 					<a href="{% url outside_enquete s.id %}">
-						{% trans "focus sur l'enquête" %}
+						{% trans "Focus on the research" %}
 					</a>
 					{% endcomment %}
 
@@ -80,14 +80,15 @@
 						
 					<!--If the user is connected and authorized to explore the documents-->
 					
-					<p>{% trans "Pour accêder aux données de l'enquête vous devez être inscrit" %}</p>
-					
+					{% if user.is_authenticated %}
+					<p>{% trans "To access the survey datas you have to be registered" %}</p>
+					{%endif%}
 					<a href="{% url outside_enquete s.id %}">
-						{% trans "accéder aux contenus" %}
+						{% trans "access content"|capfirst %}
 					</a>
 					
 					<a href="{% url outside_access_request s.id %}">
-						{% trans "demander l'accès" %}
+						{% trans "request access"|capfirst %}
 					</a>
 				</div>
 			</div>

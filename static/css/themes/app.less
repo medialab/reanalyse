@@ -1567,12 +1567,13 @@ p.invalid{
 }
 
 .toast-item-close {
-    background:url("../../img/icons/32-Cross-white.png");
-    width:32px;
-    height:32px;
+    background:url("../../img/icons/32-Cross-white.png") no-repeat;
+    width:22px;
+    height:22px;
     position: absolute;
     top:7px;
     right:7px;
+    cursor:pointer;
 }
 
 .toast-item-image {
@@ -2241,7 +2242,7 @@ table.meta{
 		.transition(margin-top, .3s, ease-in-out);
 	}
 	.cover{
-		height:198px;
+		height:auto;//198px
 		width:272px;
 		position:absolute;
 		top:-200px;
@@ -2271,7 +2272,7 @@ table.meta{
 			width: 272px;
 			margin:0;
 			border:0;
-			padding:0;
+			
 
 			a, a:visited{
 				display:block;
@@ -2299,12 +2300,13 @@ table.meta{
 		}
 		>.lowerside{
 			border-top: 1px solid  fade( white, 55%);
-			
+			padding-bottom:10px;
 		}
 		>.upperside{
 			background:darken( @page-color, 6%);
 			border-bottom: 1px solid darken( @page-color, 13%);
 			padding-bottom: 8px;
+			padding-top:10px;
 			
 		}
 	}
@@ -2342,5 +2344,26 @@ table.meta{
 }
 
 
+//Password strength style signup.js
+
+.orange {
+  color : orange;
+}
+
+.green {
+  color : green;
+}
+
+.blue {
+  color:blue;
+}
 
 
+.red{
+  color:red;
+}
+
+.blue-link{
+  color:@blue-base-color;
+  
+}

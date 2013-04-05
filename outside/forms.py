@@ -19,51 +19,48 @@ class SubscriberForm (forms.Form):
 	email = forms.EmailField()
 	affiliation = forms.CharField( max_length = 128, required=False )
 	status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES))
-	accepted_terms = forms.BooleanField()
+	accepted_terms = forms.BooleanField(required=False, initial=False)
 	description = forms.CharField( widget=forms.Textarea) # personal description
+	action = forms.CharField( label="action", required=False, widget=forms.HiddenInput )
 	captcha = ReCaptchaField(attrs={'theme':'clean'})
 
     
 class LoginForm( forms.Form ):
 	username = forms.CharField( max_length=32, widget=forms.TextInput, required=True )
 	password = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ), required=True )
+	#captcha = ReCaptchaField(attrs={'theme':'clean'}, required=True)
 	
 	
 	
 class SignupForm( forms.Form ):
+    username = forms.CharField( max_length=32, widget=forms.TextInput, required=True )
     first_name = forms.CharField( max_length = 64,  ) # longer than standard field
     last_name = forms.CharField( max_length = 64,  ) # longer than standard field
-    
-    #username = forms.CharField( max_length=32, widget=forms.TextInput,  )
-    
-    password = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
-    #password2 = forms.CharField( max_length=64, label='Password2', widget=forms.PasswordInput(render_value=False ), required=True )
-    
+    password1 = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
+    password2 = forms.CharField( max_length=64, label='Password2', widget=forms.PasswordInput(render_value=False ), required=True )
     email = forms.EmailField()
-    
     affiliation = forms.CharField( max_length = 128, required=True,  )
     status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES), )
-    accepted_terms = forms.BooleanField(initial=1)
-    
-    message = forms.CharField( widget=forms.Textarea) # personal message
-
+    accepted_terms = forms.BooleanField(initial=False)
+    description = forms.CharField( widget=forms.Textarea) # personal message
     captcha = ReCaptchaField(attrs={'theme':'clean'})
     
 class ChangePasswordForm( forms.Form ):	
 	password1 = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
 	password2 = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
-	username = forms.CharField( label=_("username"), required=True, widget=forms.HiddenInput )
-    #captcha = ReCaptchaField(attrs={'theme':'clean'})
+	username = forms.CharField( label="username", required=True, widget=forms.HiddenInput )
+	captcha = ReCaptchaField(attrs={'theme':'clean'})
 
 
-class RecoverPasswordForm(forms.Form):
+class ReinitializePasswordForm(forms.Form):
 	email = forms.EmailField()
-	username = forms.CharField( label=_("username"), required=True, widget=forms.HiddenInput )
-	#captcha = ReCaptchaField(attrs={'theme':'clean'})
+	username = forms.CharField( label=_("username"), required=True )
+	captcha = ReCaptchaField(attrs={'theme':'clean'})
 
 	
 	
 class AccessRequestForm( forms.Form ):
+    username = forms.CharField( label=_("username"), required=True, widget=forms.HiddenInput )
     first_name = forms.CharField( max_length = 64,  ) # longer than standard field
     last_name = forms.CharField( max_length = 64,  ) # longer than standard field
     #username = forms.CharField( max_length=32, widget=forms.TextInput,  )
@@ -71,10 +68,11 @@ class AccessRequestForm( forms.Form ):
     
     class MyModelChoiceField(ModelChoiceField):
 	    def label_from_instance(self, obj):
-	        return "%s" % obj.name
+	        return "%s %s" % (obj.ddi_id, obj.name)
     
-    enquete = MyModelChoiceField(queryset = Enquete.objects.all())
-    
+    enquete = MyModelChoiceField(queryset = Enquete.objects.all(), widget=forms.Select(attrs={'disabled': 'disabled'}))
+    forms.CharField(widget=forms.TextInput(attrs={'readonly': True}))
+    #enquete = forms.CharField( max_length = 128, required=True  )
     
     email = forms.EmailField()
     
@@ -83,7 +81,7 @@ class AccessRequestForm( forms.Form ):
     
     description = forms.CharField( widget=forms.Textarea) # personal message
 
-    #captcha = ReCaptchaField(attrs={'theme':'clean'})
+    captcha = ReCaptchaField(attrs={'theme':'clean'})
     
     
 

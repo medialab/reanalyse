@@ -23,7 +23,8 @@
 
 			
 			
-						
+			<label for="id_edit_profile_password">{% trans "password"|capfirst %}</label>
+			<p><a href="{%url outside.views.change_password%}">Changer votre mot de passe</a></p>		
 			
 			<label for="id_edit_profile_email">{% trans "email"|capfirst %}</label>
 			<p>{{ edit_profile_form.email }}</p>

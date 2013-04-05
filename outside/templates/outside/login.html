@@ -15,36 +15,54 @@
 {% url outside_signup_generic as signup_url %}
 	<section class="alpha">
 		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
-			<h2>{% trans "login required" %}</h2>
+			<h2>
+				
+				{%if request.GET.next %}
+					{% trans "login required" %}
+				
+				{% else %}
+				{% trans "login page" %}
+				{%endif%}
+				
+				</h2>
+			
+			
 			
 			{%if error%}
 			<p class="invalid">{{ error }}</p>
 			
 			
 			{%endif%}
-			
+			<p class="connection-text">
 			 {% blocktrans %}
-			<p>Veuillez remplir ce formulaire pour vous connecter, <a href="{{signup_url}}">cliquez ici</a> si vous n'êtes pas inscrit</p>
+			Please fill this form to connect, <a href="{{signup_url}}"><u>click here</u></a> if you are not registered
 			 {% endblocktrans %}
-			
+			</p>
 			
 			{% comment %}{{ next }}{% endcomment %}
 			<div class="mini-section">
-				{{ login_form.username.label_tag }}
+				{{ login_form.username.label }}
 				{{ login_form.username }}
 			</div>
 			<div class="mini-section">
 				{{ login_form.password.label_tag }}
 				{{ login_form.password }}
 			</div>
+			
+			
+			{%comment%}<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
+			</label>
+			
+			{{ login_form.captcha }}
+			{%endcomment%}
+			
 			<div class="mini-section center">
 				<input type="hidden" value="{{ next }}" name="next"/>
-				<input type="submit" value="{% trans "login"%}"/>
-				<input type="button" value="{% trans "inscription"%}" onclick="window.location='{{signup_url}}'"/>
+				<input type="submit" value="{% trans "connection"%}"/>
 			</div>
 			
-			<div align="center"><a href="{% url outside_change_password %}">{% trans 'Password forgotten?'%}</a></div>
-			
+			<div align="center"><a href="{% url outside_reinitialize_password %}">{% trans 'Password forgotten?'%}</a></div>
 		</form>
 	</section>
 	

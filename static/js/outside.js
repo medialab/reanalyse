@@ -50,6 +50,7 @@ oo.api.process = function( result, callback, namespace ){
 	} else if( typeof result.error == "object" ){
 		oo.invalidate( result.error, namespace );
 		oo.toast(  oo.i18n.translate("invalid form") , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
+		Recaptcha.reload();
 	} else {
 		oo.toast( result.error , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
 	}
@@ -198,7 +199,13 @@ oo.i18n.dict = {
 		"list numbers sms failure":"Certains SMS n'ont pu être envoyés.",
 		"to change password": "Veuillez changer votre <br/> <b>mot de passe</b>",
 		"please check accepted terms": "Veuillez accepter les conditions d'utilisation",
-		"the two fields are not the same string":"Le mot de passe n'est pas le même dans les 2 champs."
+		"the two fields are not the same string":"Veuillez rectifier la confirmation du mot de passe",
+		"Too short":"trop court",
+		"Bad":"trop faible",
+		"Good":"bonne",
+		"Strong":"forte",
+		"Your password security is too weak":"La sécurité de votre mot de passe est trop faible",
+		"the password is not the same as above":"les deux mots de passes ne sont pas égaux"
 
 	}
 };

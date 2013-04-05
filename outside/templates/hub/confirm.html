@@ -11,16 +11,34 @@
 	
 	
 	<p>
-	{% if error %}
-	
-		{% trans "Your email has already been confirmed." %}
-		
-	
-	{% else %}
-	
-		{% trans "Thank you, your email has been confirmed, we will consider your request for this survey." %}
 
-	{% endif %}
+		{% url outside_login as login_url %}
+		
+		
+		<div id="subscription-accepted">
+			<h2>{% trans "Thanks"%}!</h2>
+			
+			
+			{%if action == 'signup'%}
+			
+				{% blocktrans %}
+				Your account has been confirmed, you are now registered and you can login <a href="{{login_url}}">here</a>
+				{% endblocktrans %}
+			
+			{%endif%}
+			
+			{%if action == 'reinitPass'%}
+				{% blocktrans %}
+				Your pass has been reinitialized, we have sended your new password by mail, to {{email}}
+				{% endblocktrans %}
+			{%endif%}
+			
+		</div>
+		
+		
+
+
+
 	</p>
 	
 	

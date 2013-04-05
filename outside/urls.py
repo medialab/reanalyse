@@ -2,6 +2,8 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
 urlpatterns = patterns('',
+	
+	url(r'^', include('password_reset.urls')),	
 	url(r'^$','outside.views.index', name='outside_index'),
 	url(r'^index/$','outside.views.index', name='outside_index'),
 	url(r'^news/$','outside.views.news', name='outside_news'),
@@ -9,6 +11,8 @@ urlpatterns = patterns('',
 	url(r'^logout/$','outside.views.logout_view', name='outside_logout'),
 	
 	url(r'^changePassword/$','outside.views.change_password', name='outside_change_password'),
+	url(r'^reinitializePassword/$','outside.views.reinitialize_password', name='outside_reinitialize_password'),
+	
 	
 	
 	
@@ -17,12 +21,20 @@ urlpatterns = patterns('',
 	url(r'^signup/enquete/(?P<enquete_id>\d+)/$','outside.views.signup', name='outside_signup'),
 	url(r'^accessRequest/enquete/(?P<enquete_id>\d+)/$','outside.views.access_request', name='outside_access_request'),
 	url(r'^accessRequest/$','outside.views.access_request', name='outside_access_request'),
-	url(r'^confirm/(?P<token>[a-zA-Z\d]+)/(?P<user_id>\d+)/$','outside.views.confirm', name='outside_confirm'),
-
+	url(r'^confirm/(?P<token>[a-zA-Z\d]+)/(?P<user_id>\d+)/(?P<action>[a-zA-Z\d]+)$','outside.views.confirm', name='outside_confirm'),
+	
+	
+	url(r'^api/reinitializePassword/$','outside.api.reinitialize_password', name='outside_api_reinitialize_password'),
 	url(r'^api/signup/$', 'outside.api.signups', name='outside_api_signups'),
 	url(r'^api/signup/(?P<subscriber_id>\d+)/$', 'outside.api.signup', name='outside_api_signup'),	
 	url(r'^api/accessRequest/$', 'outside.api.access_request', name='outside_api_access_request'),
 	url(r'^api/changePassword/$','outside.api.change_password', name='outside_api_change_password'),
+	url(r'^api/captcha/$', 'outside.api.captcha', name='outside_captcha'),
+	
+	url(r'^editProfile/$', 'outside.views.edit_profile', name='outside_edit_profile'),##EDIT PROFILE##
+	url(r'^createProfile/$', 'outside.views.create_profile', name='outside_create_profile'),##ADD PROFILE##
+	
+
 	
 	url(r'^legal-notice/$','outside.views.legal', name='outside_legal'),
 	
@@ -52,15 +64,26 @@ urlpatterns = patterns('',
 	url(r'^api/enquiry/(?P<enquiry_slug>[A-Za-z0-9-]+)/pins/$','outside.api.enquiry_pins', name='outside_enquiry_pins'), # foreign key to enquete for model Oustide_Enquiry
 	
 	
-	
+	###password reset###
+	url(r'^passwordReset/$', include('password_reset.urls')),
 
 	url(r'^api/subscriber/$', 'outside.api.subscribers', name='outside_api_subscribers'),
 	url(r'^api/subscriber/(?P<subscriber_id>\d+)/$', 'outside.api.subscriber', name='outside_api_subscriber'),
+	
+	#Send message to admin
+	url(r'^api/contacts/$', 'outside.api.contacts', name='outside_api_contacts'),
+	
 	
 	
 	url(r'^api/test/$','outside.api.test', name='outside_test'),
 
 	url(r'^(?P<page_slug>[A-Za-z0-9-]+)/$','outside.views.page', name='outside_page'),
+	
+	url(r'^account/', include('django.contrib.auth.urls')),
+	
+	#url(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root': 'static'}),
+	
+	
 
 
 
