@@ -1,0 +1,45 @@
+{% load i18n %}
+
+
+
+{%if action == 'client_notification' %}
+
+	{% blocktrans %}
+	
+	Bonjour votre message a été envoyé, nous vous répondrons dès que possible. <br/><br/>
+	Contenu du message : {{message}} <br/><br/>
+	
+	Aurevoir<br/>
+	
+	<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>
+	
+	{% endblocktrans %}
+
+
+{%endif%}
+
+
+
+
+{%if action == 'admin_notification' %}
+
+	{% blocktrans %}
+	
+	Bonjour, vous avez un nouveau message<br/><br/>
+	
+	Informations :<br/>
+	
+	prénom:{{prenom}}<br/>
+	nom:{{nom}}<br/>
+	email:{{email}}<br/>
+	affiliation:{{affiliation}}<br/>
+	site:{{site}}<br/>
+	message:{{description}}<br/>
+	<br/><br/>
+		
+	Aurevoir<br/>
+	<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>
+	
+	{% endblocktrans %}
+
+{%endif%}

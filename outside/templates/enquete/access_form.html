@@ -1,0 +1,111 @@
+{% extends "enquete/hook.html" %}
+{% load i18n %}
+{% load extras %}
+
+
+	<!-- static url: {{ STATIC_URL }} -->
+
+{% block page_hook_inner %}
+		<h3>{{ enquete.name }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if not forloop.last %}, {% endif %}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
+	
+{% endblock %}
+
+{% block document_ready %}
+	{% if enquete %}
+		oo.vars.enquete_id = "{{ enquete.id }}";
+	{% endif %}
+	{{ block.super }}
+{% endblock %}
+
+{% block page_left %}
+	<div id="subscription">
+
+		
+		
+		<div class="subscription-wrapper">
+			<p>
+			Pour accéder aux documents de l'enquête, veuillez remplir ce formulaire. Nous vous informerons dès que votre demande aura été examinée.
+			</p>
+			<label for="id_access_request_message">{% trans "Research project" %}
+				<div class="specification">{% trans "To access the research content, please fill this form. Your request will be evaluated by the beQuali team and you will be notified by an email if you are granted or not." %}
+</div>
+			</label>
+			{{ access_request_form.description }}
+			
+			<label for="id_access_request_enquete">{% trans "Research" %}
+				<div class="specification">
+					<!--Retour au catalogue des enquêtes-->
+					{%comment%}{% trans "Choose the research you want to ask for study" %}{%endcomment%}
+					
+				</div>
+				
+			</label>
+			{{ access_request_form.enquete }}
+			
+			<br/>
+			
+			<label for="id_access_request_first_name">{% trans "first name" %}</label>
+			{{ access_request_form.first_name }}
+
+			<label for="id_access_request_last_name">{% trans "last name" %}</label>
+			{{ access_request_form.last_name }}
+			
+			<label for="id_access_request_email">{% trans "email"|capfirst %}
+				<!--<div class="specification">{% trans "email specification" %}</div>-->
+			</label>
+			
+			{{ access_request_form.email }}
+			
+			<label for="id_access_request_status">{% trans "status" %}
+				
+			</label>
+			<p>{{ access_request_form.status }}</p>
+
+			<label for="id_access_request_affiliation">{% trans "affiliation institution" %}
+				<div class="specification">{% trans "university or institution" %}</div>
+			</label>
+			{{ access_request_form.affiliation }}
+			
+			
+			
+			<label for="recaptcha_response_field">{% trans "Captcha" %}
+				<div class="specification">{% trans "Recaptcha" %}</div>
+			</label>
+			{{ access_request_form.captcha }}
+			
+			<!--
+			<label for="accepted_terms">{% trans "accepted terms" %}
+				<div class="specification">{% trans "legal notice description" %}</div>
+				<div class="specification"><b>J'ai lu et j'accepte</b>		{{ subscriber_form.accepted_terms }}</div>
+
+			</label>
+			-->
+	
+			
+
+			
+			<input type="button" id="add-access-request" value="{% trans "send" %}"/>
+		</div>
+	
+	</div>
+
+	<div id="subscription-accepted" style="display:none">
+		<h2>{% trans "Thanks"%}!</h2>
+
+		{% trans "Your request has been sent, you will receive a mail when you are granted." %}
+
+		<p>
+			<a href="{% url outside_index %}">{% trans "back to home page"%}</a>
+		</p>
+	</div>
+	
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "hub/middle.html" %}
+{% load i18n %}
+{% load extras %}
+
+
+	<!-- static url: {{ STATIC_URL }} -->
+
+
+
+
+{% block page_left %}
+	<div id="subscription">
+		{% trans "Please fill this form to reinitialize your password, you will receive your new password by mail" %}
+
+		<div class="subscription-wrapper">
+			
+		
+			<p>
+				<label for="id_change_password_username">{% trans "username" %}
+					
+					<div class="specification">
+							
+						</div>
+					
+				</label>
+				{{reinitialize_password_form.username}}
+			</p>
+			
+			<p>
+				<label for="id_change_reinitialize_password_email">{% trans "email"|capfirst %}
+					
+					<div class="specification">
+							
+					</div>	
+					
+				</label>
+			{{reinitialize_password_form.email}}
+			</p>
+			
+			
+			
+			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
+			</label>
+			
+			{{reinitialize_password_form.captcha}}
+			
+			<input type="button" id="reinitialize-password" value="{% trans "reinitialize" %}"/>
+		</div>
+	
+	</div>
+
+	<div id="subscription-accepted" style="display:none">
+		<h2>{% trans "Thanks"%}!</h2>
+
+		{% trans "We sended you an email with a confirm link to finalize your password reinilization." %}
+
+		<p>
+			<a href="{% url outside_index %}">{% trans "back to home page"%}</a>
+		</p>
+	</div>
+	
+{% endblock %}

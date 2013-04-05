@@ -1,0 +1,44 @@
+{% load i18n %}
+
+
+{%if action == 'email_confirm'%}
+
+	{% blocktrans %}
+	
+	Bonjour {{firstname}} {{nom}},<br/><br/>
+	
+	Veuillez cliquer sur ce  <a href="{{confirmation_href}}">lien</a> pour confirmer votre inscription sur le site BeQuali.<br/>
+	
+	Vous pourrez vous connecter avec cet identifiant : {{username}} et mot de passe : {{password}} (masqué pour raison de sécurité). <br/><br/>
+	
+	Aurevoir<br/>
+	
+	<img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>
+	
+	{% endblocktrans %}
+
+{%endif%}
+
+
+{%if action == 'admin_notification'%}
+
+	{% blocktrans %}
+	
+	Bonjour, vous avez une nouvelle demande d'accès : <br/><br/>
+	user information :<br/>
+	
+	prenom: {{prenom}}<br/>
+	nom: {{nom}}<br/>
+	email: {{email}}<br/>
+	affiliation: {{affiliation}}<br/>
+	status: {{status}}<br/>
+	description:{{description}}<br/>
+	
+	Vous pouvez cliquer <a href="{{admin_url}}">ici</a> pour accéder à la page admin<br/>
+	
+	Aurevoir<br/>
+	 <img src="http://quali.dime-shs.sciences-po.fr/bequali/static/img/bequali-logo.png"/>
+					 
+	{% endblocktrans %}
+	
+{%endif%}
