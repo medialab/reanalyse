@@ -63,9 +63,6 @@ urlpatterns = patterns('',
 
 	url(r'^api/enquiry/(?P<enquiry_slug>[A-Za-z0-9-]+)/pins/$','outside.api.enquiry_pins', name='outside_enquiry_pins'), # foreign key to enquete for model Oustide_Enquiry
 	
-	
-	###password reset###
-	url(r'^passwordReset/$', include('password_reset.urls')),
 
 	url(r'^api/subscriber/$', 'outside.api.subscribers', name='outside_api_subscribers'),
 	url(r'^api/subscriber/(?P<subscriber_id>\d+)/$', 'outside.api.subscriber', name='outside_api_subscriber'),
