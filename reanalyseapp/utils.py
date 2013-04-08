@@ -3,12 +3,11 @@
 import settings
 import re
 
-if ROOT_DIRECTORY_NAME == 'app':
+
+if settings.ROOT_DIRECTORY_NAME == 'app':
     from reanalyseapp.models import *
 else:
     from reanalyse.reanalyseapp.models import *
-
-
 
 
 
