@@ -2,7 +2,16 @@
 ###########################################################################
 import settings
 import re
-from reanalyse.reanalyseapp.models import *
+
+if ROOT_DIRECTORY_NAME == 'app'
+    from reanalyseapp.models import *
+else:
+    from reanalyse.reanalyseapp.models import *
+
+
+
+
+
 from django.core import serializers
 from xml.etree.ElementTree import ElementTree
 # to randomly sort an array : random.shuffle(arr)
