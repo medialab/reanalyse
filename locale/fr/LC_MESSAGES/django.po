@@ -682,8 +682,8 @@ msgstr "retour à la page d'accueil"
 
 #: outside/templates/enquete/document.html:54
 #: outside/templates/enquete/enquiry.html:43
-msgid "Lire le rapport de l'enquête sur l'enquête (PDF)"
-msgstr "Read the whole report Reasearch on the research (PDF)"
+msgid "Read the whole report Research on the research (PDF)"
+msgstr "Lire le rapport de l'enquête sur l'enquête (PDF)"
 
 #: outside/templates/enquete/document.html:79
 #: outside/templates/enquete/enquete.html:80
