@@ -40,7 +40,7 @@ from django.utils.html import strip_tags
 
 
 # settings.py
-LOGIN_URL = '/reanalyse/login/'
+LOGIN_URL = '/%s/login/' % ROOT_DIRECTORY_NAME
 
 #
 #    Outside

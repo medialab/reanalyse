@@ -3,7 +3,7 @@ from django.conf import settings
 
 urlpatterns = patterns('',
 	
-	url(r'^', include('password_reset.urls')),	
+		
 	url(r'^$','outside.views.index', name='outside_index'),
 	url(r'^index/$','outside.views.index', name='outside_index'),
 	url(r'^news/$','outside.views.news', name='outside_news'),
