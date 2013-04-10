@@ -908,11 +908,11 @@ msgstr "Ajouter"
 
 #: outside/templates/enquete/hook.html:9
 msgid "back to enquetes list"
-msgstr "Retour à la lsite des enquêtes"
+msgstr "Retour à la liste des enquêtes"
 
 #: outside/templates/enquete/hook.html:14
 msgid "Focus on the research"
-msgstr "Retour à l'enquête"
+msgstr "L'enquête en bref"
 
 #: outside/templates/enquete/hook.html:33
 msgid "Download the research"
