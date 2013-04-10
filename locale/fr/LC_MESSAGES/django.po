@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-05 11:10+0200\n"
+"POT-Creation-Date: 2013-04-09 18:05+0200\n"
 "PO-Revision-Date: 2013-04-04 10:00+0100\n"
 "Last-Translator: Alexandre <alexandreaazzouz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,19 +119,24 @@ msgstr ""
 "Vous n'avez pas accès à cette enquête, veuillez demander l'autorisation <a "
 "href='%s' class='blue-link'>ici</a>."
 
-#: outside/views.py:409
+#: outside/views.py:312
+
+msgid "There is no research on this research"
+msgstr "Il n'y a pas d'enquête sur l'enquête pour l'instant"
+
+#: outside/views.py:420
 msgid "user has been disabled"
 msgstr "Cet utilisateur a été désactivé"
 
-#: outside/views.py:411 outside/views.py:414
+#: outside/views.py:422 outside/views.py:425
 msgid "invalid credentials"
 msgstr "Identifiants invalides"
 
-#: outside/views.py:465
+#: outside/views.py:476
 msgid "You already have access to this research."
 msgstr "Vous avez déjà accès à cette enquête."
 
-#: outside/views.py:467
+#: outside/views.py:478
 msgid ""
 "You already asked for this research, you will be notified when your access "
 "is granted."
@@ -139,24 +144,24 @@ msgstr ""
 "Vous avez déjà demandé l'accès à cette enquête. Vous recevrez bientôt une "
 "confirmation de votre accès."
 
-#: outside/views.py:509
+#: outside/views.py:521
 msgid "Signup request"
 msgstr "Demande d'inscription"
 
-#: outside/views.py:509 outside/views.py:544
+#: outside/views.py:521 outside/views.py:556
 #, fuzzy
 msgid "Bequali Team"
 msgstr "équipe beQuali"
 
-#: outside/views.py:544
+#: outside/views.py:556
 msgid "beQuali password reinitialization"
 msgstr "beQuali Réinitialisation du mot de passe effectuée"
 
-#: outside/views.py:673
+#: outside/views.py:685
 msgid "language not found"
 msgstr "Langue non disponible"
 
-#: outside/views.py:761
+#: outside/views.py:773
 #, fuzzy
 msgid "You already have a profile"
 msgstr "Vous avez déjà accès à cette enquête."
@@ -592,7 +597,9 @@ msgstr "Nom"
 msgid "email"
 msgstr "email"
 
-
+#: outside/templates/enquete/access_form.html:63
+msgid "email specification"
+msgstr "cette addresse sera votre identifiant utilisateur une fois inscrit"
 
 #: outside/templates/enquete/access_form.html:68
 #: outside/templates/hub/contacts.html:27
@@ -679,19 +686,18 @@ msgid "back to home page"
 msgstr "retour à la page d'accueil"
 
 #: outside/templates/enquete/document.html:54
-#: outside/templates/enquete/enquiry.html:43
-msgid "Read the whole report Research on the research (PDF)"
-msgstr "Lire le rapport de l'enquête sur l'enquête (PDF)"
+msgid "Lire le rapport de l'enquête sur l'enquête (PDF)"
+msgstr ""
 
 #: outside/templates/enquete/document.html:79
-#: outside/templates/enquete/enquete.html:80
-#: outside/templates/enquete/enquete.html:164
-#: outside/templates/enquete/enquiry.html:54
-#: outside/templates/enquete/enquiry.html:84
-#: outside/templates/enquete/enquiry.html:113
+#: outside/templates/enquete/enquete.html:69
+#: outside/templates/enquete/enquete.html:153
+#: outside/templates/enquete/enquiry.html:59
+#: outside/templates/enquete/enquiry.html:89
+#: outside/templates/enquete/enquiry.html:118
 #: outside/templates/enquete/metadata.html:38
-#: outside/templates/enquete/middle.html:160
-#: outside/templates/enquete/middle.html:176
+#: outside/templates/enquete/middle.html:162
+#: outside/templates/enquete/middle.html:178
 #: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:160
 #: outside/templates/hub/middle.html:178 outside/templates/hub/middle.html:190
 #: outside/templates/outside/enquete.html:43
@@ -704,10 +710,10 @@ msgid "edit mode"
 msgstr "Édition"
 
 #: outside/templates/enquete/document.html:79
-#: outside/templates/enquete/enquete.html:164
-#: outside/templates/enquete/enquiry.html:54
-#: outside/templates/enquete/enquiry.html:84
-#: outside/templates/enquete/middle.html:176
+#: outside/templates/enquete/enquete.html:153
+#: outside/templates/enquete/enquiry.html:59
+#: outside/templates/enquete/enquiry.html:89
+#: outside/templates/enquete/middle.html:178
 #: outside/templates/hub/middle.html:190
 #: outside/templates/outside/enquete.html:117
 #: outside/templates/outside/middle.html:110
@@ -715,9 +721,9 @@ msgid "add news"
 msgstr "Ajouter une news"
 
 #: outside/templates/enquete/document.html:79
-#: outside/templates/enquete/enquiry.html:54
-#: outside/templates/enquete/enquiry.html:84
-#: outside/templates/enquete/middle.html:160
+#: outside/templates/enquete/enquiry.html:59
+#: outside/templates/enquete/enquiry.html:89
+#: outside/templates/enquete/middle.html:162
 #: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:160
 #: outside/templates/hub/middle.html:178 outside/templates/hub/middle.html:312
 #: outside/templates/hub/middle.html:321
@@ -733,53 +739,53 @@ msgstr "Ajouter une section"
 msgid "return to the research"
 msgstr "Retour à l'enquête"
 
-#: outside/templates/enquete/enquete.html:64
-#: outside/templates/enquete/enquete.html:175
+#: outside/templates/enquete/enquete.html:53
+#: outside/templates/enquete/enquete.html:164
 #: outside/templates/outside/enquete.html:30
 msgid "documents"
 msgstr "Documents"
 
-#: outside/templates/enquete/enquete.html:65
+#: outside/templates/enquete/enquete.html:54
 #: outside/templates/hub/create_profile.html:34
 #: outside/templates/hub/edit_profile.html:35
 #: outside/templates/outside/enquete.html:31
 msgid "description"
 msgstr "Description"
 
-#: outside/templates/enquete/enquete.html:67
+#: outside/templates/enquete/enquete.html:56
 #, fuzzy
 msgid "Research on the research"
 msgstr "Ajouter l'enquête sur l'enquête"
 
-#: outside/templates/enquete/enquete.html:80
+#: outside/templates/enquete/enquete.html:69
 #: outside/templates/enquete/metadata.html:38
 #: outside/templates/outside/enquete.html:43
 msgid "add enquete sur enquete"
 msgstr ""
 
-#: outside/templates/enquete/enquete.html:87
+#: outside/templates/enquete/enquete.html:76
 #: outside/templates/enquete/metadata.html:45
 #: outside/templates/outside/enquete.html:50
 msgid "enquete"
 msgstr ""
 
-#: outside/templates/enquete/enquete.html:190
+#: outside/templates/enquete/enquete.html:179
 msgid "document visualization"
 msgstr "Visualisation"
 
-#: outside/templates/enquete/enquete.html:191
+#: outside/templates/enquete/enquete.html:180
 msgid "study metadata"
 msgstr "Métadonnées"
 
-#: outside/templates/enquete/enquete.html:215
-#: outside/templates/enquete/enquete.html:224
+#: outside/templates/enquete/enquete.html:204
+#: outside/templates/enquete/enquete.html:213
 #: outside/templates/enquete/metadata.html:267
 #: outside/templates/enquete/metadata.html:276
 #: outside/templates/outside/enquete.html:139
 msgid "add enquiry"
 msgstr "Ajouter"
 
-#: outside/templates/enquete/enquete.html:223
+#: outside/templates/enquete/enquete.html:212
 #: outside/templates/enquete/metadata.html:275
 #: outside/templates/hub/middle.html:302 outside/templates/hub/middle.html:320
 #: outside/templates/hub/middle.html:367
@@ -827,7 +833,7 @@ msgstr "Télécharger"
 
 #: outside/templates/enquete/enquetes.html:183
 #: outside/templates/enquete/enquiries.html:133
-#: outside/templates/enquete/enquiry.html:221
+#: outside/templates/enquete/enquiry.html:242
 #: outside/templates/enquete/page.html:40 outside/templates/hub/blog.html:37
 #: outside/templates/hub/index.html:41 outside/templates/hub/legal.html:28
 #: outside/templates/hub/page.html:29 outside/templates/outside/index.html:60
@@ -837,7 +843,7 @@ msgstr "Éditer"
 
 #: outside/templates/enquete/enquetes.html:184
 #: outside/templates/enquete/enquiries.html:134
-#: outside/templates/enquete/enquiry.html:222
+#: outside/templates/enquete/enquiry.html:243
 #: outside/templates/enquete/page.html:41 outside/templates/hub/blog.html:38
 #: outside/templates/hub/index.html:42 outside/templates/hub/legal.html:29
 #: outside/templates/hub/page.html:30 outside/templates/outside/index.html:61
@@ -847,7 +853,7 @@ msgstr "Éditer"
 
 #: outside/templates/enquete/enquetes.html:185
 #: outside/templates/enquete/enquiries.html:135
-#: outside/templates/enquete/enquiry.html:223
+#: outside/templates/enquete/enquiry.html:244
 #: outside/templates/enquete/page.html:42 outside/templates/hub/blog.html:39
 #: outside/templates/hub/index.html:43 outside/templates/hub/legal.html:30
 #: outside/templates/hub/page.html:31 outside/templates/outside/index.html:62
@@ -857,7 +863,7 @@ msgstr "Supprimer"
 
 #: outside/templates/enquete/enquetes.html:188
 #: outside/templates/enquete/enquiries.html:138
-#: outside/templates/enquete/enquiry.html:226
+#: outside/templates/enquete/enquiry.html:247
 #: outside/templates/enquete/page.html:45 outside/templates/hub/blog.html:42
 #: outside/templates/hub/index.html:46 outside/templates/hub/legal.html:33
 #: outside/templates/hub/page.html:34 outside/templates/outside/index.html:65
@@ -867,7 +873,7 @@ msgstr "Publier"
 
 #: outside/templates/enquete/enquetes.html:190
 #: outside/templates/enquete/enquiries.html:140
-#: outside/templates/enquete/enquiry.html:228
+#: outside/templates/enquete/enquiry.html:249
 #: outside/templates/enquete/page.html:47 outside/templates/hub/blog.html:44
 #: outside/templates/hub/index.html:48 outside/templates/hub/legal.html:35
 #: outside/templates/hub/page.html:36 outside/templates/outside/index.html:67
@@ -884,19 +890,19 @@ msgstr ""
 msgid "researches on the researches"
 msgstr "Enquêtes sur les enquêtes"
 
-#: outside/templates/enquete/enquiry.html:67
+#: outside/templates/enquete/enquiry.html:72
 msgid "interview done with"
 msgstr "Entretien réalisé par"
 
-#: outside/templates/enquete/enquiry.html:70
+#: outside/templates/enquete/enquiry.html:75
 msgid "on"
 msgstr "Sur"
 
-#: outside/templates/enquete/enquiry.html:100
-msgid "Enquête sur l'enquête"
-msgstr "Read the whole report Reasearch on the research (PDF)"
+#: outside/templates/enquete/enquiry.html:105
+msgid "Read the whole report Research on the research (PDF)"
+msgstr "Enquête sur l'enquête"
 
-#: outside/templates/enquete/enquiry.html:113
+#: outside/templates/enquete/enquiry.html:118
 msgid "add enquiry content"
 msgstr "Ajouter"
 
@@ -1019,17 +1025,12 @@ msgstr "Mon compte"
 msgid "Your profile "
 msgstr "Mon compte"
 
-#: outside/templates/enquete/middle.html:109
-#: outside/templates/hub/middle.html:128
-msgid "news"
-msgstr "Ajouter une nouvelle actualité"
-
-#: outside/templates/enquete/middle.html:113
+#: outside/templates/enquete/middle.html:115
 #: outside/templates/hub/middle.html:132
 msgid "contacts"
 msgstr "Contact"
 
-#: outside/templates/enquete/middle.html:160
+#: outside/templates/enquete/middle.html:162
 #: outside/templates/hub/blog.html:21 outside/templates/hub/middle.html:178
 #: outside/templates/outside/middle.html:99
 #: outside/templates/outside/page.html:26
@@ -1075,7 +1076,8 @@ msgid ""
 "\t\t\t\t"
 msgstr ""
 "\n"
-"Votre inscription est finalisée, vous pouvez vous connectez <a href=\"%(login_url)s\">ici</a>"
+"Votre inscription est finalisée, vous pouvez vous connectez <a href="
+"\"%(login_url)s\">ici</a>"
 
 #: outside/templates/hub/confirm.html:31
 #, python-format
@@ -1086,7 +1088,8 @@ msgid ""
 "\t\t\t\t"
 msgstr ""
 "\n"
-"Votre mot de passe a été réinitialisé, nous vous l'avons envoyé à cette adresse : %(email)s"
+"Votre mot de passe a été réinitialisé, nous vous l'avons envoyé à cette "
+"adresse : %(email)s"
 
 #: outside/templates/hub/contacts.html:8
 msgid "Contact"
@@ -1166,6 +1169,10 @@ msgstr "Vos modifications ont été enregistrées"
 #: outside/templates/hub/login.html:18 outside/templates/outside/login.html:21
 msgid "login required"
 msgstr "Authentification requise"
+
+#: outside/templates/hub/middle.html:128
+msgid "news"
+msgstr "Ajouter une nouvelle actualité"
 
 #: outside/templates/hub/middle.html:166
 #: outside/templates/outside/middle.html:87
@@ -1607,155 +1614,145 @@ msgstr ""
 #~ msgid "The researches"
 #~ msgstr "Les enquêtes"
 
-
-
-
 #
-#	SECTION B
-#	===
+# 	SECTION B
+# 	===
 #
-#	JSON metadata field tranlations
+# 	JSON metadata field tranlations
 #
-msgid "langdoc"
-msgstr "Langage documentation"
+#~ msgid "langdoc"
+#~ msgstr "Langage documentation"
 
-msgid "locationofunitsofobservation"
-msgstr "Niveau de comparatisme"
+#~ msgid "locationofunitsofobservation"
+#~ msgstr "Niveau de comparatisme"
 
+#~ msgid "keywords"
+#~ msgstr "Mots clefs"
 
-msgid "keywords"
-msgstr "Mots clefs"
+#~ msgid "copyright"
+#~ msgstr "copyright"
 
-msgid "copyright"
-msgstr "copyright"
+#~ msgid "discipline"
+#~ msgstr "Discipline"
 
-msgid "discipline"
-msgstr "Discipline"
+#~ msgid "methodofdatacollection"
+#~ msgstr "Technique de collection"
 
-msgid "methodofdatacollection"
-msgstr "Technique de collection"
+#~ msgid "titl"
+#~ msgstr "Nom"
 
-msgid "titl"
-msgstr "Nom"
+#~ msgid "contact"
+#~ msgstr "Contact"
 
-msgid "contact"
-msgstr "Contact"
+#~ msgid "actor"
+#~ msgstr "Acteur"
 
-msgid "actor"
-msgstr "Acteur"
+#~ msgid "targetgroups"
+#~ msgstr "Groupes de population ciblés"
 
+#~ msgid "collsitu"
+#~ msgstr "Durée des observations"
 
-msgid "targetgroups"
-msgstr "Groupes de population ciblés"
+#~ msgid "accessconditions"
+#~ msgstr "Conditions d'accès"
 
-msgid "collsitu"
-msgstr "Durée des observations"
+#~ msgid "relpubl"
+#~ msgstr "Publications"
 
-msgid "accessconditions"
-msgstr "Conditions d'accès"
+#~ msgid "colldate"
+#~ msgstr "Dates de récolte des données"
 
-msgid "relpubl"
-msgstr "Publications"
+#~ msgid "anonymization"
+#~ msgstr "Anonymisation"
 
-msgid "colldate"
-msgstr "Dates de récolte des données"
+#~ msgid "authenty"
+#~ msgstr "Auteur(s)"
 
-msgid "anonymization"
-msgstr "Anonymisation"
+#~ msgid "sampprocedure"
+#~ msgstr "Echantillonnage "
 
-msgid "authenty"
-msgstr "Auteur(s)"
+#~ msgid "distrbtr"
+#~ msgstr "Distributeur"
 
-msgid "sampprocedure"
-msgstr "Echantillonnage "
+#~ msgid "topicclassification"
+#~ msgstr "Classification"
 
-msgid "distrbtr"
-msgstr "Distributeur"
+#~ msgid "nation"
+#~ msgstr "Pays"
 
+#~ msgid "timedimension"
+#~ msgstr "Périodicité"
 
+#~ msgid "modedatacollection"
+#~ msgstr "Accès aux observations"
 
-msgid "topicclassification"
-msgstr "Classification"
+#~ msgid "numberofunits"
+#~ msgstr "Nombre d'observations"
 
-msgid "nation"
-msgstr "Pays"
+#~ msgid "studydates"
+#~ msgstr "Dates de l'enquête"
 
-msgid "timedimension"
-msgstr "Périodicité"
+#~ msgid "timeperiodcovered"
+#~ msgstr "Période couverte"
 
-msgid "modedatacollection"
-msgstr "Accès aux observations"
+#~ msgid "spatialunits"
+#~ msgstr "Unités spatialisées"
 
-msgid "numberofunits"
-msgstr "Nombre d'observations"
+#~ msgid "datakind"
+#~ msgstr "Types de documents"
 
-msgid "studydates"
-msgstr "Dates de l'enquête"
+#~ msgid "weighting"
+#~ msgstr "Segmentation"
 
-msgid "timeperiodcovered"
-msgstr "Période couverte"
+#~ msgid "numberoffiles"
+#~ msgstr "Nombre de documents"
 
-msgid "spatialunits"
-msgstr "Unités spatialisées"
+#~ msgid "locarch"
+#~ msgstr "Localisation archives"
 
-msgid "datakind"
-msgstr "Types de documents"
+#~ msgid "grantno"
+#~ msgstr "Bourse"
 
-msgid "weighting"
-msgstr "Segmentation"
+#~ msgid "idno"
+#~ msgstr "DDI Id"
 
+#~ msgid "observunits"
+#~ msgstr "Unités d'observation"
 
-msgid "numberoffiles"
-msgstr "Nombre de documents"
+#~ msgid "langdata"
+#~ msgstr "Language données"
 
-msgid "locarch"
-msgstr "Localisation archives"
-	
+#~ msgid "editor"
+#~ msgstr "Edition"
 
+#~ msgid "geogcover"
+#~ msgstr "Couverture géographique"
 
-msgid "grantno"
-msgstr "Bourse"
+#~ msgid "transcription"
+#~ msgstr "Transcription"
 
-msgid "idno"
-msgstr "DDI Id"
+#~ msgid "firstedition"
+#~ msgstr "Première version"
 
-msgid "observunits"
-msgstr "Unités d'observation"
+#~ msgid "fundag"
+#~ msgstr "Agence de financement"
 
-msgid "langdata"
-msgstr "Language données"
+#~ msgid "latestedition"
+#~ msgstr "Dernière version"
 
-msgid "editor"
-msgstr "Edition"
+#~ msgid "software"
+#~ msgstr "Logiciel"
 
-msgid "geogcover"
-msgstr "Couverture géographique"
+#~ msgid "interview done on the"
+#~ msgstr "entretien réalisé le"
 
-msgid "transcription"
-msgstr "Transcription"
+#~ msgid "message specification"
+#~ msgstr ""
+#~ "Dans ce message veuillez nous décrire votre <i>projet de recherche</i> "
+#~ "afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/"
+#~ ">Veuillez notamment préciser dans quel cadre vous comptez réutiliser "
+#~ "cette enquête et quel type de traitement vous avez prévu de mener sur les "
+#~ "documents de l'enquête."
 
-msgid "firstedition"
-msgstr "Première version"
-
-msgid "fundag"
-msgstr "Agence de financement"
-
-msgid "latestedition"
-msgstr "Dernière version"
-
-msgid "software"
-msgstr "Logiciel"
-
-msgid "interview done on the"
-msgstr "entretien réalisé le"
-
-
-msgid "email specification"
-msgstr "cette addresse sera votre identifiant utilisateur une fois inscrit"
-
-
-msgid "message specification"
-msgstr "Dans ce message veuillez nous décrire votre <i>projet de recherche</i> afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/>Veuillez notamment préciser dans quel cadre vous comptez réutiliser cette enquête et quel type de traitement vous avez prévu de mener sur les documents de l'enquête."
-
-msgid "password specification"
-msgstr "votre mot de passe doit contenir au moins 8 charactères"
+#~ msgid "password specification"
+#~ msgstr "votre mot de passe doit contenir au moins 8 charactères"

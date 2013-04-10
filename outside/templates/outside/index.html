@@ -4,18 +4,6 @@
 {% block page_header %}
 
 
-<script>
-	{% if messages %}
-		$(document).ready(function() {
-	    {% for message in messages %}
-			oo.toast( "{{ message|safe }}", 
-				"",
-				{stayTime:5000, cleanup: true}
-				)
-	    {% endfor %}
-		})
-	{% endif %}
-	</script>
 
 
 <div id="introduction">

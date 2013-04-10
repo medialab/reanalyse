@@ -134,15 +134,46 @@
 			.tablesorter{
 				width:400px;
 				
-			}			
+			}
+			.dataTables_scroll{
+				
+				font-size:11px;
+				
+			}
+			
+			.zoom_less, .zoom_more{
+				cursor:pointer;
+				
+			}
+			
+			
 		</style>
 		
+		Zoom : <span class="zoom_less">-</span>
+		<span class="zoom_more">+</span>
+		
 		<div id="CSVTable" width="200"></div>
+		
+		
+		
 		
 		<div id="pager" width=500></div>
 		
 		<script>
-
+			
+			$('.zoom_less').click(function(){
+				
+				$(".dataTables_scroll").css("font-size", parseFloat($(".dataTables_scroll").css("font-size"))-1)
+				
+			})
+			
+			$('.zoom_more').click(function(){
+				
+				$(".dataTables_scroll").css("font-size", parseFloat($(".dataTables_scroll").css("font-size"))+1)
+				
+			})
+			
+			
 			$('#CSVTable').CSVToTable('{% url outside_enquete_document_embed document.id %}', 
 			    { 
 			       loadingImage: '', 

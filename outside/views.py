@@ -302,12 +302,23 @@ def document_embed( request, document_id ):
 
 def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","enquiry" ] )
-	data['enquiry'] = get_object_or_404( Enquiry, enquete__id=enquete_id, language=data['language'])
-	data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
+	
+	try:
+	
+		data['enquiry'] = Enquiry.objects.get( enquete__id=enquete_id, language=data['language'])
+	
+	except Enquiry.DoesNotExist:
+		
+		messages.add_message(request, messages.ERROR, _('There is no research on this research'))
+		return redirect(reverse('outside.views.enquetes'))
+	
+	
+	
+	else:
+		data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
+		return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 
 	
-
-	return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 
 
 	

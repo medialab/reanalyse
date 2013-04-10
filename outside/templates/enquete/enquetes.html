@@ -38,16 +38,6 @@
 
 
 
-<!-- Access error !-->
-{% if request.GET.error == 'already_ask' %}
-<script>
-	$(document).ready(function() {
-		oo.toast("You has already asked for this enquete")
-	})
-</script>
-
-{% endif %}
-
 
 <a id="enquetes"></a>
 	<section id="list-of-enquetes" class="alpha expand items-container" style="width:auto; padding:36px">
@@ -80,7 +70,7 @@
 						
 					<!--If the user is connected and authorized to explore the documents-->
 					
-					{% if user.is_authenticated %}
+					{% if not user.is_authenticated %}
 					<p>{% trans "To access the survey datas you have to be registered" %}</p>
 					{%endif%}
 					<a href="{% url outside_enquete s.id %}">

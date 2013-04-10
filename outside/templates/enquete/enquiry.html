@@ -4,6 +4,8 @@
 {% block head %}
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/audio.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/speaker/speakker-big-1.2.22r209.min.js"></script>
+
 	<!-- script type="text/javascript" src="{{ STATIC_URL }}js/jwplayer.js"></script>
 	<script type="text/javascript">jwplayer.key="Q8pvYVJiRAZFafuu06UX9CRv4x0w1VGZSraGaQ==";</script -->
 {% endblock %}
@@ -12,6 +14,7 @@
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/enquiry.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/audio.js"></script>
+	
 
 {% endblock %}
 
@@ -40,13 +43,14 @@
 			{% for pin in sections %}
 			<li><a href="#{{ pin.slug }}">{{ pin.title }}</a></li>
 			{% endfor %}
-			<li><a href="{{ STATIC_URL }}docs/enquete-{{ enquiry.enquete.id }}.pdf">&rarr; {% trans "Lire le rapport de l'enquête sur l'enquête (PDF)" %}</a></li>
-
+			{%comment%}
+			<li><a href="{{ STATIC_URL }}docs/enquete-{{ enquiry.enquete.id }}.pdf">&rarr; {% trans "Read the whole report Research on the research (PDF)" %}</a></li>
+			{%endcomment%}
 		</ul>
 	</div>
 {% endblock %}
 
-
+Read the whole report Research on the research (PDF)
 {% block page_hook_inner %}
 	
 		 <h3>{{ enquiry.title }}</h3>
@@ -97,7 +101,7 @@
 		
 		
 		<div class="abstract">
-			{% trans "Enquête sur l'enquête" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
+			{% trans "Read the whole report Research on the research (PDF)" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
 
 			de {% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if forloop.last %}{% else %}, {%endif %} {% endfor %}
 
@@ -116,9 +120,15 @@
 
 
 		<script>
+		
+		//create audio5js object
+				
+			
 			audiojs.events.ready(function() {
     			var as = audiojs.createAll();
   			});
+  			
+ 
 			
 		</script>
 		<!-- script>
@@ -197,7 +207,8 @@
 						{% endif %}
 						{% ifequal pc.mime "audio" %}
 							<div id='audio-{{ pc.slug }}'></div>
-							<audio src="{{ pc.local.url }}" preload="auto" />
+							<audio class="audio_player" src="{{ pc.local.url }}" preload="auto" />
+							
 						{% endifequal %}
 						
 
@@ -255,5 +266,7 @@
 
 
 	</section>
+	
+
 	
 {% endblock %}	

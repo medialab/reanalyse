@@ -154,14 +154,14 @@ def isMetaDocOK(folderPath,docPath):
 		
 		for counter, row in enumerate(doc):
 			if row['*id']!='*descr':
-				file_location = folderPath+row['*file']
+				file_location = '%s/%s'%( folderPath, str(row['*file']) )
 				try:
 					open(file_location)						 
 				except IOError, e:
 					if(e.args[0] == 2):#no such file or directory
 						error = True
 						error_dict.update({file_location:e.args[1]})
-                       				logger.info({file_location:e.args[1]})
+						logger.info({file_location:e.args[1]})
 
 		if(error is True):
 			return {'status':False, 'error_dict':error_dict}
@@ -318,9 +318,10 @@ def importEnqueteUsingMeta(upPath,folderPath):
 							if doc_mimetype=='tei':
 								newDocument.status	= '5' # 'waiting' status
 								newDocument.save()
-							elif doc_mimetype=='pdf' or doc_mimetype=='csv' or doc_mimetype=='img':
+							elif doc_mimetype=='pdf' or doc_mimetype=='csv' or doc_mimetype=='img' or doc_mimetype=='mp4':
 								newDocument.status	= '0'
 								newDocument.save()
+
 							elif doc_mimetype=='htm':
 								try:
 									f = open(file_location,'r')
