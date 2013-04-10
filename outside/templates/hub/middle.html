@@ -121,10 +121,11 @@
 					</li>
 					{% endfor %}
 					
+					{%comment%}
 					<li{% if 'news' in tags %} class="selected"{% endif %}>
 						<a href="{% url outside_news %}">{% trans "news"%}</a>
 					</li>
-
+					{%endcomment%}
 					<li{% if 'contacts' in tags %} class="selected"{% endif %}>
 						<a href="{% url outside_contacts %}">{% trans "contacts"%}</a>
 					</li>
