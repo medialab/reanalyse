@@ -900,7 +900,7 @@ msgstr "Sur"
 
 #: outside/templates/enquete/enquiry.html:105
 msgid "Read the whole report Research on the research (PDF)"
-msgstr "Enquête sur l'enquête"
+msgstr "Lire le rapport complet sur l'enquête sur l'enquête (PDF)"
 
 #: outside/templates/enquete/enquiry.html:118
 msgid "add enquiry content"
