@@ -31,9 +31,15 @@ urlpatterns = patterns('',
 	url(r'^api/changePassword/$','outside.api.change_password', name='outside_api_change_password'),
 	url(r'^api/captcha/$', 'outside.api.captcha', name='outside_captcha'),
 	
-	url(r'^editProfile/$', 'outside.views.edit_profile', name='outside_edit_profile'),##EDIT PROFILE##
-	url(r'^createProfile/$', 'outside.views.create_profile', name='outside_create_profile'),##ADD PROFILE##
+	url(r'^editProfile/$', 'outside.views.edit_profile', name='outside_edit_profile'),
+	url(r'^createProfile/$', 'outside.views.create_profile', name='outside_create_profile'),
 	
+	
+	url(r'^downloadPage/(?P<enquete_id>\d+)$', 'outside.views.download_page', name='outside_download_page'),
+	
+	#TEST DOWNLOAD
+	url(r'^download/test_dl1/$', 'outside.views.test_dl1', name='outside_test_dl1'),
+	url(r'^download/test_dl2/$', 'outside.views.test_dl2', name='outside_test_dl2'),
 
 	
 	url(r'^legal-notice/$','outside.views.legal', name='outside_legal'),
@@ -79,9 +85,8 @@ urlpatterns = patterns('',
 	url(r'^account/', include('django.contrib.auth.urls')),
 	
 	#url(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root': 'static'}),
-	
-	
+				
 
-
+	url(r'^e/(?P<eid>\d+)/d/(?P<did>\d+)/getHtmlContent$', 'outside.views.dGetHtmlContent', name="GetHtmlContent"),	
 
 )

@@ -97,11 +97,11 @@
 			{% for k,parvs in paraverbal.items %}
 				<h4>{{k}}</h4>
 				<ul>
-				{% for p in parvs  %}
+				{% for p,o in parvs  %}
 					<li>
 						<input class="paraCheck" id="paraCheck_{{p}}" type="checkbox" checked="checked"/>
 						<span class="text_{{p}} text_legend"></span>
-						 {{p}}
+						 {{o}}
 					</li>
 				{% endfor %}
 				</ul>
@@ -484,7 +484,7 @@
 			var chk = $('#paraCheckAll').attr("checked");
 			if (chk!='checked') chk=null;
 			{% for k,parvs in paraverbal.items %}
-			{% for p in parvs  %}
+			{% for p,o in parvs  %}
 			$('#paraCheck_{{p}}').attr('checked',chk);
 			$('.text_{{p}}:not(.text_legend)').toggle( (chk=='checked') );
 			{% endfor %}
@@ -493,7 +493,7 @@
 		
 		// TOGGLE paraverbals
 		{% for k,parvs in paraverbal.items %}
-		{% for p in parvs  %}
+		{% for p,o in parvs  %}
 		$('#paraCheck_{{p}}').click(function() {
 			console.log("toggle par:{{p}}");
 			$('.text_{{p}}:not(.text_legend)').toggle();

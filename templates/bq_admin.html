@@ -68,8 +68,8 @@
 			<ul>
 				{% for s in serverAvailableStudies %}
 				<li id="load_{{s.foldername}}">
-				<a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.eParseFolder s.foldername %}");$("#load_{{s.foldername}}").html("study loaded - go look at it");return false;'>{{s.foldername}}</a>
-				</li>
+			{%comment%}	<a href="" onclick='doGetAtUrl("{% url reanalyseapp.views.eParseFolder s.foldername %}");$("#load_{{s.foldername}}").html("study loaded - go look at it");return false;'>{{s.foldername}}</a>
+			{%endcomment%}	</li>
 				{% endfor %}
 			</ul>
 		</div>
@@ -191,7 +191,13 @@
 				});
 				$("#buttOk").click( function(event) {
 					// create Enquete from uploaded files					
-					doGetAtUrl("{% url reanalyseapp.views.eParse %}?foldname={{foldname}}");
+					doGetAtUrl("{% url reanalyseapp.views.eParse %}?foldname={{foldname}}",
+						function(data, textStatus, jqXHR){
+							console.log(data)
+						}
+					);
+					
+					
 					//event.stopPropagation();
 					//event.preventDefault();
 					//window.location.href="{% url reanalyseapp.views.eBrowse %}";

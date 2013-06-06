@@ -1,21 +1,124 @@
 {% extends "enquete/hook.html" %}
 {% load i18n %}
+{% load tags %}
+
+{% block less%}
+	{{ block.super }}
+	<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/enquete.less">
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/utilScripts.js"></script>
+{% endblock %}
 
 {% block head %}
 
+	{% if document.doctype == "CSV"%}
+	
 	<script src="{{ STATIC_URL }}/js/csvtotable/js/jquery.csvToTable.js"></script>
     <script src="{{ MEDIA_URL }}/datatables/js/jquery.dataTables.js"></script>
+	<script src="{{ MEDIA_URL }}/datatables/extras/TableTools/media/js/TableTools.min.js"></script>
+    <script src="{{ MEDIA_URL }}/datatables/extras/ColReorder/media/js/colReorderResize.js"></script>
     <link rel="stylesheet" href="{{ MEDIA_URL }}/datatables/extras/flick/jquery.ui.theme.css" type="text/css" id="" media="print, projection, screen" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}/datatables/extras/flick/jquery-ui.css" type="text/css" id="" media="print, projection, screen" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}/datatables/css/jquery.dataTables.css" type="text/css" id="" media="print, projection, screen" />
-	<script src="{{ MEDIA_URL }}/datatables/extras/TableTools/media/js/TableTools.min.js"></script>
-    <script src="{{ MEDIA_URL }}/datatables/extras/ColReorder/media/js/colReorderResize.js"></script>
+	
 
+	{%endif%}
+
+	
+	
+	{% if texte.doctype == 'TEI' %}
+	<!-- Dropdownmenu checklist jquery plugin (POS display selection) -->
+	<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/dropdownchecklist/css/ui.dropdownchecklist.themeroller.css" />	
+	<script type="text/javascript" language="javascript" src="{{ MEDIA_URL }}/dropdownchecklist/js/ui.dropdownchecklist-1.4-min.js"></script>
+	
+	<!-- qtip tooltips for verbatim -->
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.qtip-1.0.0-rc3.min.js"></script>
+
+	<!-- =============================== FOR VIZ -->
+	<!-- d3.js -->
+	<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
+	<!-- the only viz we display for the moment: -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
+	
+	<link rel="stylesheet" href="{{ STATIC_URL }}/css/themes/reanalyse_outside.css" type="text/css" id="" media="print, projection, screen" />
+	
+
+	<!-- =============================== CSS FOR SPEAKERS COLORS (used for css verbatim block + d3.js viz -->
+	<style type="text/css">
+		
+		
+		
+		{% for k,v in speakersColors.items %}
+			
+			.squareColor_{{k}} {
+				width:10px;
+				height:10px;
+				background-color:{{v}};fill:{{v}};
+				display:inline-block;
+			}
+			
+			div.speakerColor_{{k}} {
+				border-left:3px solid {{v}};
+				/*background-color:{{v}};fill:{{v}};*/
+			}
+		{% endfor %}
+		
+		
+		
+	.leftmenublock{
+	    float:left;
+	  
+	    
+	}
+	
+	#right-sidebar{
+		height:auto;
+	}
+	
+	#tei-settings{
+		
+		display:none;
+		
+	}
+	
+	
+	input[type="submit"], input[type="button"], input[type="reset"], button, .button {
+	    border-radius: 3px 3px 3px 3px;
+	    border-style: solid;
+	    border-width: 1px;
+	    font-size: 14px;
+	    font-style: normal;
+	    font-weight: normal;
+	    line-height: 23.38px;
+	    margin: -6px auto 11px 1px;
+	    padding: 2px 11px 6px;
+	    text-transform: lowercase;
+	}
+		
+	</style>
+	<!-- ======================================================= -->
+
+	
+	
+	{% endif %}
+	
+	
+	
+	<script type="text/javascript" src="{{ MEDIA_URL }}/g_doc_viewer/jquery.gdocsviewer.min.js"></script>
 
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/audio.min.js"></script>
 	<!-- script type="text/javascript" src="{{ STATIC_URL }}js/jwplayer.js"></script>
 	<script type="text/javascript">jwplayer.key="Q8pvYVJiRAZFafuu06UX9CRv4x0w1VGZSraGaQ==";</script -->
+		
+		
+		
+		
+		
 {% endblock %}
 
 {% block outside_scripts %}
@@ -25,7 +128,37 @@
 	
 	
     <script>
-        //we'll write script commands here
+   
+       $('a.embed').gdocsViewer();
+		
+		
+		$(document).ready(function() {
+			
+			
+			
+			$(".speak_link, .para_link").click(function(){
+				var icon = $(this).find('i:first')
+				
+				if (icon.is('.icon-collapse-alt')) {
+				 
+					icon.removeClass().addClass('icon-expand-alt icon-2');
+				 
+				}
+				else {
+				 
+					icon.removeClass().addClass('icon-collapse-alt icon-2');
+				}
+					
+			})
+
+			$("#speakersShowHide").toggle("fast");
+			$("#paraverbalShowHide").toggle("fast");
+		});
+		
+		
+		
+		
+        
     </script>
 
 {% endblock %}
@@ -73,45 +206,534 @@
 {% endblock %}
 
 
+
 {% block page_right %}	
-	{% if edit_mode %}
+	{% if edit_mode %}settings
 		<div class="edit-mode add-enquiry-pin" data-enquiry-slug="{{ page.slug }}" style="text-align:center" rel="tooltip" title="{% trans "edit mode" %}: {% trans "add news" %}">[ {% trans "add section" %} ]
 		</div>
 	{% endif %}
+	
+	<style>
+		
 
-							<div class="clear"></div>
-					{% endblock %}
+	</style>	
+
+	<div class="clear"></div>
+	
+	
+	<div id="documents" style="border-bottom:none;overflow:hidden;height:auto" >
+		<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
+			
+		<div id="documents-inner" style="float:left;overflow: hidden; width: auto;">
+			<div  id="counter">
+				<span class="docLabel">{% trans "Metadatas"%}</span>
+			</div>
+			
+			<ul>
+				
+				<li class="active">
+					{% trans "Date"%} : {{document.date}}
+				</li>
+				
+				<li class="active" >
+					Location : {{document.location}}
+				</li>
+				
+				
+				<li class="active">
+					{% trans "Name" %} : {{document.name}}
+				</li>
+				
+				<li class="active">
+					Id : {{document.locationpath}}
+				</li>	
+		
+			</ul>
+
+		</div>
+	
+		</div>
+	
+	</div>
+	
+	<br/>
+		{% if texte.doctype == 'TEI' %}
+		<!-- =============================== -->
+	
+			
+
+		
+	
+	
+	<div id="tei-settings">
+
+		<div  id="counter">
+			<span class="docLabel"><i  style="font-size:22px" class="icon-pencil"></i> {% trans "Settings"%}</span>
+		</div>
+		
+		<div class="leftmenublock">
+			<a href="#" class="speak_link" onclick='$("#speakersShowHide").toggle("fast"); return false;'>
+				
+				<h4 style="color:white" class="title">
+				{% trans 'Show/Hide Speakers'%} <i style="font-size:17px" class="icon-collapse-alt icon-2"></i></h4></a>
+			<div id="speakersShowHide">
+				<div id="speakersShowHide">
+					
+					<ul>
+						
+						<li><h4 class="subtitle">{% trans 'Investigators'%} : </h4> </li>
+						
+					
+					
+						<ul class="spkcheckboxes">
+						{% for s in speakers.inv %}
+							<li>
+								<input id="spkCheck_{{s.id}}" type="checkbox" checked="checked" /> {{ s.name }} &nbsp;
+								<div class="squareColor_{{s.id}}"></div>
+							</li>
+						{% endfor %}
+						</ul>
+					
+					</ul>
+					
+				</div>
+				<div id="speakersShowHide">
+					
+					<ul>
+						
+						<li><h4 class="subtitle">{% trans 'Speaker(s)'%} : </h4></li>
+					
+					
+						<ul class="spkcheckboxes">
+						{% for s in speakers.spk %}
+							<li>
+								<input id="spkCheck_{{s.id}}" type="checkbox" checked="checked" />
+								{{ s.name }}&nbsp;
+								<div class="squareColor_{{s.id}}"></div>
+							</li>
+						{% endfor %}
+						</ul>
+					</ul>
+				</div>
+				{% if speakers.pro %}
+				<div id="speakersShowHide">
+					
+					<ul>
+					
+						<li><h4 class="subtitle" >{% trans 'Protagoniste(s)'%} : </h4></li>
+						<ul class="spkcheckboxes">
+						{% for s in speakers.pro %}
+							<li class="speakerColor_{{s.id}}">
+								<input id="spkCheck_{{s.id}}" type="checkbox" checked="checked" />
+								{{ s.name }}&nbsp;
+								<div class="squareColor_{{s.id}}"></div>
+							</li>
+						{% endfor %}
+						</ul>
+					<ul>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		<!-- =============================== -->
+		<div class="leftmenublock">
+			<a href="#" class="para_link" onclick='$("#paraverbalShowHide").toggle("fast"); return false;'>
+				
+				<h4 class="title" style="color:white">{% trans 'Show/Hide Paraverbal'%} <i style="font-size:17px" class="icon-collapse-alt icon-2"></i> </h4></a>
+			<div id="paraverbalShowHide">
+				<ul>
+					<li>
+						<input id="paraCheckAll" type="checkbox" checked="checked"/>  
+						<label for="paraCheckAll">Tout cocher</label>
+					</li>
+					
+					
+				
+				{% for k,parvs in paraverbal.items %}
+					<li><h4>{{k}}</h4></li>
+					<ul>
+					{% for p,o,c in parvs  %}
+						
+						
+						<li>
+							
+							<input class="paraCheck" id="paraCheck_{{p}}" type="checkbox" checked="checked"/>
+							<label for="paraCheck_{{p}}"><span class="{{c}} text_legend"></span> {{o}}</label>
+							 
+						</li>
+					{% endfor %}
+					</ul>
+				{% endfor %}
+				
+				</ul>
+			</div>
+		</div>
+	
+	</div>
+	
+	<!-- =============================== -->
+{% endif %}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+							
+{% endblock %}
+
+
 
 {% block page_left %}
 
-	<a id="description"></a>
-	
 	<section class="alpha wide" >
-		<div class="icon {{ document.doctype }}">
-			<img src="{{ STATIC_URL }}/img/{{ document.doctype }}.png" style="height:36px"/>
+		<div style="font-size:11px;color:#0299CC;margin:9px 8px 0px 32px" class="icon {{ document.doctype }}">
+			<i class="icon-file-alt icon-3x"></i>
 		</div>
-		<h3>{{ document.name }}</h3>
+		<h3 style="font-size:23px;margin:0px">{{ document.name }}</h3>
+		
+				
+		
+		{%comment%}
+		
+		
 		
 		<div class="content" >
-		{{ document.doccat1 }}
-
-		{{ document.doccat2 }}
 		
-		</div>			
+		
+		</div>	
+		
+		
+		
 		
 		<a class="return-link" href="{% url outside.views.enquete document.enquete.id %}">
-			<img src="{{STATIC_URL}}/img/return-arrow.png"/> 
-			<b>{% trans "return to the research" %}</b>
+			
+			<b>{% trans "return to the research" %}</b> <i class="icon-chevron-sign-left"></i>
 		</a>
-
+		{%endcomment%}
 		<div class="clear"></div>
 
 	</section>
 	
+
+	{% if texte.doctype == 'TEI' %}
+
+<div class="introHtml">
+	<!-- ========================================================================= -->
+
+	
+	<p>
+		<ul style="margin-left:33px;">
+			<li><b>{% trans 'Investigator'%} : </b>
+				{% for i in speakers.inv %}
+				<a href="{% url reanalyseapp.views.esShow enquete.id i.id %}">{{i.name}}</a> ({{i|speakerMeta}})
+				
+				{% endfor %}
+			</li>
+			<li><b>{% trans 'Speakers'%} : </b>
+				{% for s in speakers.spk %}
+				<a href="{% url reanalyseapp.views.esShow enquete.id s.id %}">{{s.name}}</a>{% if not forloop.last %}, {% endif %} {{s|speakerMeta}}
+				{% endfor %}
+			</li>
+		</ul>
+	</p>	
+	
+	<br/>
+	
+	
+	{% comment %}
+	<!-- ========================================================================= -->
+	<!-- experimetnal form to tune display of words in verbatim. javascript to update css -->
+	<!-- note bug with dropdownchecklist if "display:none;" at the beginning -->
+	<a href="#" onclick='$("#verb_controls").toggle("fast"); return false;'>Experimental: display tuning</a>
+	<div id="verb_controls">
+		Here you can tune the display of words/lemmas
+		<input type="checkbox" id="verb_checkfilt_negative" name="negative_mode"/>Negative Mode 
+		<a href="" onclick="resetVerbDisplayFilters();return false;">reset filters</a><br/>
+		<a href="" onclick="loadSampleStopwordsList();return false;">load sample stopwordlist</a><br/>
+		<textarea cols="30" rows="4" id="verb_inputfilt_w"></textarea>
+		<textarea cols="30" rows="4" id="verb_inputfilt_lem"></textarea><br/>
+		Or select the POS tag you want<br/>
+		<select id="verb_selectfilt_pos" multiple="multiple">
+		{% for classcat,dic in codes_treetagger.items %}
+			<optgroup label="{{classcat}}">
+				{% for class,descr in dic.items %}
+				<option id="{{class}}" value="{{class}}">{{class}} - {{descr}}</option>
+				{% endfor %}
+			</optgroup>
+		{% endfor %}
+		</select>
+		Here we can also have the dictionnaries used
+		<select id="verb_dictionnary_lem"></select>
+		<select id="verb_dictionnary_pos"></select>
+		<br/><br/>
+	</div>
+	<!-- auto-complete by tags using tag-it -->	
+	<!--<script src="{{ MEDIA_URL }}/js/tag-it.js" type="text/javascript" charset="utf-8"></script>-->
+    <!--<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/jquery.tagit.css">-->
+	<script type="text/javascript">
+		// AUTO COMPLETION FOR SEARCH FIELDS
+		// Loading tag-it values : all codes
+		// Adding all PEOPLE & CODES
+/*
+		var theTags = [{% for p in enquete.speaker_set.all %}'{{p.name}}',{% endfor %}{% for c in enquete.code_set.all %}'{{c.name}}',{% endfor %}'nope'];
+		$('#tagfields').tagit();
+		$('#tagfields').tagit({
+			availableTags: theTags, // this param is of course optional. it's for autocomplete.
+			// configure the name of the input field (will be submitted with form), default: item[tags]
+			itemName: 'item',
+			fieldName: 'q'
+		});
+*/
+	</script>
+	{% endcomment %}
+	
+</div>
+
+	<!-- ========================================================================= -->
+	<!-- before we used to feed the "render_d.html" template with data, now everything is made using ajax (see bottom or render_d.html template) -->
+	<div class="text_verbatim" id="verbatim"></div>
+
+{% endif %}
+	
+
+<!-- ======================================================= -->
+<!-- scrolling div by hand (jquery plugin) -->
+<script type="text/javascript" src="{{ MEDIA_URL }}/js/dragscrollable.js"></script>
+
+<script type="text/javascript">
+
+{% if texte.doctype == 'TEI' %}
+	function loadSampleStopwordsList() {
+		$.get("{{MEDIA_URL}}/xmlsamples/stopwords_fr.txt", function success(data) {
+			$("#verb_inputfilt_w").val(data);
+			// negative mode, we want to hide them
+			$("#verb_checkfilt_negative").attr('checked','checked');
+			changeVerbatimWordsDisplay( data, "w_", $("#verb_checkfilt_negative").attr('checked')!='checked' );
+			//console.log("file received:"+);
+		});
+	};
+
+	///// global vars to feed d3.js streamTimeline
+	var fromTextPart = {{minpart}};
+	var toTextPart = {{maxpart}};
+	var maxTextParts = {{totalmaxparts}};
+	
+	///// Fetch text parts functions
+	var loadingDiv = '<div id="loadingFetchingText"><span class="vizLoadingSpinner"></span> Chargement du document...<div>';
+	
+	function getVerbatimParts(from,to) {
+		//$.scrollTo( $("#topAnchor") , 500, {offset:-190} ); //{top:'0', left:'0'}
+		$('#verbatim').html(loadingDiv);
+		$.ajax({
+			type: "GET",
+			data: {'from':from,'to':to {%if highlight%}, 'highlight':'{{highlight}}'{%endif%} },
+			url: '{% url GetHtmlContent enquete.id texte.id %}' ,
+			cache: false,
+			success: function processAnswer(html) {
+			
+				$('#tei-settings').css('display', 'block')
+				$('#verbatim').html(html);
+				//initVerbatimTooltips();
+				//console.log("ntotal:"+ $('span:regex(class,lem_*)').length);
+				//updateDictionnarySelect();
+				// sidebar height
+				//dime.updateView();
+				oo.sidebar.init();
+				
+			}
+		});
+	}
+	function getClassDic(tag) {
+		classes = {};
+		$('span:regex(class,'+tag+'*)').each(function() {
+			var regp = new RegExp("^"+tag);
+			$($(this).attr('class').split(' ')).each(function() { 
+				if( this !== '' & regp.test(this) ) {
+					classes[this] = this;
+				}	
+			});
+		});
+		return classes;
+	};
+	function updateDictionnarySelect() {
+		var classLem = getClassDic("lem_");
+		var count=0;
+		for(c in classLem) {
+			var seldic=$("#verb_dictionnary_lem");
+			$("<option>"+count+" - "+c+"</option>").appendTo(seldic);
+			count+=1;
+		}
+		
+		var classLem = getClassDic("pos_");
+		var count=0;
+		for(c in classLem) {
+			var seldic=$("#verb_dictionnary_pos");
+			$("<option>"+count+" - "+c+"</option>").appendTo(seldic);
+			count+=1;
+		}
+	};
+	
+{% endif %}
+
+
+	$(document).ready(function() {
+		
+		{% if texte.doctype == 'TEI' %}
+		
+		///////////////// init verbatim fine display js controls (stopwords,lemmas,grammar,etc...)
+		// for each word, the view gives us all informations .. so we can filter the display !
+		// ex:
+		//	<span class="w_mangeais l_manger tfidf_0.2 pos_VERB" title="tfidf=0.1876,..."> mangeais </span>
+		// rappel:
+		// function changeVerbatimWordsDisplay( textareacontent(tosplit) , "css_prefix", showOrHide? )
+		$("#verb_inputfilt_lem").keypress(function(e){
+			if(e.which == 13) changeVerbatimWordsDisplay( $("#verb_inputfilt_lem").val(), "lem_", $("#verb_checkfilt_negative").attr('checked')!='checked' );
+		});
+		$("#verb_inputfilt_w").keypress(function(e){
+			if(e.which == 13) changeVerbatimWordsDisplay( $("#verb_inputfilt_w").val(), "w_", $("#verb_checkfilt_negative").attr('checked')!='checked' );
+		});				
+		$("#verb_selectfilt_pos").dropdownchecklist({
+			'emptyText':'select POS tags',
+			//'onComplete':onDropDownSelectClick,
+			'onItemClick': function(selector) {
+				var theSelec = $("#verb_selectfilt_pos option:selected");
+				var postagsstr = selector.val()+" " ;
+				for(var k=0;k<theSelec.length;k++) {
+					var tag = theSelec[k].id ; // looks like "VER_infi"
+					postagsstr += tag + " ";
+				}
+				console.log("dropDownSelectedTags:"+postagsstr);
+				changeVerbatimWordsDisplay( postagsstr, "pos_", $("#verb_checkfilt_negative").attr('checked')!='checked' );
+			},
+			'maxDropHeight':200,
+			//'positionHow':'absolute',//'relative'
+			'width':200,
+			//'minWidth':150,
+		});
+				
+		///////////////// get the actual txt content !
+		getVerbatimParts(fromTextPart,toTextPart);
+		
+		{% endif %}
+		
+		
+		//////////// scroll to fixed
+		$('#contentScrollToFixed').scrollToFixed();
+		
+		//////////// let's put fullscreen as default ? hum not yet
+		//toggleFullScreenMode();
+
+{% if texte.doctype == 'CSV' %}
+		// Init datatable
+		csvTable = $('#csvTable').dataTable( {
+			//"bFilter": true,
+			//"bSort": false,
+			"sScrollY": "600px",
+			"sScrollX": "100%", // not taken into acount !!
+ 			//"sScrollXInner": "100%",
+			"bScrollCollapse": true,
+			"bPaginate": false,
+			//"bJQueryUI": true,				// jQuery UI Theme
+			//"aaSorting": [[ 2, "desc" ]],
+			//"aoColumnDefs": [ { "sWidth": "10px", "aTargets": [ 4 ] } ],		// column width
+			"oLanguage": {
+				"sSearch": "Filtrer:",
+				"sLengthMenu": "Display _MENU_ records per page",
+				"sZeroRecords": "Nothing found - sorry",
+				"sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+				"sInfoEmpty": "Showing 0 to 0 of 0 records",
+				"sInfoFiltered": "(filtered from _MAX_ total records)"
+				},
+		});
+		$('.dataTables_scrollBody').dragscrollable({acceptPropagatedEvent:true});
+{% endif %}
+	
+	
+{% if texte.doctype == 'TEI' %}
+		$( "#teiIntervalSlider" ).slider({
+			range: true,
+			min: {{minpart}},
+			max: {{maxpart}},
+			values: [ {{minpart}}, {{maxpart}} ],
+			stop: function( event, ui ) {
+				var min=$("#teiIntervalSlider").slider("values",0);
+				var max=$("#teiIntervalSlider").slider("values",1);
+				// Update text
+				$("#teiIntervalText").html("from "+min+" to "+max);
+				// fetch content
+				getVerbatimParts(min,max);
+			}
+		});
+		var min=$("#teiIntervalSlider").slider("values",0);
+		var max=$("#teiIntervalSlider").slider("values",1);
+		$("#teiIntervalText").html("from "+min+" to "+max);
+			
+		// init tooltips is made when receiving textparts !
+		
+		// TOGGLE Speakers
+		{% for s in texte.speaker_set.all %}
+		$('#spkCheck_{{s.id}}').click(function() {
+			console.log("toggle spk:{{s.id}}");
+			$('.speaker_{{s.id}}').toggle();
+		});
+		{% endfor %}
+		
+		// TOGGLE All paraverbal
+		$('#paraCheckAll').click(function() {
+			console.log("toggle all");
+			var chk = $('#paraCheckAll').attr("checked");
+			if (chk!='checked') chk=null;
+			{% for k,parvs in paraverbal.items %}
+			{% for p,o,c in parvs  %}
+			$('#paraCheck_{{p}}').attr('checked',chk);
+			
+			
+			var css_class = '.{{c}}'.replace(' ', '.');
+			$(css_class+':not(.text_legend)').toggle((chk=='checked') );
+			
+			{% endfor %}
+			{% endfor %}
+		});
+		
+		// TOGGLE paraverbals
+		{% for k,parvs in paraverbal.items %}
+		{% for p,o,c in parvs  %}
+		$('#paraCheck_{{p}}').click(function() {
+			console.log("toggle par:{{p}}");
+			var css_class = '.{{c}}'.replace(' ', '.');
+			$(css_class+':not(.text_legend)').toggle();
+		});
+		{% endfor %}
+		{% endfor %}
+		
+{% endif %}
+	
+	
+	});
+</script>
+	
+	
+	
+	
+	{%comment%}
+	<a href="{% url outside_enquete_document_embed document.id %}" class="embed">Download file</a>
+	{%endcomment%}
+	<a id="description"></a>
+	
+	
+	
 	<section class="wide">
+		
+		
+		
+		
 		{% ifequal document.doctype "PDF" %}
 			<div class="pdf">
-				<object data="{% url outside_enquete_document_embed document.id %}#toolbar=1&amp;navpanes=0&amp;scrollbar=1&amp;page=0&amp;view=FitBV" type="application/pdf" width="700px" height="500px">
+				<object data="{% url outside_enquete_document_embed document.id %}#toolbar=0&amp;navpanes=0&amp;scrollbar=1&amp;page=0&amp;view=FitBV" type="application/pdf" width="700px" height="500px">
 				  alt : <a href="{% url outside_enquete_document_embed document.id %}">{{ document.name }}.pdf</a>
 				  <param name="view" value="Fit" />
 				</object>

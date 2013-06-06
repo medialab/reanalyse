@@ -15,8 +15,12 @@
 
 					<ul>
 						{% for s in sites_available %}
+						
 						<li class="site {% ifequal site s.name %}selected{% endifequal %}" data-title="{{ s.title }}" data-content="{{ s.content }}" data-placement="bottom"><a href="{{ s.url }}">{{ s.label|safe }}</a></li>
-				{% endfor %}
+						
+
+						
+						{% endfor %}
 
 						
 						{% if user.is_authenticated %}

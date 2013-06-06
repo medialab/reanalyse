@@ -118,9 +118,9 @@ ATTRIBUTE_PUBLICY_CHOICES = (
 ################################################################################ VERBATIM PUNCTUATION
 ########## PONCTUATION
 SENTENCE_UTT_SYMBOLS = {}
-SENTENCE_UTT_SYMBOLS['exclamative']='! '
+SENTENCE_UTT_SYMBOLS['exclamative']=' ! '
 SENTENCE_UTT_SYMBOLS['declarative']='. '
-SENTENCE_UTT_SYMBOLS['interrogative']='? '
+SENTENCE_UTT_SYMBOLS['interrogative']=' ? '
 SENTENCE_UTT_SYMBOLS['not_classified']=' ' # and other keys
 
 
@@ -155,8 +155,12 @@ CODES_IMAGE['inaudible']=				'inaudible'
 CODES_IMAGE['interruption']=			'interruption'
 CODES_IMAGE['part:echo']=				'interruption'
 CODES_IMAGE['laugh']=					'laugh'
-CODES_IMAGE['silence']=					'silence'
+CODES_IMAGE['rires']=					'laugh'
+#CODES_IMAGE['fin de la page']=			'laugh'
+
+CODES_IMAGE['pause']=					'pause'
 CODES_IMAGE['points de suspension']=	'hesitation' # (soon deprecated) more mapping, because some verb of test-studies may contain thoses
+
 
 ## IMAGE WITH TOOLTIP 			aka (comment:le commentaire)
 CODES_IMAGE_TOOLTIP={}
@@ -167,6 +171,57 @@ CODES_IMAGE_TOOLTIP['directed:']=		'directed'
 CODES_IMAGE_TOOLTIP['question:']=		'question'
 CODES_IMAGE_TOOLTIP['time:']=			'time'
 CODES_IMAGE_TOOLTIP['to:']=				'directed' # (soon deprecated) more mapping, because some verb of test-studies may contain thoses
+CODES_IMAGE_TOOLTIP['anonym:']=         'anonym'
+CODES_IMAGE_TOOLTIP['begin_page:']  =  'begin_page'
+CODES_IMAGE_TOOLTIP['end_page:']= 		 'end_page'
+CODES_IMAGE_TOOLTIP['incident:']=  	'incident'
+
+
+CODES_IMAGE_LABELS = {}
+CODES_IMAGE_LABELS['break']=				'Coupure'
+CODES_IMAGE_LABELS['body']=					'Gestuelle'
+CODES_IMAGE_LABELS['comment']=				'Commentaire'
+CODES_IMAGE_LABELS['directed']=				'Intéraction'
+CODES_IMAGE_LABELS['question']=				'Question'
+CODES_IMAGE_LABELS['time']=					'Durée ou heure'
+CODES_IMAGE_LABELS['to']=					'to'
+CODES_IMAGE_LABELS['anonym']=				'Passage anonymisé'
+CODES_IMAGE_LABELS['end_page']=				'Fin de la page'
+CODES_IMAGE_LABELS['begin_page']=			'Début de page'
+CODES_IMAGE_LABELS['hesitation']=			'Hésitation'
+CODES_IMAGE_LABELS['inaudible']=			'inaudible'
+CODES_IMAGE_LABELS['interruption']=			'interruption'
+CODES_IMAGE_LABELS['laugh']=				'Rire'
+CODES_IMAGE_LABELS['pause']=				'Silence'
+CODES_IMAGE_LABELS['points de suspension']=	'Silence'
+CODES_IMAGE_LABELS['incident']=	'Incident'
+
+
+
+
+
+
+CODES_IMAGE_CSS = {}
+CODES_IMAGE_CSS['break']=				'icon-microphone-off'
+CODES_IMAGE_CSS['body']=				'icon-user'
+CODES_IMAGE_CSS['comment']=				'icon-comments-alt'
+CODES_IMAGE_CSS['directed']=			'icon-comments-alt'
+CODES_IMAGE_CSS['question']=			'icon-question'
+CODES_IMAGE_CSS['time']=				'icon-time'
+CODES_IMAGE_CSS['to']=					'to'
+CODES_IMAGE_CSS['anonym']=				'icon-lock'
+CODES_IMAGE_CSS['begin_page']=			'icon-chevron-sign-left'
+CODES_IMAGE_CSS['end_page']=			'icon-chevron-sign-right'
+CODES_IMAGE_CSS['hesitation']=			'icon-ellipsis-horizontal'
+CODES_IMAGE_CSS['inaudible']=			'icon-volume-off'
+CODES_IMAGE_CSS['interruption']=		'icon-cut'
+CODES_IMAGE_CSS['laugh']=				'icon-smile'
+CODES_IMAGE_CSS['pause']=				'icon-pause'
+CODES_IMAGE_CSS['points de suspension']=	'icon-ellipsis-horizontal'
+CODES_IMAGE_CSS['uncertain']=	'text_uncertain'
+CODES_IMAGE_CSS['strong']=	'text_strong'
+CODES_IMAGE_CSS['incident']=	'icon-warning-sign'
+
 
 
 ############ 2) THOSE who require
@@ -176,10 +231,14 @@ CODES_IMAGE_TOOLTIP['to:']=				'directed' # (soon deprecated) more mapping, beca
 CODES_TEXT={}
 CODES_TEXT['strong:']=	'strong'
 
+
+
+
 ## TEXT STYLING WITH TOOLTIP 	aka (sic:uncertain)
 CODES_TEXT_TOOLTIP={}
 CODES_TEXT_TOOLTIP['sic:']=			'sic'
 CODES_TEXT_TOOLTIP['uncertain:']=	'uncertain'
+#CODES_TEXT_TOOLTIP['uncertain:']=	'uncertain'
 
 
 
@@ -192,8 +251,28 @@ STREAMVIZCODES['codes'] 	= ['question','silence','hesitation','laugh','inaudible
 
 # if you want code to be displayed in edShow as show/hide chackboxes, within categories (Transcription/Verbatim
 PARVBCODES={}
-PARVBCODES['Transcription'] = 	['break','comment','inaudible','question','time']
-PARVBCODES['Verbatim'] = 		['body','directed','hesitation','interruption','laugh','silence']
+PARVBCODES['Transcription'] = 	[
+									['break','Coupure', 'icon-microphone-off'],
+									['comment','Commentaire', 'icon-quote-left'],
+									['inaudible','Inaudible', 'icon-volume-off'],
+									['question','Question', 'icon-question'],
+									['time', 'Temps', 'icon-time'],
+								
+								]
+PARVBCODES['Verbatim'] = 		[
+									['body','Gestuelle', 'icon-user'],
+									['directed','Interaction', 'icon-comments-alt'],
+									['hesitation','Hésitation', 'icon-ellipsis-horizontal'],
+									['interruption','Interruption', 'icon-cut'],
+									['laugh','Rire', 'icon-smile'],
+									['pause','Silence', 'icon-pause'],
+									['anonym','Passage anonymisé', 'icon-lock'],
+									['begin_page','Début de page', 'icon-chevron-sign-left'],
+									['end_page','Fin de page', 'icon-chevron-sign-right'],
+									#['uncertain', 'Incertain', 'icon-warning-sign'],
+									['incident', 'Incident', 'icon-warning-sign'],
+								]
+
 
 # if you want code to be put specially in the margin (will add a css class)
 PARVBMARGL = ['comment','break']	# left margin
@@ -208,8 +287,17 @@ ALLCODES.update(CODES_IMAGE_TOOLTIP)
 ALLCODES.update(CODES_TEXT)
 ALLCODES.update(CODES_TEXT_TOOLTIP)
 for k in ALLCODES.values():
-	CODE_TO_CSS[k]='text_'+k
+	#CODE_TO_CSS[k]='text_'+k
 
+	if( k in CODES_IMAGE_CSS.keys() ):
+	
+		CODE_TO_CSS[k]=CODES_IMAGE_CSS[k]+''
+
+		
+	else:
+		
+		
+		CODE_TO_CSS[k]='text_'+k
 
 ################################################################################ TREETAGGER CODES
 # source:
@@ -252,7 +340,7 @@ CODES_TREETAGGER['VERBES']['VER_ppre'] = "participes présents"
 CODES_TREETAGGER['VERBES']['VER_pres'] = "verbes au présent"
 CODES_TREETAGGER['VERBES']['VER_simp'] = "verbes au passé simple"
 CODES_TREETAGGER['VERBES']['VER_subi'] = "verbes au subjonctif imparfait"
-CODES_TREETAGGER['VERBES']['VER_subp'] = "verbes au subjonctif présent"
+CODES_TREETAGGER['VERBES']['VER_subp'] = "verbes support@fr.one.com au subjonctif présent"
 
 
 
@@ -270,6 +358,11 @@ HTML_COLORS+=['#FFECEC','#FFEEFB','#FFECF5','#FFEEFD','#FDF2FF','#FAECFF','#F1EC
 HTML_COLORS+=['#FFECFF','#F4D2F4','#F9EEFF','#F5EEFD','#EFEDFC','#EAF1FB','#DBF0F7']
 HTML_COLORS+=['#EEEEFF','#ECF4FF','#F9FDFF','#E6FCFF','#F2FFFE','#CFFEF0','#EAFFEF']
 HTML_COLORS+=['#E3FBE9','#F3F8F4','#F1FEED','#E7FFDF','#F2FFEA','#FFFFE3','#FCFCE9']
+
+HTML_COLORS_INT = ['#1ECAB3','#1ECA7A','#01E32E','#0145AC','#8927EA',"#337375","#7ed6d9","#5087d9"]#['#E9C9B1','#FEA347','#FAA401','#DE9816','#ED7F10','#E67E30','#DF6D14','#F4661B','#B36700','#A75502','#AD4F09']
+
+HTML_COLORS_INV = ['#FE0000','#FE5500','#FE9900','#FEFE00','#8C0000','#d1492e','#d6954f']#['#FF6F7D','#FC5D5D','#E9383F','#C72C48','#BF3030','#BD4A4F','#A42424','#9E0E40','#91283B']
+  
 
 # Scale from d3.js d3.scale.category20()
 #HTML_COLORS=['#aec7e8','#ffbb78','#98df8a','#ff9896','#c5b0d5','#c49c94','#f7b6d2','#c7c7c7','#dbdb8d','#9edae5']

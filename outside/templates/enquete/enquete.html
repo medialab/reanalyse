@@ -17,9 +17,7 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.js"></script>
 	<script src="{{ STATIC_URL }}js/jquery.slimscroll.min.js"></script>
 	
-	
-	
-
+	<link rel="stylesheet" href="{{ STATIC_URL }}/fonts/font-awesome/css/font-awesome.min.css">
 	
 
 {% endblock %}
@@ -104,31 +102,69 @@
 	
 	
 	<section id="visualization" class="alpha wide" style="padding-top:0px">
-		
-		
 
+		          <!-- Button to trigger modal -->
+   &nbsp;&nbsp;&nbsp;
+   
+   <a id="help-general" href="#modal-help-general" role="button" class="btn_help_modal help-icon" data-toggle="modal">
+   	
+   	<em><b> Comment utiliser les outils d'exporation?</b></em>
+			
+			</a>
 		
+		
+	
 
 		<div class="map content" style="margin-left:0px; margin-top:18px">
+			<a id="help-filtre0" href="#modal-filtre0" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
+    		title="Filtrer selon les étapes du processus de recherche"><em><b></b>Explorer le corpus via le classement analytique des documents</em></a>
+		
+			<br/>
+			
+			<a id="help-filtre1" href="#modal-filtre1" role="button" class="btn_help_modal help-icon" data-toggle="modal" title="Filtrer selon les étapes du processus de recherche">
+				<em>Filtrer selon les étapes du processus de recherche</em></a>
+			
 			<div><p class='typetitle'>1. Phases</p></div>
 			<div id="phases"></div>
+			
+			<a id="help-filtre2" href="#modal-filtre2" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
+    		title="Filtrer selon le type d'activité"><em>Filtrer selon le type d'activité</em></a>
 			<div><p class='typetitle'>2. Categories</p></div>
 			<div id="categories"></div>
+			
+			<a id="help-filtre3" href="#modal-filtre3" role="button" class="btn_help_modal help-icon" data-toggle="modal"
+			 title="Filtrer selon le type de documents"><em>Filtrer selon le type de documents</em></a>
 			<div><p class='typetitle'>3. Articles</p></div>
 			<div id="articles"></div>
 
 		
+			<a id="help-filtre4" href="#modal-filtre4" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
+	title="Explorer le corpus via la localisation géographique des documents"><em></em>
+		Explorer le corpus via la localisation géographique des documents
+	</a>   	
 			<div id="map"></div>
 			
 			
 			
-			<div id="timeline"></div>
+    		
+    		
+    		
+			<div id="timeline">
+				
+				<a id="help-filtre5" href="#modal-filtre5" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
+			
+			title="Explorer le corpus via la répartition temporelle des documents"><em>Explorer le corpus via la répartition temporelle des documents</em></a>
+
+				
+			</div>
 			
 		</div>
 		<div class="clear"></div>
 	</section>
 
 	<a ></a>
+	
+	{%comment%}
 	<section id="content" class="section expand" >
 		<div class="abstract">
 			{% for abstract  in enquete.meta.values.general.abstract.value %}{{ abstract }}{% endfor %}
@@ -140,6 +176,7 @@
 
 		</div>
 	</section>
+	{%endcomment%}
 
 
 {% endblock %}
@@ -169,7 +206,12 @@
 					<ul></ul>
 				</div>
 			</div>
-
+		
+		
+		
+		
+		
+		
 		{% endblock %}
 
 
@@ -214,6 +256,236 @@
 		</div>
 	</div>
 	{% endif %}
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- Modal -->
+    
+    <div id="modal-filtre0" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+   			 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Explorer le corpus via le classement analytique des documents</h3>
+   		</div>
+   		 <div class="modal-body">
+   			Les diagrammes en barres ci-dessous présentent la distribution des document selon, respectivement, les 3 niveaux du plan de classement.
+			Chaque barre représente une catégorie du plan de classement. En cliquant sur une barre donnée, vous sélectionnez les documents de la catégorie correspondante.
+			Vous pouvez à tout moment revenir à l'étape précédente en cliquant à nouveau sur cette barre.
+			
+			
+			
+   		 </div>
+    	<div class="modal-footer">
+   			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    		
+   		 </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <div id="modal-filtre1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+   			 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Filtrer selon les étapes du processus de recherche</h3>
+   		</div>
+   		 <div class="modal-body">
+   			<b>Ici vous pouvez sélectionner les documents relevant :</b>
+   			<ul>
+				<li>d’une étape préparatoire (préparation)</li>
+				<li>de la phase de collecte des matériaux (collecte)</li>
+				<li>de la phase d’analyse des matériaux (analyse)</li>
+				<li>ou ajoutés ex post au corpus (complément)</li>
+			
+			</ul>
+
+   		 </div>
+    	<div class="modal-footer">
+   			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    		
+   		 </div>
+    </div>
+    
+    
+    <div id="modal-filtre2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+   			 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Filtrer selon le type d'activité</h3>
+   		</div>
+   		 <div class="modal-body">
+   			<b> Ici vous pouvez sélectionner les documents relevant d’une activité :</b>
+  		 	<ul>
+				<li>administrative (admi)</li>
+				<li>de documentation (docu)</li>
+				<li>méthodologique (methodo)</li>
+				<li>d’enregistrements d’observations sur le terrain (audio, icono, vidéo)</li>
+				<li>de consignation par écrit des observations (note, transcription)</li>
+				<li>de traitement des matériaux résultant (inter)</li>
+				<li>de production de résultats scientifiques (prod)</li>
+			</ul>
+		
+   		 </div>
+    	<div class="modal-footer">
+   			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    		
+   		 </div>
+    </div>
+    
+    
+     <div id="modal-filtre3" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+   			 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Filtrer selon les types de documents</h3>
+   		</div>
+   		 <div class="modal-body">
+   		
+   		
+   		<b>Ici vous pouvez sélectionner les types de documents suivants (dans la mesure où ils sont présents dans le corpus) :</b>
+   		<ul>
+
+	   		<li>budget (budget)</li>
+			<li>correspondance (corresp)</li>
+			<li>missions (mission)</li>
+			<li>réunions (reunion)</li>
+			<li>archives des enquêtés (archives)</li>
+			<li>documentation compilée par le chercheur (info)</li>
+			<li>contexte matériel de l’enquête (contextmat)</li>
+			<li>outils du protocole d’enquête (outils)</li>
+			<li>notes de terrain contextuelles (topo)</li>
+			<li>gestion du recrutement (recrut)</li>
+			<li>entretien individuel (entretienindiv)</li>
+			<li>entretien collectif (entretiencol)</li>
+			<li>questionnaires</li>
+			<li>observations (topo)</li>
+			<li>fiches sur les enquêtés ou l’analyse des matériaux (fiche)</li>
+			<li>publications (publi)</li>
+			<li>communications (com)</li>
+			<li>cours (cours)</li>
+		    <li>littérature grise (lgrise)</li>
+   		</ul>
+   			
+
+   		 </div>
+    	<div class="modal-footer">
+   			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    		
+   		 </div>
+    </div>
+    
+    
+    <div id="modal-filtre4" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+   			 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Explorer le corpus via la localisation géographique des documents</h3>
+   		</div>
+   		 <div class="modal-body">
+				<b>Les cercles présents sur la carte représentent les documents regroupés selon leur localisation géographique.
+	Ce filtre peut être actionné de deux manières :</b>
+			
+			<ul>
+	
+		   	
+		   		
+		   		<li>en cliquant sur un cercle, le cadre se centre autour de celui-ci, vous pouvez ensuite zoomer pour ne faire
+	   apparaître que le cercle sélectionné</li>
+				<li>en déplaçant le cadre de la carte avec la souris ou le pavé tactile, jusqu’à ne faire apparaître que le ou les
+	          cercles sélectionnés, en zoomant si nécessaire</li>
+				
+	   		</ul>
+			
+			La liste des documents filtrés est affichée dans la colonne de droite.
+
+   		 </div>
+   		 
+   		 
+    	<div class="modal-footer">
+   			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    		
+   		 </div>
+    </div>
+    
+   
+   
+   <div id="modal-filtre5" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+   			 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Explorer le corpus via la répartition temporelle des documents</h3>
+   		</div>
+   		 <div class="modal-body">
+   			<b>Cette ligne correspond à une visualisation temporelle dont chaque
+graduation correspond à une année.
+Ce filtre peut être actionné de deux manières:</b>
+
+<ul>
+	
+		   		
+		   		
+		   		<li>en cliquant sur une barre correspondant à une année donnée,
+      sélectionnant ainsi les documents correspondants</li>
+				<li>en étirant la bande bleue située sous la ligne, de manière à
+       sélectionner la plage chronologique désirée. Cette bande, peut
+         ensuite être déplacer le long de la ligne de temps.</li>
+				
+	   		</ul>
+   			
+   			
+
+   		 </div>
+    	<div class="modal-footer">
+   			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    		
+   		 </div>
+    </div>
+    
+     <!-- Modal -->
+    <div id="modal-help-general" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		    <h3 id="myModalLabel">Aide générale</h3>
+	    </div>
+	    <div class="modal-body">
+			 <b> 3 types de filtres permettent d'explorer le corpus :</b>
+			 
+			  <ul>
+			  	<li>1- le classement analytique des documents</li>
+			  	<li>2- la localisation géographique des documents</li>
+			  	<li>3- la date des documents</li>
+			  </ul>
+			   <br/>
+			<b>Ces filtres :</b>
+			 <br/>
+			<ul>
+				<li>peuvent être utilisés de manière indépendante ou combinée : vous pouvez sélectionner un filtre puis
+				         affiner votre sélection avec les deux autres jusqu'à obtenir le résultat souhaité.</li> <br/>
+				<li>sont interdépendants : toute action effectuée sur un des filtres se répercute automatiquement sur les
+				      deux autres.</li> <br/>
+				<li>sont associés à des visualisations représentant le poids relatif de chaque élément du corpus. Chaque action
+				        sur un filtre déclenche une transition animée permettant de visualiser la modification du corpus par
+				         rapport à l'étape précédente</li> <br/>
+				<li>La liste de documents affichée dans la colonne de droite correspond au résultat de la requête effectuée à
+				        l'aide de ces filtres. Chaque document y est identifié par son nom, sa date et sa localisation géographique.</li>
+				<li>Un chemin de fer situé en haut de cette colonne fournit un récapitulatif des filtres actionnés et permet soit
+				      de les désactiver un par un soit de tout réinitialiser.</li> <br/>
+				<li>Si vous avez obtenu l’accès à l’enquête, vous pouvez cliquer sur chaque document pour l’afficher dans une
+				            autre fenêtre.</li>
+			</ul>
+			
+			Pour plus d'information sur l'usage avancée des filtres, cliquez ici.
+
+	    </div>
+	    <div class="modal-footer">
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		    
+	    </div>
+    </div>
+	
 {% endblock %}
 
 

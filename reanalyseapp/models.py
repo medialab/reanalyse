@@ -53,8 +53,8 @@ from collections import OrderedDict
 import logging
 logger = logging.getLogger('apps')
 class NullHandler(logging.Handler):
-    def emit(self, record):
-        pass
+	def emit(self, record):
+		pass
 nullhandler = logger.addHandler(NullHandler())
 ###########################################################################
 
@@ -99,15 +99,15 @@ class Tag(models.Model):
 	DISABLE_VISUALIZATION = 'DV'
 
 	TYPE_CHOICES = (
-        (AUTHOR, 'Author'),
-        (ARTICLE, 'Article'),
-        (INSTITUTION, 'Institution'),
-        (RESEARCHER, 'Researcher'),
-        (PLACE, 'Place'),
-        (DATE, 'Date'),
-        (GEOCOVER, 'Geographic coverage'),
-        (DISABLE_VISUALIZATION, 'Disable Visualization')
-    )
+		(AUTHOR, 'Author'),
+		(ARTICLE, 'Article'),
+		(INSTITUTION, 'Institution'),
+		(RESEARCHER, 'Researcher'),
+		(PLACE, 'Place'),
+		(DATE, 'Date'),
+		(GEOCOVER, 'Geographic coverage'),
+		(DISABLE_VISUALIZATION, 'Disable Visualization')
+	)
 
 	name = models.CharField(max_length=128) # e.g. 'Mr. E. Smith'
 	slug = models.SlugField(max_length=128) # e.g. 'mr-e-smith'
@@ -124,95 +124,95 @@ class Tag(models.Model):
 # ENQUETE
 ##############################################################################
 class Enquete(models.Model):
-    #connection_name="enquetes"                # todo: one db for each enquete ?
-    name = models.CharField(max_length=250)
-    uploadpath     = models.CharField(max_length=250)    # root path of uploaded folder (if we want to remove everything)
-    locationpath = models.CharField(max_length=250)    # root path of the extracted folder (used as base during import)
-    metadata = models.TextField(default='{}')         # store all metadata as json dict
-    ese = models.TextField()                        # ese is not yet included/structured in enquete, let's put all infos from ese.xml into a json dict
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES)        # see globalvars
-    statuscomplete = models.BigIntegerField(default=0)                     # loading 0-100%
-    date = models.DateTimeField(auto_now_add=True)                            # date uploaded
-    ddi_id = models.CharField(max_length=170)
+	#connection_name="enquetes"				# todo: one db for each enquete ?
+	name = models.CharField(max_length=250)
+	uploadpath	 = models.CharField(max_length=250)	# root path of uploaded folder (if we want to remove everything)
+	locationpath = models.CharField(max_length=250)	# root path of the extracted folder (used as base during import)
+	metadata = models.TextField(default='{}')		 # store all metadata as json dict
+	ese = models.TextField()						# ese is not yet included/structured in enquete, let's put all infos from ese.xml into a json dict
+	status = models.CharField(max_length=2, choices=STATUS_CHOICES)		# see globalvars
+	statuscomplete = models.BigIntegerField(default=0)					 # loading 0-100%
+	date = models.DateTimeField(auto_now_add=True)							# date uploaded
+	ddi_id = models.CharField(max_length=170)
 
-    tags = models.ManyToManyField( Tag )
+	tags = models.ManyToManyField( Tag )
 
-    users = models.ManyToManyField( User, through="AccessRequest" ) # user having th...
-    
-    
-    #permission = models.ForeignKey(Permission)
-    class Meta: # Users & Groups are initialized in views
-        permissions = (
-            ("can_browse", "BROWSE Can see enquete overview"),
-            ("can_explore", "EXPLORE Can see whole enquete"),
-            ("can_make", "MAKE Can upload enquetes and make viz"),
-        )
-    def __unicode__(self):
-        return str(self.id)+":"+self.name
-    def meta(self):
-        if self.metadata:
-            return simplejson.loads(self.metadata)
-        else:
-            return {'metainfo':'no meta was parsed'}
-    
-    def meta_items(self):
-        if self.metadata:
-           self.metadata = simplejson.loads(self.metadata)
-           
-           sorted_values = {}
-            
-           for k in self.metadata['values']:
-               sorted_values[k] = OrderedDict(sorted([x for x in self.metadata['values'][k].iteritems() if isinstance(x[1], dict)], key=lambda x: x[1]['i'] ))
-               
-           self.metadata['values'] = sorted_values
-           
-           
-           return self.metadata
-            
-            #return simplejson.loads(self.metadata)
-        else:
-            return {'metainfo':'no meta was parsed'}   
-        
-        
-    
+	users = models.ManyToManyField( User, through="AccessRequest" ) # user having th...
+	
+	
+	#permission = models.ForeignKey(Permission)
+	class Meta: # Users & Groups are initialized in views
+		permissions = (
+			("can_browse", "BROWSE Can see enquete overview"),
+			("can_explore", "EXPLORE Can see whole enquete"),
+			("can_make", "MAKE Can upload enquetes and make viz"),
+		)
+	def __unicode__(self):
+		return str(self.id)+":"+self.name
+	def meta(self):
+		if self.metadata:
+			return simplejson.loads(self.metadata)
+		else:
+			return {'metainfo':'no meta was parsed'}
+	
+	def meta_items(self):
+		if self.metadata:
+		   self.metadata = simplejson.loads(self.metadata)
+		   
+		   sorted_values = {}
+			
+		   for k in self.metadata['values']:
+			   sorted_values[k] = OrderedDict(sorted([x for x in self.metadata['values'][k].iteritems() if isinstance(x[1], dict)], key=lambda x: x[1]['i'] ))
+			   
+		   self.metadata['values'] = sorted_values
+		   
+		   
+		   return self.metadata
+			
+			#return simplejson.loads(self.metadata)
+		else:
+			return {'metainfo':'no meta was parsed'}   
+		
+		
+	
 
 
 #Store every access request from clients
 class AccessRequest(models.Model):
-    user = models.ForeignKey( User )
-    enquete = models.ForeignKey( Enquete, related_name="access_requests" )
-    description = models.TextField()
-    date = models.DateTimeField( auto_now_add=True )
-    is_activated = models.BooleanField( default=False )
-    
-    class Meta:
-        unique_together = ('user', 'enquete')
-    
-    def __unicode__(self):
-        return "%s %s" % ( self.enquete.id, self.user.username )
+	user = models.ForeignKey( User )
+	enquete = models.ForeignKey( Enquete, related_name="access_requests" )
+	description = models.TextField()
+	date = models.DateTimeField( auto_now_add=True )
+	is_activated = models.BooleanField( default=False )
+	
+	class Meta:
+		unique_together = ('user', 'enquete')
+	
+	def __unicode__(self):
+		return "%s %s" % ( self.enquete.id, self.user.username )
 
 
 @receiver(pre_save, sender=AccessRequest)
 def email_if_access_true(sender, instance, **kwargs):
-    try:
-        access_request = AccessRequest.objects.get(pk=instance.pk)
-    except AccessRequest.DoesNotExist:
-        pass # Object is new, so field hasn't technically changed, but you may want to do something else here.
-    else:
-        if access_request.is_activated == False and instance.is_activated == True: # if is_activated becomes true
-            from django.contrib.sites.models import Site
-            
-            enquete_view = reverse('outside.views.enquete', kwargs={'enquete_id':access_request.enquete.id})
-            url = '%s%s' % (settings.REANALYSEURL, enquete_view )
-            
-            subject, from_email, to = _('Bequali : Research request granted'),"L'equipe Bequali <admin@bequali.fr>", access_request.user.email
-            html_content = render_to_string('email/access_request.html', {'action':'access_granted', 'enquete':access_request.enquete,'url':url})
-            text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
-            
-            # create the email, and attach the HTML version as well.
-            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
+	try:
+		access_request = AccessRequest.objects.get(pk=instance.pk)
+	except AccessRequest.DoesNotExist:
+		pass # Object is new, so field hasn't technically changed, but you may want to do something else here.
+	else:
+		if access_request.is_activated == False and instance.is_activated == True: # if is_activated becomes true
+			from django.contrib.sites.models import Site
+			
+			enquete_view = reverse('outside.views.enquete', kwargs={'enquete_id':access_request.enquete.id})
+			url = '%s%s' % (settings.REANALYSEURL, enquete_view )
+			
+			subject, from_email, to = _('Bequali : Research request granted'),"L'equipe Bequali <admin@bequali.fr>", access_request.user.email
+			html_content = render_to_string('email/access_request.html', {'action':'access_granted', 'enquete':access_request.enquete,'url':url})
+			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+			
+			# create the email, and attach the HTML version as well.
+			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
 
 
 
@@ -288,7 +288,7 @@ class AttributeType(models.Model):
 	def __unicode__(self):
 		return self.name
 ##############################################################################	
-# 45,33,12,H,F,pêcheur diplomé & groupeType2,groupeType3
+# 45,33,12,H,F,p��cheur diplom�� & groupeType2,groupeType3
 class Attribute(models.Model):
 	enquete = models.ForeignKey(Enquete)
 	attributetype = models.ForeignKey(AttributeType)
@@ -342,7 +342,7 @@ class Code(models.Model):
  		return self.name
 #################################################
 class Sentence(models.Model):
-	# Enfin •• je crois ((rire)).
+	# Enfin ������ je crois ((rire)).
 	enquete = models.ForeignKey(Enquete)
 	texte = models.ForeignKey(Texte)
 	speaker = models.ForeignKey(Speaker)
@@ -444,12 +444,17 @@ class NgramSpeaker(models.Model):
 # TEI XML PARSER
 ############################################################################################
 def parseXmlDocument(texte):
+	
+	#print('parseXmlDocument')
+	
 	e = texte.enquete
 	
 	# WE ERASE ALL OBJECTS if there is (will erase Sentences & Words too)
 	texte.sentence_set.all().delete()
 	
 	tree = etree.parse(texte.locationpath)
+	
+	print(texte.locationpath)
 	root = tree.getroot()
 	roottag = root.tag
 	
@@ -526,6 +531,9 @@ def parseXmlDocument(texte):
 ############################################################################################################### PARSE TXM
 # NB: we build long sentences without looking at punctuation
 def parseTXMDivs(texte,nodes,speakersArray):
+	
+	#print('parseTXMDivs')
+	
 	e=texte.enquete
 	speakerContentDict = dict((theid,'') for theid in speakersArray)
 	
@@ -573,6 +581,9 @@ def parseTXMDivs(texte,nodes,speakersArray):
 		s.save()
 ################################################
 def parseTXMWords(sentence,words,N):
+	
+	#print('parseTXMWords')
+	
 	# for the moment only looking at normal words+punctuation
 	allSentenceTxt=""
 	allSentenceHtml=""
@@ -629,6 +640,7 @@ def splitElemListByTimeAnchor(elemList,initTime):
 	yield [anchorTime, elemList[j:k+1]]
 ######################################################################## manage list of all <div>
 def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
+	#print('parseTEIDivs')
 	e = texte.enquete
 	# init speakerContentDict which will store all text for one speaker
 	speakerContentDict = dict((theid,'') for theid in speakersArray)
@@ -640,7 +652,8 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 	divNodesCur=0
 	# here we note the complete %, based on the total number of interventions
 	for node in nodes:
-		if node.tag==XMLTEINMS+'div' and e.status=='1':
+		
+		if node.tag==XMLTEINMS+'div': #and e.status=='1':
 			unode = node.findall(XMLTEINMS+'u')[0]
 			ddiid = unode.attrib['who']
 			if ddiid.startswith('#'): # means that the real ddi_id is in the header
@@ -680,6 +693,8 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 		s.save()
 ########################
 def parseTEISentences(texte,nodes,speaker):
+	#print('parseTEISentences')
+	
 	e=texte.enquete
 	allSentencesContent=""
 	n=0 # index of sentences if many in same intervention
@@ -714,12 +729,26 @@ def parseTEISentences(texte,nodes,speaker):
 	return allSentencesContent
 ########################
 def parseTEIWords(sentence,nodes,N):
+	#print('parseTEIWords')
+	
 	e=sentence.texte.enquete
 	t=sentence.texte
 	s=sentence.speaker
 	allSentenceTxt=""
 	allSentenceHtml=""
 	onlyMarginParaverbal=True	
+	
+	lastWordType = ""
+	lastWordContent = ""
+	currentWordType = ""
+	
+	leadingSpace = ""
+	endingSpace = ""
+	
+	simple_ponctuation = [',','.','...']
+	double_ponctuation = [';',':','!','?']
+	
+	
 	for node in nodes:
 		incidDesc=''
 		createWord = True
@@ -728,31 +757,79 @@ def parseTEIWords(sentence,nodes,N):
 		if node.tag==XMLTEINMS+'w':
 			# TRASH: codeTypeName = 'word'
 			wordContent = node.text
-			allSentenceTxt += wordContent+" "
+			#allSentenceTxt += wordContent+" "
 			# nb: if we want to, we can put content in css class to allow some display
 			#allSentenceHtml += '<span class="w_'+wordContent+'">' + wordContent + "</span> "
-			allSentenceHtml += wordContent + " "
+			#allSentenceHtml += " "+wordContent+ " "
+			
+			currentWordType = "w"
+		
+			if lastWordContent == '-':
+				leadingSpace = ""
+				endingSpace = ""
+			else:
+				leadingSpace = " "
+				endingSpace = ""	
+			
+			if(wordContent != None):
+				allSentenceTxt += str(leadingSpace)+wordContent+str(endingSpace)
+				allSentenceHtml += leadingSpace+wordContent+endingSpace
+			
+			lastWordType = currentWordType
+			lastWordContent = wordContent
+		
+		
 		elif node.tag==XMLTEINMS+'c':
+			
+			currentWordType = "c"
 			# TRASH: codeTypeName = 'ponctuation'
+			
+			#condition double and mono ponctuation
+			
+			
 			wordContent = node.text
-			allSentenceTxt += wordContent+" "
-			allSentenceHtml += wordContent+" "
+			
+			
+			if wordContent in simple_ponctuation :
+					leadingSpace = ""
+					endingSpace = " "
+			elif wordContent in double_ponctuation :
+				leadingSpace = " "
+				endingSpace = " "
+			else:
+				if lastWordType == 'w':
+					leadingSpace = ""
+					endingSpace = ""
+			
+			
+			allSentenceTxt += leadingSpace+wordContent+endingSpace
+			allSentenceHtml += leadingSpace+wordContent+endingSpace
+			
+			lastWordType = currentWordType
+			lastWordContent = wordContent
+			
+			
 		###################################################################### PARAVERBAL PARSING, see globalvars.py for codes
 		elif node.tag==XMLTEINMS+'pause':
 			# TRASH: codeTypeName = 'paraverbal'
 			isParaverbal = True
-			codeName = 'silence'
+			codeName = 'pause'
 			try:
 				wordContent = node.attrib['type'] # short/long
 			except:
-				wordContent = 'silence'
+				wordContent = 'pause'
 		elif node.tag==XMLTEINMS+'incident':
+			
+			
 			# TRASH: codeTypeName = 'paraverbal'
 			isParaverbal = True
 			codeName = 'incident'
 			wordContent = 'incident'
 			try:
 				incidDesc = node.findall(XMLTEINMS+'desc')[0].text
+				
+				#print inciDesc
+
 			except:
 				incidDesc = 'nodescr.orpbparsing.forthisincident'
 			################################ look into description to manage know incidents
@@ -760,6 +837,8 @@ def parseTEIWords(sentence,nodes,N):
 				codeName = CODES_IMAGE[incidDesc]
 			else:
 				for nms in CODES_IMAGE_TOOLTIP.keys():
+					nms = nms.decode('utf-8')
+					
 					if incidDesc.startswith(nms):
 						codeName = CODES_IMAGE_TOOLTIP[nms]
 						incidDesc = incidDesc[len(nms):]
@@ -776,8 +855,13 @@ def parseTEIWords(sentence,nodes,N):
 			# TRASH: codeTypeName = 'unknown'
 			createWord = False
 		
+		
+		#HANDLE SPACES FOR WORDS AND PONCTUATION
+		
+		
 		###################################################################### PARAVERBAL HTML
 		if isParaverbal:
+
 			try:
 				cssClass='text_anyparvb ' + CODE_TO_CSS[codeName]
 				# add classes if you want certain types to be located on the margin
@@ -789,21 +873,40 @@ def parseTEIWords(sentence,nodes,N):
 				cssClass='text_anyparvb text_incident'
 			
 			# NB: for tooltips, location of bubble depends on 'onlyMarginParaverbal'... see javascript for the location
-			
-			if codeName in CODES_IMAGE.values(): 				# dont keep content, only image
+			if codeName in CODES_IMAGE.values(): # dont keep content, only image
 				#allSentenceHtml += '<div class="'+cssClass+'">&nbsp;</div>'
 				# todo: content even if no descr (rappel)
-				allSentenceHtml += '<a rel="text_tooltip" title="'+codeName+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
+
+				if codeName in CODES_IMAGE_LABELS.keys():
+					CODE_LABEL = CODES_IMAGE_LABELS[codeName].decode('utf-8')
+				else:
+					#print(codeName)
+					
+					
+					CODE_LABEL = ' '
+
+				#allSentenceHtml += ' <a rel="text_tooltip" title="'+CODE_LABEL+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
+				allSentenceHtml += ' <a rel="text_tooltip" title="'+CODE_LABEL+'" class="'+cssClass+'"></a> '
 			elif codeName in CODES_IMAGE_TOOLTIP.values(): 		# keep content as popup on image (tooltip made with js)
-				allSentenceHtml += '<a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
+				#allSentenceHtml += ' <a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
+				allSentenceHtml += ' <a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"></a> '
 			elif codeName in CODES_TEXT.values(): 				# text styling
 				allSentenceTxt += incidDesc+" "
-				allSentenceHtml += '<div class="'+cssClass+'">'+incidDesc+'</div> '
+				allSentenceHtml += '<a class="'+cssClass+'">'+incidDesc+'</a> '
 			elif codeName in CODES_TEXT_TOOLTIP.values(): 		# text styling with tooltip
-				allSentenceHtml += '<a rel="text_tooltip" title="'+codeName+'" class="'+cssClass+'"><div>'+incidDesc+'</div></a> '
+				if codeName == 'sic':
+					
+					splitted = incidDesc.split('|')
+					
+					allSentenceHtml += '<a rel="text_tooltip" title="Sans correction" class="'+cssClass+'"><div>['+splitted[0]+']</div></a>'
+					allSentenceHtml += '<a rel="text_tooltip" title="Correction" class="'+cssClass+'"><div>['+splitted[1]+']</div></a>'
+				
+				elif codeName == 'uncertain':
+					allSentenceHtml += ' <a rel="text_tooltip" title="Transcription incertaine" class="'+cssClass+'"><div>'+incidDesc+'</div></a> '
 			else: # unkown (ie 'incident')
-				allSentenceHtml += '<a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
-			
+				#allSentenceHtml += ' <a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"><div>&nbsp;</div></a> '
+				allSentenceHtml += ' <a rel="text_tooltip" title="'+incidDesc+'" class="'+cssClass+'"></a> '
+
 			if codeName not in PARVBMARGL+PARVBMARGR:
 				onlyMarginParaverbal=False
 		else:
@@ -835,9 +938,11 @@ def parseTEIWords(sentence,nodes,N):
 				# todo: to solve that thread-not-safe problem with get_or_create, which can produce duplicate entries !!!!
 				# update: is there really a problem here ?
 				logger.info("PROBLEM: get_or_create problem :"+codeName+","+wordContent+","+str(N) )
-				
+		
+		
+		
 	# end symbol
-	
+		
 	typ = sentence.code.name
 	try:
 		endS = SENTENCE_UTT_SYMBOLS[typ]
@@ -888,7 +993,7 @@ def parseTEIWords(sentence,nodes,N):
 #	0		1	2		C		si !
 #	1		1	2		C		je te dis que si !
 ################################################################################## TIMEPART 
-#	0		2	3		D		j'ai mangé un chien
+#	0		2	3		D		j'ai mang�� un chien
 #	0		2	3		B		impossible
 ################################################################################## TIMEPART (most of time, we have only one speaker per [i,o])
 #	0		3	4		E		taisez-vous.
@@ -1907,7 +2012,7 @@ def getTextContent(texte,fromT,toT):
 
 
 
-# Testing models on different databases ... à suivre
+# Testing models on different databases ... �� suivre
 #################################
 #class Poire(models.Model):
 #	connection_name="default"
@@ -1969,7 +2074,7 @@ def getTextContent(texte,fromT,toT):
 ##############################################################################
 # DEPRECATED (unuseful!)
 # class Intervention(models.Model):
-# 	# Je ne le connais pas ! Enfin •• je crois ((rire)).
+# 	# Je ne le connais pas ! Enfin ������ je crois ((rire)).
 # 	enquete = models.ForeignKey(Enquete)
 # 	texte = models.ForeignKey(Texte)
 # 	speaker = models.ForeignKey(Speaker)

@@ -110,8 +110,8 @@ TIME_ZONE = 'Europe/Paris'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGES = (
-	('en', 'English'),
 	('fr', 'Français'),
+	('en', 'English'),
 )
 
 
@@ -188,6 +188,9 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.locale.LocaleMiddleware',
 	'djangosecure.middleware.SecurityMiddleware',
+	'django.middleware.cache.UpdateCacheMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -308,6 +311,14 @@ LOGGING = {
 		}
 	}
 }
+
+
+#CACHES = {
+ #   'default': {
+  #      'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+   #     'LOCATION': '127.0.0.1:11211',
+    #}
+#}	
 
 
 #

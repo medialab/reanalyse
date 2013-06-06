@@ -73,6 +73,28 @@ def getSpeakersColorsDict(e,texte):
 	return colors
 ###########################################################################
 
+# return color dict for a text or for whole enquete
+def getRandomSpeakersColorsDict(e,texte):
+    colors={}
+    try:
+        for s in texte.speaker_set.all():
+            
+            
+            if s.ddi_type == 'INV':
+                i = int(len(HTML_COLORS_INV)*random.random())
+                colors[int(s.id)]=HTML_COLORS_INV[i]
+                HTML_COLORS_INV.pop(i)
+            else:
+                i = int(len(HTML_COLORS_INT)*random.random())
+                colors[int(s.id)]= HTML_COLORS_INT[i]
+                HTML_COLORS_INT.pop(i)
+            
+            
+    except:
+        for s in e.speaker_set.all():
+            colors[int(s.id)]=str(s.color)
+    return colors
+###########################################################################
 
 
 

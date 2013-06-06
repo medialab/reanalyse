@@ -29,7 +29,7 @@
 			{% endcomment %}
 			{% if request.user.is_authenticated %}
 			<div class="back floating with-icon" >
-				<a href="{% if enquiry %}{% url outside_enquete_download enquiry.enquete.id %}{% else %}{% url outside_enquete_download enquete.id %}{% endif %}" title="{% trans "Download the research" %}">
+				<a href="{% url outside_download_page enquete.id%}" title="{% trans "Download page" %}">
 					<div class="icon"><img src="{{ STATIC_URL }}img/57-download.png"></div>{% trans "Download" %}
 				</a>
 			</div>

@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 #
 #   Import script for .csv files.
 #    Note: manifest a strong printaholism.
 #
 import sys, os, csv, re
 from optparse import OptionParser
-
 
 
 # get path of the django project
@@ -23,6 +23,8 @@ from django.conf import settings
 from reanalyseapp.models import Enquete, Texte, Tag
 from datetime import datetime
 
+from reanalyseapp.views import *
+
 def update( textes, enquete, csvdict ):
 
     print "        %s documents found in enquete: \"%s\", id:%s" % ( textes.count(), enquete.name, enquete.id )
@@ -39,11 +41,21 @@ def update( textes, enquete, csvdict ):
             texte_url = row['*file']
             texte_name = row['*name']
             locationgeo = re.sub( r'[^0-9\.,-]', '', row['*locationgeo'])
-            researcher = row['*researcher']
+            #researcher = row['*researcher']
             article =  row['*article']
-            date = datetime.strptime(row['*date'], "%Y_%m_%d") #"31-12-12"
-                    
-
+            
+            if('/' in row['*date']):
+                dateFormat = "%d/%m/%y"
+            elif('_' in row['*date']) :
+                dateFormat = "%d_%m_%y"
+            elif('-' in row['*date']) :
+                dateFormat = "%d-%m-%y"
+            
+            #print(row['*date'])
+            date = row['*date']#datetime.datetime.strptime(row['*date'], dateFormat) #"31-12-12"
+            
+            #date = datetime.datetime.strptime(row['*date'], '%d/%m/%y').strftime(dateFormat)       
+           
         except KeyError, e:
             print "            Field format is not valid: %s " % ( e )
             break
@@ -110,6 +122,29 @@ def install( upload_path, enquete_path ) :
     print "        installation completed."
 
 
+from reanalyseapp.models import *
+
+def testTEIparse(texte_id):
+    texte = Texte.objects.get(id=texte_id)
+    parseXmlDocument(texte)
+    
+
+def testEnqueteImport(foldName):
+   folname = foldName    
+   upPath = settings.REANALYSEUPLOADPATH+folname+"/"
+   enqueterootpath='' 
+   for f in os.listdir(upPath+"extracted/"):
+       if os.path.exists(upPath+"extracted/"+f+"/_meta/"):
+           enqueterootpath = upPath+"extracted/"+f+"/"
+   
+   e = importEnqueteUsingMeta(upPath,enqueterootpath)
+   
+   if(e != None):
+       doFiestaToEnquete(e)
+   else:
+        print('ok')
+
+
 #
 #CheckMetaDocuments
 #Check if every file exists in MetaDocuments
@@ -167,6 +202,7 @@ def main( argv ):
     parser.add_option("-p", "--upload_path", dest="upload_path", help="enquete upload path", default="" ) #use with --func=install
     parser.add_option("-x", "--enquete_path", dest="enquete_path", help="enquete extracted path", default="" ) #use with --func=install
     parser.add_option("-f", "--function", dest="func", help="update function", default="update" )
+    parser.add_option("-d", "--document_id", dest="document_id", help="document id (Texte)", default="" )
 
     ( options, argv ) = parser.parse_args()
 
@@ -181,6 +217,27 @@ def main( argv ):
         else:
             # install the enquete
             return install( options.upload_path, options.enquete_path )
+        
+    if options.func == "testTEIparse" :
+        print(options.func)
+        # install the enquete
+        return testTEIparse( options.document_id )
+    
+    
+    if options.func == "testDownload" :
+        print(options.func)
+        # install the enquete
+        return testDownload( options.enquete_id )
+    
+    if options.func == "testEnqueteImport" :
+        print(options.func)
+        # install the enquete
+        return testEnqueteImport( '' )
+
+    if options.func == "parseAllTeis" :
+       print(options.func)
+       # reparseAllteis file of an enquete
+       return parseAllTeis( options.enquete_id )
 
     if options.enquete_id is None:
         error("enquete_id arg not found!", parser)
@@ -204,7 +261,7 @@ def main( argv ):
     f = open( options.csvfile, 'rb' )
     csvdict = csv.DictReader( f, delimiter="\t" )
     for t in textes:
-        print t.name #, t.locationpath
+       pass# print(textes.count())#print t.name #, t.locationpath
     update( textes, enquete, csvdict )
 
     print """
@@ -217,7 +274,40 @@ def main( argv ):
     """
 
 
+def parseAllTeis(enquete_id):
+    
+    textes = Texte.objects.filter(enquete_id=enquete_id, doctype="TEI")
 
+    for t in textes :
+        parseXmlDocument(t)
+    
+    
+def testDownload(enquete_id):
+    import zipfile, zlib
+    
+    """
+    zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete_id )
+
+    zf = zipfile.ZipFile( zippath, mode='w' )
+    
+    
+    
+    """
+    for t in Texte.objects.filter( enquete_id=enquete_id ):
+        
+        if('é'.decode('utf-8') in t.locationpath):
+            
+            t.locationpath= t.locationpath.replace('é'.decode('utf-8'), 'e')
+           
+        if os.path.isfile(t.locationpath.decode('utf-8')):
+            
+            if( t.locationpath.find('_ol') or t.locationpath.find('_dl') ):
+                print(t.locationpath.split('/', 7)[7])
+               
+                """
+                zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, 
+                            arcname= t.locationpath.split('/', 5)[5])"""
+                            
 
 def error( message="generic error", parser=None):
     print 

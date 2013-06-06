@@ -36,6 +36,21 @@ from django.contrib import messages
 
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.core.cache import cache
+
+#TEI PART
+
+from reanalyseapp.utils import *
+from reanalyseapp.models import *
+from reanalyseapp.imexport import *
+from reanalyseapp.forms import *
+from reanalyseapp.visualization import *
+from reanalyseapp.search import *
+
+# Search with haystack
+from haystack.views import *
+from haystack.forms import *
+from haystack.query import *
 
 
 
@@ -114,8 +129,6 @@ def enquete( request, enquete_id ):
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 	data['disabled'] =  [ t.slug for t in data['enquete'].tags.filter( type=Tag.DISABLE_VISUALIZATION ) ]
 	
-	
-	
 	try:
 		data['enquiry'] = Enquiry.objects.get( enquete=enquete_id, language=data['language'] )
 	except Enquiry.DoesNotExist,e:
@@ -148,16 +161,23 @@ def enquete_metadata( request, enquete_id ):
 #@permission_required('reanalyseapp.can_browse')
 def enquete_download( request, enquete_id ):
 	#Check if the user has access to the files
-	try:
-   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
-	except AccessRequest.DoesNotExist:
-		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
-							 ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) ), extra_tags='Access')
-		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
-		return redirect(viewurl)
+	
+	if( not request.user.has_perm('reanalyseapp.can_browse') ):
+
+		try:
+	   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
+	   		
+	   		
+		except AccessRequest.DoesNotExist:
+			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
+								 ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) ), extra_tags='Access')
+			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
+			return redirect(viewurl)
+		else:
+			pass
+	
 	else:
 		pass
-	
 	
 	enquete = get_object_or_404( Enquete, id=enquete_id )
 	
@@ -166,10 +186,24 @@ def enquete_download( request, enquete_id ):
 	zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete.id )
 
 	zf = zipfile.ZipFile( zippath, mode='w' )
-
+	
+	
+	
 	for t in Texte.objects.filter( enquete=enquete ):	
-		zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, arcname= os.path.join( t.doccat1, os.path.basename(  t.locationpath ) ) )
 
+		if('é'.decode('utf-8') in t.locationpath):
+		    
+		    t.locationpath= t.locationpath.replace('é'.decode('utf-8'), 'e')
+		   
+		
+		if os.path.isfile(t.locationpath.decode('utf-8')):
+		    
+		    if( t.locationpath.find('_ol.') or t.locationpath.find('_dl.') ):
+				
+				zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, 
+							arcname= t.locationpath.split('/', 7)[7])
+
+		
 	response = HttpResponse( open( zippath , 'r' ) , content_type="application/gzip"  )
 	response['Content-Description'] = "File Transfer";
 	response['Content-Disposition'] = "attachment; filename=enquete-%s.zip" % ( enquete.id ) 
@@ -187,23 +221,122 @@ def document( request, document_id ):
 	data['document'] = document = get_object_or_404( Texte, id=document_id )
 	data['enquete'] = enquete = document.enquete
 	data['mimetype'] = guess_type( document.locationpath )[0]
+	
+	data['document'].locationpath = data['document'].locationpath.split('/', 5)[5]
+	
+	###### ANY DOCUMENT
+	e = Enquete.objects.get(id=document.enquete.id)
+	texte = Texte.objects.get(id=document_id)
+	ctx = {'enquete':texte.enquete,'texte':texte,'bodyid':'e','pageid':'documents'}
+	
+	######################################### TEI
+	if texte.doctype=='TEI':
+	
+		###### RELATED VIZ
+		# we can take all related viz if we want
+		#ctx.update({'visualizations':getRelatedViz(textes=[texte])})
+		# now testing with only the textstreamtimeline
+		try:
+			streamtimelineviz = Visualization.objects.get(textes=texte,viztype='TexteStreamTimeline')
+		except:
+			try:
+				streamtimelineviz = Visualization.objects.filter(textes=texte,viztype='TexteStreamTimeline')[0]
+			except:
+				streamtimelineviz = None
+		ctx.update({'visualization':streamtimelineviz})
+	
+		maxTextPart = texte.sentence_set.aggregate(Max('i')).values()[0]
+		
+		if request.GET.get('highlight'):
+			ctx.update({'highlight':request.GET.get('highlight')})
+		
+		if request.GET.get('around'):
+			around = int(request.GET.get('around'))
+			minPart = max(0,around-2)
+			maxPart = min(maxTextPart,around+2)
+		else:
+			minPart = request.GET.get('from',0)
+			maxPart = request.GET.get('to',maxTextPart)
+			
+		ctx.update({'minpart':minPart,'maxpart':maxPart,'totalmaxparts':maxTextPart})
+		
+		### CODES_PARAVERBAL DICT FOR LEGEND (see globalvars)
+		
+		
+		newPARVBCODES={}
+		newPARVBCODES['Transcription'] = 	['comment']
+		newPARVBCODES['Verbatim'] = 		[]
+		
+		newPARVBCODES={}
+		newPARVBCODES['Transcription'] = 	[]
+		newPARVBCODES['Verbatim'] = 		[]
+		
+		
+		import mmap
+		f = open(texte.locationpath, 'r')
+		
+		lines = f.read()
+		
+		
+		
+		
+		#return HttpResponse(f, 'text')
+		
+		for code,label,css in PARVBCODES['Verbatim'] :
+			
+			search = lines.find(code)
+			
+		#	return HttpResponse(answer, 'text')
+			
+			if search != -1 :
+			    newPARVBCODES['Verbatim'] += [[code, label, css]]
+				
+		for code,label,css in PARVBCODES['Transcription'] :
+			
+			search = lines.find(code)
+			
+			if search != -1 :
+			    newPARVBCODES['Transcription'] += [[code, label, css]]
+		
+	
+	
+		ctx.update({'paraverbal':newPARVBCODES})	
+		#ctx.update({'paraverbal':PARVBCODES})	
+		
+		### CODES_TREETAGGER DICT FOR display
+		ctx.update({'codes_treetagger':CODES_TREETAGGER})
+		
+		### COLORS FOR SPEAKERS
+		speakersColors = getRandomSpeakersColorsDict(e,texte)
+		ctx.update({'speakersColors':speakersColors})
+		
+		### SPEAKERS
+		inv = texte.speaker_set.filter(ddi_type="INV")
+		spk = texte.speaker_set.filter(ddi_type="SPK")
+		pro = texte.speaker_set.filter(ddi_type="PRO")
+		ctx.update({'speakers':{'inv':inv,'spk':spk,'pro':pro}})
 
-	#Check if the user has access to the files
-	try:
-   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
-	   
-		
-	except AccessRequest.DoesNotExist:
-		
-		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
-							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
-		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
-		return redirect(viewurl)
+	
+	if( not request.user.has_perm('reanalyseapp.can_browse') ):
+	
+		#Check if the user has access to the files
+		try:
+	   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+		   
+			
+		except AccessRequest.DoesNotExist:
+			
+			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
+								 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+			return redirect(viewurl)
+		else:
+			pass
+	
 	else:
 		pass
 	
-	
-	return render_to_response('enquete/document.html', RequestContext(request, data ) )
+	return render_to_response('enquete/document.html',ctx, RequestContext(request, data ) )
 	
 	
 	"""
@@ -237,19 +370,23 @@ def document_download( request, document_id ):
 	data = shared_context( request )
 	document = get_object_or_404( Texte, id=document_id )
 	
-
-	#Check if the user has access to the files
-	try:
-   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
-	except AccessRequest.DoesNotExist:
-		
-		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
-							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
-		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
-		return redirect(viewurl)
+	
+	if( not request.user.has_perm('reanalyseapp.can_browse') ):
+	
+		#Check if the user has access to the files
+		try:
+	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+		except AccessRequest.DoesNotExist:
+			
+			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
+								 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+			return redirect(viewurl)
+		else:
+			pass
+	
 	else:
 		pass
-	
 	
 	mimetype = guess_type( document.locationpath )[0]
 	
@@ -296,7 +433,7 @@ def document_embed( request, document_id ):
 	except AttributeError, e:
 		filetitle, extension = os.path.splitext( document.locationpath )
 		content_type = "application/octet-stream"
-
+	
 	return HttpResponse( open( document.locationpath , 'r' ) , mimetype=content_type  )
 	
 
@@ -304,16 +441,11 @@ def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","enquiry" ] )
 	
 	try:
-	
 		data['enquiry'] = Enquiry.objects.get( enquete__id=enquete_id, language=data['language'])
-	
+		data['enquete'] = data['enquiry'].enquete
 	except Enquiry.DoesNotExist:
-		
 		messages.add_message(request, messages.ERROR, _('There is no research on this research'))
 		return redirect(reverse('outside.views.enquetes'))
-	
-	
-	
 	else:
 		data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
 		return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
@@ -415,7 +547,12 @@ def login_view( request ):
 					
 					
 					# @todo: Redirect to next page
-					return redirect( request.REQUEST.get('next', 'outside_index') )
+					
+					if( request.method == 'GET' and 'next' in request.GET ) :
+						return redirect( request.REQUEST.get('next', 'outside_index') )
+					else:
+						return redirect( reverse('outside_index') )
+						
 				else:
 					login_message['error'] = _("user has been disabled")
 			else:
@@ -787,5 +924,67 @@ def reinitialize_password(request):
 	return render_to_response("hub/reinitialize_passwd.html", RequestContext(request, data ) )
 	
 
+def test_dl1( request ):
+	response = HttpResponse( open( '/var/opt/reanalyse/static/test/videos.zip' , 'r' ) , content_type='zip'  )
+	response['Content-Description'] = "File Transfer";
+	response['Content-Disposition'] = "attachment; filename=videos.zip"
+	
+	return response
 
+def test_dl2( request ):
+	response = HttpResponse( open( '/var/opt/reanalyse/static/test/G2BXL.mp4' , 'r' ) , content_type='video'  )
+	response['Content-Description'] = "File Transfer";
+	response['Content-Disposition'] = "attachment; filename=videos.mp4"
+	
+	return response
+
+def download_page( request, enquete_id ):
+	data = shared_context( request, tags=[ "download" ] )
+	data['dl_link'] = reverse('outside_enquete_download', args=[enquete_id])
+	return render_to_response("hub/download.html", RequestContext(request, data ) )
+
+
+def evGetJson(request,eid,vid):
+	v = Visualization.objects.get(enquete__id=eid,id=vid)
+	return HttpResponse(v.json, mimetype="application/json")
+###########################################################################
+
+@login_required
+def evSaveHtml(request,eid,vid):
+	
+	v = Visualization.objects.get(enquete__id=eid,id=vid)
+	
+	thehtml = request.POST
+	v.contenthtml = thehtml
+	v.save()
+	return HttpResponse("done", mimetype="application/json")
+
+from django.views.decorators.cache import cache_page
+
+
+def dGetHtmlContent(request,eid,did):
+
+	texte = Texte.objects.get(id=did)
+	sStart = request.GET.get('from',0)
+	sEnd = request.GET.get('to',0)
+	
+	key = "timeparts_%s_%s" % ( eid, did )
+	
+	timeparts = cache.get(key)
+	
+	if (timeparts == None) :
+	  timeparts = getTextContent(texte,sStart,sEnd)
+	  cache.set(key, timeparts, 1000)
+	
+
+	if request.GET.get('highlight'):
+		ctx.update({'highlight':request.GET.get('highlight')})
+	
+	ctx={'timeparts':timeparts}
+	
+	return render_to_response('bq_render_d.html', ctx, context_instance=RequestContext(request))
+###################################################################################################################################
+	
+	
+	
 	
