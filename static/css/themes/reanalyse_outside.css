@@ -1,0 +1,1674 @@
+/* ============================================ GENERAL BY DEFAULT */
+body {
+	font-size: 14px;
+}
+h1, h2, h3, h4 {
+	color: #585858;
+}
+h1 {
+	margin-top:10px;
+	margin-bottom:7px;
+}
+p, blockquote, ul, ol {
+
+}
+
+p {
+	margin-bottom: 5px;
+	text-align:justify;
+}
+ul, ol, li {
+	margin: 0px;
+	padding: 0px;
+}
+
+a {
+	text-decoration: none;
+	color: #F40C42;
+}
+a:hover {
+	text-decoration: underline;
+	color: #F40C42;
+}
+hr {
+	border:1px solid lightgray;
+	margin-top:7px;
+	margin-bottom:7px;
+}
+
+
+/* ============================================ SETTINGS - TOP RIGHT */
+/* fullscreen toggle on top */
+/* deprecated with images */
+/*
+#fullsContainer:hover {
+	background:#B5B5B5;
+}
+#fullsContainer {
+	position:absolute;
+	background:#F2F1ED;
+	height:15px;
+	width:18px;
+	left:-34px;
+	padding:8px;
+}
+*/
+
+#id_username, #id_password {
+	/*width:80px;*/
+}
+
+/* ============================================ LEFT MENU */
+#leftmenu {
+	float:left;
+	display:inline;
+	width:100%;
+	padding:0px 0px 20px 0px;
+}
+
+#leftmenucontent {
+	/*padding:2px;*/
+}
+.leftmenublock {
+	/*background:#FFFDFA;
+	border:solid 1px lightgray;*/
+	padding:7px;
+	margin-bottom:5px;
+}
+.leftmenublock h1 {
+	margin-top:0px;
+	margin-bottom:5px;
+	//font-size: 10px;
+	border-bottom:1px solid lightgray;
+}
+.leftmenublock h2 {
+	margin-top:7px;
+	margin-bottom:5px;
+	//font-size: 10px;
+	border-bottom:1px solid lightgray;
+}
+.leftmenublock ul {
+	list-style-type:none;
+}
+
+/* ============================================ CONTENT */
+#wrapper {
+	margin:0 auto;
+	min-height:100%;
+	/*position:relative;*/ /* enables faux columns to be positioned relative to wrapper */
+	background:#999;
+	overflow:hidden; /* clears floated columns in FX, Opera, Safari, & Chrome */
+	background-color:#F2E6CE;
+}
+#contenttop {
+	//float:left;
+	//display:inline;
+	/*width:770px;*/
+}
+#content {
+	/*float:left;
+	display:inline;*/
+	padding:25px 20px 120px 20px;
+	min-height:600px; 
+	height:auto !important;
+	height:600px;
+	background-color:#F2F1ED;
+	/*width:100%;*/
+}
+
+/* ============================================ IMAGES ! */
+
+/* help blue circle */
+/*.imHelpLeft { position:relative; top:3;left:-3; }*/
+.imHelp {
+	opacity:0.5; background-image: url("../../img/rea/helpcircle.png");
+	display:inline-block; width:15px; height:15px;
+	margin-left:2px; margin-left:2px;
+	position:relative; top:3;
+}
+.imHelp:hover { opacity:1; }
+
+/* document list */
+.imExternalLink { background-image: url("../../img/rea/link.png"); display:inline-block; width:10px; height:10px; }
+/* select spk/doc and launch viz */
+.imVizBut { background-image: url("../../img/rea/rea/viz_but.png"); display:inline-block; width:10px; height:10px; }
+/* main menu*/
+.imDocument { background-image: url("../../img/rea/page_copy.png"); display:inline-block; width:16px; height:16px; }
+.imSpeaker { background-image: url("../../img/rea/user_red.png"); display:inline-block; width:16px; height:16px; }
+.imVisualisation { background-image: url("../../img/rea/rainbow.png"); display:inline-block; width:16px; height:16px; }
+.imSearch { background-image: url("../../img/rea/zoom.png"); float:left; margin-left: 9px; width:16px; height:16px; }
+
+.imTei { background-image: url("../../img/rea/comment.png"); display:inline-block; width:16px; height:16px; }
+
+.imSpkInvestigator { background-image: url("../../img/rea/user_edit.png"); display:inline-block; width:16px; height:16px; }
+.imSpkSpeaker { background-image: url("../../img/rea/user_comment.png"); display:inline-block; width:16px; height:16px; }
+.imSpkProtagonist { background-image: url("../../img/rea/user_gray.png"); display:inline-block; width:16px; height:16px; }
+
+
+/* =================================================================================== HOME / INTRO / (project/methodology/access/admin....) HTML CONTENT TEXTS */
+/* admin / upload page */
+.logconsole {
+	font-size: 0.75em;
+	line-height: 1em;
+	color:gray;
+}
+.inputButt {
+	margin-top:5px;
+	margin-left:5px;
+}
+.contentHtml h1 {
+	margin-top:10px;
+	margin-bottom:7px;
+	padding-top:10px;
+	padding-bottom:5px;
+	border-bottom:1px solid lightgray;
+}
+.contentHtml h2{
+	margin-top:10px;
+	margin-bottom:7px;
+	font-size: 1.3em;
+	padding-top:10px;
+	padding-bottom:5px;
+	border-bottom:1px solid lightgray;
+}
+.contentHtml p {
+	margin:10px;
+	text-align:justify;
+	text-indent:30px;
+}
+.contentHtml ul, .contentHtml ol {
+	margin:5px;
+	margin-left:20px;
+	list-style-type:none;
+}
+.contentHtml li {
+	background-image: url('../../img/rea/text_bullet.png');
+	background-repeat: no-repeat;
+	background-position: 0 0.4em;
+	padding:2px;
+	padding-left: 15px;
+}
+
+/* a little more for Normalization / Visualization HTML contents */
+
+/* for table cells describing original study.. */
+.content_norm {
+	font-size:1em;
+	line-height:1.3em;
+}
+.content_norm .content_norm_orig {
+	background:#E6E6E6;
+	font-size:0.8em;
+}
+
+/* lists */
+.content_norm ul, .content_norm ol {
+	margin-left:30px;
+}
+.content_norm li {
+	padding-left:0;
+	list-style-type:decimal;
+	background-image:none;
+	margin:5px;
+}
+
+/* misc */
+.content_norm table {
+	background:white;
+	margin:10px;
+	border-left:#4C509B solid 3px;
+}
+.content_norm h2 {
+	/* h2 is managed by .contentHtml */
+}
+.content_norm h3 {
+	font-size:1.4em;
+	margin:30px 0 10px 0;
+	border-bottom:1px lightgray solid;
+}
+.content_norm h4 {
+	font-size:1.2em;
+	margin:25px 0 5px 0;
+	border-bottom:1px lightgray solid;
+}
+.content_norm td {
+	padding:4px;
+	border:1px lightgray solid;
+	font-size:0.75em;
+}
+.content_norm img {
+	margin-bottom: 10px;
+}
+.content_norm tr:first-child {
+	background:#E0E4FC;
+}
+.content_norm td:first-child {
+	background:#E0E4FC;
+}
+
+/* for table rows description.. */
+.content_norm_expl td {
+	background:#E6E6E6;
+	font-size:0.7em;
+}
+/* for table rows ese.. */
+.content_norm_ese td {
+	background:#E6E6E6;
+	opacity:0.6;
+}
+
+.content_norm_ext {
+	color:red;
+}
+.content_norm_file {
+	color:#4C509B;
+}
+/* for verbatim extracts */
+.content_norm_verb {
+	margin:15px;
+	margin-bottom:5px;
+	padding:10px;
+	background:#E0E4FC;
+	border:lightgray dashed 1px;
+	border-left:#4C509B solid 3px;
+}
+.content_norm_vleg {
+	margin-left:30px;
+	margin-bottom:25px;
+	color:#B1B1B1;
+	font-style:italic;
+}
+/* Following for styling examples of syntax */
+
+.content_norm_verbspk { /*speakers names*/
+	color:gray;
+}
+.content_norm_verbm { /*paraverbal*/
+	color:red;
+}
+.content_norm_verbmc { /*comments*/
+	color:#A3A131;
+}
+.content_norm_verbmcon { /*time superposition*/
+	color:green;
+}
+
+
+
+
+
+/* =================================================================================== LOGIN / REGISTER */
+/* Login table */
+.loginFormTable {
+	background:white;
+	border:1px lightgray solid;
+	margin:5px;
+}
+.loginFormTable td,th {
+	padding:10px;
+	border:1px lightgray solid;
+}
+
+/* Overview of different registration status */
+.statutTable {
+	margin:10px;
+}
+.statutTable td, .statutTable th {
+	padding:5px;
+	padding-right:25px;
+	border:1px #909090 solid;
+}
+.statutTable thead {
+	background:lightgray;
+	font-weight:bold;
+}
+.statutTableYes {
+	background:#CDFFC7;
+}
+.statutTableNo {
+	background:#FFD1D1;
+}
+
+/* Overview of different registration status */
+.registerFormTable {
+	background:white;
+	border:1px lightgray solid;
+	margin:5px;
+}
+.registerFormTable td,th {
+	padding:10px;
+	border:1px lightgray solid;
+}
+.errorlist {
+	color:red;
+	list-style-type:none;
+}
+
+/* ======================== */
+
+.uploadEnqueteList ul {
+	list-style-type: none;
+}
+
+/* =================================================================================== ENQUETE BROWSE (LIST) ebrowse */
+
+ul#eList {
+	list-style-type:none;
+}
+#eList li {
+	border-bottom:1px solid lightgray;
+}
+/* 1 = Loading ... see globalvars.py */
+.eStatus_1  { 
+	background:#FFCC99;
+}
+/* 4 = Deleting ... see globalvars.py */
+.eStatus_4  {
+	background:#CCCCCC;
+}
+/* 6 = Reparsing ... see globalvars.py */
+.eStatus_6  {
+	background:#FFCC99;
+}
+.eBrowseEnquete {
+	margin:7px;
+	padding:10px;
+}
+.eBrowseEnquete:hover {
+	background:#F2E6CE;
+	cursor:pointer;
+}
+.eBrowseEnquete h1 {
+	margin-top:0px;
+}
+.eBrowseEnqueteStatus {
+	float:right;
+	color:gray;
+	margin-left:4px;
+}
+.eProblem {
+	color:red;
+}
+.eBrowseEnqueteDescription {
+	margin-left:20px;
+	color:gray;
+	font-size:1em;
+}
+
+/* meta list */
+.eBrowseEnqueteMeta {
+	font-size:0.9em;
+}
+.eMetaList {
+	margin:3px;
+}
+
+/* statistics doc spk viz */
+.eBrowseEnqueteContentStats {
+	float:right;
+}
+.eMetaDoc {}
+.eMetaSpk {}
+.eMetaViz {}
+
+
+
+
+/* =================================================================================== GENERAL ALWAYS PRESENT IN ENQUETE */
+/* ============================================ */
+.enqueteMetaShowTableContainer {
+	background:white;
+	padding:5px;
+	font-size:0.85em;
+}
+div#enqueteMetaShow {
+	/*margin-left:15px;*/
+}
+.enqueteMetaShowTableToggle {
+	/*margin-left:10px;*/
+}
+.enqueteMetaShowTable {
+	width:100%;
+	padding:20px;
+	/*margin-top:10px;
+	margin-bottom:5px;*/
+}
+.enqueteMetaShowTable td {
+	padding:3px;
+	padding-right:8px;
+	padding-left:8px;
+}
+.enqueteMetaShowTable tr.odd{
+	background:#F0F0F0;
+}
+.enqueteMetaShowTable tr.even {
+	background:white;
+}
+.enqueteMetaShowTable tr.newcat {
+	border-top:1px solid gray;
+}
+.enqueteMetaShowTableKeyField {
+	font-style:italic;
+	font-size: 0.8em;
+	text-align:right;
+	color:gray;
+}
+.enqueteMetaShowTableKeyVal {
+	width:70%;
+}
+
+/* Enquete title and meta on the top */
+div.title_enquete {
+	padding:5px;
+	margin-left:10px;
+}
+div.title_enquete h1 {
+	font-size: 2.2em;
+	margin-top:13px;
+	margin-bottom:0px;
+}
+div.meta_enquete {
+
+}
+
+/* ============================================ */
+/* Main Links in the left menu */
+div.allPage {
+	height:30px;
+	padding:5px 10px 0px 5px;
+	border-left:3px solid transparent;
+	color:#606060;
+	vertical-align: middle;
+}
+div.allPage a {
+	color:#606060;
+}
+div.allPage:hover {
+	border-left:3px solid darkgray;
+}
+div.pageDisabled {
+	color:lightgray;
+	border-left:3px solid transparent;
+}
+div.currentPage {
+	background:lightgray;
+	border-left:3px solid #606060;
+}
+
+/* ============================================ */
+/* Tooltips */
+#theGeneralToolTip {
+    position:absolute;
+    z-index:999999;
+    width:auto;
+}
+#theGeneralToolTip .tipBody {
+	text-align: left;
+    background-color:#383838;
+    padding:5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+	border:lightgray solid 1px;
+	text-decoration: none;
+	color:white;
+}
+#theGeneralToolTip a {
+	color:white;
+}
+/* =================================================================================== RELATED VIZ */
+#relatedViz {
+	/*width:100%;*/
+	background-color:#FFFFCC;
+	padding:3px;
+	text-align:center;
+	border-bottom: 1px solid lightgray;
+}
+#relatedVizToggle {
+	padding:4px;
+}
+#relatedVizToggle:hover {
+	background-color:#FFCC99;
+	cursor:pointer;
+}
+#relatedVizContainer {
+	background:white;
+}
+#relatedVizContainer ul {
+	list-style-type:none;
+}
+#relatedVizContainer li {
+	margin-top:2px;
+}
+
+/* =================================================================================== DOCUMENT / SPEAKER BROWSE edBrowse esBrowse */
+.vizinvolved {
+	color:black;
+	margin:1px;
+	display:inline-block;
+	padding:1px;
+	background:lightgray;
+	/*background:url('../../img/viz_involved.png') no-repeat;*/
+	font-size:7px;
+	line-height:1.5em;
+}
+.vizinvolved:hover {
+	cursor:pointer;
+	opacity:0.5;	
+}
+/* jquery-UI modal css */
+
+/* deactivated */
+.content_littlefrise {
+	/* also set to 80 in d3 builder (d3_TexteContentLittleFrise.js) */
+	width:80px;
+	/*height:100%;*/
+	/*background:lightgray;*/
+	padding:2px 4px;
+}
+
+/* =================================================================================== DOCUMENT / SPEAKER BROWSE & SELECTION */
+/* table for selection doc/spk and viz launch */
+.selectTable {
+	margin-top:10px;
+	display: inline-block;
+	background: white;
+}
+.selectTable th {
+	font-size: 20px;
+	font-weight:bold;
+	padding:20px;
+	width:50%;
+	background:#EDF3FE;
+	border:1px lightgray solid;
+}
+.selectTable td {
+	padding:20px;
+	width:50%;
+	border:1px lightgray solid;
+	font-size: 0.8em;
+}
+.selectTable td a {
+	color:gray;
+}
+.selectTable td a:hover {
+	text-decoration:underline;
+}
+
+.inTableListContainer li {
+	margin:0px;
+}
+
+/* LIST current selected spk/doc */
+ul.selectedList {
+	margin-top:10px;
+	overflow-y:auto;
+	height:180px;
+	margin-left:15px;
+}
+.selectedList li {
+	margin:0px;
+}
+/* LIST action buttons to launch viz */
+ul.vizLaunchList {
+	list-style-type:none;
+	margin-left:3px;
+}
+.vizLaunchList li {
+	height:30px; /* large to include dropdownchecklist */
+}
+
+
+
+/* for 2 steps viz creation (tagcloud,...) */
+/*
+.littleForm {
+	display: inline-block;
+	margin-left:5px;
+}
+.littleInputBox {
+	display: inline-block;
+    font-size: 9px;
+    height: 8px;
+    width: 30px;
+    margin-right:5px;
+}
+.goCreateVizForm {
+	color:blue;
+}
+*/
+
+
+
+/* =================================================================================== CSV BROWSE */
+/* table */
+#csvTable tr.show.even{
+	background:#FFFF99;
+}
+#csvTable tr.show.odd {
+	background:#FFFFCC;
+}
+
+
+/* =================================================================================== DOCUMENT BROWSE */
+/* Table */
+#docTable a {
+	color:#F40C42;
+}
+#docTable a:hover {
+	text-decoration: underline;
+}
+
+/* try to put colors on rows based on doctype TEI,PDF,CSV */
+/*
+tr.odd.doctype_TEI td {
+	background-color:#F8F8F8;
+}
+tr.even.doctype_TEI td {
+	background-color: #F0F0F0;
+}
+*/
+
+/* =================================================================================== SPEAKER BROWSE */
+
+
+/* for little graph in doc/spk tables ? */
+.littleFrise {
+	height:12px;
+	background:#909090;
+}
+
+/* ============================================ */
+/* Table */
+#speakerTable a, .DTFC_ScrollWrapper a {
+	color:#F40C42;
+}
+#speakerTable a:hover, .DTFC_ScrollWrapper a:hover {
+	text-decoration: underline;
+}
+
+/* FixedLeftColumn */
+.DTFC_LeftWrapper {
+	border:1px gray solid;
+}
+
+/* testing colorPicker included in speaker table cells */
+/*
+.colorPicker {
+	width: 20px;
+	height: 20px;
+	background: url(../colorpick../../img/select2.png);
+}
+*/
+
+/* ============================================ */
+/* for speaker sets (experimental) */
+/* speaker selection table on the bottom, complicated tryout with speaker sets */
+/*
+.speakerSelectionLeftHeader {
+	height:40px;
+	width:100%;
+}
+.speakerSelectionLeftCenter {
+	height:100px;
+	width:100%;
+	margin-top:3px;
+	margin-bottom:3px;
+}
+.speakerSelectionLeftBottom {
+	height:10px;
+	width:100%;
+}
+.speakerSelectionLeftParts {
+	width:170px;
+	display:inline-block;
+}
+.inTableListContainer {
+	height:100px;
+	width:170px;
+	display:inline-block;
+	overflow-y:scroll;
+}
+
+.speakerSetSelected {
+	background:#BADCDD;
+}
+#nospeaker, #nospeakerset {
+	font-style:italic;
+	color:#B8B8B8;
+}
+*/
+
+
+/* ============================================ */
+/* SpeakerTable Scroll */
+.scroll-bar-wrap {
+	clear: left;
+	padding: 0 4px 0 2px;
+	margin: 0 -1px -1px -1px;
+	margin-left:100px;
+	margin-bottom:4px;
+	width:500px;
+}
+.scroll-bar-wrap .ui-slider {
+	background: none;
+	border:0;
+	height: 0.9em;
+	margin: 0 auto;
+}
+.scroll-bar-wrap .ui-handle-helper-parent { position: relative; width: 100%; height: 100%; margin: 0 auto; }
+.scroll-bar-wrap .ui-slider-handle { top:.2em; height: 1.5em; }
+.scroll-bar-wrap .ui-slider-handle .ui-icon { margin: -8px auto 0; position: relative; top: 50%; }
+/* ============================================ */
+/* Browse Speakers */
+.speaker_table {
+	width:670px;
+	height: 650px;
+	overflow:auto;
+}
+/* ============ */
+/* SpeakerTable */
+.seven {
+	background:#FFFFFF;
+}
+.sodd{
+	background:#EDF3FE;
+}
+.sTable {
+	float:left;
+	width:700px;
+	font-size:8px;
+}
+/* ============ */
+.sTableHeaders {
+	float:left;
+	width:700px;
+	border:1px solid gray;
+	margin-bottom:7px;
+}
+.sTableLeftHeader, .sTableCenterHeader, .sTableRightHeader {
+	background:#CCCCFF;
+	float:left;
+}
+.sTableLeftHeader, .sTableLeftContent {
+	width:120px;
+}
+.sTableCenterHeader, .sTableCenterContent {
+	width:470px;
+	overflow-y:auto;
+	overflow-x:hidden;
+	margin-left:5px;
+	margin-right:5px;
+	/*-moz-box-shadow: inset -5px -5px 5px 5px gray;
+	-webkit-box-shadow: inset -5px -5px 5px 5px gray;
+	box-shadow: inset -5px -5px 5px 5px gray;*/
+}
+.sTableCenterScrollHeader {
+	display:inline-block;
+	width:2000px; /* ------------------------------- */
+}
+.sTableRightHeader, .sTableRightContent {
+	width:80px;
+}
+/* ============ */
+.sTableContent {
+	float:left;
+	width:700px;
+	height:300px;
+	border:1px solid gray;
+	background:#EDF3FE;
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+.sTableLeftContent, .sTableCenterContent {
+	float:left;
+}
+#sContentWidthDiv {
+
+}
+.sTableCenterScrollContent {
+	display:inline-block;
+	width:2000px; /* ------------------------------- */
+}
+.sTableRightContent {
+	display:inline-block;
+}
+/* ============ */
+.sTableColumn {
+	display:inline-block;
+	border-left:1px #DDDDDD solid;
+	width:55px;
+	text-align: center;
+}
+.sTableCell {
+	float:left;
+	border-bottom:1px #DDDDDD solid;
+	width:55px;
+	padding:3px;
+	height:30px;
+	overflow:hidden;
+}
+.spColor, .spColor .sTableCell { width:15px; }
+.spName, .spName .sTableCell { width:95px; font-size:10px; font-weight:bold; }
+
+.sTableHeaders .sTableCell {
+	background:#FCFCFC;
+	font-size:10px;
+	height:40px;
+}
+.sTableCenterHeader .sTableCell {
+	background:#F0F0F0;
+}
+
+
+
+
+
+
+
+
+/* =================================================================================== SEARCH */
+/* ============================================ */
+/* Search Results D3 Graph Textes/Speakers */
+/*
+.svgLinkTextSpeaker {
+    fill: none;
+    stroke: gray;
+    stroke-width: 1.5px;
+    opacity:0.5;
+}
+*/
+
+/* ============================================ */
+/* Search Form */
+#searchFormContainer{
+	margin-top:20px;
+	padding: 20px 10px 12px;
+	border-top: 1px solid #ccc;
+}
+#searchFormDiv input[type=text]{
+	height:24px;
+}
+
+
+/* ============================================ */
+/* Search Fields */
+
+#id_inTextes, #id_inSpeakers {
+	width:100%;
+	font-size: 10px;
+}
+#id_q {
+	width:96px;
+	font-size: 10px;
+}
+#id_searchsubmit{
+	margin-top:6px;
+	float:right;
+}
+
+/* ============================================ */
+/* search facets */
+/*#facetText #facetSpeaker*/
+.facetList a {
+	color:#808080;
+}
+.facetList a:hover {
+	color:#F40C42;
+	text-decoration: none;
+}
+.facetList .facetSelected {
+	color:black;
+	/*font-weight: bold;*/
+}
+.facetNb, .facetNbZero {
+	font-size: 9px;
+}
+.facetNb {
+	color:red;
+}
+.facetRelevance {
+	height:2px;
+	width:100%;
+	margin-top: 5px;
+}
+
+
+/* ============================================ */
+/* Search Results */
+.searchedQuery {
+	background:#FFFF99;
+	color:#808080;
+	padding: 0 4px 0 4px;
+}
+.search_pagination {
+	text-align:center;
+	margin-bottom:10px;
+}
+ol#searchResultList {
+	/*list-style-type:decimal;*/
+	list-style-type:none;
+	margin-bottom:10px;
+}
+.searchResult_relevance {
+	height:3px;
+	width:100%;
+	background:lightgray;
+	font-size: 7px;
+	margin-top: 5px;
+}
+#searchResultList li {
+	//background-color:white;
+	padding:1px;
+	overflow:hidden;
+	margin:3px;
+}
+#instantresultscount {
+	color:gray;
+	font-size: 9px;
+}
+/*
+.searchResultHighlight {
+	background-color:yellow;
+	padding-left:3px;
+	padding-right:3px;
+}
+.searchResultHighlight_excerpt {
+	background-color:yellow;
+	padding-left:3px;
+	padding-right:3px;
+}
+*/
+.result_highlighted {
+	display:inline-block;
+	background:#FFFF99;
+	padding: 0 2px 0 2px;
+}
+
+.res_left , .res_middle, .res_right {
+	padding:5px;
+	display:inline-block;
+}
+
+/* ============= LEFT */
+.res_left {
+	text-align:center; 
+	vertical-align: top;
+	width:10%;
+	font-size:0.7em;
+}
+/* ============= MIDDLE */
+.res_middle {
+	width:72%;
+	border-right: 1px lightgray solid;
+	border-left: 1px lightgray solid;
+	background-color:white;
+	font-size:0.8em;
+}
+.res_middle:hover {
+	background:#F2F3C7;
+}
+a.res_middle_link {
+	text-decoration: none;
+	color:#606060;
+}
+/* ============= RIGHT */
+.res_right {
+	text-align:center; 
+	vertical-align: top;
+	width:12%;
+	font-size:0.7em;
+}
+.res_right:hover {
+	background:#E0E0E0;
+}
+
+
+/* ============================================ */
+/* Options Boxes */
+.collapsableoptions {
+	margin-bottom:10px;
+}
+
+
+
+/* =================================================================================== VISUALIZATIONS (d3.js created objects) */
+/* color is set in template based on speaker model color */
+
+/* TextStreamTimeline */
+.viz_TextStreamTimeline_Graph { stroke:gray; opacity:0.6; }
+.viz_TextStreamTimeline_TicksTxt { fill:gray; }
+
+.viz_colparvb_question 		{ fill:#66CCFF ; }
+.viz_colparvb_silence 		{ fill:#BFBD9F ; }
+.viz_colparvb_hesitation 	{ fill:#EC993B ; }
+.viz_colparvb_laugh 		{ fill:#D9FF00 ; }
+.viz_colparvb_inaudible 	{ fill:#ED5300 ; }
+.viz_colparvb_break 		{ fill:#ED5300 ; }
+.viz_colparvb_comment 		{ fill:#517368 ; }
+.viz_colparvb_time 			{ fill:#66CCFF ; }
+
+
+/* Attributes */
+.viz_Attributes_Types {
+	font-size:1em;
+	display:inline-block;
+	position:absolute;
+	color:black;
+	text-align:center;
+ }
+.viz_Attributes_Val {
+	position:absolute;
+	color:black;
+	font-size:0.8em;
+	text-align:center;
+	line-height:1.1em;
+}
+
+/* Cloud */
+.viz_Cloud li {
+	list-style-type:none;
+	display:inline-block;
+}
+.viz_Cloud li a {
+	text-decoration:none;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	/*background: lightgray;*/
+	/*border:1px solid lightgray;*/
+	padding:2px;
+	margin:2px;
+	cursor:pointer;
+}
+.viz_Cloud li a:hover {
+	text-decoration:none;
+	background: #E8E8E8 ;
+	/*border:1px solid gray;*/
+}
+
+/* =================================================================================== VISUALIZATIONS (evbrowse) */
+.vizdiv {
+	text-align:left;
+	font-size:10px;
+}
+
+/* ============================================ */
+/* Viz facets */
+#vizFacetLook, #vizFacetType { padding-left:24px;padding-bottom:8px;}
+#vizFacetOverView { margin-left:24px;}
+
+/* ============================================ */
+/* GENERAL LIST OF VIZUS */
+.vizAll li {
+	list-style-type:none;
+}
+/* left border color based on type */
+.viztype_Cloud_SolrSpeakerTagCloud { 	border-left:5px solid #66CCCC;border-bottom:2px solid #66CCCC; }
+.viztype_TexteStreamTimeline { 			border-left:5px solid #FFCC99;border-bottom:2px solid #FFCC99; }
+.viztype_Attributes { 					border-left:5px solid #3399CC;border-bottom:2px solid #3399CC; }
+
+.viztype_Graph_SpeakersAttributes { 	border-left:5px solid #B0B0B0;border-bottom:2px solid #B0B0B0; }
+.viztype_Graph_SpeakersSpeakers { 		border-left:5px solid #B0B0B0;border-bottom:2px solid #B0B0B0; }
+.viztype_Graph_SpeakersWords { 			border-left:5px solid #B0B0B0;border-bottom:2px solid #B0B0B0; }
+
+ul.vizGlobalActions {
+	list-style-type:none;
+}
+vizGlobalActions li {
+	color
+	padding-right:10px;
+}
+.vizOne {
+	/*clear:left;*/
+	background-color:white;
+	border-right: lightgray solid 1px;
+	border-top: lightgray solid 1px;
+	width:100%;
+	margin-bottom:5px;
+}
+.vizTop {
+	background:#D8D8D8;
+	height:5px;
+}
+.vizTop:hover {
+	background:#C0C0C0;
+}
+.vizHeader {
+	background:#E8E8E8;
+	height:40px;
+	padding:7px;
+}
+.vizHeader:hover {
+	background:#D8D8D8;
+}
+.vizContainer, .descrContainer {
+	padding:7px;
+	border-top:1px solid lightgray;
+}
+.descrContainer {
+	background-color: #BCCCD9; /* same color used in jquery-ui custom css for header (viz-modals) */
+	
+}
+.vizOne h1 {
+	margin:1px;
+	font-size: 1em;
+	font-weight: none;
+	margin-bottom:5px;
+}
+.vizOne .vizInvolve {
+	float:right;
+	text-align:right;
+	/*color:blue;*/
+}
+.vizActions {
+	opacity:0.5;
+	width:500px; /* to avoid relatedDocSpk table overlay ! */
+}
+.vizInvolveTable td {
+	color:gray;
+	padding:2px;
+	padding-left:5px;
+	padding-right:5px;
+	/*border:1px solid lightgray;*/
+}
+
+.vizLoadingSpinner {display:inline-block; background: url("../../img/rea/loading.gif"); width:15px; height:15px; vertical-align:text-bottom;}
+
+.vizStatusPublic, .vizStatusPrivate {
+	padding-left:3px;
+	padding-right:3px;
+}
+.vizStatusPublic {
+	color:green;
+	background:#99FF99;
+}
+.vizStatusPrivate {
+	color:red;
+	background:#FFCCCC;
+}
+/* interactive input to update viz description on evBrowse */
+.vizDescrInput {
+	background:#FFFFCC;
+	width:100%;
+	height:100px;
+}
+
+/* ============================================ */
+/* TAG CLOUDS */
+
+/*
+#tagCloudBox {
+	margin:0 auto;
+	padding:3px;
+	margin-top:10px;
+	border: lightgray solid 1px;
+}
+#tagCloudForm {
+	padding:5px;
+	background: white;
+	font-size: 10px;
+}
+#tagCloudForm select {
+	font-size: 10px;
+	width:90px;
+}
+*/
+
+
+
+
+
+
+/* ============================================ */
+/* D3 GRAPH */
+
+#d3graphcontainer {
+	background-color:white;
+	padding:5px;
+	margin-top:10px;
+	border: lightgray solid 1px;
+}
+/* D3 Interface Styles */
+ul.d3buttons {
+	text-align: center;
+	margin-top:10px;
+	/*width:300px;*/
+} 
+.d3buttons li {
+	display:inline;
+	margin:10px;
+	padding:5px;
+	color:white;
+}
+.d3buttonOn {
+	background:gray;
+}
+.d3buttonOff {
+	background:lightgray;
+}
+.d3buttonOn:hover, .d3buttonOff:hover {
+	cursor:pointer;
+	color:red;
+}
+/* D3 Objects Styles */
+
+.wordhidden {
+	/*visibility:hidden;*/
+	fill:#B0B0B0;
+}
+.wordshowed {
+	/*visibility:visible;*/
+	fill:black;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* =================================================================================== DOCUMENT / TEXT / VERBATIM DISPLAY */
+#loadingFetchingText {
+	text-align:center;
+}
+
+/* ============================================ */
+/* words display filters (white/black lists) */
+#verb_controls textarea#verb_inputfilt_w {
+	background:white;
+	font-size: 0.8em;
+}
+#verb_controls textarea#verb_inputfilt_lem {
+	background:#EFE9BD;
+	font-size: 0.8em;
+}
+
+/* ============================================ */
+/* show/hide speaker parts with checkboxes */
+
+.spkcheckboxes a {
+	/*color:#606060;*/
+}
+ul.spkcheckboxes {
+	list-style-type:none;
+}
+.spkcheckboxes li {
+	padding:2px;
+	margin:2px;
+	font-size:13px;
+}
+
+/* ========================== styles for text content (verbatims) */
+.teiSliderLabel {
+	margin-bottom:10px;
+}
+#teiIntervalText {
+	display:inline-block;
+}
+.text_part table{
+	border-left:2px solid grey ;
+	/*border-left:2px solid #FF6633 ;*/
+	border-right:2px solid grey ;
+}
+
+.text_verbatim {
+	background:white;
+	padding:10px;
+	/*font-family: 'Patrick Hand', cursive;*/
+	/*line-height: 20px;*/
+	font-size: 14px;
+	/*position:relative;*/
+}
+
+div.text_part {
+	margin:5px 0px 5px 97px;
+	position:relative;
+}
+.text_part table {
+	width:100%;
+}
+.text_part th {
+	margin:0px;
+	padding:0px;
+}
+div.text_speaker {
+	/*
+	border:1px dotted gray;
+	margin:4px;
+	padding:5px;
+	background-color:lightgray;
+	*/
+	text-align: justify;
+	padding:7px;
+}
+
+div.text_speaker_name {
+    color: gray;
+    font-family: Tahoma,Geneva,sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    height: 28px;
+    left: -97px;
+    overflow: hidden;
+    position: absolute;
+    text-align: right;
+    text-overflow: ellipsis;
+    width: 77px;
+    word-wrap: break-word;
+}
+span.text_speaker_namecount {
+	/*color:lightgray;*/
+	color:gray;
+}
+/* verbatim Text styles */
+.text_ref {
+	/*display:inline;*/
+}
+.text_p {
+	margin-top:4px;
+	margin-bottom:4px;
+}
+
+/* ========================== ALL IMAGES */
+a.text_anyparvb {
+	text-align:left;
+	display: inline-block;
+	/*width:23px;*/
+	background: left;
+	cursor: pointer;
+	color:#0299CC;
+	font-size:20px;
+	
+}
+
+a:hover.text_anyparvb {
+	color:#0299CC;
+}
+
+.text_legend {
+	font-size:17px;
+}
+
+/* ========================== IN MARGIN */
+.text_margL, .text_margR {
+	position:absolute;
+	text-decoration: none;
+	width:20px;
+}
+.text_margL { left:-115px; }
+.text_margR { right:-14px; }
+
+/* ========================== TEXT STYLING */
+.text_sic,
+.text_uncertain{
+	text-decoration: none;
+	border-bottom:1px dotted black;
+	
+	
+}
+
+.text_silence {
+    background: url("../../img/tei_icons/text_silence.png") no-repeat scroll 0 0 ;
+    
+    display: inline-block;
+    height: 22px;
+    width: 12px;
+}
+
+
+.text_anonym {
+    background: url("../../img/tei_icons/text_anonym.png") no-repeat scroll  0 0 ;
+    
+    display: inline-block;
+    height: 11px;
+    width: 16px;
+    background-position:center center;
+}
+
+
+
+
+.text_end_page {
+    background: url("../../img/tei_icons/picto_findepage.png") no-repeat scroll 0 0 ;
+    
+    display: inline-block;
+    height: 15px;
+    width: 16px;
+}
+
+.text_begin_page {
+    background: url("../../img/tei_icons/picto_debutdepage.png") no-repeat scroll 0 0 ;
+    
+    display: inline-block;
+    height: 15px;
+    width: 16px;
+}
+
+.text_strong {
+	text-decoration: underline;
+	font-weight: bold;
+	padding-right:4px;
+}
+
+a.text_sic, a.text_uncertain, a.text_anonym { color:gray; }
+
+a.text_sic { 		/*background:#CCCCFF;*/ cursor:help}
+.text_uncertain { 	background:#FFFF66; }
+.text_strong { 		background:red; }
+.text_anonym { 		background:#CCFFCC; }
+
+
+/* ========================== VERBATIM IMAGES */
+
+.text_incident {
+    background: url("../../img/tei_icons/text_comment.png") no-repeat scroll center center transparent;
+    display: inline-block;
+    height: 15px;
+    width: 18px;
+}
+/* TRANSCRIPTION */
+.text_comment {			display:inline-block; height:11px;width:40px; background:url('../../img/tei_icons/text_comment.png') no-repeat; }
+.text_question {		display:inline-block; height:16px;width:10px; background:url('../../img/tei_icons/text_question.png') no-repeat; }
+.text_inaudible {
+    background: url("../../img/tei_icons/text_inaudible.png") no-repeat scroll center center transparent;
+    display: inline-block;
+    height: 16px;
+    width: 25px;
+}
+.text_break {			display:inline-block; height:16px;width:21px; background:url('../../img/tei_icons/text_break.png') no-repeat; }
+.text_time {			display:inline-block; height:16px;width:16px; background:url('../../img/tei_icons/text_time.png') no-repeat; }
+
+/* VERBATIM */
+.text_laugh {			display:inline-block; height:16px;width:16px; background:url('../../img/tei_icons/text_laugh.png') no-repeat; }
+
+
+.text_interruption {	display:inline-block; height:18px;width:18px; background:url('../../img/tei_icons/text_interruption.png') no-repeat; }
+
+.text_hesitation {
+    background: url("../../img/tei_icons/text_hesitation.png") no-repeat scroll center center transparent;
+    display: inline-block;
+    height: 27px;
+    width: 29px;
+}
+.text_silence {
+    background: url("../../img/tei_icons/text_silence.png") no-repeat scroll center center transparent;
+    display: inline-block;
+    height: 22px;
+    width: 16px;
+}.text_directed {		display:inline-block; height:16px;width:21px; background:url('../../img/tei_icons/text_directed.png') no-repeat; }
+.text_body {			display:inline-block; height:16px;width:5px; background:url('../../img/tei_icons/text_body.png') no-repeat; }
+/*
+div.text_silence:before {
+	content:"�";
+}
+div.text_silence:after {
+	content:"&nbsp;";
+}*/
+/*
+.text_incident:before {
+	content:"[";
+}
+.text_incident:after {
+	content:"]";
+}
+*/
+
+/* ============================================ */
+/* Text Tooltip */
+
+.theTextTooltip a, a:hover  {
+	text-decoration: none;
+}
+#theTextTooltip {
+    position:absolute;
+    z-index:9999;
+    width:auto;
+}
+#theTextTooltip .tipBody {
+	text-align: left;
+	width:auto;
+    background-color:white;
+    padding:5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+	border:lightgray solid 1px;
+	text-decoration: none;
+	color:#606060;
+}
+
+
+/* ============================================ ENQUETE SUR ENQUETE */
+
+.verticalslider_tabs {
+	margin-top:20px;
+	margin-bottom:20px;
+}
+.verticalslider_tabs li {
+	list-style-type:none;
+	display:inline-block;	
+}
+.verticalslider_tabs a:link, .verticalslider_tabs a:visited {
+	border:1px solid lightgray;
+	padding:5px;
+	color:#333333;
+	text-decoration:none;
+}
+.verticalslider_tabs a:hover,
+.verticalslider_tabs .activeTab a:link,
+.verticalslider_tabs .activeTab a:hover,
+.verticalslider_tabs .activeTab a:active {
+	background:#FFFFFF;
+	border:1px solid gray;
+}
+.verticalslider_contents>li {
+	display:none;
+	list-style-type:none; 
+	font-size: 0.8em;
+}
+.verticalslider_contents .activeContent {
+	display:inline;
+}
+.activeTab .arrow {
+	display:none;
+}
+
+/* Audio player */
+
+.ese_chapter_player {
+	float:right;
+	margin-left:15px;
+	margin-bottom:15px;
+}
+.verticalslider .playPause a {
+	display:block;
+	width:60px;
+	height:60px;
+	position:absolute;
+	z-index:50;
+}
+.verticalslider .play a:link,.verticalslider .play a:visited {
+	background:url(../../img/rea/plays.png) no-repeat 0 0;
+	display:none;
+}
+.verticalslider .pause a:link,.verticalslider .pause a:visited {
+	background:url(../../img/rea/pauses.png) no-repeat 0 0;
+}	
+.verticalslider .pause a:hover,.verticalslider .pause a:active,.verticalslider .play a:hover,.verticalslider  .play a:active {
+	background-position:0px -60px;
+	border-bottom:none;
+}
+
+/* Report download link */
+
+.ese_reportdownload {
+	font-size: 0.8em;
+	margin-top:10px;
+	padding:5px;
+	width:100%;
+	border-top:lightgray 1px solid;
+	border-bottom:lightgray 1px solid;
+}
+
+/* ============================================ */
+
+
+ .modal-body > li {
+ 
+ 	
+	margin: 8px;
+	padding: 0px;
+     
+    
+ }
+ 
+  .modal-body > ul {
+ 
+ 	
+ 		margin: 8px;
+    	padding: 0px;
+     
+    
+ }
+ 
+
+#paraverbalShowHide{
+	
+	/*background:grey;*/
+	
+	
+	
+	
+}
+
+#tei-settings h4{
+	color:white;
+	
+}
+
+#tei-settings ul {
+    margin: 5px 0 9px 10px;text
+}
+
+#tei-settings li {
+    margin: 0 0 -2px;
+    padding: 0;
+}
+
+#tei-settings .title {
+    font-size:16px
+}
+
+#tei-settings .subtitle {
+    font-size:14px
+}
+
+
+
+.introHtml {
+	height:110px;
+	
+}
+

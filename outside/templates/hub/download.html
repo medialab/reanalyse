@@ -1,0 +1,36 @@
+{% extends "hub/middle.html" %}
+{% load i18n %}
+{% load extras %}
+
+
+{% block page_left %}
+	
+
+	
+	<div id="subscription">
+		<h2>{% trans "Download page" %}</h2>
+		
+		<br/>
+		
+{% blocktrans %}
+
+<p>
+Hello the research file is huge so you'll need a software which can interrupt the download and continue it later.<br/>
+
+If you are on windows you can use <a href="http://www.clubic.com/telecharger-fiche12841-free-download-manager.html">free download manager</a>. 
+<br/>On linux you can use <a href="https://launchpad.net/steadyflow">steadyflow</a>.
+
+<br/><br/>
+
+Here is
+<a href="{{dl_link}}" title="">
+ the download link
+</a>
+.
+
+
+</p>
+{% endblocktrans %}
+	</div>
+	
+{% endblock %}
