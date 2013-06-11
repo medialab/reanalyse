@@ -216,6 +216,7 @@ def enquete_download( request, enquete_id ):
 @login_required( login_url=LOGIN_URL )
 #@permission_required('reanalyseapp.can_browse')
 def document( request, document_id ):
+	
 	data = shared_context( request, tags=[ "enquetes","metadata" ] )
 
 	data['document'] = document = get_object_or_404( Texte, id=document_id )
@@ -324,8 +325,10 @@ def document( request, document_id ):
 		pro = texte.speaker_set.filter(ddi_type="PRO")
 		ctx.update({'speakers':{'inv':inv,'spk':spk,'pro':pro}})
 
+	#return HttpResponse(document.locationpath, 'text')
 	
 	if( not request.user.has_perm('reanalyseapp.can_browse') ):
+		
 	
 		#Check if the user has access to the files
 		try:
@@ -342,6 +345,7 @@ def document( request, document_id ):
 			pass
 	
 	else:
+	
 		pass
 	
 	return render_to_response('enquete/document.html',ctx, RequestContext(request, data ) )
@@ -421,18 +425,22 @@ def document_embed( request, document_id ):
 	document = get_object_or_404( Texte, id=document_id )
 	mimetype = guess_type( document.locationpath )[0]
 
-	#Check if the user has access to the files
-	try:
-   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
-	except AccessRequest.DoesNotExist:
+	
+	if( not request.user.has_perm('reanalyseapp.can_browse') ):
 		
-		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
-							 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
-		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
-		return redirect(viewurl)
+		#Check if the user has access to the files
+		try:
+	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
+		except AccessRequest.DoesNotExist:
+			
+			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
+								 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+			return redirect(viewurl)
+		else:
+			pass
 	else:
 		pass
-	
 
 
 	try:
