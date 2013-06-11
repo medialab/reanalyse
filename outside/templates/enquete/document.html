@@ -135,7 +135,7 @@
 		$(document).ready(function() {
 			
 			
-			
+			/*
 			$(".speak_link, .para_link").click(function(){
 				var icon = $(this).find('i:first')
 				
@@ -154,7 +154,7 @@
 			$("#speakersShowHide").toggle("fast");
 			$("#paraverbalShowHide").toggle("fast");
 		});
-		
+		*/
 		
 		
 		
@@ -195,7 +195,7 @@
 		<h3>{{ enquete.name }}</h3>
 		<div class="meta">
 			<span class="author" >
-				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% endfor %}
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if not forloop.last %}, {% endif %}{% endfor %}
 			</span> &dash;
 			<span class="tags">
 				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
@@ -245,7 +245,7 @@
 				</li>
 				
 				<li class="active">
-					Id : {{document.locationpath}}
+					Id : {{document.spec_id}}
 				</li>	
 		
 			</ul>
@@ -260,10 +260,7 @@
 		{% if texte.doctype == 'TEI' %}
 		<!-- =============================== -->
 	
-			
 
-		
-	
 	
 	<div id="tei-settings">
 
@@ -272,10 +269,10 @@
 		</div>
 		
 		<div class="leftmenublock">
-			<a href="#" class="speak_link" onclick='$("#speakersShowHide").toggle("fast"); return false;'>
+			<a href="#" class="speak_link" onclick='return false;//$("#speakersShowHide").toggle("fast"); return false;'>
 				
 				<h4 style="color:white" class="title">
-				{% trans 'Show/Hide Speakers'%} <i style="font-size:17px" class="icon-collapse-alt icon-2"></i></h4></a>
+				{% trans 'Show/Hide Speakers'%} <!--<i style="font-size:17px" class="icon-collapse-alt icon-2"></i>--></h4></a>
 			<div id="speakersShowHide">
 				<div id="speakersShowHide">
 					
@@ -337,9 +334,9 @@
 		</div>
 		<!-- =============================== -->
 		<div class="leftmenublock">
-			<a href="#" class="para_link" onclick='$("#paraverbalShowHide").toggle("fast"); return false;'>
+			<a href="#" class="para_link" onclick='return false;//$("#paraverbalShowHide").toggle("fast"); return false;'>
 				
-				<h4 class="title" style="color:white">{% trans 'Show/Hide Paraverbal'%} <i style="font-size:17px" class="icon-collapse-alt icon-2"></i> </h4></a>
+				<h4 class="title" style="color:white">{% trans 'Show/Hide Paraverbal'%} <!--<i style="font-size:17px" class="icon-collapse-alt icon-2"></i>--> </h4></a>
 			<div id="paraverbalShowHide">
 				<ul>
 					<li>
@@ -391,7 +388,17 @@
 
 	<section class="alpha wide" >
 		<div style="font-size:11px;color:#0299CC;margin:9px 8px 0px 32px" class="icon {{ document.doctype }}">
+			
+			{% if document.doctype != "TEI" %}
 			<i class="icon-file-alt icon-3x"></i>
+			
+			{% else %}
+			
+			<i class="icon-code icon-3x"></i>
+			
+			{% endif %}
+			
+			
 		</div>
 		<h3 style="font-size:23px;margin:0px">{{ document.name }}</h3>
 		
@@ -427,15 +434,15 @@
 	
 	<p>
 		<ul style="margin-left:33px;">
-			<li><b>{% trans 'Investigator'%} : </b>
+			<li><b>{% trans 'Investigators'%} : </b>
 				{% for i in speakers.inv %}
-				<a href="{% url reanalyseapp.views.esShow enquete.id i.id %}">{{i.name}}</a> ({{i|speakerMeta}})
+				{{i.name}} ({{i|speakerMeta}})
 				
 				{% endfor %}
 			</li>
 			<li><b>{% trans 'Speakers'%} : </b>
 				{% for s in speakers.spk %}
-				<a href="{% url reanalyseapp.views.esShow enquete.id s.id %}">{{s.name}}</a>{% if not forloop.last %}, {% endif %} {{s|speakerMeta}}
+				{{s.name}} ({{s|speakerMeta}}) {% if not forloop.last %}, {% endif %} 
 				{% endfor %}
 			</li>
 		</ul>

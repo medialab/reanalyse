@@ -18,12 +18,12 @@ from django.utils.translation import ugettext as _
 
 from mimetypes import guess_extension, guess_type
 
-from reanalyseapp.models import Enquete, Tag, Texte, AccessRequest
+from reanalyseapp.models import Enquete, Tag, Texte
 
 from glue.models import Pin, Page
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 
-from outside.models import Enquiry, Subscriber, Confirmation_code
+from outside.models import Enquiry, Subscriber, Confirmation_code, AccessRequest
 from outside.sites import OUTSIDE_SITES_AVAILABLE
 from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
 
@@ -165,7 +165,7 @@ def enquete_download( request, enquete_id ):
 	if( not request.user.has_perm('reanalyseapp.can_browse') ):
 
 		try:
-	   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
+	   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, activated=True)
 	   		
 	   		
 		except AccessRequest.DoesNotExist:
@@ -219,6 +219,14 @@ def document( request, document_id ):
 	data = shared_context( request, tags=[ "enquetes","metadata" ] )
 
 	data['document'] = document = get_object_or_404( Texte, id=document_id )
+	
+	
+	
+	locationpath = str(document.locationpath)
+	data['document'].spec_id = locationpath.split('/')[-1].replace('_', ' _ ')
+
+	
+	
 	data['enquete'] = enquete = document.enquete
 	data['mimetype'] = guess_type( document.locationpath )[0]
 	
@@ -321,7 +329,7 @@ def document( request, document_id ):
 	
 		#Check if the user has access to the files
 		try:
-	   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+	   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
 		   
 			
 		except AccessRequest.DoesNotExist:
@@ -375,7 +383,7 @@ def document_download( request, document_id ):
 	
 		#Check if the user has access to the files
 		try:
-	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
 		except AccessRequest.DoesNotExist:
 			
 			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
@@ -415,7 +423,7 @@ def document_embed( request, document_id ):
 
 	#Check if the user has access to the files
 	try:
-   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
+   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
 	except AccessRequest.DoesNotExist:
 		
 		messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
@@ -549,7 +557,9 @@ def login_view( request ):
 					# @todo: Redirect to next page
 					
 					if( request.method == 'GET' and 'next' in request.GET ) :
-						return redirect( request.REQUEST.get('next', 'outside_index') )
+						#return redirect( request.REQUEST.get('next', 'outside_index') )
+						return redirect( settings.REANALYSEURL )
+
 					else:
 						return redirect( reverse('outside_index') )
 						
@@ -609,7 +619,7 @@ def access_request(request, enquete_id=None):
 		
 		else:
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
-			if(access.is_activated == True):
+			if(access.activated == True):
 				error_str = _('You already have access to this research.')
 			else:
 				error_str = _('You already asked for this research, you will be notified when your access is granted.')
@@ -762,7 +772,7 @@ def shared_context( request, tags=[], previous_context={} ):
 	# load language and share it inside context
 	load_language( request, d )
 	
-	d['pages'] = [ p for p in Page.objects.exclude(slug="legal-notice").filter( language=d['language'] ).order_by(*['sort','id']) ] # menu up. type PAGE should be translated via django trans tamplate tags.
+	d['pages'] = [ p for p in Page.objects.exclude(slug="legal-notice").filter( language=d['language'], activated=True ).order_by(*['sort','id']) ] # menu up. type PAGE should be translated via django trans tamplate tags.
 	
 	return d
 

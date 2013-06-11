@@ -232,7 +232,7 @@ def main( argv ):
     if options.func == "testEnqueteImport" :
         print(options.func)
         # install the enquete
-        return testEnqueteImport( '' )
+        return testEnqueteImport( 'up_1370422794.12')
 
     if options.func == "parseAllTeis" :
        print(options.func)

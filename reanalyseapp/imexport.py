@@ -151,9 +151,11 @@ def isMetaDocOK(folderPath,docPath):
         
         error = False
         error_dict = {}
-                
+        
+        i = 0
+        
         for counter, row in enumerate(doc):
-            
+            i += 1
 
             if row['\xef\xbb\xbf*id']!='*descr':
                 
@@ -168,14 +170,14 @@ def isMetaDocOK(folderPath,docPath):
                     if(e.args[0] == 2):#no such file or directory
                         error = True
                         error_dict.update({file_location:e.args[1]})
-                       # print({file_location:e.args[1]})
-                       #print(file_location)
+
+                        print(file_location)
                         logger.info({file_location:e.args[1]})
                 else:
                     logger.info(file_location+" exists")
-                    print(file_location)
+                   
                 
-            
+        print('######################'+str(i)+'############################')   
         if(error is True):
             return {'status':False, 'error_dict':error_dict}
         else:
@@ -193,17 +195,16 @@ def importEnqueteUsingMeta(upPath,folderPath):
     
     #Check if every files exists in meta_documents.csv
     check = isMetaDocOK(folderPath,docPath)
-    
-    """ if(check == True):
+    """
+    if(check == True):
         pass
     else:
         logger.info("=========== PARSING META_DOCUMENT.CSV CANCELLED")
         return check
-        """
     
     logger.info("=========== PARSING META_STUDY.CSV")
     ### Parsing Study metadatas (the only file mandatory!)
-    
+    """
 
     std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
     headers = std.fieldnames
@@ -270,8 +271,13 @@ def importEnqueteUsingMeta(upPath,folderPath):
         doc = csv.DictReader(open(docPath),delimiter='\t')
         
         logger.info(eidstr+" %s row found " % doc )
-
+        
+        i = 0
+        
         for counter, row in enumerate(doc):
+            
+            
+            
             #try:
             logger.info("%s fields : %s" % (eidstr, row ) ) 
             if row['\xef\xbb\xbf*id'] != '*descr':
@@ -282,6 +288,9 @@ def importEnqueteUsingMeta(upPath,folderPath):
                 doc_mimetype =         row['*mimetype'].lower().replace(" ","")
                 doc_category1 =     row['*researchPhase'].lower().replace(" ","")
                 doc_category2 =     row['*documentType'].lower().replace(" ","")
+                doc_category3 =     row['*article'].lower().replace(" ","")
+                
+                print doc_category3 in DOC_CAT_3.keys()
                 doc_public =         True # ...could be based on categories...
                 doc_description =     ''#row['*description']
                 doc_location =         row['*location']
@@ -308,9 +317,10 @@ def importEnqueteUsingMeta(upPath,folderPath):
                     newEnquete.save()
                     #except:
                         #logger.info(eidstr+"EXCEPT with ESE")
-                        
+                       
                 ### if cat(s) are listed in globalvars.py, create doc
-                elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys():
+                elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys() and doc_category3 in DOC_CAT_3.keys():
+                    print('ok')
                     if doc_mimetype in DOCUMENT_MIMETYPES:
                         newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
             

@@ -99,6 +99,8 @@ class PageAbstract( models.Model ):
 	language =  models.CharField( max_length=2, default='EN', choices=LANGUAGE_CHOICES ) # magic admin features: create a pin for the same language
 	sort     =  models.IntegerField( default=0 )
 	
+	activated = models.BooleanField(default=True)
+	
 	class Meta:
 		unique_together = ( "slug", "language" )
 		abstract = True

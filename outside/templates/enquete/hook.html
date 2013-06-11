@@ -6,7 +6,7 @@
 		
 		<div class="nav">
 			<div class="back floating" >
-				<a href="{% url outside_enquetes %}" title="  {% trans "back to enquetes list" %}">&larr;</a>
+				<a href="{% url outside_enquetes %}" title="  {% trans "back to enquetes list" %}"><span style="font-size:22px">&larr;</span></a>
 			</div>
 
 			<div class="back floating with-icon {% if "metadata" in tags %}selected{%endif%}">
@@ -36,7 +36,7 @@
 			{% endif %}
 
 			<div class="ese floating {% if "access_request" in tags %}selected{%endif%}">
-				<a href="{% if enquiry %}{% url outside_access_request enquiry.enquete.id %}{% else %}{% url outside_access_request enquete.id %}{% endif %}"><i>{% trans "Ask for access" %}</i> &rarr;</a>
+				<a href="{% if enquiry %}{% url outside_access_request enquiry.enquete.id %}{% else %}{% url outside_access_request enquete.id %}{% endif %}"><i>{% trans "Ask for access" %}</i><span style="font-size:22px"> &rarr;</span></a>
 			</div>
 			
 			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->

@@ -1333,6 +1333,7 @@ div.text_part {
 .text_part th {
 	margin:0px;
 	padding:0px;
+	font-weight:normal;
 }
 div.text_speaker {
 	/*
@@ -1380,7 +1381,7 @@ a.text_anyparvb {
 	background: left;
 	cursor: pointer;
 	color:#0299CC;
-	font-size:20px;
+	font-size:15px;
 	
 }
 
@@ -1398,14 +1399,20 @@ a:hover.text_anyparvb {
 	text-decoration: none;
 	width:20px;
 }
-.text_margL { left:-115px; }
-.text_margR { right:-14px; }
-
+.text_margL {
+    left: -91px;
+    top: 11px;
+}
+.text_margR {
+    right: -18px;
+    top: 12px;
+}
 /* ========================== TEXT STYLING */
 .text_sic,
-.text_uncertain{
+a.text_uncertain{
 	text-decoration: none;
 	border-bottom:1px dotted black;
+	cursor:help;
 	
 	
 }

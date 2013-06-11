@@ -71,11 +71,7 @@ class TagAdmin(admin.ModelAdmin):
 
 
     
-class AccessRequestAdmin( admin.ModelAdmin ):
-   search_fields = ['user__username']
-   list_display = ('user', 'enquete', 'date', 'is_activated')
-    
-    
+
 
 # Tag
 admin.site.register( Tag, TagAdmin )
@@ -84,7 +80,7 @@ admin.site.register( Tag, TagAdmin )
 # Texte aka study documents
 admin.site.register( Texte )
 
-admin.site.register(AccessRequest, AccessRequestAdmin )
+
 
 
 #############################################################

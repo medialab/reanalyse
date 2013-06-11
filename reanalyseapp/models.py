@@ -177,42 +177,6 @@ class Enquete(models.Model):
 	
 
 
-#Store every access request from clients
-class AccessRequest(models.Model):
-	user = models.ForeignKey( User )
-	enquete = models.ForeignKey( Enquete, related_name="access_requests" )
-	description = models.TextField()
-	date = models.DateTimeField( auto_now_add=True )
-	is_activated = models.BooleanField( default=False )
-	
-	class Meta:
-		unique_together = ('user', 'enquete')
-	
-	def __unicode__(self):
-		return "%s %s" % ( self.enquete.id, self.user.username )
-
-
-@receiver(pre_save, sender=AccessRequest)
-def email_if_access_true(sender, instance, **kwargs):
-	try:
-		access_request = AccessRequest.objects.get(pk=instance.pk)
-	except AccessRequest.DoesNotExist:
-		pass # Object is new, so field hasn't technically changed, but you may want to do something else here.
-	else:
-		if access_request.is_activated == False and instance.is_activated == True: # if is_activated becomes true
-			from django.contrib.sites.models import Site
-			
-			enquete_view = reverse('outside.views.enquete', kwargs={'enquete_id':access_request.enquete.id})
-			url = '%s%s' % (settings.REANALYSEURL, enquete_view )
-			
-			subject, from_email, to = _('Bequali : Research request granted'),"L'equipe Bequali <admin@bequali.fr>", access_request.user.email
-			html_content = render_to_string('email/access_request.html', {'action':'access_granted', 'enquete':access_request.enquete,'url':url})
-			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
-			
-			# create the email, and attach the HTML version as well.
-			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-			msg.attach_alternative(html_content, "text/html")
-			msg.send()
 
 
 
@@ -899,7 +863,7 @@ def parseTEIWords(sentence,nodes,N):
 					splitted = incidDesc.split('|')
 					
 					allSentenceHtml += '<a rel="text_tooltip" title="Sans correction" class="'+cssClass+'"><div>['+splitted[0]+']</div></a>'
-					allSentenceHtml += '<a rel="text_tooltip" title="Correction" class="'+cssClass+'"><div>['+splitted[1]+']</div></a>'
+					allSentenceHtml += '<a rel="text_tooltip" title="Avec correction" class="'+cssClass+'"><div>['+splitted[1]+']</div></a>'
 				
 				elif codeName == 'uncertain':
 					allSentenceHtml += ' <a rel="text_tooltip" title="Transcription incertaine" class="'+cssClass+'"><div>'+incidDesc+'</div></a> '

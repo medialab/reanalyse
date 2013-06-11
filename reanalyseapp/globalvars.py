@@ -53,7 +53,29 @@ DOC_CAT_2['note'] 		= 'Note'
 DOC_CAT_2['prod'] 		= 'Production'
 DOC_CAT_2['revis'] 		= 'Reused'
 DOC_CAT_2['transcr'] 	= 'Transcription'
+"corresp""corresp""reunion""presse""recrut""outil""contextmat""topo""fiche""topo""photo"
+"dessin""entretiencoll""publi""com"
+"lgrise"
 
+
+DOC_CAT_3={}
+DOC_CAT_3['corresp'] 		= 'correspondance'
+DOC_CAT_3['reunion'] 		= 'reunion'
+DOC_CAT_3['presse'] 		= 'presse'
+DOC_CAT_3['recrut'] 		= 'recrutement'
+DOC_CAT_3['outil'] 			= 'outils'
+DOC_CAT_3['contextmat'] 	= 'contextmat'
+DOC_CAT_3['topo'] 			= 'topo'
+DOC_CAT_3['fiche'] 			= 'fiche'
+DOC_CAT_3['photo'] 			= 'photo'
+DOC_CAT_3['dessin'] 		= 'dessin'
+DOC_CAT_3['entretiencoll'] 	= 'entretiencoll'
+DOC_CAT_3['publi'] 			= 'publi'
+DOC_CAT_3['com'] 			= 'com'
+DOC_CAT_3['lgrise'] 		= 'lgrise'
+DOC_CAT_3['finance'] 		= 'finance'
+DOC_CAT_3['budget'] 		= 'budget'
+DOC_CAT_3['materiel'] 		= 'materiel'
 
 # C) meta_documents.csv : COLUMN *mimetype .
 # be careful ! "mimetype" doesn't mean real mimetype of the file, rather the category for the Texte model (to be renamed in Document)

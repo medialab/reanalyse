@@ -587,7 +587,7 @@ function initVerbatimTooltips() {
 					radius: 5,
 					color: '#A2D959'
 				},
-				//name: 'dark' // Inherit the rest of the attributes from the preset dark style
+				name: 'dark' // Inherit the rest of the attributes from the preset dark style
 			}
 */
 		});
