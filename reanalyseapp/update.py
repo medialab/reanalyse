@@ -145,6 +145,18 @@ def testEnqueteImport(foldName):
         print('ok')
 
 
+def deleteSpeakers(enquete_id):
+  
+   
+    textes = Texte.objects.filter(enquete_id=enquete_id, doctype="TEI")
+
+    for t in textes :
+        speakers = t.speaker_set.filter()
+        
+        print(speakers)
+        for s in speakers :
+            s.delete()
+           
 #
 #CheckMetaDocuments
 #Check if every file exists in MetaDocuments
@@ -232,12 +244,18 @@ def main( argv ):
     if options.func == "testEnqueteImport" :
         print(options.func)
         # install the enquete
-        return testEnqueteImport( 'up_1370422794.12')
+        return testEnqueteImport( 'up_1371112674.63')
 
     if options.func == "parseAllTeis" :
        print(options.func)
        # reparseAllteis file of an enquete
        return parseAllTeis( options.enquete_id )
+
+   
+    if options.func == "deleteSpeakers" :
+        print(options.func)
+        # reparseAllteis file of an enquete
+        return deleteSpeakers( options.enquete_id )
 
     if options.enquete_id is None:
         error("enquete_id arg not found!", parser)
@@ -292,7 +310,7 @@ def testDownload(enquete_id):
     
     
     
-    """
+    """ 
     for t in Texte.objects.filter( enquete_id=enquete_id ):
         
         if('é'.decode('utf-8') in t.locationpath):

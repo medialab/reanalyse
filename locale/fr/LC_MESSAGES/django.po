@@ -1402,7 +1402,7 @@ msgstr "Documents"
 
 #: templates/bq_e_base.html:92 templates/bq_e_base.html.py:141
 msgid "Speakers"
-msgstr "Intervenants"
+msgstr "Enquêté(s)"
 
 #: templates/bq_e_base.html:93 templates/bq_e_base.html.py:142
 msgid "Visualizations"
@@ -1816,7 +1816,7 @@ msgid "Show/Hide Speakers"
 msgstr "Voir/cacher les intervenants"
 
 msgid "Investigators"
-msgstr "Enquêteurs"
+msgstr "Enquêteur(s)"
 
 msgid "Protagoniste"
 msgstr "Protagoniste"
@@ -1826,11 +1826,11 @@ msgid "Protagoniste(s)"
 msgstr "Protagoniste(s)"
 
 msgid "Speakers(s)"
-msgstr "Intervenant(s)"
+msgstr "Enquêtés(s)"
 
 
 msgid "Show/Hide Paraverbal"
-msgstr "Voir/cacher le paraverbale"
+msgstr "Voir/cacher le paraverbal"
 
 
 

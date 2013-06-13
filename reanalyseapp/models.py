@@ -422,6 +422,10 @@ def parseXmlDocument(texte):
 	root = tree.getroot()
 	roottag = root.tag
 	
+	
+	
+	
+	
 	######################### NB + todo
 	# the current parsing loops are expensive !
 	# it may be better to use xslt to "parse" xml
@@ -453,6 +457,10 @@ def parseXmlDocument(texte):
 	# todo: use DTD to parse any schema..
 	
 	######################### XML TXM		## Built using Formatted .txt > TXM
+	
+	
+	
+	
 	if roottag=='Trans':
 		logger.info("["+str(e.id)+"] parsing text "+str(texte.id)+" with type: TXM ...")
 		persons = root.findall('Speakers/Speaker')
@@ -461,13 +469,18 @@ def parseXmlDocument(texte):
 		# every speaker turn
 		childs = root.findall('Episode/Section/Turn')
 		parseTXMDivs(texte,childs,speakersArray)
+		
 	
-	######################### XML TEI		## Built using: Formatted .txt > Exmaralda .exb > TEI Drop
+	######################### XML TEI ## Built using: Formatted .txt > Exmaralda .exb > TEI Drop
 	elif roottag==XMLTEINMS+'TEI':
+		
+		
 		logger.info("["+str(e.id)+"] parsing text "+str(texte.id)+" with type: Exmaralda TEI ...")
 		persons = root.findall(XMLTEINMS+'teiHeader/'+XMLTEINMS+'profileDesc/'+XMLTEINMS+'particDesc/'+XMLTEINMS+'person')
 		# putting speakers ddi_id from TEI header in a dict to access them (if the <who> tags contains #references to that header)
 		speakersDDIDict={}
+		
+		
 		if persons[0].attrib[XMLNMS+'id']=='SPK0': # means that ddi ids are defined in header
 			for n,p in enumerate(persons):
 				pid=p.attrib[XMLNMS+'id']
@@ -507,6 +520,7 @@ def parseTXMDivs(texte,nodes,speakersArray):
 	for node in nodes:
 		spk_ddiid = node.attrib['speaker']
 		
+		print(spk_ddiid)
 		# new Speaker
 		theSpeaker,isnew = Speaker.objects.get_or_create(enquete=texte.enquete,ddi_id=spk_ddiid)
 		theSpeaker.textes.add(texte)
@@ -608,7 +622,7 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 	e = texte.enquete
 	# init speakerContentDict which will store all text for one speaker
 	speakerContentDict = dict((theid,'') for theid in speakersArray)
-		
+	
 	allTextContent=""
 	texte.statuscomplete=0
 	texte.save()
@@ -620,6 +634,8 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 		if node.tag==XMLTEINMS+'div': #and e.status=='1':
 			unode = node.findall(XMLTEINMS+'u')[0]
 			ddiid = unode.attrib['who']
+			print(ddiid)
+			
 			if ddiid.startswith('#'): # means that the real ddi_id is in the header
 				try:
 					ddiid = speakersDDIDict[ddiid]
@@ -629,6 +645,8 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 			theSpeaker,isnew = Speaker.objects.get_or_create(enquete=texte.enquete,ddi_id=ddiid)
 			theSpeaker.textes.add(texte)
 			theSpeaker.save()
+			
+			
 			# get sub-elements (and get time <anchor synch="#T16" /> information !)
 			childs = unode.getchildren()
 			# DEPRECATED: i = getTeiAnchorTime(childs[0])

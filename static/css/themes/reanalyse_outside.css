@@ -1381,7 +1381,8 @@ a.text_anyparvb {
 	background: left;
 	cursor: pointer;
 	color:#0299CC;
-	font-size:15px;
+	font-size:14px;
+	z-index: 1000;
 	
 }
 

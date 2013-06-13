@@ -323,6 +323,8 @@ def document( request, document_id ):
 		inv = texte.speaker_set.filter(ddi_type="INV")
 		spk = texte.speaker_set.filter(ddi_type="SPK")
 		pro = texte.speaker_set.filter(ddi_type="PRO")
+		
+		
 		ctx.update({'speakers':{'inv':inv,'spk':spk,'pro':pro}})
 
 	#return HttpResponse(document.locationpath, 'text')
@@ -564,12 +566,11 @@ def login_view( request ):
 					
 					# @todo: Redirect to next page
 					
-					if( request.method == 'GET' and 'next' in request.GET ) :
-						#return redirect( request.REQUEST.get('next', 'outside_index') )
-						return redirect( settings.REANALYSEURL )
+					
+					return redirect( request.REQUEST.get('next', 'outside_index') )
+						#return redirect( settings.REANALYSEURL+request.GET['next'] )
 
-					else:
-						return redirect( reverse('outside_index') )
+					
 						
 				else:
 					login_message['error'] = _("user has been disabled")
