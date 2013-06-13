@@ -177,6 +177,42 @@ class Enquete(models.Model):
 	
 
 
+#Store every access request from clients
+class AccessRequest(models.Model):
+	user = models.ForeignKey( User )
+	enquete = models.ForeignKey( Enquete, related_name="access_requests" )
+	description = models.TextField()
+	date = models.DateTimeField( auto_now_add=True )
+	is_activated = models.BooleanField( default=False )
+	
+	class Meta:
+		unique_together = ('user', 'enquete')
+	
+	def __unicode__(self):
+		return "%s %s" % ( self.enquete.id, self.user.username )
+
+
+@receiver(pre_save, sender=AccessRequest)
+def email_if_access_true(sender, instance, **kwargs):
+	try:
+		access_request = AccessRequest.objects.get(pk=instance.pk)
+	except AccessRequest.DoesNotExist:
+		pass # Object is new, so field hasn't technically changed, but you may want to do something else here.
+	else:
+		if access_request.is_activated == False and instance.is_activated == True: # if is_activated becomes true
+			from django.contrib.sites.models import Site
+			
+			enquete_view = reverse('outside.views.enquete', kwargs={'enquete_id':access_request.enquete.id})
+			url = '%s%s' % (settings.REANALYSEURL, enquete_view )
+			
+			subject, from_email, to = _('Bequali : Research request granted'),"L'equipe Bequali <admin@bequali.fr>", access_request.user.email
+			html_content = render_to_string('email/access_request.html', {'action':'access_granted', 'enquete':access_request.enquete,'url':url})
+			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+			
+			# create the email, and attach the HTML version as well.
+			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
 
 
 
@@ -422,10 +458,6 @@ def parseXmlDocument(texte):
 	root = tree.getroot()
 	roottag = root.tag
 	
-	
-	
-	
-	
 	######################### NB + todo
 	# the current parsing loops are expensive !
 	# it may be better to use xslt to "parse" xml
@@ -457,10 +489,6 @@ def parseXmlDocument(texte):
 	# todo: use DTD to parse any schema..
 	
 	######################### XML TXM		## Built using Formatted .txt > TXM
-	
-	
-	
-	
 	if roottag=='Trans':
 		logger.info("["+str(e.id)+"] parsing text "+str(texte.id)+" with type: TXM ...")
 		persons = root.findall('Speakers/Speaker')
@@ -469,18 +497,13 @@ def parseXmlDocument(texte):
 		# every speaker turn
 		childs = root.findall('Episode/Section/Turn')
 		parseTXMDivs(texte,childs,speakersArray)
-		
 	
-	######################### XML TEI ## Built using: Formatted .txt > Exmaralda .exb > TEI Drop
+	######################### XML TEI		## Built using: Formatted .txt > Exmaralda .exb > TEI Drop
 	elif roottag==XMLTEINMS+'TEI':
-		
-		
 		logger.info("["+str(e.id)+"] parsing text "+str(texte.id)+" with type: Exmaralda TEI ...")
 		persons = root.findall(XMLTEINMS+'teiHeader/'+XMLTEINMS+'profileDesc/'+XMLTEINMS+'particDesc/'+XMLTEINMS+'person')
 		# putting speakers ddi_id from TEI header in a dict to access them (if the <who> tags contains #references to that header)
 		speakersDDIDict={}
-		
-		
 		if persons[0].attrib[XMLNMS+'id']=='SPK0': # means that ddi ids are defined in header
 			for n,p in enumerate(persons):
 				pid=p.attrib[XMLNMS+'id']
@@ -520,7 +543,6 @@ def parseTXMDivs(texte,nodes,speakersArray):
 	for node in nodes:
 		spk_ddiid = node.attrib['speaker']
 		
-		print(spk_ddiid)
 		# new Speaker
 		theSpeaker,isnew = Speaker.objects.get_or_create(enquete=texte.enquete,ddi_id=spk_ddiid)
 		theSpeaker.textes.add(texte)
@@ -622,7 +644,7 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 	e = texte.enquete
 	# init speakerContentDict which will store all text for one speaker
 	speakerContentDict = dict((theid,'') for theid in speakersArray)
-	
+		
 	allTextContent=""
 	texte.statuscomplete=0
 	texte.save()
@@ -634,8 +656,6 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 		if node.tag==XMLTEINMS+'div': #and e.status=='1':
 			unode = node.findall(XMLTEINMS+'u')[0]
 			ddiid = unode.attrib['who']
-			print(ddiid)
-			
 			if ddiid.startswith('#'): # means that the real ddi_id is in the header
 				try:
 					ddiid = speakersDDIDict[ddiid]
@@ -645,8 +665,6 @@ def parseTEIDivs(texte,nodes,speakersArray,speakersDDIDict):
 			theSpeaker,isnew = Speaker.objects.get_or_create(enquete=texte.enquete,ddi_id=ddiid)
 			theSpeaker.textes.add(texte)
 			theSpeaker.save()
-			
-			
 			# get sub-elements (and get time <anchor synch="#T16" /> information !)
 			childs = unode.getchildren()
 			# DEPRECATED: i = getTeiAnchorTime(childs[0])

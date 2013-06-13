@@ -215,6 +215,7 @@ def main( argv ):
     parser.add_option("-x", "--enquete_path", dest="enquete_path", help="enquete extracted path", default="" ) #use with --func=install
     parser.add_option("-f", "--function", dest="func", help="update function", default="update" )
     parser.add_option("-d", "--document_id", dest="document_id", help="document id (Texte)", default="" )
+    parser.add_option("-dir", "--directory", dest="directory", help="upload directory study", default="" )
 
     ( options, argv ) = parser.parse_args()
 
@@ -244,7 +245,7 @@ def main( argv ):
     if options.func == "testEnqueteImport" :
         print(options.func)
         # install the enquete
-        return testEnqueteImport( 'up_1371112674.63')
+        return testEnqueteImport( options.directory )
 
     if options.func == "parseAllTeis" :
        print(options.func)

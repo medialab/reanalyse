@@ -135,8 +135,14 @@ def enquete( request, enquete_id ):
 		pass
 		# data['enquiry'] = None
 
-
-	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
+	
+	if(  settings.REANALYSEURL == 'http://bequali.fr' ) :
+		messages.add_message(request, messages.ERROR, 'Cette enquête n\'est pas encore consultable')
+		viewurl = reverse('outside.views.enquetes')
+		return redirect(viewurl)
+		
+	else :
+		return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
 
 
 
