@@ -135,17 +135,19 @@ def enquete( request, enquete_id ):
 		pass
 		# data['enquiry'] = None
 
+
+	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
+
+
+"""
+if(  settings.REANALYSEURL == 'http://bequali.fr' ) :
+	messages.add_message(request, messages.ERROR, 'Cette enquête n\'est pas encore consultable')
+	viewurl = reverse('outside.views.enquetes')
+	return redirect(viewurl)
 	
-	if(  settings.REANALYSEURL == 'http://bequali.fr' ) :
-		messages.add_message(request, messages.ERROR, 'Cette enquête n\'est pas encore consultable')
-		viewurl = reverse('outside.views.enquetes')
-		return redirect(viewurl)
-		
-	else :
-		return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
-
-
-
+else :
+	return render_to_response('enquete/enquete.html', RequestContext(request, data ) )
+"""
 
 def enquete_metadata( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","metadata" ] )
@@ -572,8 +574,9 @@ def login_view( request ):
 					
 					# @todo: Redirect to next page
 					
-					
-					return redirect( request.REQUEST.get('next', 'outside_index') )
+					return redirect( settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME )
+
+					#return redirect( request.REQUEST.get('next', 'outside_index') )
 						#return redirect( settings.REANALYSEURL+request.GET['next'] )
 
 					
