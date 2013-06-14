@@ -573,8 +573,7 @@ def login_view( request ):
 					
 					
 					# @todo: Redirect to next page
-					
-					return redirect( settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME )
+					return redirect( settings.REANALYSEURL+'/'+settings.ROOT_DIRECTORY_NAME )
 
 					#return redirect( request.REQUEST.get('next', 'outside_index') )
 						#return redirect( settings.REANALYSEURL+request.GET['next'] )
