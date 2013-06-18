@@ -33,7 +33,8 @@ oo.filt.cross = oo.filt.cross || {
 	// This data will be filtrated in each corresponding javascript
 
 	'extent': function( item, filter ){
-		if ( item.location == null) return true;
+		// Check if location is available and checkbutton status
+		if ( item.location.length == 0 && $('#location').is(':checked') ) return true;
 		var bounds = filter,
 			 point = item.coordinates.geometry.coordinates;
 		return point[1] < bounds.north && point[1] > bounds.south && point[0] < bounds.east && point[0] > bounds.west;
@@ -253,6 +254,9 @@ oo.filt.reset = function( eventType, data ){
 	};
 	oo.filt.push();
 };
+
+// Execute for click
+$('#location').click(function(){oo.filt.execute()})
 
 
 

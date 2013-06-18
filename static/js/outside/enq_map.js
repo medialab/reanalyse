@@ -24,6 +24,8 @@ oo.enq.map.update = function( event, filters ){
 
 	for ( var i in oo.filt.data ) {
 
+		// oo.log(oo.filt.data[i].location)
+
 		if ( oo.filt.data[i].location == null
 			|| oo.filt.data[i].location.length == 0
 			|| oo.filt.data[i].filtered == false ) continue; // Manage null location

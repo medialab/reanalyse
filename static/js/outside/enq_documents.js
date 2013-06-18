@@ -34,6 +34,8 @@ oo.enq.docs.update = function( event, filters ){
 
 	}
 
+	// oo.log('oo.filt.data', oo.filt.data)
+
 
 	// Hide / Show Itemss
 
@@ -125,7 +127,7 @@ oo.enq.docs.init = function ( objects ){
 		})
 
 		.on('click', function(d, i) {
-			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_self');
+			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_blank');
 		});
 
 	// Set Documents' Counter

@@ -37,64 +37,29 @@ oo.nest = function( objects, nester, sorter ){
 
 	for (var d in objects){
 
-
 		// Define object
-		var index = nester( objects[d] );
+		var index = nester( objects[d] ); // index
 
 		// Check consistency of data
 		if ( index == null || index.length == 0 ) continue;
 
-		// Skip not filtered elements
-		if ( typeof objects[d].filtered != 'undefined' ) {
-			if (objects[d].filtered == 'false') continue;
-		}
-		
 		// Check group existence
-		if (typeof nested[ index ] == "undefined"){
-			nested[ index ] = { "key": index, "values":[] };
-		}
+		if ( typeof nested[ index ] == "undefined" ){ nested[ index ] = { "key": index, "values":[] }; }
+
+		// Skip not filtered elements
+		if ( typeof objects[d].filtered != 'undefined' && objects[d].filtered == false ) continue;
 
 		// Push element
-		nested[ index ].values.push( objects[d] )
+		nested[ index ].values.push( objects[d] );
 	}
 
 	// refactoring array
-	var remapped = []; for( var i in nested ){ remapped.push( nested[i] );}
+	var remapped = [];
+	for ( var i in nested ) { remapped.push( nested[i] ); }
+
 	// return remapped;
 	return remapped.sort(sorter);
 
 }
-
-//
-// 
-// Count nested data
-// 
-// 
-
-// oo.count = function( objects, nester, sorter ){
-
-// 	nested = {};
-	
-// 	for (d in objects){
-
-// 		var index = nester( objects[d] );
-		
-// 		if (typeof nested[ index ] == "undefined"){
-// 			nested[ index ] = { "key": index, "count":0 };
-// 		}
-
-// 		if ( (typeof objects[d].filtered == 'undefined' ) || ( objects[d].filtered == true ) ) {
-// 			nested[ index ].count++;
-// 		}
-// 	}
-
-// 	// refactoring array
-// 	var remapped = []; for( var i in nested ){ remapped.push( nested[i] );}
-// 	return remapped.sort( sorter );
-// }
-
-
-
-
 
 

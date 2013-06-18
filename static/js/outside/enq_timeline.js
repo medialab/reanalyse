@@ -32,8 +32,6 @@ oo.enq.timeline.update = function( event, filters ){
 			return a.key < b.key ? -1 : a.key > b.key ? 1 : 0 }
 	);
 
-	oo.log('nest', nest)
-
 	// Set variables
 
 	var steps = oo.enq.timeline.steps,
@@ -60,7 +58,6 @@ oo.enq.timeline.update = function( event, filters ){
 		.transition()
 		.duration(1000)
 		.attr("y", function(d) { return - scaleY(d.values.length) - 3; })
-
 
 	oo.enq.timeline.rectangles.texts
 		.data(nest)
@@ -90,6 +87,8 @@ oo.enq.timeline.init = function( objects ){
 	);
 
 	// Set variables
+
+	// oo.log('nest', nest)
 
 	var steps = nest.length,
 		rectWidth = d3.round( ( size.width - 100 ) / (steps) );
