@@ -16,9 +16,7 @@
 	<script src="http://d3js.org/d3.v3.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.js"></script>
 	<script src="{{ STATIC_URL }}js/jquery.slimscroll.min.js"></script>
-	
-	<link rel="stylesheet" href="{{ STATIC_URL }}/fonts/font-awesome/css/font-awesome.min.css">
-	
+
 
 {% endblock %}
 
@@ -145,11 +143,9 @@
 			<div id="map"></div>
 			
 			
-			
-    		
-    		
     		
 			<div id="timeline">
+				<input id="location" checked="checked" type="checkbox" name="location" value="unclassified"> Objects unclassified by location<br>
 				
 				<a id="help-filtre5" href="#modal-filtre5" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
 			
@@ -191,7 +187,7 @@
 				</div>
 			{% endif %}
 
-			<div id="reset">→ Rétablir les filtres</div>
+			<div id="reset">→ Reetablir les filtres</div>
 
 			<!-- <p><i class="icon-repeat icon-white"></i></p> -->
 
@@ -206,12 +202,7 @@
 					<ul></ul>
 				</div>
 			</div>
-		
-		
-		
-		
-		
-		
+
 		{% endblock %}
 
 
