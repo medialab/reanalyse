@@ -31,12 +31,17 @@
 		
 		
 		<div class="subscription-wrapper">
+			<h3>{%trans "Ask for access"%}</h3>
+			<br/>
+			
 			<p>
-			Pour accéder aux documents de l'enquête, veuillez remplir ce formulaire. Nous vous informerons dès que votre demande aura été examinée.
+				Pour accéder aux documents de l'enquête, veuillez remplir ce formulaire. Nous vous informerons dès que votre demande aura été examinée.
 			</p>
+			
+			
+			<br/>
 			<label for="id_access_request_message">{% trans "Research project" %}
-				<div class="specification">{% trans "To access the research content, please fill this form. Your request will be evaluated by the beQuali team and you will be notified by an email if you are granted or not." %}
-</div>
+				<div class="specification">{% trans "To access the research content, please fill this form. Your request will be evaluated by the beQuali team and you will be notified by an email if you are granted or not." %}</div>
 			</label>
 			{{ access_request_form.description }}
 			

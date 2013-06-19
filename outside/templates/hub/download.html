@@ -1,14 +1,34 @@
-{% extends "hub/middle.html" %}
+{% extends "enquete/hook.html" %}
 {% load i18n %}
 {% load extras %}
 
 
-{% block page_left %}
+{% block page_hook_inner %}
+		<h3>{{ enquete.name }}</h3>
+		<div class="meta">
+			<span class="author" >
+				{% for authenty in enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if not forloop.last %}, {% endif %}{% endfor %}
+			</span> &dash;
+			<span class="tags">
+				{% for nation in enquete.meta.values.general.nation.value %}{{ nation }}, {% endfor %}
+				{% for studydate in enquete.meta.values.universe.studydates.value %}{{ studydate }}{% endfor %}
+			</span>
+		</div>
 	
+{% endblock %}
 
-	
+{% block document_ready %}
+	{% if enquete %}
+		oo.vars.enquete_id = "{{ enquete.id }}";
+	{% endif %}
+	{{ block.super }}
+{% endblock %}
+
+{% block page_left %}
+
+
 	<div id="subscription">
-		<h2>{% trans "Download page" %}</h2>
+		<h3>{% trans "Download page" %}</h3>
 		
 		<br/>
 		

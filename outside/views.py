@@ -183,7 +183,6 @@ def enquete_download( request, enquete_id ):
 			return redirect(viewurl)
 		else:
 			pass
-	
 	else:
 		pass
 	
@@ -962,7 +961,13 @@ def test_dl2( request ):
 	return response
 
 def download_page( request, enquete_id ):
+	
+	
+	
 	data = shared_context( request, tags=[ "download" ] )
+	
+	if enquete_id is not None:
+		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 	data['dl_link'] = reverse('outside_enquete_download', args=[enquete_id])
 	return render_to_response("hub/download.html", RequestContext(request, data ) )
 

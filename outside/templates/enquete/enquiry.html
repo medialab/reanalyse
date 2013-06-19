@@ -68,13 +68,16 @@ Read the whole report Research on the research (PDF)
 			
 			<span class="tags">
 				
+				
 				{% trans "interview done with" %}
-				{% for t in tags %}{% ifequal t.type "Rs" %} {{ t.name }} {% if not forloop.last %}, {% endif %}{% endifequal %}{% endfor %}
+				{% for t in tags %}{% ifequal t.type "Rs" %} {{ t.name }} {% if not forloop.last %}, 
+				{% endif %}{% endifequal %}{% endfor %}
 				
 				{% trans "on" %}
 				
-				{% for t in tags %}{% ifequal t.type "Da" %} {{ t.name }} {% if not forloop.last %}, {% endif %} {% endifequal %}{% endfor %}
-				{% for t in tags %}{% ifequal t.type "Pl" %} {{ t.name }} {% if not forloop.last %}, {% endif %} {% endifequal %}{% endfor %}
+				{% for t in tags %}{% ifequal t.type "Da" %} {{ t.name }} 
+				{% if not forloop.last %} {% endif %} {% endifequal %}{% endfor %} 
+				- {% for t in tags %}{% ifequal t.type "Pl" %} {{ t.name }} {% if not forloop.last %} {% endif %} {% endifequal %}{% endfor %}
 			</span>
 		</div>
 		{% endwith %}

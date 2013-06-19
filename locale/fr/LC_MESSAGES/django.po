@@ -905,11 +905,11 @@ msgstr "Lire le rapport complet sur l'enquête sur l'enquête (PDF)"
 
 #: outside/templates/enquete/enquiry.html:71
 msgid "interview done with"
-msgstr "Entretien réalisé par"
+msgstr "Entretien réalisé avec"
 
 #: outside/templates/enquete/enquiry.html:74
 msgid "on"
-msgstr "Sur"
+msgstr "le"
 
 #: outside/templates/enquete/enquiry.html:117
 msgid "add enquiry content"
@@ -1678,142 +1678,142 @@ msgstr ""
 #
 # 	JSON metadata field tranlations
 #
-#~ msgid "langdoc"
-#~ msgstr "Langage documentation"
+msgid "langdoc"
+msgstr "Langage documentation"
 
-#~ msgid "locationofunitsofobservation"
-#~ msgstr "Niveau de comparatisme"
+msgid "locationofunitsofobservation"
+msgstr "Niveau de comparatisme"
 
-#~ msgid "keywords"
-#~ msgstr "Mots clefs"
+msgid "keywords"
+msgstr "Mots clefs"
 
-#~ msgid "copyright"
-#~ msgstr "copyright"
+msgid "copyright"
+msgstr "copyright"
 
-#~ msgid "discipline"
-#~ msgstr "Discipline"
+msgid "discipline"
+msgstr "Discipline"
 
-#~ msgid "methodofdatacollection"
-#~ msgstr "Technique de collection"
+msgid "methodofdatacollection"
+msgstr "Technique de collection"
 
-#~ msgid "titl"
-#~ msgstr "Nom"
+msgid "titl"
+msgstr "Nom"
 
-#~ msgid "contact"
-#~ msgstr "Contact"
+msgid "contact"
+msgstr "Contact"
 
-#~ msgid "actor"
-#~ msgstr "Acteur"
+msgid "actor"
+msgstr "Acteur"
 
-#~ msgid "targetgroups"
-#~ msgstr "Groupes de population ciblés"
+msgid "targetgroups"
+msgstr "Groupes de population ciblés"
 
-#~ msgid "collsitu"
-#~ msgstr "Durée des observations"
+msgid "collsitu"
+msgstr "Durée des observations"
 
-#~ msgid "accessconditions"
-#~ msgstr "Conditions d'accès"
+msgid "accessconditions"
+msgstr "Conditions d'accès"
 
-#~ msgid "relpubl"
-#~ msgstr "Publications"
+msgid "relpubl"
+msgstr "Publications"
 
-#~ msgid "colldate"
-#~ msgstr "Dates de récolte des données"
+msgid "colldate"
+msgstr "Dates de récolte des données"
 
-#~ msgid "anonymization"
-#~ msgstr "Anonymisation"
+msgid "anonymization"
+msgstr "Anonymisation"
 
-#~ msgid "authenty"
-#~ msgstr "Auteur(s)"
+msgid "authenty"
+msgstr "Auteur(s)"
 
-#~ msgid "sampprocedure"
-#~ msgstr "Echantillonnage "
+msgid "sampprocedure"
+msgstr "Echantillonnage "
 
-#~ msgid "distrbtr"
-#~ msgstr "Distributeur"
+msgid "distrbtr"
+msgstr "Distributeur"
 
-#~ msgid "topicclassification"
-#~ msgstr "Classification"
+msgid "topicclassification"
+msgstr "Classification"
 
-#~ msgid "nation"
-#~ msgstr "Pays"
+msgid "nation"
+msgstr "Pays"
 
-#~ msgid "timedimension"
-#~ msgstr "Périodicité"
+msgid "timedimension"
+msgstr "Périodicité"
 
-#~ msgid "modedatacollection"
-#~ msgstr "Accès aux observations"
+msgid "modedatacollection"
+msgstr "Accès aux observations"
 
-#~ msgid "numberofunits"
-#~ msgstr "Nombre d'observations"
+msgid "numberofunits"
+msgstr "Nombre d'observations"
 
-#~ msgid "studydates"
-#~ msgstr "Dates de l'enquête"
+msgid "studydates"
+msgstr "Dates de l'enquête"
 
-#~ msgid "timeperiodcovered"
-#~ msgstr "Période couverte"
+msgid "timeperiodcovered"
+msgstr "Période couverte"
 
-#~ msgid "spatialunits"
-#~ msgstr "Unités spatialisées"
+msgid "spatialunits"
+msgstr "Unités spatialisées"
 
-#~ msgid "datakind"
-#~ msgstr "Types de documents"
+msgid "datakind"
+msgstr "Types de documents"
 
-#~ msgid "weighting"
-#~ msgstr "Segmentation"
+msgid "weighting"
+msgstr "Segmentation"
 
-#~ msgid "numberoffiles"
-#~ msgstr "Nombre de documents"
+msgid "numberoffiles"
+msgstr "Nombre de documents"
 
-#~ msgid "locarch"
-#~ msgstr "Localisation archives"
+msgid "locarch"
+msgstr "Localisation archives"
 
-#~ msgid "grantno"
-#~ msgstr "Bourse"
+msgid "grantno"
+msgstr "Bourse"
 
-#~ msgid "idno"
-#~ msgstr "DDI Id"
+msgid "idno"
+msgstr "DDI Id"
 
-#~ msgid "observunits"
-#~ msgstr "Unités d'observation"
+msgid "observunits"
+msgstr "Unités d'observation"
 
-#~ msgid "langdata"
-#~ msgstr "Language données"
+msgid "langdata"
+msgstr "Language données"
 
-#~ msgid "editor"
-#~ msgstr "Edition"
+msgid "editor"
+msgstr "Edition"
 
-#~ msgid "geogcover"
-#~ msgstr "Couverture géographique"
+msgid "geogcover"
+msgstr "Couverture géographique"
 
-#~ msgid "transcription"
-#~ msgstr "Transcription"
+msgid "transcription"
+msgstr "Transcription"
 
-#~ msgid "firstedition"
-#~ msgstr "Première version"
+msgid "firstedition"
+msgstr "Première version"
 
-#~ msgid "fundag"
-#~ msgstr "Agence de financement"
+msgid "fundag"
+msgstr "Agence de financement"
 
-#~ msgid "latestedition"
-#~ msgstr "Dernière version"
+msgid "latestedition"
+msgstr "Dernière version"
 
-#~ msgid "software"
-#~ msgstr "Logiciel"
+msgid "software"
+msgstr "Logiciel"
 
-#~ msgid "interview done on the"
-#~ msgstr "entretien réalisé le"
+msgid "interview done on the"
+msgstr "entretien réalisé le"
 
-#~ msgid "message specification"
-#~ msgstr ""
-#~ "Dans ce message veuillez nous décrire votre <i>projet de recherche</i> "
-#~ "afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/"
-#~ ">Veuillez notamment préciser dans quel cadre vous comptez réutiliser "
-#~ "cette enquête et quel type de traitement vous avez prévu de mener sur les "
-#~ "documents de l'enquête."
+msgid "message specification"
+msgstr ""
+"Dans ce message veuillez nous décrire votre <i>projet de recherche</i> "
+"afin de permettre à l'équipe beQuali d'évaluer votre demande. <br/"
+">Veuillez notamment préciser dans quel cadre vous comptez réutiliser "
+"cette enquête et quel type de traitement vous avez prévu de mener sur les "
+"documents de l'enquête."
 
-#~ msgid "password specification"
-#~ msgstr "votre mot de passe doit contenir au moins 8 charactères"
+msgid "password specification"
+msgstr "votre mot de passe doit contenir au moins 8 charactères"
 
 
 #DOCUMENTS
