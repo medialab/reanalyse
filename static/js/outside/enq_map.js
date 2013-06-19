@@ -136,6 +136,8 @@ oo.enq.map.init = function ( objects ){
     		oo.filt.trigger( oo.filt.events.replace, {'extent': map.extent()} );
     	}, 500 );
 	});
+	
+	//$('.zoomer.zoomin').trigger('click')
 
 }
 

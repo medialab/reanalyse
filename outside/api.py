@@ -16,12 +16,12 @@ from django.core.mail import EmailMultiAlternatives
 
 
 from glue.models import Pin
-from outside.models import Enquiry, Subscriber, Message, Confirmation_code, AccessRequest
+from outside.models import Enquiry, Subscriber, Message, Confirmation_code
 from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError
-from reanalyseapp.models import Enquete, Tag
+from reanalyseapp.models import Enquete, Tag, AccessRequest
 from datetime import datetime
 
 import os, mimetypes
@@ -235,8 +235,8 @@ def enquete_data( request, enquete_id ):
 		return response.throw_error(error="%s" % e, code=API_EXCEPTION_DOESNOTEXIST).json()
 	
 	response.meta('total_count', textes.count() )
-	response.meta('version', version)
-
+	
+	
 
 	response.add('objects',[{
 		'id':t.id,

@@ -142,7 +142,7 @@ def doFiestaToEnquete(e):
 def isMetaDocOK(folderPath,docPath):
    
     if os.path.exists(docPath):
-       
+        
         
         #mandatoryFields = ['*id','*name','*category','*description','*location','*date']
         logger.info("=========== PARSING META_DOCUMENTS.CSV TO CHECK IF A FILE IS MISSING IF TRUE IMPORT IS CANCELLED")
@@ -157,13 +157,13 @@ def isMetaDocOK(folderPath,docPath):
         for counter, row in enumerate(doc):
             i += 1
 
-            if row['\xef\xbb\xbf*id']!='*descr':
+            if row['*id']!='*descr':
                 
 
                 file_location = '%s/%s'%( folderPath, str(row['*file']) )
                 try:
                     open_file = open(file_location)
-                    
+                    print(file_location)
                     
                     
                 except IOError, e:
@@ -171,12 +171,12 @@ def isMetaDocOK(folderPath,docPath):
                         error = True
                         error_dict.update({file_location:e.args[1]})
 
-                        print(file_location)
+                        print(e.args)
                         logger.info({file_location:e.args[1]})
                 else:
                     logger.info(file_location+" exists")
                    
-                
+        print( error_dict )         
         print('######################'+str(i)+'############################')   
         if(error is True):
             return {'status':False, 'error_dict':error_dict}
@@ -195,7 +195,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
     
     #Check if every files exists in meta_documents.csv
     check = isMetaDocOK(folderPath,docPath)
-    """
+
     if(check == True):
         pass
     else:
@@ -204,7 +204,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
     
     logger.info("=========== PARSING META_STUDY.CSV")
     ### Parsing Study metadatas (the only file mandatory!)
-    """
+   
 
     std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
     headers = std.fieldnames

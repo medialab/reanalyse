@@ -246,7 +246,11 @@
 				
 				<li class="active">
 					Id : {{document.spec_id}}
-				</li>	
+					
+					
+				</li>
+				
+
 		
 			</ul>
 
@@ -400,14 +404,16 @@
 			
 			
 		</div>
-		<h3 style="font-size:23px;margin:0px">{{ document.name }}</h3>
+		
+		<a class="return-link" href="{% url outside.views.enquete document.enquete.id %}">
+			
+			<i class="icon-chevron-sign-left"></i> <b>{% trans "return to the research" %}</b> 
+		</a>
+		
+		<h3 style="font-size:23px;margin:0px">{{ document.name }} </h3>
 		
 				
-		
-		{%comment%}
-		
-		
-		
+
 		<div class="content" >
 		
 		
@@ -416,11 +422,8 @@
 		
 		
 		
-		<a class="return-link" href="{% url outside.views.enquete document.enquete.id %}">
-			
-			<b>{% trans "return to the research" %}</b> <i class="icon-chevron-sign-left"></i>
-		</a>
-		{%endcomment%}
+		
+		
 		<div class="clear"></div>
 
 	</section>
@@ -691,28 +694,42 @@
 		
 		// TOGGLE All paraverbal
 		$('#paraCheckAll').click(function() {
+			$('.para_link').find('h4').append('<span class="ajax-loader"></span>');
+			
 			console.log("toggle all");
 			var chk = $('#paraCheckAll').attr("checked");
 			if (chk!='checked') chk=null;
+			
+			
 			{% for k,parvs in paraverbal.items %}
-			{% for p,o,c in parvs  %}
-			$('#paraCheck_{{p}}').attr('checked',chk);
+				{% for p,o,c in parvs  %}
+					$('#paraCheck_{{p}}').attr('checked',chk);
 			
-			
-			var css_class = '.{{c}}'.replace(' ', '.');
-			$(css_class+':not(.text_legend)').toggle((chk=='checked') );
-			
+					
+					
+					
+					
+					var css_class = '.{{c}}'.replace(' ', '.');
+					$(css_class+':not(.text_legend)').toggle((chk=='checked') );
+					
+				{% endfor %}
 			{% endfor %}
-			{% endfor %}
+			
+			$('.ajax-loader').remove().delay(800);
+			
+			/*$('.ajax-loader').remove();*/
+			
 		});
 		
 		// TOGGLE paraverbals
 		{% for k,parvs in paraverbal.items %}
 		{% for p,o,c in parvs  %}
 		$('#paraCheck_{{p}}').click(function() {
+			$('.para_link').find('h4').append('<span class="ajax-loader"></span>');
 			console.log("toggle par:{{p}}");
 			var css_class = '.{{c}}'.replace(' ', '.');
 			$(css_class+':not(.text_legend)').toggle();
+			$('.ajax-loader').remove().delay(800);
 		});
 		{% endfor %}
 		{% endfor %}

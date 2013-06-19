@@ -215,7 +215,7 @@ def main( argv ):
     parser.add_option("-x", "--enquete_path", dest="enquete_path", help="enquete extracted path", default="" ) #use with --func=install
     parser.add_option("-f", "--function", dest="func", help="update function", default="update" )
     parser.add_option("-d", "--document_id", dest="document_id", help="document id (Texte)", default="" )
-    parser.add_option("-dir", "--directory", dest="directory", help="upload directory study", default="" )
+    parser.add_option("-D", "--directory", dest="directory", help="upload directory study", default="" )
 
     ( options, argv ) = parser.parse_args()
 

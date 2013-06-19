@@ -178,6 +178,7 @@ CODES_IMAGE['interruption']=			'interruption'
 CODES_IMAGE['part:echo']=				'interruption'
 CODES_IMAGE['laugh']=					'laugh'
 CODES_IMAGE['rires']=					'laugh'
+CODES_IMAGE['smiles']=					'laugh'
 #CODES_IMAGE['fin de la page']=			'laugh'
 
 CODES_IMAGE['pause']=					'pause'
@@ -213,6 +214,8 @@ CODES_IMAGE_LABELS['begin_page']=			'Début de page'
 CODES_IMAGE_LABELS['hesitation']=			'Hésitation'
 CODES_IMAGE_LABELS['inaudible']=			'inaudible'
 CODES_IMAGE_LABELS['interruption']=			'interruption'
+CODES_IMAGE_LABELS['rires']=				'Rire'
+CODES_IMAGE_LABELS['smiles']=				'Rire'
 CODES_IMAGE_LABELS['laugh']=				'Rire'
 CODES_IMAGE_LABELS['pause']=				'Silence'
 CODES_IMAGE_LABELS['points de suspension']=	'Silence'
@@ -237,6 +240,8 @@ CODES_IMAGE_CSS['end_page']=			'icon-chevron-sign-right'
 CODES_IMAGE_CSS['hesitation']=			'icon-ellipsis-horizontal'
 CODES_IMAGE_CSS['inaudible']=			'icon-volume-off'
 CODES_IMAGE_CSS['interruption']=		'icon-cut'
+CODES_IMAGE_CSS['rires']=				'icon-smile'
+CODES_IMAGE_CSS['smiles']=				'icon-smile'
 CODES_IMAGE_CSS['laugh']=				'icon-smile'
 CODES_IMAGE_CSS['pause']=				'icon-pause'
 CODES_IMAGE_CSS['points de suspension']=	'icon-ellipsis-horizontal'
@@ -286,12 +291,11 @@ PARVBCODES['Verbatim'] = 		[
 									['directed','Interaction', 'icon-comments-alt'],
 									['hesitation','Hésitation', 'icon-ellipsis-horizontal'],
 									['interruption','Interruption', 'icon-cut'],
-									['laugh','Rire', 'icon-smile'],
+									['rires','Rire', 'icon-smile'],
 									['pause','Silence', 'icon-pause'],
 									['anonym','Passage anonymisé', 'icon-lock'],
 									['begin_page','Début de page', 'icon-chevron-sign-left'],
 									['end_page','Fin de page', 'icon-chevron-sign-right'],
-									#['uncertain', 'Incertain', 'icon-warning-sign'],
 									['incident', 'Incident', 'icon-warning-sign'],
 								]
 

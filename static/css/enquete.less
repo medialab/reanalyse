@@ -257,105 +257,104 @@
 
 
 
-
 #right-sidebar {
 
-		color: #d4d1cd;
-		
-		#reset {
-			padding: 4px 18px;
-			font-family: 'LatinModernRoman10Regular', serif;
-			font-style: italic;
-			font-size: 13px;
-			text-decoration: underline;
-			cursor: pointer;
+    color: #d4d1cd;
+    
+    #reset {
+      padding: 4px 18px;
+      font-family: 'LatinModernRoman10Regular', serif;
+      /*font-style: italic;
+       * text-decoration: underline;*/
+      font-weight:bold;
+      font-size: 14px;
+      
+      cursor: pointer;
 
-			&:hover{
-				background: lighten( #383838, 8% );
-			}
+      &:hover{
+        background: lighten( #383838, 8% );
+      }
 
-			border-top:1px solid fade( white, 5%);
-			border-bottom:1px solid darken(#383838, 14%);
-		}
-
-
-		#counter {
-			font-family: 'LatinModernSans10Regular', sans-serif;
-		    padding: 12px 18px;
-			font-size: 24px;
-		    overflow: hidden;
-		    width: 214px;
-		    height: 24px;
-		    line-height: 24px;
-		    cursor: default;
-		    background: darken( #383838, 3% );
-
-		    border-top:1px solid fade( white, 5%);
-			border-bottom:1px solid darken(#383838, 4%);
-
-			p {
-				margin-top: 40px; // For initial sliding
-			    text-transform: capitalize;
-			}
-
-		}
+      border-top:1px solid fade( white, 5%);
+      border-bottom:1px solid darken(#383838, 14%);
+    }
 
 
-		#documents {
-			
-			overflow: -moz-scrollbars-vertical; 
-			overflow-y: scroll;
-			height: @line_height * 22 + 9;
-			padding-bottom: 2px;
-		    width: 250px;
-		    
-		    border-bottom:1px solid darken(#383838, 14%);
+    #counter {
+      font-family: 'LatinModernSans10Regular', sans-serif;
+        padding: 12px 18px;
+      font-size: 24px;
+        overflow: hidden;
+        width: 214px;
+        height: 24px;
+        line-height: 24px;
+        cursor: default;
+        background: darken( #383838, 3% );
 
-		    background: #383838;
-		 word-wrap:break-word;
-      overflow:hidden;
+        border-top:1px solid fade( white, 5%);
+      border-bottom:1px solid darken(#383838, 4%);
 
-			ul{
-				margin:0;
-				padding:0;
-				
-				li {
-					font-family: 'LatinModernSans10Regular', sans-serif;
-					font-size: 15px;
-					cursor: pointer;
+      p {
+        margin-top: 40px; // For initial sliding
+          text-transform: capitalize;
+      }
 
-					overflow: hidden;
-
-					display: block;
-					padding: 6px 18px;
-
-					border-top: 1px solid fade( white, 5%);
-					border-bottom: 1px solid darken(#383838, 4%);
-
-					&:hover {
-						background: lighten( #383838, 8% );
-					}
-
-					i {
-						font-family: 'LatinModernSans10Regular', sans-serif;
-						font-size: 10px;
-						text-transform: uppercase;
-						background: lighten( #383838, 8% );
-						padding: 0 2px;
-						margin: 0 3px 0 0;
-						border:0 solid;
-						border-radius: 2px;
-					}
-
-				}
-				
-			}
-
-		}
+    }
 
 
-	}
-	
+    #documents {
+      
+      overflow: -moz-scrollbars-vertical; 
+      overflow-y: hidden;
+      height: @line_height * 22 + 9;
+      padding-bottom: 2px;
+        width: 250px;
+        
+        border-bottom:1px solid darken(#383838, 14%);
+
+        background: #383838;
+
+
+      ul{
+        margin:0;
+        padding:0;
+        
+        li {
+          font-family: 'LatinModernSans10Regular', sans-serif;
+          font-size: 15px;
+          cursor: pointer;
+
+          overflow: hidden;
+
+          display: block;
+          padding: 6px 18px;
+
+          border-top: 1px solid fade( white, 5%);
+          border-bottom: 1px solid darken(#383838, 4%);
+
+          &:hover {
+            background: lighten( #383838, 8% );
+          }
+
+          i {
+            font-family: 'LatinModernSans10Regular', sans-serif;
+            font-size: 10px;
+            text-transform: uppercase;
+            background: lighten( #383838, 8% );
+            padding: 0 2px;
+            margin: 0 3px 0 0;
+            border:0 solid;
+            border-radius: 2px;
+          }
+
+        }
+        
+      }
+
+    }
+
+
+  }
 	
 
 a.blue-link{

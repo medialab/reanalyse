@@ -29,6 +29,8 @@
 	<script src="{{ STATIC_URL }}js/outside/enq_types.js" type="text/javascript"></script>
 	<script src="{{ STATIC_URL }}js/outside/enq_documents.js" type="text/javascript"></script>
 	<script src="{{ STATIC_URL }}js/outside/enquiry.js" type="text/javascript"></script>
+	
+	
 {% endblock %}
 
 {% block document_ready %}
@@ -99,7 +101,7 @@
 {% block page_left %}
 	
 	
-	<section id="visualization" class="alpha wide" style="padding-top:0px">
+	<section id="visualization" class="alpha wide" style="padding-top:0px;height:880px">
 
 		          <!-- Button to trigger modal -->
    &nbsp;&nbsp;&nbsp;
@@ -145,7 +147,7 @@
 			
     		
 			<div id="timeline">
-				<input id="location" checked="checked" type="checkbox" name="location" value="unclassified"> Objects unclassified by location<br>
+				<input id="location" checked="checked" type="checkbox" name="location" value="unclassified"> Afficher/cacher les fichiers non localisés<br>
 				
 				<a id="help-filtre5" href="#modal-filtre5" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
 			
@@ -187,7 +189,7 @@
 				</div>
 			{% endif %}
 
-			<div id="reset">→ Reetablir les filtres</div>
+			<div id="reset"><i class="icon-rotate-right"></i> Rétablir les filtres</div>
 
 			<!-- <p><i class="icon-repeat icon-white"></i></p> -->
 
@@ -197,7 +199,7 @@
 					<span class='docLabel'>{% trans "documents" %}</span>
 				</p>
 			</div>
-			<div id="documents">
+			<div id="documents" >
 				<div id="documents-inner">
 					<ul></ul>
 				</div>

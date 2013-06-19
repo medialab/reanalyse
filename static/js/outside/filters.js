@@ -256,7 +256,9 @@ oo.filt.reset = function( eventType, data ){
 };
 
 // Execute for click
-$('#location').click(function(){oo.filt.execute()})
+$('#location').click( function(){
+	oo.filt.execute();
+});
 
 
 

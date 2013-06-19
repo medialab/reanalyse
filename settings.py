@@ -193,6 +193,13 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
+
+
+SESSION_ENGINE = (
+				"django.contrib.sessions.backends.cached_db"
+)
+
+
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 ROOT_URLCONF = 'urls'

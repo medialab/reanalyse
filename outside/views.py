@@ -18,12 +18,12 @@ from django.utils.translation import ugettext as _
 
 from mimetypes import guess_extension, guess_type
 
-from reanalyseapp.models import Enquete, Tag, Texte
+from reanalyseapp.models import Enquete, Tag, Texte, AccessRequest
 
 from glue.models import Pin, Page
 from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
 
-from outside.models import Enquiry, Subscriber, Confirmation_code, AccessRequest
+from outside.models import Enquiry, Subscriber, Confirmation_code 
 from outside.sites import OUTSIDE_SITES_AVAILABLE
 from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
 
@@ -173,7 +173,7 @@ def enquete_download( request, enquete_id ):
 	if( not request.user.has_perm('reanalyseapp.can_browse') ):
 
 		try:
-	   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, activated=True)
+	   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
 	   		
 	   		
 		except AccessRequest.DoesNotExist:
@@ -289,33 +289,29 @@ def document( request, document_id ):
 		newPARVBCODES['Verbatim'] = 		[]
 		
 		
-		import mmap
-		f = open(texte.locationpath, 'r')
-		
-		lines = f.read()
-		
-		
-		
-		
+
 		#return HttpResponse(f, 'text')
 		
 		for code,label,css in PARVBCODES['Verbatim'] :
 			
-			search = lines.find(code)
+			import commands
 			
-		#	return HttpResponse(answer, 'text')
+			a = commands.getoutput('grep -l %s %s' % (code, texte.locationpath) )
 			
-			if search != -1 :
-			    newPARVBCODES['Verbatim'] += [[code, label, css]]
+
+			if(a != ""):
+				 newPARVBCODES['Verbatim'] += [[code, label, css]]
+
+			   
 				
 		for code,label,css in PARVBCODES['Transcription'] :
 			
-			search = lines.find(code)
+			a = commands.getoutput('grep -l %s %s' % (code, texte.locationpath) )
 			
-			if search != -1 :
+			if(a != ""):
 			    newPARVBCODES['Transcription'] += [[code, label, css]]
 		
-	
+		
 	
 		ctx.update({'paraverbal':newPARVBCODES})	
 		#ctx.update({'paraverbal':PARVBCODES})	
@@ -342,7 +338,7 @@ def document( request, document_id ):
 	
 		#Check if the user has access to the files
 		try:
-	   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
+	   		req = AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 		   
 			
 		except AccessRequest.DoesNotExist:
@@ -397,7 +393,7 @@ def document_download( request, document_id ):
 	
 		#Check if the user has access to the files
 		try:
-	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
+	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 		except AccessRequest.DoesNotExist:
 			
 			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
@@ -440,7 +436,7 @@ def document_embed( request, document_id ):
 		
 		#Check if the user has access to the files
 		try:
-	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, activated=True)
+	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 		except AccessRequest.DoesNotExist:
 			
 			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
@@ -573,9 +569,9 @@ def login_view( request ):
 					
 					
 					# @todo: Redirect to next page
-					return redirect( settings.REANALYSEURL+'/'+settings.ROOT_DIRECTORY_NAME )
+					#return redirect( settings.REANALYSEURL+'/'+settings.ROOT_DIRECTORY_NAME )
 
-					#return redirect( request.REQUEST.get('next', 'outside_index') )
+					return redirect( request.REQUEST.get('next', 'outside_index') )
 						#return redirect( settings.REANALYSEURL+request.GET['next'] )
 
 					
@@ -636,7 +632,7 @@ def access_request(request, enquete_id=None):
 		
 		else:
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
-			if(access.activated == True):
+			if(access.is_activated == True):
 				error_str = _('You already have access to this research.')
 			else:
 				error_str = _('You already asked for this research, you will be notified when your access is granted.')

@@ -1059,6 +1059,10 @@ msgstr ""
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
+#: outside/templates/hub/change_password.html
+msgid "Change your password"
+msgstr "Changer votre mot de passe"
+
 #: outside/templates/hub/change_password.html:26
 #: outside/templates/hub/signup.html:45
 msgid "The password must have a good security"
@@ -1190,7 +1194,7 @@ msgstr ""
 
 #: outside/templates/hub/edit_profile.html:13
 msgid "You can modify your information"
-msgstr "Vous pouvez modifier vos coordonnées"
+msgstr "Voici vos coordonnées, vous pouvez les modifier."
 
 #: outside/templates/hub/edit_profile.html:47
 msgid "recaptcha"
@@ -1208,6 +1212,11 @@ msgstr ""
 #: outside/templates/hub/edit_profile.html:58
 msgid "Modifier"
 msgstr "Modifier"
+
+#: outside/templates/hub/edit_profile.html:58
+msgid "back to profile page"
+msgstr "Retour à la page profile"
+	
 
 #: outside/templates/hub/edit_profile.html:66
 msgid "Your modifications are saved"

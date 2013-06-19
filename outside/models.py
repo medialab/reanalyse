@@ -4,9 +4,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from glue.models import PageAbstract, Pin
-from reanalyseapp.models import Enquete, Tag
+from reanalyseapp.models import Enquete, Tag, AccessRequest
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.utils.translation import ugettext as _
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 # Create your models here.
 
@@ -116,23 +121,6 @@ class Confirmation_code( models.Model ):
 	action = models.CharField( max_length = 64, null=True, blank=True )
 	date = models.DateField( auto_now=True )
 	activated = models.BooleanField( default=False )
-
-
-#Store every access request from clients
-class AccessRequest(models.Model):
-	user = models.ForeignKey( User )
-	enquete = models.ForeignKey( Enquete, related_name="access_requests" )
-	description = models.TextField()
-	date = models.DateTimeField( auto_now_add=True )
-	activated = models.BooleanField( default=False )
-	
-	class Meta:
-		unique_together = ('user', 'enquete')
-	
-	def __unicode__(self):
-		return "%s %s" % ( self.enquete.id, self.user.username )
-
-
 
 
 
