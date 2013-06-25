@@ -424,7 +424,7 @@ PHASE_LABEL['anal'] = 'analyse'
 PHASE_LABEL['col']  = 'collecte'
 PHASE_LABEL['add']  = 'add'
 PHASE_LABEL['ese']  = 'ese'
-
+PHASE_LABEL['compl']  = 'compl'
 
 # DEPRECATED Descriptions
 #

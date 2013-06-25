@@ -261,7 +261,7 @@
 	</div>
 	
 	<br/>
-		{% if texte.doctype == 'TEI' %}
+		{% if texte.doctype|upper == 'TEI' %}
 		<!-- =============================== -->
 	
 
@@ -401,7 +401,7 @@
 	<section class="alpha wide" >
 		<div style="font-size:11px;color:#0299CC;margin:9px 8px 0px 32px" class="icon {{ document.doctype }}">
 			
-			{% if document.doctype != "TEI" %}
+			{% if document.doctype|upper != "TEI" %}
 			<i class="icon-file-alt icon-3x"></i>
 			
 			{% else %}
@@ -437,7 +437,7 @@
 	</section>
 	
 
-	{% if texte.doctype == 'TEI' %}
+	{% if texte.doctype|upper == 'TEI' %}
 
 <div class="introHtml">
 	<!-- ========================================================================= -->
@@ -524,7 +524,7 @@
 
 <script type="text/javascript">
 
-{% if texte.doctype == 'TEI' %}
+{% if texte.doctype|upper == 'TEI' %}
 	function loadSampleStopwordsList() {
 		$.get("{{MEDIA_URL}}/xmlsamples/stopwords_fr.txt", function success(data) {
 			$("#verb_inputfilt_w").val(data);
@@ -600,7 +600,7 @@
 
 	$(document).ready(function() {
 		
-		{% if texte.doctype == 'TEI' %}
+		{% if texte.doctype|upper == 'TEI' %}
 		
 		///////////////// init verbatim fine display js controls (stopwords,lemmas,grammar,etc...)
 		// for each word, the view gives us all informations .. so we can filter the display !
@@ -673,7 +673,7 @@
 
 	
 	
-{% if texte.doctype == 'TEI' %}
+{% if texte.doctype|upper == 'TEI' %}
 		
 		$('.ajax-loader-div0').hide();
 		
@@ -884,7 +884,7 @@
 		
 		
 		
-		{% ifequal document.doctype "TEI" %}
+		{% ifequal document.doctype|upper "TEI" %}
 			{% autoescape on %}
 				{{ xslt_render|safe }}
 			{% endautoescape %}
