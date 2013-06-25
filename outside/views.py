@@ -463,11 +463,12 @@ def enquiry( request, enquete_id ):
 	
 	try:
 		data['enquiry'] = Enquiry.objects.get( enquete__id=enquete_id, language=data['language'])
-		data['enquete'] = data['enquiry'].enquete
+		
 	except Enquiry.DoesNotExist:
 		messages.add_message(request, messages.ERROR, _('There is no research on this research'))
 		return redirect(reverse('outside.views.enquetes'))
 	else:
+		data['enquete'] = data['enquiry'].enquete
 		data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
 		return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 
@@ -1013,6 +1014,96 @@ def dGetHtmlContent(request,eid,did):
 	return render_to_response('bq_render_d.html', ctx, context_instance=RequestContext(request))
 ###################################################################################################################################
 	
-	
+
+
+@login_required
+def enquete_admin(request):
+    ### unique foldername if some upload is done 
+    sessionFolderName = "up_"+str(time())
+    ctx = {'bodyid':'admin','foldname':sessionFolderName}
+    """
+    ### todo: move that somewhere else to do it just when website/database is reset
+    try:
+        init_users()
+    except:
+        donothing=1
+    
+    ### check if solr launched, relaunch it if needed
+    if checkSolrProcess():
+        ctx.update({'solrstatus':'was off. but refreshing this page has relaunched it. wait 5,7s and refresh again to be sure'})
+    else:
+        ctx.update({'solrstatus':'is running !'})
+    ctx.update({'staffemail':settings.STAFF_EMAIL})
+    
+    ### log file
+    #logger.info("Looking at ADMIN page")
+    wantedCount = int(request.GET.get('log','50'))
+    log_django     = getTailOfFile(settings.REANALYSELOGDJANGO,wantedCount)
+    #log_solr     = getTailOfFile(settings.REANALYSELOGSOLR,wantedCount)
+    ctx.update({'log_django':log_django})
+        
+    ### solr path
+    ctx.update({'BASE_URL':settings.BASE_URL,'solr_url':settings.SOLR_URL})
+    """
+    ### all enquetes
+    ctx.update({'enquetes':Enquete.objects.all()})
+    """
+    ### default page is 'users'
+    ctx.update({'page':request.GET.get('page','users')})
+    
+    ### static pages : (they are also loaded one at at time on the home page) load them all now
+    for name in ['project','method','access']:
+        for lan in ['en','fr']:
+            nothing = getStaticHtmlContent(name,lan)
+    
+    ### users
+    users={}
+    users['header']=['username','name','email','status','group','full study access','joined','last login']
+    users['rows']=[]
+    for u in User.objects.order_by('id'):
+        uTab=[]
+        uTab.append('<a href="'+settings.BASE_URL+'admin/auth/user/'+str(u.id)+'">'+u.username+'</a>')
+        uTab.append(u.last_name +" "+ u.first_name)
+        uTab.append(u.email)
+        # STATUS (activated?)
+        sstr="need to be activated..."
+        if u.is_active:
+            sstr="activated"
+        uTab.append(sstr)
+        # GROUPS
+        gstr=""
+        if u.is_staff:
+            gstr="STAFF "
+        for g in u.groups.all():
+            gstr+=g.name+" "
+        uTab.append(gstr)
+        # PERMISSIONS
+        pstr=""
+        for e in Enquete.objects.order_by('id'):
+            if u.has_perm('reanalyseapp.can_explore_'+str(e.id)):
+                pstr+="["+str(e.id)+"] "+e.name+"<br/>"        
+        uTab.append(pstr)
+        # DATES JOINED LASTLOGIN
+        uTab.append(u.date_joined.strftime("%a %x"))
+        uTab.append(u.last_login.strftime("%a %d at %Hh%M"))
+        users['rows'].append(uTab)
+    ctx.update({'users':users})
+    """
+    ### upload of available studies
+    
+    
+    
+    serverAvailableStudies = []
+    for foldername in os.listdir(settings.REANALYSESAMPLE_STUDIES_FILES):
+        #logger.info("Listing existing study folder: "+foldername)
+        serverAvailableStudies.append({'foldername':foldername})
+    ctx.update({'serverAvailableStudies':serverAvailableStudies})
+    
+    
+    data = shared_context( request, tags=[ "enquete_admin" ] )
+    ctx.update({'data':data})
+    
+    return render_to_response('enquete/enquete_admin.html', ctx , context_instance=RequestContext(request, data))
+
 	
 	

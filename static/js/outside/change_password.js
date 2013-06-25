@@ -62,12 +62,13 @@ oo.api.change_password.add = function( params ){
 };
 
 oo.change_password.init = function(){
+	
 	$("#change-password").click( function(){
 		
 		password1 = $('input[name=password1]').val()
 		password2 = $('input[name=password2]').val()
 		
-		if(  password1 != password2){
+		if(  password1 != password2 ){
 			return oo.toast( oo.i18n.translate("the two fields are not the same string"), oo.i18n.translate("error") );
 		} else {
 			

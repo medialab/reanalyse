@@ -36,7 +36,7 @@ from subprocess import PIPE, Popen
 
 from haystack.management.commands import update_index
 
-
+import bag.csv2
 ###########################################################################
 # LOGGING
 ###########################################################################
@@ -139,27 +139,35 @@ def doFiestaToEnquete(e):
 
 
 
+
 def isMetaDocOK(folderPath,docPath):
+    
    
+    
+    
     if os.path.exists(docPath):
         
         
         #mandatoryFields = ['*id','*name','*category','*description','*location','*date']
         logger.info("=========== PARSING META_DOCUMENTS.CSV TO CHECK IF A FILE IS MISSING IF TRUE IMPORT IS CANCELLED")
         ###### Parsing Documents
-        doc = csv.DictReader(open(docPath),delimiter='\t')
         
+        doc = bag.csv2.UnicodeDictReader(open(docPath, 'r'), delimiter='\t',
+                                encoding='utf-8')
+       
+       
         error = False
         error_dict = {}
         
         i = 0
         
+     
+
         for counter, row in enumerate(doc):
             i += 1
 
             if row['*id']!='*descr':
                 
-
                 file_location = '%s/%s'%( folderPath, str(row['*file']) )
                 try:
                     open_file = open(file_location)
@@ -171,7 +179,7 @@ def isMetaDocOK(folderPath,docPath):
                         error = True
                         error_dict.update({file_location:e.args[1]})
 
-                        print(e.args)
+                       
                         logger.info({file_location:e.args[1]})
                 else:
                     logger.info(file_location+" exists")
@@ -195,7 +203,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
     
     #Check if every files exists in meta_documents.csv
     check = isMetaDocOK(folderPath,docPath)
-
+    """
     if(check == True):
         pass
     else:
@@ -204,9 +212,9 @@ def importEnqueteUsingMeta(upPath,folderPath):
     
     logger.info("=========== PARSING META_STUDY.CSV")
     ### Parsing Study metadatas (the only file mandatory!)
-   
+    """
 
-    std = csv.DictReader(open(stdPath),delimiter='\t',quotechar='"')
+    std = bag.csv2.UnicodeDictReader(open(stdPath),delimiter='\t',quotechar='"')
     headers = std.fieldnames
     allmeta={}
     allmeta['values']={}    # store metadata
@@ -268,7 +276,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
         #mandatoryFields = ['*id','*name','*category','*description','*location','*date']
         logger.info(eidstr+"=========== PARSING META_DOCUMENTS.CSV")
         ###### Parsing Documents
-        doc = csv.DictReader(open(docPath),delimiter='\t')
+        doc = bag.csv2.UnicodeDictReader(open(docPath),delimiter='\t')
         
         logger.info(eidstr+" %s row found " % doc )
         
@@ -280,7 +288,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
             
             #try:
             logger.info("%s fields : %s" % (eidstr, row ) ) 
-            if row['\xef\xbb\xbf*id'] != '*descr':
+            if row['*id'] != '*descr':
                 #try:
                 file_location =     folderPath+row['*file']                        # if LINK > url , else REF > nothing
                 file_extension =     file_location.split(".")[-1].upper()
@@ -289,8 +297,6 @@ def importEnqueteUsingMeta(upPath,folderPath):
                 doc_category1 =     row['*researchPhase'].lower().replace(" ","")
                 doc_category2 =     row['*documentType'].lower().replace(" ","")
                 doc_category3 =     row['*article'].lower().replace(" ","")
-                
-                print doc_category3 in DOC_CAT_3.keys()
                 doc_public =         True # ...could be based on categories...
                 doc_description =     ''#row['*description']
                 doc_location =         row['*location']
@@ -320,7 +326,6 @@ def importEnqueteUsingMeta(upPath,folderPath):
                        
                 ### if cat(s) are listed in globalvars.py, create doc
                 elif doc_category1 in DOC_CAT_1.keys() and doc_category2 in DOC_CAT_2.keys() and doc_category3 in DOC_CAT_3.keys():
-                    print('ok')
                     if doc_mimetype in DOCUMENT_MIMETYPES:
                         newDocument = Texte(enquete=newEnquete, name=doc_name, doccat1=doc_category1, doccat2=doc_category2, description=doc_description, locationpath=file_location, date=doc_date, location=doc_location, status='1', public=doc_public)
             
@@ -382,7 +387,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
     if os.path.exists(spkPath):
         logger.info(eidstr+"=========== PARSING META_SPEAKERS.CSV")            
         ###### Parsing Speakers
-        spk = csv.DictReader(open(spkPath),delimiter='\t',quotechar='"')
+        spk = bag.csv2.UnicodeDictReader(open(spkPath),delimiter='\t',quotechar='"')
         headers = spk.fieldnames
         mandatories = ["*pseudo","*id","*type"]
         attributetypes=[]
@@ -418,7 +423,7 @@ def importEnqueteUsingMeta(upPath,folderPath):
     if os.path.exists(codPath):
         logger.info(eidstr+"=========== PARSING META_CODES.CSV")
         ###### Parsing Codes
-        cod = csv.DictReader(open(codPath),delimiter='\t',quotechar='"')
+        cod = bag.csv2.UnicodeDictReader(open(codPath),delimiter='\t',quotechar='"')
         # to do later..
     else:
         logger.info(eidstr+"=========== PARSING: no cod meta found")

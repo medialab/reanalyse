@@ -15,11 +15,8 @@ oo.magic.access_request.add = function(){
 };
 
 /*
-
-
     AccessRequest Ajax API
     ===================
-
 */
 
 

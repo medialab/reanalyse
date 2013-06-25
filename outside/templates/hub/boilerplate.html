@@ -10,8 +10,13 @@
 
 		<title>{% block title %}Enquêtes. L’instrument de DIME-SHS : la banque d’enquêtes qualitatives{% endblock %}</title>
 
-		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fonts.css">
-		<link rel="stylesheet" href="{{ STATIC_URL }}/fonts/font-awesome/css/font-awesome.min.css">
+		<!--<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fonts.css">
+		<link rel="stylesheet" href="{{ STATIC_URL }}/fonts/font-awesome/css/font-awesome.min.css">-->
+		
+		<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/fonts.css">	
+		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
 		
 		{% block less%}
 		<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/themes/{{ stylesheet }}.less">
@@ -24,6 +29,7 @@
 		 <script src="{{ MEDIA_URL }}/jqueryui/js/jquery-ui-1.8.16.custom.min.js"></script>
 		
 		<script src="{{ STATIC_URL }}js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="{{ STATIC_URL }}js/outside/spin.js" type="text/javascript"></script>
 		
 		<script src="{{ STATIC_URL }}js/jquery.toastmessage.js" type="text/javascript"></script>
 

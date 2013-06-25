@@ -200,12 +200,12 @@ oo.i18n.dict = {
 		"to change password": "Veuillez changer votre <br/> <b>mot de passe</b>",
 		"please check accepted terms": "Veuillez accepter les conditions d'utilisation",
 		"the two fields are not the same string":"Veuillez rectifier la confirmation du mot de passe",
-		"Too short":"trop court",
-		"Bad":"trop faible",
-		"Good":"bonne",
-		"Strong":"forte",
+		"Too short":"Mot de passe trop court",
+		"Bad":"Sécurité trop faible ",
+		"Good":"Sécurité convenable",
+		"Strong":"Sécurité forte",
 		"Your password security is too weak":"La sécurité de votre mot de passe est trop faible",
-		"the password is not the same as above":"les deux mots de passes ne sont pas égaux"
+		"the password is not the same as above":"Les deux mots de passes ne sont pas égaux"
 
 	}
 };

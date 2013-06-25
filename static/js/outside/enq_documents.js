@@ -140,6 +140,6 @@ oo.enq.docs.init = function ( objects ){
 		.duration(500)
 		.style('margin-top', '0px');
 	
-	$('#documents-inner').slimScroll({height:493});
+	$('#documents-inner').slimScroll({height:600, color:'white'});
 };
 

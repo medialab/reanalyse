@@ -37,6 +37,8 @@ from django.utils import translation
 
 import string, random
 
+from reanalyseapp.globalvars import *
+
 version = '0.0.3'
 
 #
@@ -245,7 +247,7 @@ def enquete_data( request, enquete_id ):
 		'articles': [{'article':a.name} for a in t.tags.filter(type=Tag.ARTICLE)],
 		# 'tags':[ {'name':tag.name, 'type':tag.type} for tag in t.tags.all() ],
 		'categories': [{'category':c} for c in t.doccat2.split(",")],
-		'phases': [{'phase' : t.doccat1}],
+		'phases': [{'phase' : PHASE_LABEL[t.doccat1]}],
 		'times':[{'time':t.date.isoformat()} ] if t.date else [],
 		'location': t.locationgeo,
 		'coordinates' : {"type": "Feature","geometry": {"type": "Point","coordinates": t.locationgeo.split(",")[::-1] if t.locationgeo else [] },"properties": {"name": t.location}},
@@ -603,7 +605,7 @@ def reinitialize_password(request):
 			
 			try:
 			
-				user = User.objects.get(username=form.cleaned_data['username'], email=form.cleaned_data['email'])
+				user = User.objects.get(username=form.cleaned_data['username'], email__iexact=form.cleaned_data['email'])
 				
 				
 			except User.DoesNotExist, e :

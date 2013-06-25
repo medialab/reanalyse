@@ -464,7 +464,11 @@ function createVisualization(eid,vizType,moreparams) {
 	
 	// set spinner rolling
 	$('.vizLoadingSpinner.'+vizType).attr('style','display:inline-block;');
+	
 	// Send AJAX to create visualization
+	
+	
+	
 	$.ajax({
 		type: "GET",
 		data: dict,
@@ -584,6 +588,20 @@ function initVerbatimTooltips() {
 		});
 	});
 };
+
+
+
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+
 
 
 /* deprecated manual tooltip */

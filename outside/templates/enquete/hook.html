@@ -11,14 +11,15 @@
 
 			<div class="back floating with-icon {% if "metadata" in tags %}selected{%endif%}">
 				<a href="{% if enquiry %}{% url outside_enquete_metadata enquiry.enquete.id %}{% else %}{% url outside_enquete_metadata enquete.id %}{% endif %}" title="{% trans "The research in a nut shell" %}" >
-					<div class="icon"><img src="{{ STATIC_URL }}img/179-notepad.png"></div>{% trans "Focus on the research" %}
+					<div class="icon"><span class="icon-compass" ></span></div>{% trans "Focus on the research" %}
 				</a>
 			</div>
 
 			<div class="back floating with-icon {% if "enquiry" in tags %}selected{%endif%}">
 				<a href="{% if enquiry %}{% url outside_enquiry enquiry.enquete.id %}{% else %}{% url outside_enquiry enquete.id %}{% endif %}" title="{% trans "The research on the research" %}" >
-					<div class="icon"><img src="{{ STATIC_URL }}img/66-microphone.png"></div>{% trans "The research on the research" %}
+					<div class="icon"><span class="icon-microphone" style=""></span></div>{% trans "The research on the research" %}
 				</a>
+				
 			</div>
 			{% comment %}
 			<div class="back floating with-icon {% if "focus-on-enquete" in tags %}selected{%endif%}">
@@ -30,7 +31,7 @@
 			{% if request.user.is_authenticated %}
 			<div class="back floating with-icon" >
 				<a href="{% url outside_download_page enquete.id%}" title="{% trans "Download page" %}">
-					<div class="icon"><img src="{{ STATIC_URL }}img/57-download.png"></div>{% trans "Download" %}
+					<div class="icon"><span class="icon-download-alt" style=""></span></div>{% trans "Download" %}
 				</a>
 			</div>
 			{% endif %}

@@ -418,6 +418,10 @@ VIZTYPES	= GRAPHTYPES + ['Cloud_SolrSpeakerTagCloud','TexteStreamTimeline','Attr
 
 VIZTYPESDESCR = 'Please clic me to update (html) description. If you need general technical information about that viz type, please clic the blue bubble above.'
 
+PHASE_LABEL = {}
+PHASE_LABEL['prep'] = 'préparatoire'
+PHASE_LABEL['anal'] = 'analyse'
+PHASE_LABEL['col']  = 'collecte'
 
 
 # DEPRECATED Descriptions

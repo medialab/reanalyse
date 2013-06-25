@@ -31,6 +31,10 @@
 	<script src="{{ STATIC_URL }}js/outside/enquiry.js" type="text/javascript"></script>
 	
 	
+	
+	
+	
+	
 {% endblock %}
 
 {% block document_ready %}
@@ -124,17 +128,17 @@
 			<a id="help-filtre1" href="#modal-filtre1" role="button" class="btn_help_modal help-icon" data-toggle="modal" title="Filtrer selon les étapes du processus de recherche">
 				<em>Filtrer selon les étapes du processus de recherche</em></a>
 			
-			<div><p class='typetitle'>1. Phases</p></div>
+			<div><p class='typetitle'>1. Etapes</p></div>
 			<div id="phases"></div>
 			
 			<a id="help-filtre2" href="#modal-filtre2" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
     		title="Filtrer selon le type d'activité"><em>Filtrer selon le type d'activité</em></a>
-			<div><p class='typetitle'>2. Categories</p></div>
+			<div><p class='typetitle'>2. Type d'activité</p></div>
 			<div id="categories"></div>
 			
 			<a id="help-filtre3" href="#modal-filtre3" role="button" class="btn_help_modal help-icon" data-toggle="modal"
 			 title="Filtrer selon le type de documents"><em>Filtrer selon le type de documents</em></a>
-			<div><p class='typetitle'>3. Articles</p></div>
+			<div><p class='typetitle'>3. Type de documents</p></div>
 			<div id="articles"></div>
 
 		
@@ -147,7 +151,7 @@
 			
     		
 			<div id="timeline">
-				<input id="location" checked="checked" type="checkbox" name="location" value="unclassified"> Afficher/cacher les fichiers non localisés<br>
+				<input id="location" checked="checked" type="checkbox" name="location" value="unclassified"> Afficher les fichiers non localisés<br>
 				
 				<a id="help-filtre5" href="#modal-filtre5" role="button" class="btn_help_modal help-icon" data-toggle="modal" 
 			
@@ -189,7 +193,7 @@
 				</div>
 			{% endif %}
 
-			<div id="reset"><i class="icon-rotate-right"></i> Rétablir les filtres</div>
+			<div id="reset"><i class="icon-rotate-right"></i> Réinitialiser les filtres</div>
 
 			<!-- <p><i class="icon-repeat icon-white"></i></p> -->
 
@@ -394,6 +398,9 @@
 	   		</ul>
 			
 			La liste des documents filtrés est affichée dans la colonne de droite.
+			
+			<br/>
+			  Les documents non localisés n'apparaissent pas sur la carte. Vous pouvez les faire apparaître dans la colonne de droite en cochant la case "Afficher les fichiers non localisés".
 
    		 </div>
    		 
@@ -478,6 +485,13 @@ Ce filtre peut être actionné de deux manières:</b>
 		    
 	    </div>
     </div>
+    
+    <script>
+		
+		
+		
+		
+	</script>
 	
 {% endblock %}
 

@@ -1353,7 +1353,7 @@ div.text_speaker_name {
     font-weight: normal;
     height: 28px;
     left: -97px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     position: absolute;
     text-align: right;
     text-overflow: ellipsis;
@@ -1673,6 +1673,10 @@ div.text_silence:after {
     font-size:14px
 }
 
+#tei-settings label {
+    margin-top:0px;
+}
+
 
 
 .introHtml {
@@ -1689,4 +1693,16 @@ div.text_silence:after {
     width: 17px;
 	
 }
+
+.slimScrollBar{
+	background:grey;
+	
+}
+
+.spinner{
+	
+	margin-left:50px
+}
+
+
 

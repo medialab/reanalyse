@@ -12,9 +12,10 @@ oo.api.forms.init = function( params ){
 	$("input[name=affilation]").mask("SS?SSSSSSSSSSSSSSSSSSSSSS", {placeholder:""});
 	
 	
+	
 	$('input[name=password1], input[name=password2]').keyup(function(){
 			
-			if( $('input[name=password1]').val() != '' ){
+			if( $('input[name=password1]').val() != '' &&   $('input[name=password2]').val() != ''){
 			
 				if( $('input[name=password2]').val() != $('input[name=password1]').val() ) {
 					

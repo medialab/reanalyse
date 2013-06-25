@@ -37,6 +37,9 @@ urlpatterns = patterns('',
 	
 	url(r'^downloadPage/(?P<enquete_id>\d+)$', 'outside.views.download_page', name='outside_download_page'),
 	
+	
+	url(r'^enquete_admin$', 'outside.views.enquete_admin', name='outside_enquete_admin'),
+	
 	#TEST DOWNLOAD
 	url(r'^download/test_dl1/$', 'outside.views.test_dl1', name='outside_test_dl1'),
 	url(r'^download/test_dl2/$', 'outside.views.test_dl2', name='outside_test_dl2'),
@@ -88,5 +91,5 @@ urlpatterns = patterns('',
 				
 
 	url(r'^e/(?P<eid>\d+)/d/(?P<did>\d+)/getHtmlContent$', 'outside.views.dGetHtmlContent', name="GetHtmlContent"),	
-
+	url	(r'^e/parsefolder/(?P<fold>\w+)$', 'reanalyseapp.views.eParseFolder'),	# PARSE (existing folder)
 )

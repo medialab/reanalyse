@@ -39,6 +39,13 @@ oo.filt.cross = oo.filt.cross || {
 			 point = item.coordinates.geometry.coordinates;
 		return point[1] < bounds.north && point[1] > bounds.south && point[0] < bounds.east && point[0] > bounds.west;
 	},
+	'location': function( item, filter ) {
+		if ( !filter ) {
+			return item.location.length != 0;
+		} else {
+			return true;
+		}
+	},
 	'period': function( item, filter ){
 		if ( item.times.length == 0 ) return true;
 		// Set time in the middle of the year
@@ -201,6 +208,9 @@ oo.filt.clean = function( eventType, data ){
 
 	oo.filt.filters = {};
 	oo.filt.push();
+
+	$('#location').attr('checked', true);
+	
 };
 
 
@@ -245,19 +255,23 @@ oo.filt.replace = function( eventType, data ){
 	ex. oo.filt.trigger( oo.filt.events.reset, {'type':[]} )
 */
 
-oo.filt.reset = function( eventType, data ){
+// oo.filt.reset = function( eventType, data ){
 
-	oo.log("[oo.filt.reset]");
+// 	oo.log("[oo.filt.reset]");
 
-	for (var f in data) {
-		delete oo.filt.filters[f];
-	};
-	oo.filt.push();
-};
+// 	for (var f in data) {
+// 		delete oo.filt.filters[f];
+// 	};
+// 	oo.filt.push();
+// };
 
 // Execute for click
 $('#location').click( function(){
-	oo.filt.execute();
+
+	oo.log("[oo.filt.location]");
+
+	oo.filt.trigger( oo.filt.events.add, {'location': $('#location').is(':checked') } );
+	// oo.filt.execute();
 });
 
 
