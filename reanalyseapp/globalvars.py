@@ -422,6 +422,8 @@ PHASE_LABEL = {}
 PHASE_LABEL['prep'] = 'préparatoire'
 PHASE_LABEL['anal'] = 'analyse'
 PHASE_LABEL['col']  = 'collecte'
+PHASE_LABEL['add']  = 'add'
+PHASE_LABEL['ese']  = 'ese'
 
 
 # DEPRECATED Descriptions

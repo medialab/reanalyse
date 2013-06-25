@@ -247,7 +247,7 @@ def enquete_data( request, enquete_id ):
 		'articles': [{'article':a.name} for a in t.tags.filter(type=Tag.ARTICLE)],
 		# 'tags':[ {'name':tag.name, 'type':tag.type} for tag in t.tags.all() ],
 		'categories': [{'category':c} for c in t.doccat2.split(",")],
-		'phases': [{'phase' : PHASE_LABEL[t.doccat1]}],
+		'phases': 1,
 		'times':[{'time':t.date.isoformat()} ] if t.date else [],
 		'location': t.locationgeo,
 		'coordinates' : {"type": "Feature","geometry": {"type": "Point","coordinates": t.locationgeo.split(",")[::-1] if t.locationgeo else [] },"properties": {"name": t.location}},
