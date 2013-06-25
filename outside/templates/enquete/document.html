@@ -5,7 +5,7 @@
 {% block less%}
 	{{ block.super }}
 	<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/enquete.less">
-	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/utilScripts.js"></script>
+	
 {% endblock %}
 
 {% block head %}
@@ -43,7 +43,7 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
 	<!-- the only viz we display for the moment: -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
-	
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/utilScripts.js"></script>
 	<link rel="stylesheet" href="{{ STATIC_URL }}/css/themes/reanalyse_outside.css" type="text/css" id="" media="print, projection, screen" />
 	
 
@@ -131,11 +131,11 @@
    
        $('a.embed').gdocsViewer();
 		
-		
+		/*
 		$(document).ready(function() {
 			
 			
-			/*
+			
 			$(".speak_link, .para_link").click(function(){
 				var icon = $(this).find('i:first')
 				
