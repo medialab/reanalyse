@@ -18,13 +18,13 @@
 			
 			<form id="signup">
 			
-				<label for="id_signup_first_name">{% trans "first name"|capfirst %}</label>
+				<label for="id_signup_first_name">{% trans "first name"|capfirst %} *</label>
 				{{ signup_form.first_name }}
 	
-				<label for="id_signup_last_name">{% trans "last name"|capfirst %}</label>
+				<label for="id_signup_last_name">{% trans "last name"|capfirst %} *</label>
 				{{ signup_form.last_name }}
 				
-				<label for="id_signup_username">{% trans "username"|capfirst %}
+				<label for="id_signup_username">{% trans "username"|capfirst %} *
 					
 					
 					<div class="specification">
@@ -35,11 +35,11 @@
 				{{ signup_form.username }}
 				
 				
-				<label for="id_signup_last_name">{% trans "email"|capfirst %}</label>
+				<label for="id_signup_last_name">{% trans "email"|capfirst %} *</label>
 				{{ signup_form.email }}
 				
 				<label for="id_signup_password1">
-					{% trans "password"|capfirst %}
+					{% trans "password"|capfirst %} *
 					
 					<div class="specification">
 						{% trans "The password must have a good security"|capfirst  %}: <span id="result" style="font-weight:bold"></span>
@@ -51,7 +51,7 @@
 				
 				<label for="id_signup_password2">
 					
-					{% trans "password confirmation"|capfirst %}
+					{% trans "password confirmation"|capfirst %} *
 					<div class="specification">
 						{% trans "Please confirm your password"|capfirst  %}: <span id="pass_confirm" style="font-weight:bold"></span>
 					</div>
@@ -61,20 +61,20 @@
 				{{ signup_form.password2 }}
 				
 				
-				<label for="id_signup_affiliation">{% trans "status"|capfirst %}</label>
+				<label for="id_signup_affiliation">{% trans "status"|capfirst %} *</label>
 				<p>{{ signup_form.status }}</p>
 	
-				<label for="id_signup_affiliation">{% trans "affiliation institution"|capfirst %}
+				<label for="id_signup_affiliation">{% trans "affiliation institution"|capfirst %} *
 					<div class="specification">{% trans "university or institution"|capfirst %}</div>
 				</label>
 				{{ signup_form.affiliation }}
 				
-				<label for="id_signup_description">{% trans "describe yourself"|capfirst %}</label>
+				<label for="id_signup_description">{% trans "describe yourself"|capfirst %} *</label>
 				{{ signup_form.description }}
 				
 				
 		
-				<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
+				<label for="recaptcha_response_field">{% trans "captcha"|capfirst %} *
 					<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
 				</label>
 				{{ signup_form.captcha }}
@@ -82,7 +82,7 @@
 				
 				<div class="ajax-fc-container"></div>
 			
-				<label for="id_signup_accepted_terms">{% trans "legal notices"|capfirst %}
+				<label for="id_signup_accepted_terms">{% trans "legal notices"|capfirst %} *
 					<div class="specification">
 						{% trans "legal notice description"|capfirst  %}
 					</div>

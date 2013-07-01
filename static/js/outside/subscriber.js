@@ -41,7 +41,8 @@ oo.api.subscriber.add = function( params ){
 
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_subscriber,
-		data: params, 
+		data: params,
+		
 		success:function(result){
 			
 			if($("input[name=action]").val() == "EDIT"){

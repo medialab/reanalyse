@@ -40,9 +40,7 @@ urlpatterns = patterns('',
 	
 	url(r'^enquete_admin$', 'outside.views.enquete_admin', name='outside_enquete_admin'),
 	
-	#TEST DOWNLOAD
-	url(r'^download/test_dl1/$', 'outside.views.test_dl1', name='outside_test_dl1'),
-	url(r'^download/test_dl2/$', 'outside.views.test_dl2', name='outside_test_dl2'),
+	
 
 	
 	url(r'^legal-notice/$','outside.views.legal', name='outside_legal'),

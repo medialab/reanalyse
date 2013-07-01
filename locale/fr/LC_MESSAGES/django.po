@@ -21,6 +21,11 @@ msgstr ""
 msgid "selected page does not exists"
 msgstr ""
 
+
+msgid "This email is already used in the database."
+msgstr "Cet email est déjà utilisé sur le site"
+
+
 #: glue/api.py:83 outside/api.py:121
 #, python-format
 msgid "selected pin does not exists. Exception: %s"
@@ -78,6 +83,13 @@ msgstr "beQuali demande d'accès pour enquête"
 #: outside/api.py:476
 msgid "This username is already used"
 msgstr "Cet identifiant est déjà utilisé"
+
+
+#: outside/api.py
+msgid "This email does not exists"
+msgstr "Cet email n'existe pas"
+
+
 
 #: outside/api.py:520
 msgid "beQuali signup"
@@ -809,6 +821,9 @@ msgstr "Ajouter"
 msgid "cancel"
 msgstr "Annuler"
 
+msgid "signup"
+msgstr "inscription"
+
 #: outside/templates/enquete/enquetes.html:34
 msgid "enquetes"
 msgstr ""
@@ -1301,7 +1316,7 @@ msgstr ""
 #: outside/templates/hub/signup.html:31
 msgid "You will login to the site with this username"
 msgstr ""
-"Vous vous connecterez sur le site avec cet identifiant, les accents et "
+"Vous vous connecterez sur le site avec cet identifiant, les accents, majuscules et "
 "caractères spéciaux sont interdits"
 
 #: outside/templates/hub/signup.html:54

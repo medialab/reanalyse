@@ -37,7 +37,7 @@ oo.api.reinitialize_password.launch = function( params ){
 	
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.reinitialize_password,
-		data: params, 
+		data: params,
 		success:function(result){
 			
 			if(result.status != 'ok' && result.code=="IntegrityError"){

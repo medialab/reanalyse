@@ -269,7 +269,7 @@
 	<div id="tei-settings">
 
 		<div  id="counter">
-			<span class="docLabel"><i  style="font-size:22px" class="icon-pencil"></i> {% trans "Settings"%}</span>
+			<span class="docLabel"><i  style="font-size:22px" class="icon-wrench"></i> {% trans "Settings"%}</span>
 		</div>
 		
 		<div class="leftmenublock">
@@ -699,16 +699,21 @@
 		
 		// TOGGLE Speakers
 		{% for s in texte.speaker_set.all %}
+		
+		$(this).css({'cursor':'wait'})
 		$('#spkCheck_{{s.id}}').click(function() {
 			
 			console.log("toggle spk:{{s.id}}");
-			
+			//$(this).css({'cursor':'wait'})
 			$("#tei-settings input").attr("disabled", true);
 			$('.ajax-loader-div0').show ('slow', function(){
 				$('.speaker_{{s.id}}').toggle();
 				$('.ajax-loader-div0').hide();
+				$(this).css({'cursor':'default'})
+			
 				$("#tei-settings input").removeAttr("disabled");
 			});
+			
 		});
 		{% endfor %}
 		
@@ -737,6 +742,8 @@
 					{% endfor %}
 				{% endfor %}
 				
+				$(this).css({'cursor':'default'})
+				
 				$('.ajax-loader-div').hide();
 				
 				 $("#tei-settings input").removeAttr("disabled");
@@ -749,7 +756,7 @@
 		{% for k,parvs in paraverbal.items %}
 		{% for p,o,c in parvs  %}
 		$('#paraCheck_{{p}}').click(function() {
-			
+			$(this).css({'cursor':'wait'})
 			$("#tei-settings input").attr("disabled", true);
 			$('.ajax-loader-div').show ('slow', function(){
 			
@@ -761,6 +768,8 @@
 				
 				$('.ajax-loader-div').hide();
 				$("#tei-settings input").removeAttr("disabled");
+				$(this).css({'cursor':'default'})
+			
 			});
 		});
 		{% endfor %}

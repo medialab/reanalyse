@@ -7,6 +7,8 @@ var oo = oo || {}; oo.signup = {};
     =====
 
 */
+
+oo.requestRunning = false;
 oo.magic = oo.magic || {};
 oo.magic.signup = {};
 oo.magic.signup.add = function(){
@@ -30,6 +32,26 @@ oo.api.signup.add = function( params ){
 		return;
 	}
 	
+	password1 = $('input[name=password1]').val()
+	password2 = $('input[name=password2]').val()
+	
+	
+	if(  password1 != password2){
+		return oo.toast( oo.i18n.translate("the two fields are not the same string"), oo.i18n.translate("error") );
+	} else {
+		
+		if(  passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Too short'
+			|| passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Bad'
+		
+		) {
+			return oo.toast( oo.i18n.translate("Your password security is too weak"), oo.i18n.translate("error") );
+			
+		}
+		
+	}
+	
+	
+	
 	if( typeof oo.vars.enquete_id != "undefined"){
 		$.extend( params, {enquete_id:oo.vars.enquete_id})
 	}
@@ -43,17 +65,22 @@ oo.api.signup.add = function( params ){
     	//.attr("src", "/url/to/ajax-loader.gif");
 	
 	
+	
+	$('#signup').append('<span class="ajax-loader"></span>')
+	
+	
+	
+	
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_signup,
-		data: params, 
+		data: params,
+		
 		success:function(result){
 			oo.log( "[oo.api.signup.add] result:", result );
-			
-			if(result.status != 'ok' && result.code=="IntegrityError"){
-				return oo.toast( oo.i18n.translate("error"), oo.i18n.translate("error") );
-			}
 
 			oo.api.process( result, oo.magic.signup.add, "id_signup" );
+			
+			$('.ajax-loader').remove()
 			
 			$this.removeData("executing");
 		}
@@ -63,29 +90,9 @@ oo.api.signup.add = function( params ){
 
 oo.signup.init = function(){oo.log("[oo.signup.init]");
 		
-		
+	
 	$("#add-signup").click( function(){
-		
-		password1 = $('input[name=password1]').val()
-		password2 = $('input[name=password2]').val()
-		
-		
-		if(  password1 != password2){
-			return oo.toast( oo.i18n.translate("the two fields are not the same string"), oo.i18n.translate("error") );
-		} else {
-			
-			if(  passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Too short'
-				|| passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Bad'
-			
-			) {
-				return oo.toast( oo.i18n.translate("Your password security is too weak"), oo.i18n.translate("error") );
-				
-			}
-			
-		}
-		
-		
-		
+
 		oo.api.signup.add({
 			username:$('input[name=username]').val(),
 			first_name:$('input[name=first_name]').val(),

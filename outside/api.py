@@ -4,7 +4,7 @@
 from django.db.models import Q 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
@@ -12,7 +12,6 @@ from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-from django.core.mail import EmailMultiAlternatives
 
 
 from glue.models import Pin
@@ -330,7 +329,7 @@ def contacts( request ):
 			#Notification mail to the client
 			subject, from_email, to = _('beQuali : Message sent'),_("beQuali Team")+"<equipe@bequali.fr>", form.cleaned_data['email']
 						
-			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, i18n()))
+			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
 			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 			
 			# create the email, and attach the HTML version as well.
@@ -342,7 +341,7 @@ def contacts( request ):
 			#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
 			subject, from_email, to = _('beQuali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
 						
-			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, i18n()))
+			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
 			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 			
 			# create the email, and attach the HTML version as well.
@@ -407,9 +406,8 @@ def access_request( request ):
 										'site': settings.OUTSIDE_SITE_NAME,
 										'description': form.cleaned_data['description'], 
 										'enquete': form.cleaned_data['enquete'], 
-										'url': path}, RequestContext(request, i18n())
+										'url': path}, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))										
 										
-										)
 			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 			
 			# create the email, and attach the HTML version as well.
@@ -453,7 +451,25 @@ def signups(request):
 									error={'password1':'Please enter and confirm your password', 
 										'password2':'Please enter and confirm your password'}, 
 									code=API_EXCEPTION_FORMERRORS).json()
+		"""else:
+			if CheckPassword( form.cleaned_data['password1'] ) < 3 :
+				return response.throw_error( 
+									error=_('The password stength is too weak.'),
+									code=API_EXCEPTION_FORMERRORS,
+									fields={'password1':'', 'password2':''}
+									
+									).json()
+		"""
+		
+		#Check email already exists in database
+		
 			
+		
+		if User.objects.filter( email = form.cleaned_data['email'] ).count() > 0 :
+			return response.throw_error( 
+									error=_('This email is already used in the database.'),
+									code=API_EXCEPTION_FORMERRORS,
+									fields={'email':''}).json()
 		
 		
 		try:
@@ -464,18 +480,18 @@ def signups(request):
 			created_user = User.objects.create(
 				first_name = form.cleaned_data['first_name'],
 				last_name = form.cleaned_data['last_name'],
-				username = form.cleaned_data['username'],
+				username = form.cleaned_data['username'].lower(),
 				email = form.cleaned_data['email'],
 				is_active = False,
 			)
-
+			
 			created_user.set_password(str(form.cleaned_data['password2']))
 			created_user.save()
 
 	
 		else: #If the user already exists
 			
-			return response.throw_error( error=_('This username is already used'), code=API_EXCEPTION_INTEGRITY).json()
+			return response.throw_error( error=_('This username is already used'), code=API_EXCEPTION_INTEGRITY, fields={"username":""}).json()
 		
 	
 		
@@ -497,15 +513,48 @@ def signups(request):
 			)
 			s.save()
 				
-			send_confirmation_mail( subscriber=s, request=request, action="signup" )
+			mail_send = send_confirmation_mail( subscriber=s, request=request, action="signup" )
 			
-
+			if( mail_send ==  False ):
+				created_user.delete()
+				return response.throw_error( error=_('This email does not exists'), code=API_EXCEPTION_INTEGRITY, fields={"email":""}).json()
+	
 	return response.queryset( Subscriber.objects.filter() ).json()
 
 
 
-def send_confirmation_mail( subscriber, request, action ):
 
+
+import re
+def CheckPassword(password):
+    strength = ['Blank','Very Weak','Weak','Medium','Strong','Very Strong']
+    score = 1
+
+    if len(password) < 1:
+        return strength[0]
+    if len(password) < 4:
+        return strength[1]
+
+    if len(password) >=8:
+        score = score + 1
+    if len(password) >=10:
+        score = score + 1
+    
+    if re.search('\d+',password):
+        score = score + 1
+    if re.search('[a-z]',password) and re.search('[A-Z]',password):
+        score = score + 1
+    if re.search('.[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]',password):
+        score = score + 1
+
+    return score
+		
+
+
+import smtplib
+
+def send_confirmation_mail( subscriber, request, action ):
+	
 	if(action == 'signup'):
 		
 		confirmation_code = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for x in range(33))
@@ -538,13 +587,21 @@ def send_confirmation_mail( subscriber, request, action ):
 									'password': '**********',#request.REQUEST['password1'],
 									
 									
-									}, RequestContext(request, i18n()))
+									}, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
 		
 		text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 		
 		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 		msg.attach_alternative(html_content, "text/html")
-		msg.send()
+		
+		try:
+			
+			msg.send()
+			
+		except Exception, e:
+			return False
+		else :
+			return True
 	
 	elif( action == 'reinitialize_password'):
 		
@@ -580,7 +637,7 @@ def send_confirmation_mail( subscriber, request, action ):
 									'confirmation_href': confirmation_href,
 									'username': subscriber.user.username, 
 									
-									}, RequestContext(request, i18n()))
+									}, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
 
 		
 		

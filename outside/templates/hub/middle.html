@@ -25,10 +25,14 @@
 						
 						{% if user.is_authenticated %}
 						<li style="float:right;">
-							<a href="{% url outside_logout %}"rel="tooltip" title="{% trans "logout" %} {{ user.username }}" data-tooltip-placement="bottom">{% trans "logout" %}
+							<a href="{% url outside_logout %}" rel="tooltip" title="{% trans "logout" %} {{ user.username }}" data-tooltip-placement="bottom">{% trans "logout" %} <i class="icon-signout"></i>
 							</a>
 						</li>
 						{% else %}
+						
+						<li style="float:right;">
+							<a href="{% url outside_signup_generic %}" data-toggle="" >{% trans "signup" %} <i class="icon-signin"></i> </a>
+						</li>	
 						
 						<li style="float:right;">
 							<a href="{% url outside_login %}" data-toggle="" data-target="#login-modal">{% trans "connection" %}</a>
@@ -89,7 +93,7 @@
 						{% if user.is_authenticated %}
 							
 						<li style="float:right">
-							<a href="{% url outside_edit_profile %}" {% if 'edit_profile' in tags %} class="selected"{% endif %} title="{% trans "Your profile "%}">{% trans "Your profile "%}</a>
+							<a href="{% url outside_edit_profile %}" {% if 'edit_profile' in tags %} class="selected"{% endif %} title="{% trans "Your profile "%}"><i class="icon-user"></i> {% trans "Your profile "%}</a>
 						</li>
 					
 						{% endif %}
@@ -143,6 +147,15 @@
 		
 
 			<div class="page" data-page-slug="{{ page.slug }}">
+				
+					<!--[if lte IE 8]> 
+		
+		<h3 style="color:red"><span class="icon-warning-sign"></span> 
+			Ce site n'est pas compatible avec les versions internet explorer inférieures à la 9, 
+			veuillez utiliser au minimum IE9, <a href="http://www.google.fr/intl/fr/chrome/browser/">Google Chrome </a>ou <a href="http://www.mozilla.org/fr/firefox/new/">Firefox</a> </H2>
+		
+		
+		<![endif]-->
 				
 				<sidebar class="navbar">
 					<a href="{% url outside_index %}">

@@ -548,6 +548,10 @@ def legal( request ):
 
 def login_view( request ):
 	
+	if request.user.is_authenticated():
+		return redirect( reverse('outside_index') )
+	
+	
 	form = LoginForm( request.POST )
 	login_message = { 'next':request.REQUEST.get('next', 'outside_index') }
 	
@@ -773,6 +777,7 @@ def shared_context( request, tags=[], previous_context={} ):
 	d['sites_available'] = OUTSIDE_SITES_AVAILABLE
 	d['stylesheet'] = settings.OUTSIDE_THEME
 	d['template'] = settings.OUTSIDE_TEMPLATE_DIR
+	d['REANALYSEURL'] = settings.REANALYSEURL
 
 
 	# if it is not auth, pull loginform
@@ -943,23 +948,10 @@ def reinitialize_password(request):
 	
 	data['reinitialize_password_form'] = ReinitializePasswordForm(auto_id="id_reinitialize_password_%s")
 	
-	
 	return render_to_response("hub/reinitialize_passwd.html", RequestContext(request, data ) )
 	
-
-def test_dl1( request ):
-	response = HttpResponse( open( '/var/opt/reanalyse/static/test/videos.zip' , 'r' ) , content_type='zip'  )
-	response['Content-Description'] = "File Transfer";
-	response['Content-Disposition'] = "attachment; filename=videos.zip"
 	
-	return response
-
-def test_dl2( request ):
-	response = HttpResponse( open( '/var/opt/reanalyse/static/test/G2BXL.mp4' , 'r' ) , content_type='video'  )
-	response['Content-Description'] = "File Transfer";
-	response['Content-Disposition'] = "attachment; filename=videos.mp4"
 	
-	return response
 
 def download_page( request, enquete_id ):
 	

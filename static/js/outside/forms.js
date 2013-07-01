@@ -4,7 +4,7 @@ var oo = oo || {}; oo.forms = {};
 oo.api.forms = {};
 
 oo.api.forms.init = function( params ){
-	$.mask.definitions['T'] = "[a-zA-Z0-9_.-]"
+	$.mask.definitions['T'] = "[a-z0-9_.-]"
 	$.mask.definitions['S'] = "[a-zA-Z0-9_é,à,ê,â,ô,è,î,ï]"
 	$.mask.definitions['E'] = "[a-zA-Z0-9_@.-]"
 	$("input[name=username]").mask("TT?TTTTTTTTTTTTTTTTTTT", {placeholder:""});

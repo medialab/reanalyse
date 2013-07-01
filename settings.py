@@ -212,6 +212,9 @@ TEMPLATE_DIRS = (
 	# Don't forget to use absolute paths, not relative paths.
 )
 
+AUTHENTICATION_BACKENDS = ('reanalyseapp.models.CaseInsensitiveModelBackend',)
+
+
 INSTALLED_APPS = (
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -333,6 +336,6 @@ LOGGING = {
 #    Outside specific settings
 #    =========================
 #
-OUTSIDE_SITE_NAME = "app"
+OUTSIDE_SITE_NAME = "reanalyse"
 OUTSIDE_THEME = "app"
 OUTSIDE_TEMPLATE_DIR = "hub"

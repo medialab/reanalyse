@@ -49,10 +49,19 @@ oo.api.process = function( result, callback, namespace ){
 		} else return callback( result );
 	} else if( typeof result.error == "object" ){
 		oo.invalidate( result.error, namespace );
+		/*
+		  error_string = "";
+		  $.each(result.error, function(k,v){
+            error_string += $("#"+namespace+"_"+k).parent().text()+":"+v+"</br>";
+          });
+       */
+		
 		oo.toast(  oo.i18n.translate("invalid form") , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
 		Recaptcha.reload();
 	} else {
 		oo.toast( result.error , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
+		oo.invalidate( result.fields, namespace );
+		Recaptcha.reload();
 	}
 }
 
@@ -123,7 +132,12 @@ oo.invalidate = function( errors, namespace ){ if (!namespace){ namespace = "id"
 		} else if(i.indexOf("captcha") != -1 ) {
 			$("#recaptcha_response_field").addClass("invalid");
 			continue;
+		} else if(i.indexOf("terms") != -1 ) {
+			$("#"+namespace+"_"+i).parent().attr("style", "color:red;text-decoration:underline");
+			continue;
 		}
+		
+		oo.log("#"+namespace+"_"+i)
 		$("#"+namespace+"_"+i).addClass("invalid");
 	}
 }
@@ -185,7 +199,7 @@ oo.i18n.dict = {
 		"timeout device":"Connexion trop lente.",
 		"try again later": "Veuillez réessayer dans quelques instants.",
 		"saving":"enregistrement en cours…",
-		"changes saved":"Modifications Sauvegardées",
+		"changes saved":"Modifications Sauvemagasin hema paris 7 emegardées",
 		"changes saved successfully":"Modifications Sauvegardées",
 		"password should be at least 8 chars in length":"Le mot de passe doit faire au moins 8 caractères.",
 		"password too short":"Le mot de passe est trop court",

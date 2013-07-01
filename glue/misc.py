@@ -195,10 +195,11 @@ class Epoxy:
 		return value
 
 
-	def throw_error( self, error="", code=API_EXCEPTION ):
+	def throw_error( self, error="", code=API_EXCEPTION, fields="" ):
 		self.response[ 'status' ] = 'error'
 		self.response[ 'error' ] = error
 		self.response[ 'code' ] = code
+		self.response[ 'fields' ] = fields
 		
 		return self
 
