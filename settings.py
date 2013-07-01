@@ -3,8 +3,11 @@
 # Django settings for reanalyse project.
 # pierre.jdlf started working hardly !-!-!-!
 
-import os
-DEBUG = True
+from settingsprivate import * 
+
+import os, sys
+
+
 TEMPLATE_DEBUG = DEBUG
 
 #REANALYSEURL
@@ -19,7 +22,7 @@ TEMPLATE_DEBUG = DEBUG
 #EMAIL_HOST
 #EMAIL_PORT
 # .. are defined in :
-from settingsprivate import * 
+
 
 
 REANALYSELOGPATH 			= REANALYSEPROJECTPATH + 'logs/' 					# needs to be accessible by www-data

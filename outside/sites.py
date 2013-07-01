@@ -3,6 +3,7 @@
 
 # context variables
 
+from django.conf import settings
 
 
 OUTSIDE_SITES_AVAILABLE = [
@@ -25,8 +26,8 @@ OUTSIDE_SITES_AVAILABLE = [
 		'long_content': 'archiPolis est un consortium <a href="http://www.corpus-ir.fr/" target="_blank">IR Corpus</a> créé pour inventorier, sauver les enquêtes anciennes et organiser la collecte de celles en cours et à venir en sciences sociales du politique. Il a aussi pour objet de proposer une définition élargie et contextualisée de l’enquête et des solutions de conservation pérenne.  Pour plus d’information sur archiPolis, <a href="http://bequali.fr/archipolis/">cliquez ici</a>. '
 	},
 	{
-		'name':'app',
-		'url':'/reanalyse',
+		'name':'reanalyse',
+		'url':'/reanalyse' if settings.DEBUG == True else '/app',
 		'label':'enQ<span class="cyan">uêtes</span>',
 		'title':'l’instrument de DIME-SHS',
 		'content':'La banque d’enquêtes qualitatives',
@@ -35,7 +36,7 @@ OUTSIDE_SITES_AVAILABLE = [
 		
 	},
 	{
-		'name':'reanalyse',
+		'name':'reanalyse-blog',
 		'url':'/reanalyse-blog',
 		'label':'réA<span class="cyan">nalyse</span>',
 		'title':'le projet ANR',
