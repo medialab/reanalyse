@@ -100,20 +100,35 @@
 		{% endblock %}
 		
 		<!--Catch display error messages if it exists-->
+		
 		<script>
+		$(document).ready(function() {
 		{% if messages %}
-			$(document).ready(function() {
+			
 		    {% for message in messages %}
 				oo.toast( "{{ message|safe }}", 
 					"",
 					{stayTime:105000, cleanup: true}
 					)
 		    {% endfor %}
-			})
+			
 		{% endif %}
+		
+		
+		
+		{% for message in flash.notice %}
+		   
+		   
+			oo.toast( "{{ message|safe }}", 
+					"",
+					{stayTime:105000, cleanup: true}
+					)
+		    {% endfor %}
+			
+	
+		
+		})
 		</script>
-		
-		
 		<script type="text/javascript">
 		{% block api_urls %}
 	

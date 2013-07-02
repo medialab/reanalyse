@@ -54,7 +54,7 @@ class ChangePasswordForm( forms.Form ):
 
 class ReinitializePasswordForm(forms.Form):
 	email = forms.EmailField()
-	username = forms.CharField( label=_("username"), required=True )
+	#username = forms.CharField( label=_("username"), required=True )
 	captcha = ReCaptchaField(attrs={'theme':'clean'})
 
 	

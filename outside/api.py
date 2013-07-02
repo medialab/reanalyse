@@ -12,7 +12,7 @@ from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
-
+from django.core.exceptions import *
 
 from glue.models import Pin
 from outside.models import Enquiry, Subscriber, Message, Confirmation_code
@@ -269,6 +269,16 @@ def subscribers(request):
 			
 		else:
 	
+			
+			if User.objects.filter( email = form.cleaned_data['email'] ).count() > 0 :
+			
+				return response.throw_error( 
+										error=_('This email is already used in the database.'),
+										code=API_EXCEPTION_FORMERRORS,
+										fields={'email':''}).json()
+			
+			
+			
 			if( form.cleaned_data['action'] == 'EDIT'):
 				
 			
@@ -662,20 +672,23 @@ def reinitialize_password(request):
 			
 			try:
 			
-				user = User.objects.get(username=form.cleaned_data['username'], email__iexact=form.cleaned_data['email'])
+				#user = User.objects.get(username=form.cleaned_data['username'], email__iexact=form.cleaned_data['email'])
+				user = User.objects.get(email__iexact=form.cleaned_data['email'])
 				
+			except  MultipleObjectsReturned, e:
+				
+				user = User.objects.filter(email__iexact=form.cleaned_data['email'])
+				user = user[0]
 				
 			except User.DoesNotExist, e :
 				return response.throw_error( error=_('This user does not exist in our database'), code=API_EXCEPTION_DOESNOTEXIST).json()
 				
-			else:
+			
 				
-				subscriber = get_object_or_404( Subscriber, user__id=user.id )
-				send_confirmation_mail(subscriber, request, action='reinitialize_password')
+			subscriber = get_object_or_404( Subscriber, user__id=user.id )
+			send_confirmation_mail(subscriber, request, action='reinitialize_password')
 				
-				
-							
-		
+
 		else:
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
 				

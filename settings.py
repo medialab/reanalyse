@@ -3,7 +3,7 @@
 # Django settings for reanalyse project.
 # pierre.jdlf started working hardly !-!-!-!
 
-from settingsprivate import * 
+from settingsprivate import *
 
 import os, sys
 
@@ -194,6 +194,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.cache.UpdateCacheMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.cache.FetchFromCacheMiddleware',
+	'flashcookie.FlashMiddleware',
 )
 
 
@@ -246,6 +247,7 @@ RECAPTCHA_PRIVATE_KEY = '6Lfy9dsSAAAAALKyXZsa_lAzavDaNzlewMAe1W-y'
 
 # Needed by django-tables2
 TEMPLATE_CONTEXT_PROCESSORS = (
+	"flashcookie.flash_context",
 	"django.contrib.auth.context_processors.auth",
 	"django.core.context_processors.debug",
 	"django.core.context_processors.i18n",
@@ -253,6 +255,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.core.context_processors.static",
 	"django.contrib.messages.context_processors.messages",
 	"django.core.context_processors.request",
+	
 	
 )
 

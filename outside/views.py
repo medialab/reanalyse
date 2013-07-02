@@ -342,9 +342,11 @@ def document( request, document_id ):
 			
 		except AccessRequest.DoesNotExist:
 			
-			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
-								 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+			
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
+			
+			request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) )
+			
 			return redirect(viewurl)
 		else:
 			pass
@@ -353,7 +355,13 @@ def document( request, document_id ):
 	
 		pass
 	
+	
+	
+	
 	return render_to_response('enquete/document.html',ctx, RequestContext(request, data ) )
+
+	
+
 	
 	
 	"""
@@ -395,8 +403,7 @@ def document_download( request, document_id ):
 	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 		except AccessRequest.DoesNotExist:
 			
-			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
-								 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+			request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) )
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
 			return redirect(viewurl)
 		else:
@@ -438,8 +445,8 @@ def document_embed( request, document_id ):
 	   		AccessRequest.objects.get(user=request.user.id, enquete=document.enquete.id, is_activated=True)
 		except AccessRequest.DoesNotExist:
 			
-			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a href=\"%s\">here</a> to ask for permission.") %
-								 ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) ), extra_tags='Access')
+			request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':document.enquete.id}) )
+			
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':document.enquete.id})
 			return redirect(viewurl)
 		else:
@@ -465,7 +472,8 @@ def enquiry( request, enquete_id ):
 		data['enquiry'] = Enquiry.objects.get( enquete__id=enquete_id, language=data['language'])
 		
 	except Enquiry.DoesNotExist:
-		messages.add_message(request, messages.ERROR, _('There is no research on this research'))
+		request.flash['notice'] =  _("There is no research on this research")
+			
 		return redirect(reverse('outside.views.enquetes'))
 	else:
 		data['enquete'] = data['enquiry'].enquete
@@ -635,13 +643,16 @@ def access_request(request, enquete_id=None):
 				data['access_request_form']['enquete'].editable = False
 		
 		else:
+			
+			
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
 			if(access.is_activated == True):
 				error_str = _('You already have access to this research.')
 			else:
 				error_str = _('You already asked for this research, you will be notified when your access is granted.')
+
 			
-			messages.add_message(request, messages.ERROR, error_str)
+			request.flash['notice'] = error_str
 			
 			return redirect(viewurl)
 		
@@ -934,8 +945,7 @@ def create_profile(request):
 		data['create_profile_form'] = SubscriberForm( auto_id="id_subscriber_%s", initial={'action':'ADD'})
 	
 	else:
-		
-		messages.add_message(request, messages.ERROR, _("You already have a profile") )
+		request.flash['notice'] =  _("You already have a profile")
 		
 		return redirect( request.REQUEST.get('next', 'outside_index') )
 	

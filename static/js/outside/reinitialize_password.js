@@ -41,6 +41,7 @@ oo.api.reinitialize_password.launch = function( params ){
 		success:function(result){
 			
 			if(result.status != 'ok' && result.code=="IntegrityError"){
+				$this.removeData("executing");
 				return oo.toast( oo.i18n.translate("error"), oo.i18n.translate("error") );
 			}
 			
