@@ -177,8 +177,9 @@ def enquete_download( request, enquete_id ):
 	   		
 	   		
 		except AccessRequest.DoesNotExist:
-			messages.add_message(request, messages.ERROR, _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") %
-								 ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) ), extra_tags='Access')
+			
+			request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) )
+
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
 			return redirect(viewurl)
 		else:
@@ -916,7 +917,7 @@ def edit_profile(request):
 	data['edit_profile_form'] = SubscriberForm( auto_id="id_edit_profile_%s", initial={'email': subscriber.user.email,
 																	'first_name': subscriber.first_name,
 																	'last_name':subscriber.last_name,
-																	'email':subscriber.user.email,
+																	'email':subscriber.email,
 																	'affiliation':subscriber.affiliation,
 																	'status':subscriber.status,
 																	'description':subscriber.description,
@@ -968,6 +969,17 @@ def download_page( request, enquete_id ):
 	
 	
 	data = shared_context( request, tags=[ "download" ] )
+	
+	
+	try:
+   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
+	except AccessRequest.DoesNotExist:
+		
+		request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) )
+		
+		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
+		return redirect(viewurl)
+	
 	
 	if enquete_id is not None:
 		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )

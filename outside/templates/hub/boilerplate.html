@@ -103,19 +103,7 @@
 		
 		<script>
 		$(document).ready(function() {
-		{% if messages %}
-			
-		    {% for message in messages %}
-				oo.toast( "{{ message|safe }}", 
-					"",
-					{stayTime:105000, cleanup: true}
-					)
-		    {% endfor %}
-			
-		{% endif %}
-		
-		
-		
+
 		{% for message in flash.notice %}
 		   
 		   
@@ -129,6 +117,9 @@
 		
 		})
 		</script>
+		
+		
+		
 		<script type="text/javascript">
 		{% block api_urls %}
 	
