@@ -5,7 +5,7 @@
 import urllib, os
 
 
-
+from django.core import serializers
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -466,6 +466,10 @@ def document_embed( request, document_id ):
 	return HttpResponse( open( document.locationpath , 'r' ) , mimetype=content_type  )
 	
 
+from django.utils import simplejson
+
+
+
 def enquiry( request, enquete_id ):
 	data = shared_context( request, tags=[ "enquetes","enquiry" ] )
 	
@@ -479,6 +483,12 @@ def enquiry( request, enquete_id ):
 	else:
 		data['enquete'] = data['enquiry'].enquete
 		data['sections'] = data['enquiry'].pins.order_by(*["sort","-id"])
+		
+		
+		
+		data['j_sections'] = serializers.serialize("json", data['enquiry'].pins.order_by(*["sort","-id"]))
+
+		
 		return render_to_response('enquete/enquiry.html', RequestContext(request, data ) )
 
 	

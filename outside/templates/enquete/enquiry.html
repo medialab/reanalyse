@@ -2,6 +2,48 @@
 {% load i18n %}
 
 {% block head %}
+	<script src="{{STATIC_URL}}/js/infinite-scroll/jquery.infinitescroll.js"></script>
+	<script src="{{STATIC_URL}}/js/infinite-scroll/behaviors/manual-trigger.js"></script>
+	
+	
+	
+	<script type="application/javascript">
+	
+	
+	
+	var myJSONObject = {{j_sections|safe}}
+	
+	
+	$(function() { 
+		$('#pin-box').infinitescroll({
+	
+		// callback		: function () { console.log('using opts.callback'); },
+		navSelector  	: "a#next:last",
+		nextSelector 	: "a#next:last",
+		itemSelector 	: "#content p",
+		debug		 	: true,
+		dataType	 	: 'json',
+		// behavior		: 'twitter',
+		appendCallback	: false, // USE FOR PREPENDING
+		// pathParse     	: function( pathStr, nextPage ){ return pathStr.replace('2', nextPage ); }
+    }, function( response ) {
+    	var jsonData = response.results;
+						$theCntr = $("#content");
+						var newElements = "";
+				        //var newItems = new Array();
+						for(var i=0;i<jsonData.length;i++) {
+				        	var item = $(_renderItem(jsonData[i]));
+				        	//item.css({ opacity: 0 });
+				        	$theCntr.append(item);
+		       				//newItems.push(item.attr('id'));
+						}
+	       				//_addMasonryItem(newItems);
+				      });
+		 });
+	</script>
+	
+	
+
 	{{ block.super }}
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/audio.min.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}/speaker/speakker-big-1.2.22r209.min.js"></script>

@@ -38,6 +38,8 @@ from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+
 # Python memory lookup
 #import psutil
 
@@ -192,7 +194,9 @@ class AccessRequest(models.Model):
 		return "%s %s" % ( self.enquete.id, self.user.username )
 
 
-@receiver(pre_save, sender=AccessRequest)
+from django.core.mail import send_mail
+
+@receiver(pre_save, sender=AccessRequest, dispatch_uid="054456AZ4PO4")
 def email_if_access_true(sender, instance, **kwargs):
 	try:
 		access_request = AccessRequest.objects.get(pk=instance.pk)
@@ -210,10 +214,12 @@ def email_if_access_true(sender, instance, **kwargs):
 			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 			
 			# create the email, and attach the HTML version as well.
-			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+			
+			send_mail(subject, text_content, from_email, [to])
+			
+			"""msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 			msg.attach_alternative(html_content, "text/html")
-			msg.send()
-
+			msg.send()"""
 
 
 ##############################################################################
