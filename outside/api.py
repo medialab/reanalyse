@@ -270,15 +270,6 @@ def subscribers(request):
 		else:
 	
 			
-			if User.objects.filter( email = form.cleaned_data['email'] ).count() > 0 :
-			
-				return response.throw_error( 
-										error=_('This email is already used in the database.'),
-										code=API_EXCEPTION_FORMERRORS,
-										fields={'email':''}).json()
-			
-			
-			
 			if( form.cleaned_data['action'] == 'EDIT'):
 				
 			
@@ -295,21 +286,7 @@ def subscribers(request):
 				
 			
 			elif( form.cleaned_data['action'] == 'ADD'):
-				
-				user = request.user
-				
-				s = Subscriber(
-					user = user,
-					affiliation = form.cleaned_data['affiliation'],
-					first_name = form.cleaned_data['first_name'],
-					last_name = form.cleaned_data['last_name'],
-					status = form.cleaned_data['status'],
-					accepted_terms = form.cleaned_data['accepted_terms'],
-					description = form.cleaned_data['description'],
-					email = form.cleaned_data['email'],
-					email_confirmed=False
-				)
-				s.save()
+				contacts( form )
 																						
 			
 
@@ -317,50 +294,48 @@ def subscribers(request):
 
 
 #Just send an email to the administrators, no inserts in DB
-def contacts( request ):
+def contacts( form ):
 	# logger.info("Welcome to GLUEBOX api")
-	response = Epoxy( request )
-	
-	if response.method=="POST":
-		form = SubscriberForm( request.REQUEST )
-			
-		if not form.is_valid():
-			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
-			
-		else:
-			
-			email_args = {'prenom': form.cleaned_data['first_name'],
-						'nom': form.cleaned_data['last_name'],
-						'email': form.cleaned_data['email'], 
-						'affiliation': form.cleaned_data['affiliation'], 
-						'site': settings.OUTSIDE_SITE_NAME, 
-						'description': form.cleaned_data['description']}
-			
-			#Notification mail to the client
-			subject, from_email, to = _('beQuali : Message sent'),_("beQuali Team")+"<equipe@bequali.fr>", form.cleaned_data['email']
-						
-			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
-			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
-			
-			# create the email, and attach the HTML version as well.
-			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-			msg.attach_alternative(html_content, "text/html")
-			msg.send()
-			
-			
-			#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
-			subject, from_email, to = _('beQuali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
-						
-			html_content = render_to_string('email/contact.html', email_args, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
-			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
-			
-			# create the email, and attach the HTML version as well.
-			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-			msg.attach_alternative(html_content, "text/html")
-			msg.send()
 
-			
-	return response.json()
+	
+	email_args = {'prenom': form.cleaned_data['first_name'],
+				'nom': form.cleaned_data['last_name'],
+				'email': form.cleaned_data['email'], 
+				'affiliation': form.cleaned_data['affiliation'], 
+				'site': settings.OUTSIDE_SITE_NAME, 
+				'description': form.cleaned_data['description'],
+				'REANALYSEURL':settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME
+				}
+	
+	#Notification mail to the client
+	
+	
+	subject, from_email, to = _('beQuali : Message sent'),_("beQuali Team")+"<equipe@bequali.fr>", form.cleaned_data['email']
+	
+	
+	email_args['action'] = "client_notification"			
+	html_content = render_to_string('email/contact.html', email_args)
+	
+	
+	text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+	
+	# create the email, and attach the HTML version as well.
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+	msg.attach_alternative(html_content, "text/html")
+	msg.send()
+	
+	
+	#Send mail to bequali admins : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
+	subject, from_email, to = _('beQuali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
+	
+	email_args['action'] = "admin_notification"
+	html_content = render_to_string('email/contact.html', email_args)
+	text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+	
+	# create the email, and attach the HTML version as well.
+	msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+	msg.attach_alternative(html_content, "text/html")
+	msg.send()
 
 
 def i18n():
@@ -407,23 +382,43 @@ def access_request( request ):
 			
 
 			
-			html_content = render_to_string('email/access_request.html', 
-										{'action':'ask_request',
-										'prenom': form.cleaned_data['first_name'],
-										'nom': form.cleaned_data['last_name'], 
-										'email': form.cleaned_data['email'], 
-										'affiliation': form.cleaned_data['affiliation'], 
-										'site': settings.OUTSIDE_SITE_NAME,
-										'description': form.cleaned_data['description'], 
-										'enquete': form.cleaned_data['enquete'], 
-										'url': path}, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))										
-										
+			email_args ={'prenom': form.cleaned_data['first_name'],
+						'nom': form.cleaned_data['last_name'], 
+						'email': form.cleaned_data['email'], 
+						'affiliation': form.cleaned_data['affiliation'], 
+						'site': settings.OUTSIDE_SITE_NAME,
+						'description': form.cleaned_data['description'], 
+						'enquete': form.cleaned_data['enquete'], 
+						'url': path,
+						'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME} 
+						
+			
+			email_args['action'] = 'ask_request'
+			html_content = render_to_string('email/access_request.html', email_args)
 			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 			
-			# create the email, and attach the HTML version as well.
 			msg = EmailMultiAlternatives(subject, text_content, from_email, to)
 			msg.attach_alternative(html_content, "text/html")
 			msg.send()
+			
+			
+			to = form.cleaned_data['email']
+			
+			
+			subject = "beQuali demande d'acces notification"
+			email_args['action'] = "ask_notification"			
+			html_content = render_to_string('email/access_request.html', email_args)
+			text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
+			
+			# create the email, and attach the HTML version as well.
+			
+			send_mail(subject, text_content, from_email, [to])
+			msg = EmailMultiAlternatives()
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
+					
+			
+			
 			
 			
 		except IntegrityError, e:

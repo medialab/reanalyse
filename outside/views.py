@@ -109,9 +109,10 @@ def contacts( request ):
 																		'last_name': request.user.last_name,
 																		'affiliation': subscriber.affiliation,
 																		'status': subscriber.status,
+																		'action':'ADD'
 																		} )
 	else:
-		data['subscriber_form'] = SubscriberForm(auto_id="id_subscriber_%s")
+		data['subscriber_form'] = SubscriberForm(auto_id="id_subscriber_%s",  initial={'action':'ADD'})
 	
 	
 	return render_to_response("%s/contacts.html" % data['template'], RequestContext(request, data ) )

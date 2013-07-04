@@ -22,7 +22,7 @@ class SubscriberForm (forms.Form):
 	accepted_terms = forms.BooleanField(required=False, initial=False)
 	description = forms.CharField( widget=forms.Textarea) # personal description
 	action = forms.CharField( label="action", required=False, widget=forms.HiddenInput )
-	captcha = ReCaptchaField(attrs={'theme':'clean'})
+	#captcha = ReCaptchaField(attrs={'theme':'clean'})
 
     
 class LoginForm( forms.Form ):

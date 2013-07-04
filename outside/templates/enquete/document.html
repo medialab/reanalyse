@@ -800,7 +800,7 @@
 		
 		{% ifequal document.doctype "PDF" %}
 			<div class="pdf">
-				<object data="{% url outside_enquete_document_embed document.id %}#toolbar=0&amp;navpanes=0&amp;scrollbar=1&amp;page=0&amp;view=FitBV" type="application/pdf" width="700px" height="500px">
+				<object data="{% url outside_enquete_document_embed document.id %}#toolbar=0&amp;navpanes=0&amp;scrollbar=1" type="application/pdf" width="700px" height="500px">
 				  alt : <a href="{% url outside_enquete_document_embed document.id %}">{{ document.name }}.pdf</a>
 				  <param name="view" value="Fit" />
 				</object>

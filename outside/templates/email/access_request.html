@@ -28,6 +28,22 @@
 {%endif%}
 
 
+{%if action == 'ask_notification'%}
+
+	{% blocktrans %}
+	
+	Bonjour,<br/><br/>
+	
+	Vous avez demandé l'accès pour l'enquête {{enquete}}, nous allons étudier votre demande et vous recevrez un mail quand l'accès vous sera autorisé.
+	
+	Aurevoir<br/>
+	<img src="{{REANALYSEURL}}/static/img/bequali-logo.png"/>
+	
+	{% endblocktrans %}
+
+{%endif%}
+
+
 {%if action == 'access_granted'%}
 
 	{% blocktrans %}
