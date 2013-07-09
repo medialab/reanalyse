@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models import Q 
-from django.conf import settings
+from django.conf import settings as django_settings
+
 from django.contrib.auth.models import User
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
@@ -13,6 +14,8 @@ from django.template import RequestContext
 from django.template.defaultfilters import slugify
 
 from django.core.exceptions import *
+
+#from settings import *
 
 from glue.models import Pin
 from outside.models import Enquiry, Subscriber, Message, Confirmation_code
@@ -39,6 +42,11 @@ from django.utils import translation
 import string, random
 
 from reanalyseapp.globalvars import *
+
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+
+import json
 
 version = '0.0.3'
 
@@ -169,7 +177,7 @@ def enquiry_upload_pin( request, enquiry_id, pin_slug ):
 	response.add('enquiries', [ enquiry_en.json(), enquiry_fr.json() ] )
 
 	pin_path = response.add('path', "pins/%s-%s" % ( d.year, ( d.month if d.month >10 else "0%s" % d.month ) ) )
-	absolute_pin_path = os.path.join( settings.MEDIA_ROOT, pin_path )
+	absolute_pin_path = os.path.join( django_settings.MEDIA_ROOT, pin_path )
 
 	try:
 		if not os.path.exists( absolute_pin_path ): 
@@ -230,7 +238,7 @@ def enquete_data( request, enquete_id ):
 	# return render_to_response('outside/enquete_data.json', RequestContext(request, data ) )
 	
 	response = Epoxy( request )
-	import random
+	
 	try:
 		textes = Enquete.objects.get(id=enquete_id).texte_set
 	except Enquete.DoesNotExist, e:
@@ -304,9 +312,9 @@ def contacts( form ):
 				'nom': form.cleaned_data['last_name'],
 				'email': form.cleaned_data['email'], 
 				'affiliation': form.cleaned_data['affiliation'], 
-				'site': settings.OUTSIDE_SITE_NAME, 
+				'site': django_settings.OUTSIDE_SITE_NAME, 
 				'description': form.cleaned_data['description'],
-				'REANALYSEURL':settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME
+				'REANALYSEURL':django_settings.REANALYSEURL+'/'+django_settings.OUTSIDE_SITE_NAME
 				}
 	
 	#Notification mail to the client
@@ -328,7 +336,7 @@ def contacts( form ):
 	
 	
 	#Send mail to bequali admins : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
-	subject, from_email, to = _('beQuali contact request'),'admin@bequali.fr', settings.EMAIL_ADMINS
+	subject, from_email, to = _('beQuali contact request'),'admin@bequali.fr', django_settings.EMAIL_ADMINS
 	
 	email_args['action'] = "admin_notification"
 	html_content = render_to_string('email/contact.html', email_args)
@@ -345,7 +353,7 @@ def i18n():
 	
 	
 	return {
-		'LANGUAGES': settings.LANGUAGES,
+		'LANGUAGES': django_settings.LANGUAGES,
 		'LANGUAGE_CODE': translation.get_language(),
 		'LANGUAGE_BIDI': translation.get_language_bidi(),
 		}
@@ -377,10 +385,10 @@ def access_request( request ):
 				description = form.cleaned_data['description'],
 				is_activated = False
 			)
-			path = '%s%s' % (settings.REANALYSEURL, reverse('admin:reanalyseapp_accessrequest_change', args=[request_object.id]) )
+			path = '%s%s' % (django_settings.REANALYSEURL, reverse('admin:reanalyseapp_accessrequest_change', args=[request_object.id]) )
 			
 			#Send mail to bequali admin : sarah.cadorel@sciences-po.fr, guillaume.garcia, anne.both
-			subject, from_email, to = _('bequali enquete request'),'admin@bequali.fr', settings.EMAIL_ADMINS
+			subject, from_email, to = _('bequali enquete request'),'admin@bequali.fr', django_settings.EMAIL_ADMINS
 			
 
 			
@@ -388,11 +396,11 @@ def access_request( request ):
 						'nom': form.cleaned_data['last_name'], 
 						'email': form.cleaned_data['email'], 
 						'affiliation': form.cleaned_data['affiliation'], 
-						'site': settings.OUTSIDE_SITE_NAME,
+						'site': django_settings.OUTSIDE_SITE_NAME,
 						'description': form.cleaned_data['description'], 
 						'enquete': form.cleaned_data['enquete'], 
 						'url': path,
-						'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME} 
+						'REANALYSEURL': django_settings.REANALYSEURL+'/'+django_settings.OUTSIDE_SITE_NAME} 
 						
 			
 			email_args['action'] = 'ask_request'
@@ -594,7 +602,10 @@ def send_confirmation_mail( subscriber, request, action ):
 									'password': '**********',#request.REQUEST['password1'],
 									
 									
-									}, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
+									}, RequestContext(request, 
+													{'REANALYSEURL': django_settings.REANALYSEURL+'/'+django_settings.OUTSIDE_SITE_NAME}
+													)
+									)
 		
 		text_content = strip_tags(html_content) # this strips the html, so people will have the text as well.
 		
@@ -644,7 +655,7 @@ def send_confirmation_mail( subscriber, request, action ):
 									'confirmation_href': confirmation_href,
 									'username': subscriber.user.username, 
 									
-									}, RequestContext(request, {'REANALYSEURL': settings.REANALYSEURL+'/'+settings.OUTSIDE_SITE_NAME}))
+									}, RequestContext(request, {'REANALYSEURL': django_settings.REANALYSEURL+'/'+django_settings.OUTSIDE_SITE_NAME}))
 
 		
 		
@@ -729,13 +740,7 @@ def test( request ):
 def subscriber( request, subscriber_id ):
 	return Epoxy( request ).single( Subscriber, {'id':subscriber_id} ).json()
 
-import random
 
-
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
-
-import json
 
 def captcha_refresh(request):
 	""" Return json with new captcha for ajax refresh request """
