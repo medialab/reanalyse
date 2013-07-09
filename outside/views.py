@@ -573,53 +573,8 @@ def login_view( request ):
 	
 	
 	form = LoginForm( request.POST, auto_id="id_login_%s" )
-	login_message = { 'next':request.REQUEST.get('next', 'outside_index') }
 	
-	
-	try:
-		if 'next' not in request.session:
-			request.session['next'] = request.REQUEST['next']
-	except:
-		pass
-	
-	
-	if request.method == 'POST': 
-
-		if form.is_valid():
-			user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-			if user is not None:
-				if user.is_active:
-					login(request, user)
-					
-					
-					try:
-						subscriber = Subscriber.objects.get(user=request.user.id)
-					except Subscriber.DoesNotExist:
-						return redirect( reverse('outside.views.create_profile') )
-					
-	
-					next_url = request.session['next']
-					
-					del request.session['next']
-					
-					#return HttpResponse(next_url)
-					
-					return redirect( next_url )
-						#return redirect( settings.REANALYSEURL+request.GET['next'] )
-
-					
-						
-				else:
-					login_message['error'] = _("user has been disabled")
-			else:
-				login_message['error'] = _("invalid credentials")
-				# Return a 'disabled account' error message
-		else:
-			login_message['error'] = _("invalid credentials")
-			login_message['invalid_fields'] = form.errors
-	
-	
-	data = shared_context( request, tags=[ "index" ], previous_context=login_message )
+	data = shared_context( request, tags=[ "index" ] )
 	
 	data['login_form'] = form
 
