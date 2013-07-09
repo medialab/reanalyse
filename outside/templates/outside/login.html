@@ -1,19 +1,14 @@
-{% extends "outside/middle.html" %}
+{% extends "enquete/middle.html" %}
 {% load i18n %}
 
-{% block sidebar %}
-	
-	
-{% endblock %}
+{% block sidebar %}{% endblock %}
 
-{% block page_title %}
-	
-{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block page %}
 
 {% url outside_signup_generic as signup_url %}
-	<section class="alpha">
+	<section id="subscription" class="alpha">
 		<form action="{% url outside_login %}" method="POST">{% csrf_token %}
 			<h2>
 				
@@ -34,35 +29,44 @@
 			
 			{%endif%}
 			<p class="connection-text">
-			 {% blocktrans %}
-			Please fill this form to connect, <a href="{{signup_url}}"><u>click here</u></a> if you are not registered
-			 {% endblocktrans %}
+			 
+			{% trans "Please fill this form to connect, <a href=\"{{signup_url}}?next={{next}}\"><u>click here</u></a> if you are not registered"%}
+
 			</p>
 			
 			{% comment %}{{ next }}{% endcomment %}
 			<div class="mini-section">
-				{{ login_form.username.label }}
+				<label for="id_username">{% trans "username"|capfirst%}</label>
 				{{ login_form.username }}
 			</div>
 			<div class="mini-section">
-				{{ login_form.password.label_tag }}
+				<label for="id_password">{% trans "password"|capfirst%}</label>
 				{{ login_form.password }}
 			</div>
 			
 			
-			{%comment%}<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
-				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
-			</label>
+			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %} *
+					<div class="specification">{% trans "Please fill the image below"|capfirst %}.
+						<a href="#" class="js-captcha-refresh">{% trans "Refresh captcha image" %}</a>
+					</div>
+				</label>
+				
+				<div>{{ login_form.captcha }}</div>
+				
 			
-			{{ login_form.captcha }}
-			{%endcomment%}
 			
 			<div class="mini-section center">
 				<input type="hidden" value="{{ next }}" name="next"/>
 				<input type="submit" value="{% trans "connection"%}"/>
 			</div>
 			
-			<div align="center"><a href="{% url outside_reinitialize_password %}">{% trans 'Password forgotten?'%}</a></div>
+			<div align="center">
+				
+				
+				<a href="{% url outside_reinitialize_password %}">{% trans 'Password forgotten?'%}</a>
+				<br/>
+				<a href="{% url outside_signup_generic %}">{% trans "signup"|capfirst %}</a>
+			</div>
 		</form>
 	</section>
 	

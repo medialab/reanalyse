@@ -78,8 +78,8 @@ oo.access_request.init = function(){oo.log("[oo.access_request.init]");
 			description:$('#id_access_request_description').val(),
 			enquete:!$('#id_access_request_enquete').is("select")?$('input[name=enquete]').val():$('select[name=enquete]').val(),
 			accepted_terms:	$('input[name=accepted_terms]').val(),
-			recaptcha_challenge_field:	$('input[name=recaptcha_challenge_field]').val(),
-			recaptcha_response_field:		$('input[name=recaptcha_response_field]').val(),
+			captcha_0:$('input[name=captcha_0]').val(),
+			captcha_1:$('input[name=captcha_1]').val(),
 	})});
 	//$("").click()
 };

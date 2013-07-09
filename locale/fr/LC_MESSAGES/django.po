@@ -111,7 +111,7 @@ msgstr ""
 #: outside/templates/hub/reinitialize_passwd.html:19
 #: outside/templates/hub/signup.html:27
 msgid "username"
-msgstr "Nom d'utilisateur"
+msgstr "identifiant"
 
 #: outside/views.py:154 outside/views.py:213
 #, python-format
@@ -651,7 +651,7 @@ msgstr ""
 #: outside/templates/hub/reinitialize_passwd.html:43
 #: outside/templates/hub/signup.html:78
 msgid "Please fill the image below"
-msgstr "Veuillez recopier l'image ci-dessous"
+msgstr "Merci de bien vouloir reproduire les lettres qui apparaissent dans l'image ci-dessous"
 
 #: outside/templates/enquete/access_form.html:86
 msgid "accepted terms"
@@ -841,7 +841,7 @@ msgstr "L'enquête sur l'enquête"
 
 #: outside/templates/enquete/enquetes.html:75
 msgid "To access the survey datas you have to be registered"
-msgstr "Pour accêder aux données de l'enquête vous devez être inscrit"
+msgstr "Pour lire les données de l'enquête vous devez être inscrit"
 
 #: outside/templates/enquete/enquetes.html:78
 msgid "access content"
@@ -1085,8 +1085,16 @@ msgstr "Changer votre mot de passe"
 
 #: outside/templates/hub/change_password.html:26
 #: outside/templates/hub/signup.html:45
-msgid "The password must have a good security"
-msgstr "Le mot de passe doit avoir une bonne sécurité"
+msgid "The password must have a good security, use signs and numbers to strenghten the password"
+msgstr "Le mot de passe doit avoir une bonne sécurité, utilisez des signes et des chiffres pour renforcer la sécurité"
+
+
+msgid "Research content"
+msgstr "Contenus de l'enquête"
+
+
+msgid "Create profile"
+msgstr "Création du profil"
 
 #: outside/templates/hub/change_password.html:34
 msgid "Confirmation"
@@ -1154,7 +1162,7 @@ msgstr ""
 
 #: outside/templates/hub/create_profile.html:13
 msgid "You don't have a profile, create one"
-msgstr "Vous n'avez pas de profile, veuillez en créer un"
+msgstr "Vous n'avez pas de profil, veuillez en créer un"
 
 #: outside/templates/hub/create_profile.html:18
 #: outside/templates/hub/edit_profile.html:18
@@ -1204,7 +1212,7 @@ msgid ""
 msgstr ""
 "\n"
 "<p>Les données de l'enquête peuvent être très longue à télécharger, vous "
-"devriez donc utiliser un gestionnaire de téléchargement qui permet de mettre "
+"devriez donc utiliser un gestionnaire  <br/>de téléchargement qui permet de mettre "
 "en pause un téléchargement et le continuer plus tard.</br>Si vous êtes sur "
 "windows vous pouvez utiliser <a href=\"http://www.clubic.com/telecharger-"
 "fiche12841-free-download-manager.html\">free download manager</a>.<br/>Sur "
@@ -1325,7 +1333,7 @@ msgstr "Confirmation du mot de passe"
 
 #: outside/templates/hub/signup.html:72
 msgid "describe yourself"
-msgstr "Décrivez-vous professionnellement, votre poste, où vous travaillez..."
+msgstr "Pouvez-vous nous décrire les raisons pour lesquelles vous vous intéressez à la banque d'enquêtes qualitatives?"
 
 #: outside/templates/hub/signup.html:85
 msgid "legal notices"
@@ -1356,21 +1364,16 @@ msgstr "Authentification"
 
 #: outside/templates/outside/login.html:37
 #, python-format
-msgid ""
-"\n"
-"\t\t\tPlease fill this form to connect, <a href=\"%(signup_url)s\"><u>click "
-"here</u></a> if you are not registered\n"
-"\t\t\t "
+msgid "Please fill this form to connect, <a href=\"{{signup_url}}?next={{next}}\"><u>click here</u></a> if you are not registered"
 msgstr ""
-"\n"
-"\t\t\tPour demander l'accès à une enquête vous devez être incrit sur le "
-"site, vous pouvez vous  <a href=\"%(signup_url)s\"><u>inscrire ici</u></"
+"Pour demander l'accès à une enquête vous devez être incrit sur le "
+"site, vous pouvez vous <a href=\"{{signup_url}}\"><u><b>inscrire ici</b>	 <i class=\"icon-signin icon-2x\"></i></u></"
 "a><br/> Si vous disposez déjà d'un compte veuillez entrer vos login et mot "
 "de passe ci-dessous.<br/>Nous vous rappelons que ce site est réservé à la "
 "communauté académique pour un usage strictement scientifique.<br/>Une fois "
 "authentifié, vous pouvez demander à consulter les documents de l'enquête en "
 "remplissant le formulaire de demande d'accès.<br/>Vous devrez renouveller la "
-"procédure pour chaque enquête que vous souhaiterez consulter.\t\t\t "
+"procédure pour chaque enquête que vous souhaiterez consulter."
 
 #: outside/templates/outside/login.html:67
 msgid "Password forgotten?"
@@ -1862,4 +1865,6 @@ msgid "Show/Hide Paraverbal"
 msgstr "Voir/cacher le paraverbal"
 
 
+msgid "Refresh captcha image"
+msgstr "rafraichir l'image"
 

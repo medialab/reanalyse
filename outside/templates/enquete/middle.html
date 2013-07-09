@@ -32,7 +32,7 @@
 						
 						
 						<li style="float:right;">
-							<a href="{% url outside_login %}" data-toggle="" data-target="#login-modal">{% trans "connection" %}</a>
+							<a href="{% url outside_login %}?next={{next}}" data-toggle="" data-target="#login-modal">{% trans "connection" %}</a>
 						</li>
 						
 						{% endif %}
@@ -224,26 +224,37 @@
 	</div>
 	<!-- the footer -->
 	<footer>
+		{% block footer %}
 		<div class="container_12">
-			
 			<div id="footer-inner">
-			{% ifequal site "app" %}
 				<a href="http://sciences-po.fr" class="footer-link"><img src="{{ STATIC_URL }}img/scpo-blanc.png"/></a>
-				<a href="http://www.cnrs.fr/" class="footer-link"><img src="{{ STATIC_URL }}img/cnrs.png" style="margin-top:3px"/></a>
 
-				
-				<a href="{% url outside_legal %}" class="footer-link ">mentions légales</a>
-				<a href="{% url outside_contacts %}" class="footer-link ">nous contacter</a>
-				
-				<a href="http://www.ia.fr/" class="footer-link right"><img src="{{ STATIC_URL }}img/ia.png" style="margin-top:3px"/></a>
+				<a href="{% url outside_legal %}" class="footer-link">mentions légales</a>
 
+				<a href="{% url outside_contacts %}" class="footer-link">nous contacter</a>
 
+				{% comment %}
+				<ul>
 
+					<li style="float:right" {% ifequal language "EN" %} class="selected"{% endifequal %}>
+						<a href="{{  request.path }}?lang=en">{% trans "english" %}</a>
+					</li>
+					<li style="float:right" {% ifequal language "FR" %} class="selected"{% endifequal %}>
+						<a href="{{  request.path }}?lang=fr">{% trans "french" %}</a>
+					</li>
+					
+
+					<li></li>
 		
-			{% endifequal %}
+				</ul>
+				{% endcomment %}
 			</div>
+			<div class="clear"></div>
 		</div>
 		
+		
+
+		{% endblock %}	
 		
 	</footer>
 

@@ -57,11 +57,11 @@ oo.api.process = function( result, callback, namespace ){
        */
 		
 		oo.toast(  oo.i18n.translate("invalid form") , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
-		Recaptcha.reload();
+		captcha_refresh()
 	} else {
 		oo.toast( result.error , oo.i18n.translate("error"), {stayTime:3000, cleanup: true});
 		oo.invalidate( result.fields, namespace );
-		Recaptcha.reload();
+		captcha_refresh()
 	}
 }
 
@@ -130,14 +130,15 @@ oo.invalidate = function( errors, namespace ){ if (!namespace){ namespace = "id"
 			$("#"+namespace+"_"+i).parent().addClass("invalid");
 			continue;	
 		} else if(i.indexOf("captcha") != -1 ) {
-			$("#recaptcha_response_field").addClass("invalid");
+			$("#"+namespace+"_"+"captcha_1").addClass("invalid");
+			console.log("#"+namespace+"_"+"captcha_1")
 			continue;
 		} else if(i.indexOf("terms") != -1 ) {
 			$("#"+namespace+"_"+i).parent().attr("style", "color:red;text-decoration:underline");
 			continue;
 		}
 		
-		oo.log("#"+namespace+"_"+i)
+
 		$("#"+namespace+"_"+i).addClass("invalid");
 	}
 }
@@ -218,8 +219,11 @@ oo.i18n.dict = {
 		"Bad":"Sécurité trop faible ",
 		"Good":"Sécurité convenable",
 		"Strong":"Sécurité forte",
+		"Too easy":"Ne mettez pas votre nom ou prénom pour raison de sécurité",
 		"Your password security is too weak":"La sécurité de votre mot de passe est trop faible",
-		"the password is not the same as above":"Les deux mots de passes ne sont pas égaux"
+		"the password is not the same as above":"Les deux mots de passes ne sont pas égaux",
+		"Password confirmed":"Mot de passe confirmé"
+		
 
 	}
 };

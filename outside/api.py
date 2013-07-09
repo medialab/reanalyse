@@ -729,6 +729,23 @@ def subscriber( request, subscriber_id ):
 
 import random
 
+
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+
+import json
+
+def captcha_refresh(request):
+	""" Return json with new captcha for ajax refresh request """
+	
+	new_key = CaptchaStore.generate_key()
+	to_json_response = {
+					'key': new_key,
+					'image_url': captcha_image_url(new_key),
+					}
+	return HttpResponse(json.dumps(to_json_response), content_type='application/json')
+
+
 def captcha(request):
 	# this compare captcha's number from POST and SESSION
 	if(request.method == 'POST' and request.POST['captcha'] is not None and request.POST['captcha'] == request.session['captcha']):

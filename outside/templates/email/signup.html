@@ -5,13 +5,15 @@
 
 	{% blocktrans %}
 	
-	Bonjour {{firstname}} {{nom}},<br/><br/>
+	Bonjour {{prenom}} {{nom}},<br/><br/>
 	
-	Veuillez cliquer sur ce  <a href="{{confirmation_href}}">lien</a> pour confirmer votre inscription sur le site BeQuali.<br/>
+	Nous avons bien reçu votre de mande d'inscription sur le site beQuali. 
+	Afin de finaliser la procédure veuillez	cliquer sur ce  <a href="{{confirmation_href}}">lien</a>.<br/>
 	
-	Vous pourrez vous connecter avec cet identifiant : {{username}} et mot de passe : {{password}} (masqué pour raison de sécurité). <br/><br/>
+	Vous pourrez ensuite vous connecter avec cet identifiant : {{username}} et ce mot de passe : {{password}} (masqué pour raison de sécurité). <br/><br/>
 	
-	Aurevoir<br/>
+	A bientôt!<br/>
+	L'équipe beQuali<br/>
 	
 	<img src="{{REANALYSEURL}}/static/img/bequali-logo.png"/>
 	
@@ -25,9 +27,9 @@
 	{% blocktrans %}
 	
 	Bonjour, vous avez une nouvelle demande d'accès : <br/><br/>
-	user information :<br/>
+	Informations sur l'utilisateur :<br/>
 	
-	prenom: {{prenom}}<br/>
+	prénom: {{prenom}}<br/>
 	nom: {{nom}}<br/>
 	email: {{email}}<br/>
 	affiliation: {{affiliation}}<br/>
@@ -36,7 +38,7 @@
 	
 	Vous pouvez cliquer <a href="{{admin_url}}">ici</a> pour accéder à la page admin<br/>
 	
-	Aurevoir<br/>
+	A bientôt!<br/>
 	
 	<img src="{{REANALYSEURL}}/static/img/bequali-logo.png"/>
 					 

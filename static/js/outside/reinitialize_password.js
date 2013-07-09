@@ -68,8 +68,8 @@ oo.api.reinitialize_password.init = function(){
 		oo.api.reinitialize_password.launch({
 			username:$('input[name=username]').val(),
 			email:$('input[name=email]').val(),
-			recaptcha_challenge_field:$('input[name=recaptcha_challenge_field]').val(),
-			recaptcha_response_field:$('input[name=recaptcha_response_field]').val(),
+			captcha_0:$('input[name=captcha_0]').val(),
+			captcha_1:$('input[name=captcha_1]').val(),
 			
 		
 		})});

@@ -14,7 +14,15 @@
 					<div class="icon"><span class="icon-compass" ></span></div>{% trans "Focus on the research" %}
 				</a>
 			</div>
+			
+			<div class="back floating with-icon {% if "visualizations" in tags %}selected{%endif%}">
 
+				<a href="{% url outside_enquete enquete.id %}"> 
+					<div class="icon" style="margin-top:0px"><span class="icon-eye-open " style=""></span></div> {% trans "Research content" %}
+				</a>
+			</div>
+			
+			
 			<div class="back floating with-icon {% if "enquiry" in tags %}selected{%endif%}">
 				<a href="{% if enquiry %}{% url outside_enquiry enquiry.enquete.id %}{% else %}{% url outside_enquiry enquete.id %}{% endif %}" title="{% trans "The research on the research" %}" >
 					<div class="icon"><span class="icon-microphone" style=""></span></div>{% trans "The research on the research" %}
@@ -28,6 +36,12 @@
 				</a>
 			</div>
 			{% endcomment %}
+			
+
+			
+			
+			
+			
 			{% if request.user.is_authenticated %}
 			<div class="back floating with-icon" >
 				<a href="{% url outside_download_page enquete.id%}" title="{% trans "Download page" %}">
@@ -35,16 +49,17 @@
 				</a>
 			</div>
 			{% endif %}
-
+			
 			<div class="back floating with-icon {% if "access_request" in tags %}selected{%endif%}">
-				
-				
-				
+
 				<a href="{% if enquiry %}{% url outside_access_request enquiry.enquete.id %}
 				{% else %}{% url outside_access_request enquete.id %}{% endif %}"> 
 					<div class="icon" style="margin-top:0px"><span class="icon-hand-up" style=""></span></div> {% trans "Ask for access" %}
 				</a>
 			</div>
+			
+			
+			
 			
 			<!-- div class="identifier floating">{% trans "enquete n." %} {{ enquete.id }}</div -->
 		

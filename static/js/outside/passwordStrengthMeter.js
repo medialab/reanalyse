@@ -5,6 +5,7 @@
 
 var shortPass = 'Too short'
 var badPass = 'Bad'
+var tooEasy = 'Too easy'
 var goodPass = 'Good'
 var strongPass = 'Strong'
 
@@ -19,6 +20,11 @@ function passwordStrength(password,username)
     
     //password == username
     if (password.toLowerCase()==username.toLowerCase()) return badPass
+    
+    var firstname = $('input[name=first_name]').val()
+    var lastname = $('input[name=last_name]').val()
+    
+    if( password == firstname || password == lastname || firstname+lastname == password || lastname+firstname == password) return tooEasy
     
     //password length
     score += password.length * 4

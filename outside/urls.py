@@ -3,7 +3,7 @@ from django.conf import settings
 
 urlpatterns = patterns('',
 	
-		
+	url(r'^captcha/', include('captcha.urls')),
 	url(r'^$','outside.views.index', name='outside_index'),
 	url(r'^index/$','outside.views.index', name='outside_index'),
 	url(r'^news/$','outside.views.news', name='outside_news'),
@@ -39,7 +39,7 @@ urlpatterns = patterns('',
 	
 	
 	url(r'^enquete_admin$', 'outside.views.enquete_admin', name='outside_enquete_admin'),
-	
+	url(r'^api/captcha_refresh/$', 'outside.api.captcha_refresh', name='api_captcha_refresh'),
 	
 
 	

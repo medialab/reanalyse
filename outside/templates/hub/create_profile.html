@@ -8,7 +8,7 @@
 
 {% block page_left %}
 	<div id="subscription">
-		<h2>{% trans "Your profile" %}</h2>
+		<h2>{% trans "Create profile" %}</h2>
 		
 		{% trans "You don't have a profile, create one"%}
 		
@@ -40,15 +40,7 @@
 			{{ create_profile_form.affiliation }}
 			
 
-			
-			
-			
-			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
-				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
-			</label>
-			{{ create_profile_form.captcha }}
-			
-			
+
 			{{ create_profile_form.action }}
 
 		

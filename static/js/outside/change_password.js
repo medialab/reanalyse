@@ -89,8 +89,8 @@ oo.change_password.init = function(){
 			username:$('input[name=username]').val(),
 			password1:$('input[name=password1]').val(),
 			password2:$('input[name=password2]').val(),
-			recaptcha_challenge_field:$('input[name=recaptcha_challenge_field]').val(),
-			recaptcha_response_field:$('input[name=recaptcha_response_field]').val(),
+			captcha_0:$('input[name=captcha_0]').val(),
+			captcha_1:$('input[name=captcha_1]').val(),
 			
 		
 	})});

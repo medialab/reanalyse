@@ -21,7 +21,7 @@ oo.api.forms.init = function( params ){
 					
 					$('#pass_confirm').html(oo.i18n.translate('the password is not the same as above')).removeClass().addClass('red');
 				} else {
-					$('#pass_confirm').html('ok').removeClass().addClass('green');
+					$('#pass_confirm').html(oo.i18n.translate('Password confirmed')).removeClass().addClass('green');
 					
 				}
 			}
@@ -41,6 +41,9 @@ oo.api.forms.init = function( params ){
 				span_class = 'blue'
 			} else if(check =="Strong") {
 				span_class = 'green'
+			
+			} else if(check =="Too easy") {
+				span_class = 'red'
 			}
 			
 			html = $('<span/>')
@@ -49,7 +52,39 @@ oo.api.forms.init = function( params ){
 			
 			$('#result').html(html)
 		})
+		
+		
+		
+		
+		
+		
 	
 }
+
+
+function captcha_refresh(){
+
+	$.ajax({
+		url: oo.urls.captcha_refresh,
+		dataType:'json',
+		cache:false
+	}).done(function(json) {
+		$('img.captcha').attr('src', json.image_url)// This your should update captcha image src and captcha hidden input
+   		$('input[name=captcha_0]').val(json.key)
+   		
+   		$('input[name=captcha_1]').val("")
+   		
+	});
+	
+    
+
+   
+	
+}
+
+$('.js-captcha-refresh').click(function(){
+    captcha_refresh();
+    return false;
+});
 
 

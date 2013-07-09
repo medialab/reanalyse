@@ -72,8 +72,8 @@ oo.subscriber.init = function(){
 		status:$('select[name=status]').val(),
 		email:$("input[name=email]").val(),
 		action:$("input[name=action]").val(),
-		recaptcha_challenge_field:$('#recaptcha_challenge_field').val(),
-		recaptcha_response_field:$('#recaptcha_response_field').val(),
+		captcha_0:$('input[name=captcha_0]').val(),
+		captcha_1:$('input[name=captcha_1]').val(),
 	})});
 	//$("").click()
 };

@@ -27,23 +27,26 @@
 			</p>
 		-->
 			<p>
-				<label for="id_change_reinitialize_password_email">{% trans "email"|capfirst %}
+				<label for="id_change_reinitialize_password_email">{% trans "email"|capfirst %} *
 					
 					<div class="specification">
 							
 					</div>	
 					
 				</label>
+			
 			{{reinitialize_password_form.email}}
 			</p>
 			
 			
 			
-			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %}
-				<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
-			</label>
-			
-			{{reinitialize_password_form.captcha}}
+			<label for="recaptcha_response_field">{% trans "captcha"|capfirst %} *
+					<div class="specification">{% trans "Please fill the image below"|capfirst %} 
+						<a href="#" class="js-captcha-refresh">{% trans "Refresh captcha image" %}</a>
+					</div>
+				</label>
+				
+				{{ reinitialize_password_form.captcha }}
 			
 			<input type="button" id="reinitialize-password" value="{% trans "reinitialize" %}"/>
 		</div>

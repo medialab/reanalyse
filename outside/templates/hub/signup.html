@@ -42,7 +42,7 @@
 					{% trans "password"|capfirst %} *
 					
 					<div class="specification">
-						{% trans "The password must have a good security"|capfirst  %}: <span id="result" style="font-weight:bold"></span>
+						{% trans "The password must have a good security, use signs and numbers to strenghten the password"|capfirst  %}: <br/><span id="result" style="font-weight:bold"></span>
 					</div>
 				</label>
 				{{ signup_form.password1 }}
@@ -53,7 +53,7 @@
 					
 					{% trans "password confirmation"|capfirst %} *
 					<div class="specification">
-						{% trans "Please confirm your password"|capfirst  %}: <span id="pass_confirm" style="font-weight:bold"></span>
+						{% trans "Please confirm your password"|capfirst  %}: <br/><span id="pass_confirm" style="font-weight:bold"></span>
 					</div>
 			
 					
@@ -75,10 +75,14 @@
 				
 		
 				<label for="recaptcha_response_field">{% trans "captcha"|capfirst %} *
-					<div class="specification">{% trans "Please fill the image below"|capfirst %}</div>
+					<div class="specification">{% trans "Please fill the image below"|capfirst %} 
+						<a href="#" class="js-captcha-refresh">{% trans "Refresh captcha image" %}</a>
+					</div>
 				</label>
+				
 				{{ signup_form.captcha }}
-			
+		
+				
 				
 				<div class="ajax-fc-container"></div>
 			

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm, ModelChoiceField
 from django.utils.translation import ugettext as _
-from captcha.fields import ReCaptchaField
+from captcha.fields import *
 from outside.models import Subscriber
 from reanalyseapp.models import Enquete
 
@@ -22,13 +22,12 @@ class SubscriberForm (forms.Form):
 	accepted_terms = forms.BooleanField(required=False, initial=False)
 	description = forms.CharField( widget=forms.Textarea) # personal description
 	action = forms.CharField( label="action", required=False, widget=forms.HiddenInput )
-	#captcha = ReCaptchaField(attrs={'theme':'clean'})
-
+	captcha = CaptchaField(required=False, )
     
 class LoginForm( forms.Form ):
 	username = forms.CharField( max_length=32, widget=forms.TextInput, required=True )
 	password = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ), required=True )
-	#captcha = ReCaptchaField(attrs={'theme':'clean'}, required=True)
+	captcha = CaptchaField(required=False, )
 	
 	
 	
@@ -43,19 +42,17 @@ class SignupForm( forms.Form ):
     status = forms.CharField(max_length=3, widget=forms.Select(choices=Subscriber.STATUS_CHOICES), )
     accepted_terms = forms.BooleanField(initial=False)
     description = forms.CharField( widget=forms.Textarea) # personal message
-    captcha = ReCaptchaField(attrs={'theme':'clean'})
+    captcha = CaptchaField(required=False, )
     
 class ChangePasswordForm( forms.Form ):	
 	password1 = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
 	password2 = forms.CharField( max_length=64, label='Password', widget=forms.PasswordInput(render_value=False ),  required=True )
-	username = forms.CharField( label="username", required=True, widget=forms.HiddenInput )
-	captcha = ReCaptchaField(attrs={'theme':'clean'})
-
+	username = forms.CharField( label="username", required=True, widget=forms.HiddenInput )	
 
 class ReinitializePasswordForm(forms.Form):
 	email = forms.EmailField()
 	#username = forms.CharField( label=_("username"), required=True )
-	captcha = ReCaptchaField(attrs={'theme':'clean'})
+	captcha = CaptchaField(required=True)
 
 	
 	
@@ -81,7 +78,7 @@ class AccessRequestForm( forms.Form ):
     
     description = forms.CharField( widget=forms.Textarea) # personal message
 
-    captcha = ReCaptchaField(attrs={'theme':'clean'})
+    
     
     
 

@@ -21,11 +21,11 @@ from mimetypes import guess_extension, guess_type
 from reanalyseapp.models import Enquete, Tag, Texte, AccessRequest
 
 from glue.models import Pin, Page
-from glue.forms import LoginForm, AddPageForm, AddPinForm, EditPinForm
+from glue.forms import AddPageForm, AddPinForm, EditPinForm
 
 from outside.models import Enquiry, Subscriber, Confirmation_code 
 from outside.sites import OUTSIDE_SITES_AVAILABLE
-from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
+from outside.forms import LoginForm, AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
 
 from django.core.mail import EmailMultiAlternatives
 
@@ -126,7 +126,7 @@ def page( request, page_slug ):
 	return render_to_response("%s/page.html" % 'enquete', RequestContext(request, data ) )
 
 def enquete( request, enquete_id ):
-	data = shared_context( request, tags=[ "enquetes", "focus-on-enquete" ] )
+	data = shared_context( request, tags=[ "enquetes", "focus-on-enquete", 'visualizations' ] )
 	data['enquete'] = get_object_or_404( Enquete, id=enquete_id )
 	data['disabled'] =  [ t.slug for t in data['enquete'].tags.filter( type=Tag.DISABLE_VISUALIZATION ) ]
 	
@@ -575,9 +575,16 @@ def login_view( request ):
 	form = LoginForm( request.POST )
 	login_message = { 'next':request.REQUEST.get('next', 'outside_index') }
 	
+	
+	try:
+		if 'next' not in request.session:
+			request.session['next'] = request.REQUEST['next']
+	except:
+		pass
+	
+	
 	if request.method == 'POST': 
 		
-	#return HttpResponse( request.POST, content_type="text"  )
 	
 		if form.is_valid():
 			user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
@@ -594,8 +601,16 @@ def login_view( request ):
 					
 					# @todo: Redirect to next page
 					#return redirect( settings.REANALYSEURL+'/'+settings.ROOT_DIRECTORY_NAME )
-
-					return redirect( request.REQUEST.get('next', 'outside_index') )
+					
+					
+					
+					next_url = request.session['next']
+					
+					del request.session['next']
+					
+					#return HttpResponse(next_url)
+					
+					return redirect( next_url )
 						#return redirect( settings.REANALYSEURL+request.GET['next'] )
 
 					
@@ -633,12 +648,16 @@ def access_request(request, enquete_id=None):
 		#Verify if he has already requested the enquete
 		try:
 	   		access = AccessRequest.objects.get(user=request.user.id, enquete=enquete_id)
+	   		
+	   		
 		except AccessRequest.DoesNotExist:
 			
 			try:
 				subscriber = Subscriber.objects.get(user=request.user.id)
 			except Subscriber.DoesNotExist:
 				pass
+			
+				#redirect to creation profileS
 			
 			else:
 				
@@ -801,6 +820,7 @@ def shared_context( request, tags=[], previous_context={} ):
 	d['stylesheet'] = settings.OUTSIDE_THEME
 	d['template'] = settings.OUTSIDE_TEMPLATE_DIR
 	d['REANALYSEURL'] = settings.REANALYSEURL
+	d['next'] = request.path
 
 
 	# if it is not auth, pull loginform
@@ -976,21 +996,20 @@ def reinitialize_password(request):
 	
 
 def download_page( request, enquete_id ):
-	
-	
-	
+
 	data = shared_context( request, tags=[ "download" ] )
 	
-	
-	try:
-   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
-	except AccessRequest.DoesNotExist:
-		
-		request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) )
-		
-		viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
-		return redirect(viewurl)
-	
+	if( not request.user.has_perm('reanalyseapp.can_browse') ):
+		try:
+	   		AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, is_activated=True)
+		except AccessRequest.DoesNotExist:
+			
+			request.flash['notice'] =  _("You don't have access to this document, please ask for access <a class='blue-link' href='%s'>here</a> to ask for permission.") % ( reverse('outside.views.access_request', kwargs={'enquete_id':enquete_id}) )
+			
+			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
+			return redirect(viewurl)
+	else:
+		pass
 	
 	if enquete_id is not None:
 		data['enquete'] = get_object_or_404( Enquete, id=enquete_id )

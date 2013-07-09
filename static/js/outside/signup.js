@@ -42,6 +42,7 @@ oo.api.signup.add = function( params ){
 		
 		if(  passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Too short'
 			|| passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Bad'
+			|| passwordStrength($('#id_signup_password1').val(),$('#id_signup_username').val()) == 'Too easy' 
 		
 		) {
 			return oo.toast( oo.i18n.translate("Your password security is too weak"), oo.i18n.translate("error") );
@@ -105,6 +106,8 @@ oo.signup.init = function(){oo.log("[oo.signup.init]");
 			description:$('textarea[name=description]').val(),
 			accepted_terms:$('input[name=accepted_terms]').prop("checked"),
 			recaptcha_challenge_field:$('input[name=recaptcha_challenge_field]').val(),
-			recaptcha_response_field:$('input[name=recaptcha_response_field]').val(),
+			captcha_0:$('input[name=captcha_0]').val(),
+			captcha_1:$('input[name=captcha_1]').val(),
+			
 	})});
 };
