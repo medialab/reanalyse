@@ -572,7 +572,7 @@ def login_view( request ):
 		return redirect( reverse('outside_index') )
 	
 	
-	form = LoginForm( request.POST )
+	form = LoginForm( request.POST, auto_id="id_login_%s" )
 	login_message = { 'next':request.REQUEST.get('next', 'outside_index') }
 	
 	
@@ -584,8 +584,7 @@ def login_view( request ):
 	
 	
 	if request.method == 'POST': 
-		
-	
+
 		if form.is_valid():
 			user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
 			if user is not None:
@@ -598,12 +597,7 @@ def login_view( request ):
 					except Subscriber.DoesNotExist:
 						return redirect( reverse('outside.views.create_profile') )
 					
-					
-					# @todo: Redirect to next page
-					#return redirect( settings.REANALYSEURL+'/'+settings.ROOT_DIRECTORY_NAME )
-					
-					
-					
+	
 					next_url = request.session['next']
 					
 					del request.session['next']
@@ -626,7 +620,8 @@ def login_view( request ):
 	
 	
 	data = shared_context( request, tags=[ "index" ], previous_context=login_message )
-
+	
+	data['login_form'] = form
 
 	return render_to_response('outside/login.html', RequestContext(request, data ) )
 

@@ -30,6 +30,7 @@ urlpatterns = patterns('',
 	url(r'^api/accessRequest/$', 'outside.api.access_request', name='outside_api_access_request'),
 	url(r'^api/changePassword/$','outside.api.change_password', name='outside_api_change_password'),
 	url(r'^api/captcha/$', 'outside.api.captcha', name='outside_captcha'),
+	url(r'^api/login/$', 'outside.api.auth_login', name='outside_api_login'),
 	
 	url(r'^editProfile/$', 'outside.views.edit_profile', name='outside_edit_profile'),
 	url(r'^createProfile/$', 'outside.views.create_profile', name='outside_create_profile'),

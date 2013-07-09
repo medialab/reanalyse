@@ -16,12 +16,14 @@ from django.core.exceptions import *
 
 from glue.models import Pin
 from outside.models import Enquiry, Subscriber, Message, Confirmation_code
-from outside.forms import AddEnquiryForm, SubscriberForm, SignupForm, AccessRequestForm, ChangePasswordForm, ReinitializePasswordForm
+from outside.forms import *
 from glue.misc import Epoxy, API_EXCEPTION_FORMERRORS, API_EXCEPTION_INTEGRITY, API_EXCEPTION_OSERROR, API_EXCEPTION_DOESNOTEXIST, API_EXCEPTION_EMPTY
 from glue.forms import AddPinForm
 from django.db import IntegrityError
 from reanalyseapp.models import Enquete, Tag, AccessRequest
 from datetime import datetime
+
+from django.contrib.auth import login, logout, authenticate
 
 import os, mimetypes
 
@@ -758,4 +760,50 @@ def captcha(request):
 		rand = random.randint(0, 4)
 		request.session['captcha'] = rand
 		return HttpResponse(rand, 'text')
+
+
+def auth_login( request ):
 	
+	response = Epoxy( request )
+
+	form = LoginForm( request.POST )
+	try:
+		if 'next' not in request.session:
+			request.session['next'] = request.REQUEST['next']
+	except:
+		pass
+	
+	
+	if request.method == 'POST': 
+
+		if form.is_valid():
+			user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+
+					try:
+						subscriber = Subscriber.objects.get(user=request.user.id)
+					except Subscriber.DoesNotExist:
+						return redirect( reverse('outside.views.create_profile') )
+					
+					next_url = request.session['next']
+					
+					del request.session['next']
+					
+					response.add( 'next', next_url  )
+	
+				else:
+					return response.throw_error( _("user has been disabled"), code=API_EXCEPTION_FORMERRORS).json()
+			else:
+				return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+		else:
+			"""login_message['error'] = _("invalid credentials")
+			login_message['invalid_fields'] = form.errors"""
+
+			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
+	
+		
+		
+		return response.json()
+

@@ -56,8 +56,8 @@
 			
 			
 			<div class="mini-section center">
-				<input type="hidden" value="{{ next }}" name="next"/>
-				<input type="submit" value="{% trans "connection"%}"/>
+				<input type="hidden" value="{{ request.REQUEST.next }}" name="next"/>
+				<input type="submit" id="login-button" value="{% trans "connection"%}"/>
 			</div>
 			
 			<div align="center">

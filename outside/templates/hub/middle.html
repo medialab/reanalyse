@@ -285,7 +285,7 @@
 			<div class="modal-body">
 				<input type="hidden" value="{{  request.get_full_path }}" name="next"/>
 				{{ request.get_full_path }}
-				{{ login_form.as_p }}
+				
 			</div>
 			<div class="modal-footer">
 				<input type="button" class="bad" value="{% trans "discard" %}" data-dismiss="modal"/>
@@ -394,6 +394,7 @@
 {% block api_urls %}
 	
 	oo.urls = {
+		"login":"{% url outside_api_login %}",
 		"captcha_refresh":"{% url api_captcha_refresh %}",
 		"add_page":"{% url glue_api_pages %}",
 		"add_pin":"{% url glue_api_pins %}",

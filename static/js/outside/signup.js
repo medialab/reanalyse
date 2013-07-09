@@ -63,15 +63,11 @@ oo.api.signup.add = function( params ){
 	if ($this.data("executing")) return;
 	
     $this.data("executing", true)
-    	//.attr("src", "/url/to/ajax-loader.gif");
-	
-	
+    	//.attr("src", "/url/to/ajax-loader.gif");	
 	
 	$('#signup').append('<span class="ajax-loader"></span>')
 	
-	
-	
-	
+
 	$.ajax( $.extend( oo.api.settings.post,{
 		url: oo.urls.add_signup,
 		data: params,
