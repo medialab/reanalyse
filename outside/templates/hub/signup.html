@@ -42,7 +42,7 @@
 					{% trans "password"|capfirst %} *
 					
 					<div class="specification">
-						{% trans "The password must have a good security, use signs and numbers to strenghten the password"|capfirst  %}: <br/><span id="result" style="font-weight:bold"></span>
+						{% trans "The password must have a good security, use signs and numbers to strenghten the password"|capfirst  %} : <br/><span id="result" style="font-weight:bold"></span>
 					</div>
 				</label>
 				{{ signup_form.password1 }}
@@ -53,7 +53,7 @@
 					
 					{% trans "password confirmation"|capfirst %} *
 					<div class="specification">
-						{% trans "Please confirm your password"|capfirst  %}: <br/><span id="pass_confirm" style="font-weight:bold"></span>
+						{% trans "Please confirm your password"|capfirst  %} : <br/><span id="pass_confirm" style="font-weight:bold"></span>
 					</div>
 			
 					
@@ -61,7 +61,9 @@
 				{{ signup_form.password2 }}
 				
 				
-				<label for="id_signup_affiliation">{% trans "status"|capfirst %} *</label>
+				<label for="id_signup_affiliation">{% trans "status"|capfirst %} *
+					<div class="specification">{% trans "please choose a status"|capfirst %}</div>
+				</label>
 				<p>{{ signup_form.status }}</p>
 	
 				<label for="id_signup_affiliation">{% trans "affiliation institution"|capfirst %} *

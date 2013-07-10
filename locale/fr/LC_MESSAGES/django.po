@@ -1868,3 +1868,7 @@ msgstr "Voir/cacher le paraverbal"
 msgid "Refresh captcha image"
 msgstr "Rafraîchir l'image"
 
+msgid "please choose a status"
+msgstr "Veuillez selectionner un statut"
+
+

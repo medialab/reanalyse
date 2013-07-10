@@ -859,30 +859,7 @@ def change_password(request):
 
 	return render_to_response("hub/change_password.html", RequestContext(request, data ) )
 	
-	"""message = 'Change Password'
-	pForm = ChangePasswordForm()
-
-	if request.method == 'POST':
-		if request.POST['submit'] == 'Change':
-			postDict = request.POST.copy()
-			pForm = LoginForm(postDict)
-			if pForm.is_valid():
-				uPass1 = request.POST['password']
-				uPass2 = request.POST['password1']
-				if uPass1 == uPass2:
-					user = get_object_or_404(Employee.objects.get(name__exact= request.session['uid']))
-					#user = request.session['uid']
-					print 'User: ' + user
-					user.set_password(uPass1)
-					user.save()
-					return HttpResponseRedirect(next)
-				else:
-					message = 'Passwords dont match'
-					pForm = ChangePasswordForm()
 	
-	return render_to_response('employee/change_password.html', {
-	                                  'pForm': pForm,
-	                                  'message': message })"""
 
 
 

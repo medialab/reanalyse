@@ -805,7 +805,7 @@ def auth_login( request ):
 		else:
 			"""login_message['error'] = _("invalid credentials")
 			login_message['invalid_fields'] = form.errors"""
-
+			#return HttpResponse('TEST')
 			return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
 	
 		
