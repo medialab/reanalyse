@@ -52,6 +52,8 @@ from haystack.views import *
 from haystack.forms import *
 from haystack.query import *
 
+import zipfile, zlib
+
 
 
 # settings.py
@@ -190,8 +192,19 @@ def enquete_download( request, enquete_id ):
 	
 	enquete = get_object_or_404( Enquete, id=enquete_id )
 	
-	import zipfile, zlib
+	
 
+	
+	zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete.id )
+	
+	zf = zipfile.ZipFile( zippath, mode='w' )
+	
+	#return HttpResponse(settings.REANALYSESAMPLE_STUDIES_FILES+'/downloads/enquete-'+str(enquete.id)+'.zip')
+	
+	zf = zipdir(settings.REANALYSESAMPLE_STUDIES_FILES+'/downloads/enquete-'+str(enquete.id), zf)
+	
+	
+	"""
 	zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete.id )
 
 	zf = zipfile.ZipFile( zippath, mode='w' )
@@ -212,7 +225,7 @@ def enquete_download( request, enquete_id ):
 				zf.write( t.locationpath, compress_type=zipfile.ZIP_DEFLATED, 
 							arcname= t.locationpath.split('/', 7)[7])
 
-		
+	"""	
 	response = HttpResponse( open( zippath , 'r' ) , content_type="application/gzip"  )
 	response['Content-Description'] = "File Transfer";
 	response['Content-Disposition'] = "attachment; filename=enquete-%s.zip" % ( enquete.id ) 
@@ -220,7 +233,12 @@ def enquete_download( request, enquete_id ):
 	return response
 
 
-
+def zipdir(path, zip):
+	for root, dirs, files in os.walk(path):
+		for file in files:
+			zip.write(os.path.join(root, file), compress_type=zipfile.ZIP_DEFLATED, arcname= os.path.join(root, file).split('/', 6)[6])
+	
+	return zip
 
 @login_required( login_url=LOGIN_URL )
 #@permission_required('reanalyseapp.can_browse')
