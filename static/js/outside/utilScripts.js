@@ -582,10 +582,13 @@ function initVerbatimTooltips() {
 
 			style: { 
 				color:'black',
-				name: 'blue' // Inherit the rest of the attributes from the preset dark style
+				name: 'blue',
+				'font-weight':'bold',
+				'font-family':'arial',
+				
 			}
 
-		});
+		}).removeAttr('title');
 	});
 };
 
