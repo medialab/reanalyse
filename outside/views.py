@@ -195,13 +195,13 @@ def enquete_download( request, enquete_id ):
 	
 
 	
-	zippath = os.path.join( "/tmp/", "enquete_%s.zip" % enquete.id )
+	zippath = settings.REANALYSESAMPLE_STUDIES_FILES+'/downloads/enquete-'+str(enquete.id)+'.zip'
 	
-	zf = zipfile.ZipFile( zippath, mode='w' )
+	"""zf = zipfile.ZipFile( zippath, mode='w' )
 	
 	#return HttpResponse(settings.REANALYSESAMPLE_STUDIES_FILES+'/downloads/enquete-'+str(enquete.id)+'.zip')
 	
-	zf = zipdir(settings.REANALYSESAMPLE_STUDIES_FILES+'/downloads/enquete-'+str(enquete.id), zf)
+	zf = zipdir(settings.REANALYSESAMPLE_STUDIES_FILES+'/downloads/enquete-'+str(enquete.id), zf)"""
 	
 	
 	"""

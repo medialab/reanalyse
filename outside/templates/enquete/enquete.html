@@ -14,8 +14,24 @@
 	<script src='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.js'></script>
   	<link href='http://api.tiles.mapbox.com/mapbox.js/v0.6.6/mapbox.css' rel='stylesheet' />
 	<script src="http://d3js.org/d3.v3.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.js"></script>
 	<script src="{{ STATIC_URL }}js/jquery.slimscroll.min.js"></script>
+	
+	<script type="text/javascript">
+		/*
+		$(document).ready(function () {
+		    $( "#tabs" ).tabs({
+				beforeLoad: function( event, ui ) {
+				ui.jqXHR.error(function() {
+				ui.panel.html(
+				"Couldn't load this tab. We'll try to fix this as soon as possible. " +
+				"If this wouldn't be a demo." );
+				});
+				}
+				});
+		    $("#dialog").dialog();
+		});
+		*/
+	</script>
 
 
 {% endblock %}
@@ -493,12 +509,34 @@ Ce filtre peut être actionné de deux manières:</b>
 	    </div>
     </div>
     
-    <script>
-		
-		
-		
-		
-	</script>
+    <!--
+    <div id="dialog">
+		<div id="tabs">
+		    <ul>
+		        <li><a href="/reanalyse/document/11826/">tab 1</a></li>
+		        <li><a href="#tabs-2">tab 2</a></li>
+		        <li><a href="#tabs-3">tab 3</a></li>
+		    </ul>
+		    
+		    <div id="tabs-1">
+		        test 1
+		    </div>
+		    
+		    <div id="tabs-2">
+		        test 2
+		    </div>
+		    
+		    <div id="tabs-3">
+		        test 3
+		    </div>
+		    
+		</div>
+
+
+	</div>
+	
+	-->
+
 	
 {% endblock %}
 

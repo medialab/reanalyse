@@ -252,7 +252,7 @@ Read the whole report Research on the research (PDF)
 						{% endif %}
 						{% ifequal pc.mime "audio" %}
 							<div id='audio-{{ pc.slug }}'></div>
-							<audio class="audio_player" src="{{ pc.local.url }}" preload="auto" />
+							<audio class="audio_player" src="{{ pc.local.url }}" preload="none" />
 							
 						{% endifequal %}
 						

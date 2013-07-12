@@ -35,7 +35,7 @@ oo.api.login.add = function( params ){
 	
 	
 	
-	$('#login').append('<span class="ajax-loader"></span>')
+	$('#login-button').parent().append('<span class="ajax-loader"></span>')
 	
 
 	$.ajax( $.extend( oo.api.settings.post,{

@@ -51,6 +51,8 @@ oo.Gummy = function ( objects, nester, selector, propertyName ){
 						obj = {},
 						name = propertyName;
 
+					oo.log('***', this)
+
 					if ( g.attr('data-status') == 'normal' ) {
 
 						types.selectAll('g').attr('data-status', 'hidden');
@@ -62,7 +64,7 @@ oo.Gummy = function ( objects, nester, selector, propertyName ){
 
 						types.selectAll('g').attr('data-status', 'normal'); // Set status
 						obj[name] = '';
-						oo.filt.trigger( oo.filt.events.reset, obj ); // Send request
+						oo.filt.trigger( oo.filt.events.reset, '' ); // Send request
 
 					}
 				});

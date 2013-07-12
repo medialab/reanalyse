@@ -10,6 +10,9 @@
 
 {% block head %}
 
+
+	
+
 	{% if document.doctype == "CSV"%}
 	
 	<script src="{{ STATIC_URL }}/js/csvtotable/js/jquery.csvToTable.js"></script>
@@ -33,14 +36,7 @@
 	<!-- qtip tooltips for verbatim -->
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/jquery.qtip-1.0.0-rc3.min.js"></script>
 
-	<!-- =============================== FOR VIZ -->
-	<!-- d3.js -->
-	<!--<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>-->
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.layout.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.geom.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.time.min.js"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}/d3/d3.chart.min.js"></script>
+
 	<!-- the only viz we display for the moment: -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}/d3vizus/d3_TexteStreamTimeline.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/outside/utilScripts.js"></script>
@@ -226,7 +222,7 @@
 			
 		<div id="documents-inner" style="float:left;overflow: hidden; width: auto;">
 			<div  id="counter">
-				<span class="docLabel">{% trans "Metadatas"%}</span>
+				<span class="docLabel"><span class="icon-info-sign"></span> {% trans "Metadatas"%}</span>
 			</div>
 			
 			<ul>

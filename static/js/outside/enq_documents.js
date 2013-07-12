@@ -128,6 +128,12 @@ oo.enq.docs.init = function ( objects ){
 
 		.on('click', function(d, i) {
 			window.open( oo.api.urlfactory( oo.urls.get_document, d3.select(this).attr('data-id') ), '_blank');
+			
+			/*var string = d.title + ' <small>('+d.type+')</small> <br/>';
+       		$( "#tabs" ).tabs( "add", "#tabs-2", string);
+
+			( "#tabs" ).tabs('refresh')*/
+			
 		});
 
 	// Set Documents' Counter

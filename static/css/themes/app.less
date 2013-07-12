@@ -1,4 +1,4 @@
-@import "../mixins.less";
+  @import "../mixins.less";
 @import "../fonts.less";
 
 //
@@ -401,10 +401,12 @@ html{
 
 }
 
-#subscription{
+
+
+#subscription, #login{
 	padding: @grid-padding;
 	//border-top: 1px solid darken( @page-color, 16%);
-	background: white;
+	
 
 	label{
 		.sans-serif(13px);
@@ -440,6 +442,11 @@ html{
 			text-decoration: underline;
 		}
 	
+}
+
+#subscription {
+  
+  background: white;
 }
 
 #subscription-accepted{

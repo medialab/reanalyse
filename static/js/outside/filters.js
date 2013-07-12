@@ -255,15 +255,15 @@ oo.filt.replace = function( eventType, data ){
 	ex. oo.filt.trigger( oo.filt.events.reset, {'type':[]} )
 */
 
-// oo.filt.reset = function( eventType, data ){
+oo.filt.reset = function( eventType, data ){
 
-// 	oo.log("[oo.filt.reset]");
+	oo.log("[oo.filt.reset]");
 
-// 	for (var f in data) {
-// 		delete oo.filt.filters[f];
-// 	};
-// 	oo.filt.push();
-// };
+	for (var f in data) {
+		delete oo.filt.filters[f];
+	};
+	oo.filt.push();
+};
 
 // Execute for click
 $('#location').click( function(){

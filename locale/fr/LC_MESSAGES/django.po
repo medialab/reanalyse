@@ -1215,10 +1215,10 @@ msgstr ""
 "devriez donc utiliser un gestionnaire  <br/>de téléchargement qui permet de mettre "
 "en pause un téléchargement et le continuer plus tard.</br>Si vous êtes sur "
 "windows vous pouvez utiliser <a href=\"http://www.clubic.com/telecharger-"
-"fiche12841-free-download-manager.html\">free download manager</a>.<br/>Sur "
+"fiche12841-free-download-manager.html\">free download manager</a>, sur "
 "linux vous pouvez utiliser <a href=\"https://launchpad.net/steadyflow"
-"\">steadyflow</a>.<br/><br/><a href=\"%(dl_link)s\" title=\"\">Télécharger "
-"l'enquête</a>.<br/><br/>\n"
+"\">steadyflow</a><br/> et sur mac <a href=\"http://www.macpsd.net/\">Progressive downloader</a>.<br/><br/><a href=\"%(dl_link)s\" title=\"\">Télécharger "
+"l'enquête</a><br/><br/>\n"
 
 #: outside/templates/hub/edit_profile.html:13
 msgid "You can modify your information"
@@ -1870,5 +1870,8 @@ msgstr "Rafraîchir l'image"
 
 msgid "please choose a status"
 msgstr "Veuillez selectionner un statut"
+
+msgid "Password forgotten"
+msgstr "Mot de passe oublié"
 
 
