@@ -801,6 +801,11 @@ def auth_login( request ):
 				else:
 					return response.throw_error( _("user has been disabled"), code=API_EXCEPTION_FORMERRORS).json()
 			else:
+				return response.throw_error( 
+									error={'username':'', 
+										'password':''}, 
+									code=API_EXCEPTION_FORMERRORS).json()
+				
 				return response.throw_error( error=form.errors, code=API_EXCEPTION_FORMERRORS).json()
 		else:
 			"""login_message['error'] = _("invalid credentials")
