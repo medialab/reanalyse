@@ -146,7 +146,7 @@ Read the whole report Research on the research (PDF)
 		
 		
 		<div class="abstract">
-			{% trans "Read the whole report Research on the research (PDF)" %} <a href="{% url outside_enquete enquiry.enquete.id %}">&laquo;	 {{ enquiry.enquete.name }} &raquo;	</a>,
+			{% trans "Read the whole report Research on the research (PDF)" %} <a href="{{ STATIC_URL }}docs/enquete-{{ enquiry.enquete.id }}.pdf">&rarr; {% trans "Read the whole report Research on the research (PDF)" %}</a>,
 
 			de {% for authenty in enquiry.enquete.meta.values.actor.authenty.value %}{{ authenty }}{% if forloop.last %}{% else %}, {%endif %} {% endfor %}
 

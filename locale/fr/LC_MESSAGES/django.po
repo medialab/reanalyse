@@ -1874,4 +1874,7 @@ msgstr "Veuillez selectionner un statut"
 msgid "Password forgotten"
 msgstr "Mot de passe oublié"
 
+msgid "You don't need to ask for an acces because you are an admin, but you can test"
+msgstr "Rappel : Vous êtes admin, vous avez déjà tous les accès mais vous pouvez tester..."
+
 

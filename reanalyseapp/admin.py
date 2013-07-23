@@ -62,7 +62,8 @@ class SiteContentAdmin(admin.ModelAdmin):
 # ENQUETES, TEXTES, ...
 #############################################################
 class TexteAdmin(admin.ModelAdmin):
- 	fields = ('name','contenttxt')
+    list_display = ('name','contenttxt', 'locationpath', 'enquete', 'location', 'description')
+    search_fields = ['name', 'locationpath']
 # 	Media = CommonMedia
 #############################################################
 
@@ -78,7 +79,7 @@ admin.site.register( Tag, TagAdmin )
 
 
 # Texte aka study documents
-admin.site.register( Texte )
+admin.site.register( Texte, TexteAdmin )
 
 
 
