@@ -595,6 +595,10 @@ def login_view( request ):
 	data = shared_context( request, tags=[ "index" ] )
 	
 	data['login_form'] = form
+	
+	data['signup_url'] = reverse('outside_signup_generic')
+	
+	#return HttpResponse(data['signup_url'])
 
 	return render_to_response('outside/login.html', RequestContext(request, data ) )
 
@@ -615,10 +619,14 @@ def access_request(request, enquete_id=None):
 		
 		#Verify if he has already requested the enquete
 		try:
-	   		access = AccessRequest.objects.get(user=request.user.id, enquete=enquete_id)
+	   		access = AccessRequest.objects.get(user=request.user.id, enquete=enquete_id, )
 	   		
 	   		
 		except AccessRequest.DoesNotExist:
+			
+			if( request.user.has_perm('reanalyseapp.can_browse') ):
+				request.flash['notice'] = _("You don't need to ask for an acces because you are an admin, but you can test")
+			
 			
 			try:
 				subscriber = Subscriber.objects.get(user=request.user.id)
@@ -645,6 +653,8 @@ def access_request(request, enquete_id=None):
 			
 			
 			viewurl = reverse('outside.views.enquete', kwargs={'enquete_id':enquete_id})
+			
+			
 			if(access.is_activated == True):
 				error_str = _('You already have access to this research.')
 			else:

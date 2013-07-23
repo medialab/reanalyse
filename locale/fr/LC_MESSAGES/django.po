@@ -1364,16 +1364,19 @@ msgstr "Authentification"
 
 #: outside/templates/outside/login.html:37
 #, python-format
-msgid "Please fill this form to connect, <a href=\"{{signup_url}}?next={{next}}\"><u>click here</u></a> if you are not registered"
+msgid ""
+"Please fill this form to connect, <a href='%(signup_url)s'><u>click here</"
+"u></a> if you are not registered"
 msgstr ""
-"Pour demander l'accès à une enquête vous devez être incrit sur le "
-"site, vous pouvez vous <a href=\"{{signup_url}}\"><u><b>inscrire ici</b>	 <i class=\"icon-signin icon-2x\"></i></u></"
-"a><br/> Si vous disposez déjà d'un compte veuillez entrer vos login et mot "
-"de passe ci-dessous.<br/>Nous vous rappelons que ce site est réservé à la "
-"communauté académique pour un usage strictement scientifique.<br/>Une fois "
-"authentifié, vous pouvez demander à consulter les documents de l'enquête en "
-"remplissant le formulaire de demande d'accès.<br/>Vous devrez renouveller la "
-"procédure pour chaque enquête que vous souhaiterez consulter."
+"Pour demander l'accès à une enquête vous devez être incrit sur le site, vous "
+"pouvez vous <a href='%(signup_url)s'><u><b>inscrire ici</b>\t <i class="
+"\"icon-signin icon-2x\"></i></u></a><br/> Si vous disposez déjà d'un compte "
+"veuillez entrer vos login et mot de passe ci-dessous.<br/>Nous vous "
+"rappelons que ce site est réservé à la communauté académique pour un usage "
+"strictement scientifique.<br/>Une fois authentifié, vous pouvez demander à "
+"consulter les documents de l'enquête en remplissant le formulaire de demande "
+"d'accès.<br/>Vous devrez renouveller la procédure pour chaque enquête que "
+"vous souhaiterez consulter."
 
 #: outside/templates/outside/login.html:67
 msgid "Password forgotten?"
