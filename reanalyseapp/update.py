@@ -194,8 +194,21 @@ def isMetaDocOK(upload_path, enquete_path):
 
 
 
-
-
+def commit_enquete( enquete_id ):
+    
+    #create dump of prod bdd
+    os.system('pg_dump -C -h 10.36.1.15 -U app app | psql -h localhost -U reanalyse reanalyse > prod_db.dump')
+    
+    #create dump of dev bdd
+    os.system('pg_dump -Ft -b reanalyse > dev_db.dump')
+    
+    
+    #Create update sql file for production
+    os.system('apgdiff prod_db.dump dev_db.dump > diff.sql')
+    
+    #change absolute path (/var/opt/reanalyse to /datas/www/app
+    
+    #transfert
 
 
 
